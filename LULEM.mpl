@@ -7,6 +7,20 @@
 #                                   #
 # # # # # # # # # # # # # # # # # # #
 
+# Authors: Davide Stocco and Matteo Larcher
+# Date:    12/01/2023
+
+# This is a module for the LULEM package. It contains the functions to solve
+# systems of linear equations with large expressions. The module used the LU
+# decomposition of the matrix of the system. The module is hopefully a better
+# version of the code provided in the following PhD thesis:
+#
+#   Wenqin Zhou, Symbolic Computation Techniques for Solveing Large Expressions
+#   Problems from Mathematics and Engineering (2007), Faculty of Graduate Studies,
+#   The University of Western Ontario London, Ontario, Canada.
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 module LULEM()
 
   # Exported variables
@@ -504,11 +518,11 @@ end proc;
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#  _____
-# |__  /___ _ __ ___
-#   / // _ \ '__/ _ \
-#  / /|  __/ | | (_) |
-# /____\___|_|  \___/
+#   _____
+#  |__  /___ _ __ ___
+#    / // _ \ '__/ _ \
+#   / /|  __/ | | (_) |
+#  /____\___|_|  \___/
 #
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -534,3 +548,5 @@ ZeroStrategy_normalizer := proc(
 end proc;
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# That's all folks!
