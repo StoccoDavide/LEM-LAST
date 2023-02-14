@@ -33,6 +33,7 @@
 
 # Maple
 *.mla
+*.bak
 
 # Folders
 .DS_Store
