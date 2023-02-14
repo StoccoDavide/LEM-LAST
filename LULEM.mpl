@@ -26,7 +26,7 @@ LULEM := module()
   # Exported variables
   export  SetModuleOptions,
           Veil,
-          UnVeil,
+          Unveil,
           ShowVeil,
           SubsVeil,
           ForgetVeil,
@@ -52,8 +52,8 @@ LULEM := module()
           Protect,
           NextLabel,
           Signature,
-          lastused_table,
-          unveil_table,
+          UnveilTable,
+          LastUsed,
           lib_base_path;
 
   # Package options
@@ -122,8 +122,8 @@ LULEM := module()
     description "Initialize 'LULEM' module internal variables";
 
     # Define module variables
-    lastused_table := table();
-    unveil_table   := table():
+    LastUsed := table();
+    UnveilTable   := table():
   end proc: # InitLULEM
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -165,7 +165,7 @@ LULEM := module()
       Signature(f, p, A) := rand() mod p;
     elif (f::'indexed') then
       if type(f, A[anything]) then
-        Signature(UnVeil(f, 1), p, A)
+        Signature(Unveil(f, 1), p, A)
       else
         Signature(f, p, A) := rand() mod p;
       end if;
@@ -192,14 +192,16 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  # NOTUSED
   NextLabel := proc(
     label::{symbol},
     vars::{set},
     $)
 
-    lastused_table[label] := lastused_table[label] + 1;
-    label[lastused_table[label], `if` (nargs = 2, vars, NULL)];
+    description "Calculate the next veiling label for a given label <lapel> and "
+      "a optional set of variables <vars>.";
+
+    LastUsed[label] := LastUsed[label] + 1;
+    label[LastUsed[label], `if` (nargs = 2, vars, NULL)];
   end proc: # NextLabel
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -222,18 +224,16 @@ LULEM := module()
     local A, label;
 
     label := op(procname);
-    lastused_table[label] := lastused_table[label] + 1;
-    A := label[lastused_table[label]];
-    UnVeil(A, 1) := x;
-    unveil_table[A] := x;
+    A := NextLabel(label);
+    UnveilTable[A] := x;
     return A;
   end proc: # Veil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UnVeil := proc(
-    x,                                    # The expression to be unveiled
-    n::{nonnegint, identical (infinity)}, # The number of levels to unveil
+  Unveil := proc(
+    x,                                    # The expression to be Unveiled
+    n::{nonnegint, identical (infinity)}, # The number of levels to Unveil
     $)
 
     description "Unveil the expression <x> up to <n> levels.";
@@ -242,15 +242,15 @@ LULEM := module()
     option remember;
 
     if (nargs = 1) then
-      return UnVeil(x, 1);
+      return Unveil(x, 1);
     elif (nargs = 2) and (n = 0) then
       return x;
     elif x::atomic then
       return x;
     else
-      return map(UnVeil, x, n-1);
+      return map(Unveil, x, n-1);
     end if;
-  end proc: # UnVeil
+  end proc: # Unveil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -262,8 +262,8 @@ LULEM := module()
 
     local i;
 
-    for i from 1 to lastused_table[label] do
-      print(label[i] = unveil_table[label[i]]);
+    for i from 1 to LastUsed[label] do
+      print(label[i] = UnveilTable[label[i]]);
     end do;
   end proc: # ShowVeil
 
@@ -279,9 +279,9 @@ LULEM := module()
 
     local i, sub_vec;
 
-    sub_vec := [seq(0, i = 1..lastused_table[label])]:
-    for i from lastused_table[label] to 1 by -1 do
-      sub_vec[i] := label[i] = UnVeil(label[i]);
+    sub_vec := [seq(0, i = 1..LastUsed[label])]:
+    for i from LastUsed[label] to 1 by -1 do
+      sub_vec[i] := label[i] = Unveil(label[i]);
     end do:
     return subs(op(ListTools[Reverse](sub_vec)), x);;
   end proc: # SubsVeil
@@ -297,8 +297,8 @@ LULEM := module()
     local i;
 
     subsop(4 = NULL, eval(Signature));
-    lastused_table[label] := 0;
-    unveil_table     := table();
+    LastUsed[label] := 0;
+    UnveilTable := table();
     return NULL;
   end proc: # ForgetVeil
 
@@ -474,7 +474,7 @@ LULEM := module()
       "<Strategy_Veiling>, the pivoting strategy <Strategy_Pivots> and the zero "
       "recognition strategy <Strategy_Zero>.";
 
-    local L, U, r, LU_NAG:
+    local L, U, r, x, LU_NAG:
 
     # Get LU decomposition of A
     L, U, r := SquareLUwithpivoting(
