@@ -43,7 +43,9 @@ LULEM := module()
           PivotStrategy_Sindets,
           PivotStrategy_numeric,
           ZeroStrategy_length,
-          ZeroStrategy_normalizer;
+          ZeroStrategy_normalizer,
+          Info,
+          License;
 
   # Local variables
   local   ModuleLoad,
@@ -61,7 +63,7 @@ LULEM := module()
           load   = ModuleLoad,
           unload = ModuleUnload;
 
-  description "LU Decomposition for Large Expression Systems";
+  description "LU Decomposition for Large Expression Matrices";
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -110,6 +112,7 @@ LULEM := module()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   ModuleUnload := proc()
+
     description "Module 'LULEM' module unload procedure";
 
     printf("Unloading 'LULEM'\n");
@@ -201,7 +204,7 @@ LULEM := module()
       "a optional set of variables <vars>.";
 
     LastUsed[label] := LastUsed[label] + 1;
-    label[LastUsed[label], `if` (nargs = 2, vars, NULL)];
+    label[LastUsed[label], `if` (nargs = 2, vars, NULL)]; # BOO
   end proc: # NextLabel
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -223,8 +226,15 @@ LULEM := module()
 
     local A, label;
 
+    #label := op(procname);
+    #A := NextLabel(label);
+    #UnveilTable[A] := x;
+    #return A;
+
     label := op(procname);
-    A := NextLabel(label);
+    LastUsed[label] := LastUsed[label] + 1;
+    A := label[LastUsed[label]];
+    UnVeil(A, 1) := x;
     UnveilTable[A] := x;
     return A;
   end proc: # Veil
@@ -279,11 +289,8 @@ LULEM := module()
 
     local i, sub_vec;
 
-    sub_vec := [seq(0, i = 1..LastUsed[label])]:
-    for i from LastUsed[label] to 1 by -1 do
-      sub_vec[i] := label[i] = Unveil(label[i]);
-    end do:
-    return subs(op(ListTools[Reverse](sub_vec)), x);;
+    sub_vec := [seq(label[i] = UnveilTable[label[i]], i = 1..LastUsed[label])]:
+    return subs(op(ListTools[Reverse](sub_vec)), x);
   end proc: # SubsVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -317,13 +324,13 @@ LULEM := module()
       "the veiling symbol <Q>, the pivoting strategy <Strategy_Pivots> and the "
       "zero recognition strategy <Strategy_Zero>.";
 
-    local A, n, k, i, ii, j, m, L, U, mltip, l, r, kp, p, temp, normalize, row,
+    local M, n, k, i, ii, j, m, L, U, mltip, l, r, kp, p, temp, normalize, row,
       flag, z;
 
     # Copy the input matrix
-    A := copy(LU_NAG);
-    n := LinearAlgebra[RowDimension](A):
-    m := LinearAlgebra[ColumnDimension](A);
+    M := copy(LU_NAG);
+    n := LinearAlgebra[RowDimension](M):
+    m := LinearAlgebra[ColumnDimension](M);
 
     # Check if the input matrix is square
     if (m <> n) then
@@ -336,71 +343,79 @@ LULEM := module()
     L := Matrix(LinearAlgebra[IdentityMatrix](n), shape = triangular[lower]);
 
     # U is upper matrix.
-    U := Matrix(n,n,shape = triangular[upper]):
+    U := Matrix(n, n, shape = triangular[upper]):
 
     # Create pivot vector
     r := Vector(n, k -> k);
 
     normalize := z -> `if`(Strategy_Veiling(z) > 0, Veil[Q](z), z);
 
-    # Loop over columns and find the pivot element among the entries
-    # A[r[kp],kp], A[r[kp+1],kp],	A[r[n],kp]
-    # according to different pivoting strategies.
+    # Loop over columns and find the pivot element among the entries M[r[kp], kp],
+    # M[r[kp+1], kp], M[r[n], kp] according to different pivoting strategies.
     # Interchange entries in pivot vector.
 
     row := 1;
-    for kp from 1 to m while row <= n do
+    for kp from 1 to m while (row <= n) do
       p := row;
-      flag := evalb(Strategy_Zero(A[r[row],kp]) = 0);
-      for i from row+1 to n do
-          # Once a pivot is found -- not "best"!
-          if (flag or Strategy_Pivots(A[r[i], kp], A[r[p],kp])) and
-              not (Strategy_Zero(A[r[i], kp]) = 0) then
-            p := i;
+      flag := evalb(Strategy_Zero(M[r[row], kp]) = 0);
+      for i from (row + 1) to n do
+        # Once a pivot is found -- not "best"!
+        if flag or Strategy_Pivots(M[r[i], kp], M[r[p], kp]) and
+            not Strategy_Zero(M[r[i], kp]) = 0 then
+          p := i;
           break;
-          end if;
+        end if;
       end do;
 
       # Only when the pivot is not equal to zero, the row elimination is performed
       # (the whole if statement). Else we will continue with the next column.
 
       if (Strategy_Zero(AEr[p]) = 0) then
-          WARNING(
-            "LULEM::SquareLUwithpivoting(...): the matrix appears to be singular."
-            );
+
+        WARNING(
+          "LULEM::SquareLUwithpivoting(...): the matrix appears to be singular."
+          );
+
       else
+
+        print(r, p, row, r[row], r[p]);
         if (p <> row) then
           (r[p], r[row]) := (r[row], r[p]);
         end if;
+
         userinfo(3, SquareLUwithpivoting, 'kp', kp, 'r', r);
 
-        # Now do Gauss elimination steps to get new A and also keep L information
-        # in new A. Packing everything into the A matrix during the computation of
+        # Now do Gauss elimination steps to get new M and also keep L information
+        # in new M. Packing everything into the M matrix during the computation of
         # the factors. The reason is that this code can be ported to restricted
         # memory environments, or equally, applied to very large matrices in a
         # large memory environment.
 
-        for i from row+1 to n do
-          mltip := normalize(A[r[i], kp]/A[r[row], kp]);
-          A[r[i] ,kp] := mltip;
-          for j from kp+1 to m do
-            z := A[r[i],j] - mltip * A[r[row], j] ;
-            A[r[i], j] := `if`(Strategy_Veiling(z) > 0, Veil[Q](z), z);
+        for i from (row + 1) to n do
+          mltip := normalize(M[r[i], kp]/M[r[row], kp]);
+          M[r[i], kp] := mltip;
+          for j from (kp + 1) to m do
+            z := M[r[i], j] - mltip * M[r[row], j] ;
+            M[r[i], j] := `if`(Strategy_Veiling(z) > 0, Veil[Q](z), z);
           end do;
         end do;
-        userinfo(3, SquareLUwithpivoting, `A`, A);
+
+        userinfo(3, SquareLUwithpivoting, `M`, M);
+
       end if;
       row := row + 1;
-    end do:
-    userinfo(2, SquareLUwithpivoting, `r`, r, `A`, A);
 
-    # Seperate new A into L and U
+    end do:
+
+    userinfo(2, SquareLUwithpivoting, `r`, r, `M`, M);
+
+    # Seperate new M into L and U
     for i from 1 to n do
       for j from 1 to m do
-        if i <= j then
-          U[i, j] := A[r[i], j];
+        if (i <= j) then
+          U[i, j] := M[r[i], j];
         else
-          L[i, j] := A[r[i], j];
+          L[i, j] := M[r[i], j];
         end if
       end do;
     end do;
@@ -438,11 +453,11 @@ LULEM := module()
     # Create vector for solution of Ux=y
     x := Vector(n);
 
-    normalizer := y -> `if`(Strategy_Veiling(y) > 0, Veil[Q](y), y);
+    normalizer := (y) -> `if`(Strategy_Veiling(y) > 0, Veil[Q](y), y);
 
     # Perform forward substitution to solve Ly=Pb
     userinfo(3, SolveSquareLUpivot,`n`, n, `y`, y);
-    y[1] := normalizer( b[r[1]] );
+    y[1] := normalizer(b[r[1]]);
     for i from 2 to n do
         y[i] := normalizer(b[r[i]]) - add(normalizer(A[r[i], j] * y[j]), j = 1..i-1);
     end do;
@@ -477,15 +492,26 @@ LULEM := module()
     local L, U, r, x, LU_NAG:
 
     # Get LU decomposition of A
+    printf("LU decomposition...   ");
     L, U, r := SquareLUwithpivoting(
       A, Q, Strategy_Veiling, Strategy_Pivots, Strategy_Zero
       );
+    printf("DONE\n");
 
     # Built the LU matrix (NAG-style)
-    LU_NAG := L+U-Matrix(LinearAlgebra[RowDimension](L), shape = identity);
+    printf("LU_NAG matrix...      ");
+    LU_NAG := L + U - Matrix(LinearAlgebra[RowDimension](L), shape = identity);
+    printf("DONE\n");
+
+    #print(LinearAlgebra[Diagonal](L), 'L' = L);
+    #print(LinearAlgebra[Diagonal](U), 'U' = U);
+    #print('r' = r);
+    #print('LU_NAG' = LU_NAG);
 
     # Solve the linear system Ax=b given the LU decomposition (PA=LU).
+    printf("SolveSquareLUpivot... ");
     x := SolveSquareLUpivot(LU_NAG, r, b, Q, Strategy_Veiling);
+    printf("DONE\n");
 
     # Return solution vector x and the LU decomposition data
     return x, L, U, r;
@@ -650,6 +676,70 @@ LULEM := module()
 
     return Normalizer(x)
   end proc: # ZeroStrategy_normalizer
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  #   __  __ _
+  #  |  \/  (_)___  ___
+  #  | |\/| | / __|/ __|
+  #  | |  | | \__ \ (__
+  #  |_|  |_|_|___/\___|
+  #
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  Info := proc(
+    $)::{nothing};
+
+    description "Print the information about the package.";
+
+    printf(cat(
+      "This is a module for the LULEM package. It contains the functions to solve\n",
+      "systems of linear equations with large expressions. The module uses the LU\n",
+      "decomposition of the matrix of the system. The module is hopefully a better\n",
+      "version of the code provided in the following PhD thesis:\n",
+      "\n",
+      "  Wenqin Zhou, Symbolic Computation Techniques for Solveing Large Expressions\n",
+      "  Problems from Mathematics and Engineering (2007), Faculty of Graduate\n",
+      "  Studies, The University of Western Ontario London, Ontario, Canada.\n"
+    ));
+
+    return NULL;
+  end proc: # Info
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  License := proc(
+    $)::{nothing};
+
+    description "Print the license of the package.";
+
+    printf(cat(
+      "MIT License\n",
+      "\n",
+      "Copyright (c) 2023, Davide Stocco and Matteo Larcher\n",
+      "\n",
+      "Permission is hereby granted, free of charge, to any person obtaining a copy\n",
+      "of this software and associated documentation files (the ""Software""), to deal\n",
+      "in the Software without restriction, including without limitation the rights\n",
+      "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n",
+      "copies of the Software, and to permit persons to whom the Software is\n",
+      "furnished to do so, subject to the following conditions:\n",
+      "\n",
+      "The above copyright notice and this permission notice shall be included in all\n",
+      "copies or substantial portions of the Software.\n",
+      "\n",
+      "THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n",
+      "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n",
+      "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n",
+      "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n",
+      "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n",
+      "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n",
+      "SOFTWARE.\n"
+    ));
+
+    return NULL;
+  end proc: # License
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
