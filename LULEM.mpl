@@ -26,7 +26,6 @@ LULEM := module()
   # Exported variables
   export  SetModuleOptions,
           Veil,
-          VeilDepth,
           UnVeil,
           ShowVeil,
           SubsVeil,
@@ -34,10 +33,10 @@ LULEM := module()
           SquareLUwithpivoting,
           SolveSquareLUpivot,
           Solve,
-          LEMStrategy_n,
-          LEMStrategy_L,
-          LEMStrategy_Ls,
-          LEMStrategy_LB,
+          VeilingStrategy_n,
+          VeilingStrategy_L,
+          VeilingStrategy_Ls,
+          VeilingStrategy_LB,
           PivotStrategy_Llength,
           PivotStrategy_Slength,
           PivotStrategy_Lindets,
@@ -225,124 +224,122 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#  Veil := proc(
-#    x, # The expression to be veiled
-#    $)
-#
-#    description "Veil an expression <x> and return a label to it.";
-#
-#    local A, label;
-#
-#    # label := op(procname);
-#    # A := NextLabel(label);
-#    # UnVeilTable[A] := x;
-#    # return A;
-#
-#    label := op(procname);
-#    LastUsed[label] := LastUsed[label] + 1; # Inlining NextLabel for efficiency
-#    A := label[LastUsed[label]];
-#    UnVeil(A, 1) := x; # ???
-#    #UnVeilTable[A] := x; # ???
-#    return A;
-#  end proc: # Veil
+  # Veil := proc(
+  #   x, # The expression to be veiled
+  #   $)
+  #
+  #   description "Veil an expression <x> and return a label to it.";
+  #
+  #   local A, label;
+  #
+  #   label := op(procname);
+  #   LastUsed[label] := LastUsed[label] + 1; # Inlining NextLabel for efficiency
+  #   A := label[LastUsed[label]];
+  #   UnVeil(A, 1) := x; # ???
+  #   #UnVeilTable[A] := x; # ???
+  #   return A;
+  # end proc: # Veil
 
-Veil := proc( coefficient )
-         local i, s, c, label;
-         description "hide expressions behind labels.";
-
-	 label := `if`(procname::indexed, op(procname), '_V');
-
-	  if label<>eval(label,2) then
-	      error "label %a is assigned a value already, please save its contents and unassign it", label;
-	  end if;
-
-         # Recognize zero if we can, so that we don't hide zeros.
-         c := Normalizer( coefficient );
-         # Remove the integer content and sign so that we don't hide them either.
-         i := icontent( c );
-         # And we really mean sign, here, and not signum,
-         # because the interesting case is when c may be a polynomial.
-         try
-            s := sign( c ); # sign is weak
-            # Don't do anything if we can tell that
-            # the coefficient is just a number or a simple
-            # multiple of a name (simple or indexed)
-            if s*i=c or type(s*c/i,'name') then return c end if;
-         catch:
-            s := 1;
-         end try;
-         # Only if there is something complicated to hide
-         # do we actually hide anything.
-         s*i*auxiliary( s*c/i, label );
-      end proc;
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  VeilDepth := proc(
-    x,           # The expression to be evaluated
-    p::{posint}, # ???
+  Veil := proc(
+    x, # The expression to be veiled
     $)
 
-    description "Return the veil depth of an expression <x> and return a label "
-      "to it.";
+    description "Veil an expression <x> and return a label to it.";
 
-    local A, s;
+    local i, s, c, label;
 
-    s := Signature(x, p, op(procname));
-    A := NextLabel(op(procname), op(3, s));
-    UnVeilTable[A] := x;
-    return A;
-  end proc:
+	  label := `if`(procname::indexed, op(procname), '_V');
+
+	  if (label <> eval(label, 2)) then
+	    error "label %a is assigned a value already, please save its contents and unassign it", label;
+	  end if;
+
+    # Recognize zero if we can, so that we don't hide zeros.
+    c := Normalizer(x);
+
+    # Remove the integer content and sign so that we don't hide them either.
+    i := icontent(c);
+
+    # And we really mean sign, here, and not signum, because the interesting
+    # case is when c may be a polynomial.
+    try
+      s := sign(c); # sign is weak
+      # Don't do anything if we can tell that the coefficient is just a number
+      # or a simple multiple of a name (simple or indexed)
+      if (s*i = c) or type(s*c/i,'name') then
+        return c
+      end if;
+    catch:
+      s := 1;
+    end try;
+    # Only if there is something complicated to hide we do actually hide it and
+    # return a label.
+    return s * i * auxiliary(s*c/i, label);
+  end proc; # Veil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#  UnVeil := proc(
-#    x,                                    # The expression to be Unveiled
-#    n::{nonnegint, identical (infinity)}, # The number of levels to UnVeil
-#    $)
-#
-#    description "UnVeil the expression <x> up to <n> levels.";
-#
-#    local out;
-#    option remember;
-#
-#    if (nargs = 1) then
-#      return UnVeil(x, 1);
-#    elif (nargs = 2) and (n = 0) then
-#      return x;
-#    elif x::atomic then
-#      return x;
-#    else
-#      return map(UnVeil, x, n-1);
-#    end if;
-#  end proc: # UnVeil
+  # UnVeil := proc(
+  #   x,                                    # The expression to be Unveiled
+  #   n::{nonnegint, identical (infinity)}, # The number of levels to UnVeil
+  #   $)
+  #
+  #   description "UnVeil the expression <x> up to <n> levels.";
+  #
+  #   local out;
+  #   option remember;
+  #
+  #   if (nargs = 1) then
+  #     return UnVeil(x, 1);
+  #   elif (nargs = 2) and (n = 0) then
+  #     return x;
+  #   elif x::atomic then
+  #     return x;
+  #   else
+  #     return map(UnVeil, x, n-1);
+  #   end if;
+  # end proc: # UnVeil
 
-      UnVeil := proc( c, ilevel::{nonnegint,infinity} )
-         local a, b, i, level, label;
-         description "reveal expressions hidden behind labels.";
-	 label := `if`(procname::indexed, op(procname), '_V');
-         level := `if`( nargs<2, 1, min(LastUsed[label]+1,ilevel) );
-         a := c;
-         # Always do at least 1
-         b := eval( a, [seq(label[i]=UnVeilTable[label,i],i=1..LastUsed[label])] );
-         from 2 to level while not Testzero(a-b) do
-            a := b;
-            b := eval( a, [seq(label[i]=UnVeilTable[label,i],i=1..LastUsed[label])] );
-         end do;
-         b;
-      end proc;
+  UnVeil := proc(
+    x,                        # The expression to be Unveiled
+    n::{nonnegint, infinity}, # The number of levels to UnVeil
+    $)
 
-      # Scope LastUsed etc and use option remember to detect duplicates.
-      # There is no nontrivial storage duplication because objects are hashed and
-      # stored uniquely.  All this costs is a pointer.
-      auxiliary := proc( c, label )
-         option remember;
-         unprotect(LastUsed);
-         LastUsed[label] := LastUsed[label] + 1;
-         protect(LastUsed);
-         UnVeilTable[ label, LastUsed[label] ] := c;
-         label[ LastUsed[label] ]
-      end proc:
+    description "UnVeil the expression <x> up to <n> levels.";
 
+    local a, b, i, level, label;
+
+    label := `if`(procname::indexed, op(procname), '_V');
+    level := `if`(nargs<2, 1, min(LastUsed[label]+1, n));
+    a := x;
+    # Always do at least 1 unveiling
+    b := eval(a, [seq(label[i] = UnVeilTable[label,i], i = 1..LastUsed[label])]);
+    from 2 to level while not Testzero(a - b) do
+      a := b;
+      b := eval(a, [seq(label[i] = UnVeilTable[label,i], i = 1..LastUsed[label])]);
+    end do;
+    return b;
+  end proc;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  auxiliary := proc(
+    x,     # The expression to be veiled
+    label, # The veiling label to be used
+    $)
+
+    description "Auxiliary procedure to scope LastUsed etc and use option "
+      "remember to detect duplicates. There is no nontrivial storage duplication "
+      "because objects are hashed and stored uniquely. All this costs is a pointer.";
+
+    option remember;
+
+    unprotect(LastUsed);
+    LastUsed[label] := LastUsed[label] + 1;
+    protect(LastUsed);
+    UnVeilTable[label, LastUsed[label]] := x;
+    label[LastUsed[label]]
+  end proc: # auxiliary;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -444,7 +441,7 @@ Veil := proc( coefficient )
       p := row;
       flag := evalb(Strategy_Zero(M[r[row], kp]) = 0);
       for i from (row + 1) to n do
-        if flag or Strategy_Pivots(M[r[i], kp], M[r[p], kp]) and
+        if (flag or Strategy_Pivots(M[r[i], kp], M[r[p], kp])) and
             not (Strategy_Zero(M[r[i], kp]) = 0) then
           p := i;
           break; # Once a pivot is found -- not "best"!
@@ -456,7 +453,6 @@ Veil := proc( coefficient )
 
       if (Strategy_Zero(M[r[p], kp]) = 0) then
 
-        print(row, kp, r[p], M[r[p], kp]);
         WARNING(
           "LULEM::SquareLUwithpivoting(...): the matrix appears to be singular."
           );
@@ -612,7 +608,7 @@ Veil := proc( coefficient )
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  LEMStrategy_n := proc(
+  VeilingStrategy_n := proc(
     x, # Expression to be analyzed
     $)::{integer};
 
@@ -620,40 +616,40 @@ Veil := proc( coefficient )
       "minus 4.";
 
     return nops(indets(x)) - 4;
-  end proc: # LEMStrategy_n
+  end proc: # VeilingStrategy_n
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  LEMStrategy_L:= proc(
+  VeilingStrategy_L:= proc(
     x, # Expression to be analyzed
     $)::{integer};
 
     description "Veiling strategy: length of expression <x> minus 50.";
 
     return length(x) - 50;
-  end proc: # LEMStrategy_L
+  end proc: # VeilingStrategy_L
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  LEMStrategy_Ls:= proc(
+  VeilingStrategy_Ls:= proc(
     x, # Expression to be analyzed
     $)::{integer};
 
     description "Veiling strategy: length of expression <x> minus 120.";
 
     return length(x) - 120;
-  end proc: # LEMStrategy_Ls
+  end proc: # VeilingStrategy_Ls
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  LEMStrategy_LB:= proc(
+  VeilingStrategy_LB:= proc(
     x, # Expression to be analyzed
     $)::{integer};
 
     description "Veiling strategy: length of expression <x> minus 260.";
 
     return length(x) - 260;
-  end proc: # LEMStrategy_LB
+  end proc: # VeilingStrategy_LB
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
