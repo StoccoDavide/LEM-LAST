@@ -27,7 +27,7 @@ LULEM := module()
   export  SetModuleOptions,
           Veil,
           VeilDepth,
-          UnVeil,
+          Unveil,
           ShowVeil,
           SubsVeil,
           ForgetVeil,
@@ -51,7 +51,6 @@ LULEM := module()
   # Local variables
   local   ModuleLoad,
           LastUsed,
-          auxiliary,
           ModuleUnload,
           InitLULEM,
           Protect,
@@ -67,8 +66,6 @@ LULEM := module()
           unload = ModuleUnload;
 
   description "LU Decomposition for Large Expression Matrices";
-
-  LastUsed := table('sparse');
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -131,6 +128,7 @@ LULEM := module()
 
     # Define module variables
     UnVeilTable := table();
+    LastUsed    := table();
   end proc: # InitLULEM
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -171,7 +169,7 @@ LULEM := module()
       Signature(f, p, A) := rand() mod p;
     elif (f::'indexed') then
       if type(f, A[anything]) then
-        Signature(UnVeil(f, 1), p, A)
+        Signature(Unveil(f, 1), p, A)
       else
         Signature(f, p, A) := rand() mod p;
       end if;
@@ -206,11 +204,7 @@ LULEM := module()
     description "Calculate the next veiling label for a given label <lapel> and "
       "a optional set of variables <vars>.";
 
-    option remember;
-
-    unprotect(LastUsed);
     LastUsed[label] := LastUsed[label] + 1;
-    protect(LastUsed);
     label[LastUsed[label], `if`(nargs = 2, vars, NULL)]; # ???
   end proc: # NextLabel
 
@@ -225,56 +219,27 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#  Veil := proc(
-#    x, # The expression to be veiled
-#    $)
-#
-#    description "Veil an expression <x> and return a label to it.";
-#
-#    local A, label;
-#
-#    # label := op(procname);
-#    # A := NextLabel(label);
-#    # UnVeilTable[A] := x;
-#    # return A;
-#
-#    label := op(procname);
-#    LastUsed[label] := LastUsed[label] + 1; # Inlining NextLabel for efficiency
-#    A := label[LastUsed[label]];
-#    UnVeil(A, 1) := x; # ???
-#    #UnVeilTable[A] := x; # ???
-#    return A;
-#  end proc: # Veil
+  Veil := proc(
+    x, # The expression to be veiled
+    $)
 
-Veil := proc( coefficient )
-         local i, s, c, label;
-         description "hide expressions behind labels.";
+    description "Veil an expression <x> and return a label to it.";
 
-	 label := `if`(procname::indexed, op(procname), '_V');
+    local A, label;
 
-	  if label<>eval(label,2) then
-	      error "label %a is assigned a value already, please save its contents and unassign it", label;
-	  end if;
+    # label := op(procname);
+    # A := NextLabel(label);
+    # UnVeilTable[A] := x;
+    # return A;
 
-         # Recognize zero if we can, so that we don't hide zeros.
-         c := Normalizer( coefficient );
-         # Remove the integer content and sign so that we don't hide them either.
-         i := icontent( c );
-         # And we really mean sign, here, and not signum,
-         # because the interesting case is when c may be a polynomial.
-         try
-            s := sign( c ); # sign is weak
-            # Don't do anything if we can tell that
-            # the coefficient is just a number or a simple
-            # multiple of a name (simple or indexed)
-            if s*i=c or type(s*c/i,'name') then return c end if;
-         catch:
-            s := 1;
-         end try;
-         # Only if there is something complicated to hide
-         # do we actually hide anything.
-         s*i*auxiliary( s*c/i, label );
-      end proc;
+    label := op(procname);
+    LastUsed[label] := LastUsed[label] + 1; # Inlining NextLabel for efficiency
+    A := label[LastUsed[label]];
+    UnVeil(A, 1) := x; # ???
+    #UnVeilTable[A] := x; # ???
+    return A;
+  end proc: # Veil
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   VeilDepth := proc(
@@ -295,54 +260,26 @@ Veil := proc( coefficient )
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#  UnVeil := proc(
-#    x,                                    # The expression to be Unveiled
-#    n::{nonnegint, identical (infinity)}, # The number of levels to UnVeil
-#    $)
-#
-#    description "UnVeil the expression <x> up to <n> levels.";
-#
-#    local out;
-#    option remember;
-#
-#    if (nargs = 1) then
-#      return UnVeil(x, 1);
-#    elif (nargs = 2) and (n = 0) then
-#      return x;
-#    elif x::atomic then
-#      return x;
-#    else
-#      return map(UnVeil, x, n-1);
-#    end if;
-#  end proc: # UnVeil
+  Unveil := proc(
+    x,                                    # The expression to be Unveiled
+    n::{nonnegint, identical (infinity)}, # The number of levels to Unveil
+    $)
 
-      UnVeil := proc( c, ilevel::{nonnegint,infinity} )
-         local a, b, i, level, label;
-         description "reveal expressions hidden behind labels.";
-	 label := `if`(procname::indexed, op(procname), '_V');
-         level := `if`( nargs<2, 1, min(LastUsed[label]+1,ilevel) );
-         a := c;
-         # Always do at least 1
-         b := eval( a, [seq(label[i]=UnVeilTable[label,i],i=1..LastUsed[label])] );
-         from 2 to level while not Testzero(a-b) do
-            a := b;
-            b := eval( a, [seq(label[i]=UnVeilTable[label,i],i=1..LastUsed[label])] );
-         end do;
-         b;
-      end proc;
+    description "Unveil the expression <x> up to <n> levels.";
 
-      # Scope LastUsed etc and use option remember to detect duplicates.
-      # There is no nontrivial storage duplication because objects are hashed and
-      # stored uniquely.  All this costs is a pointer.
-      auxiliary := proc( c, label )
-         option remember;
-         unprotect(LastUsed);
-         LastUsed[label] := LastUsed[label] + 1;
-         protect(LastUsed);
-         UnVeilTable[ label, LastUsed[label] ] := c;
-         label[ LastUsed[label] ]
-      end proc:
+    local out;
+    option remember;
 
+    if (nargs = 1) then
+      return Unveil(x, 1);
+    elif (nargs = 2) and (n = 0) then
+      return x;
+    elif x::atomic then
+      return x;
+    else
+      return map(Unveil, x, n-1);
+    end if;
+  end proc: # Unveil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -355,7 +292,7 @@ Veil := proc( coefficient )
     local i;
 
     for i from 1 to LastUsed[label] do
-      print(label[i] = UnVeil[label](label[i], 1));
+      print(label[i] = UnVeilTable[label[i]]);
     end do;
   end proc: # ShowVeil
 
@@ -363,7 +300,7 @@ Veil := proc( coefficient )
 
   SubsVeil := proc(
     label::{symbol}, # The label of the veiling table to be shown
-    x,               # The expression to substitute
+    x::{Vector},     # The expression to substitute
     $)
 
     description "Substitute the veiling variables of the veiling label <label> "
@@ -371,8 +308,7 @@ Veil := proc( coefficient )
 
     local i, sub_vec;
 
-    #sub_vec := [seq(label[i] = UnVeilTable[label[i]], i = 1..LastUsed[label])]:
-    sub_vec := [seq(label[i] = UnVeil[label](label[i], i), i = 1..LastUsed[label])]:
+    sub_vec := [seq(label[i] = UnVeilTable[label[i]], i = 1..LastUsed[label])]:
     return subs(op(ListTools[Reverse](sub_vec)), x);
   end proc: # SubsVeil
 
@@ -387,9 +323,7 @@ Veil := proc( coefficient )
     local i;
 
     subsop(4 = NULL, eval(Signature));
-    unprotect(LastUsed);
     LastUsed[label] := 0;
-    protect(LastUsed);
     UnVeilTable := table();
     return NULL;
   end proc: # ForgetVeil
@@ -444,10 +378,11 @@ Veil := proc( coefficient )
       p := row;
       flag := evalb(Strategy_Zero(M[r[row], kp]) = 0);
       for i from (row + 1) to n do
+        # Once a pivot is found -- not "best"!
         if flag or Strategy_Pivots(M[r[i], kp], M[r[p], kp]) and
             not (Strategy_Zero(M[r[i], kp]) = 0) then
           p := i;
-          break; # Once a pivot is found -- not "best"!
+          break;
         end if;
       end do;
 
@@ -456,7 +391,6 @@ Veil := proc( coefficient )
 
       if (Strategy_Zero(M[r[p], kp]) = 0) then
 
-        print(row, kp, r[p], M[r[p], kp]);
         WARNING(
           "LULEM::SquareLUwithpivoting(...): the matrix appears to be singular."
           );
@@ -510,7 +444,7 @@ Veil := proc( coefficient )
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  # Solve the linear system Ax=b given the LU decomposition (PA=LU) in NAG-style.
+  # Solve the linear system Ax=b given the LU decomposition (PA=LU).
   # NOTE: The pivot vector r is returned from SquareLUwithpivoting function.
   SolveSquareLUpivot := proc(
     A::{Matrix},                   # Linear system matrix A
@@ -543,18 +477,14 @@ Veil := proc( coefficient )
     userinfo(3, SolveSquareLUpivot,`n`, n, `y`, y);
     y[1] := normalizer(b[r[1]]);
     for i from 2 to n do
-        #y[i] := normalizer(b[r[i]]) - add(normalizer(A[r[i], j] * y[j]), j = 1..i-1);
-        y[i] := normalizer(b[r[i]]) - add(normalizer(A[i, j] * y[j]), j = 1..i-1);
+        y[i] := normalizer(b[r[i]]) - add(normalizer(A[r[i], j] * y[j]), j = 1..i-1);
     end do;
 
     # Perform backward substitution to solve Ux=y
-    #x[n] := normalizer(y[n]/A[r[n], n]);
-    x[n] := normalizer(y[n]/A[n, n]);
+    x[n] := normalizer(y[n]/A[r[n], n]);
     for i from n-1 to 1 by -1 do
-      #s := normalizer(y[i]) - add(normalizer(A[r[i], j] * x[j]), j = i+1..n);
-      s := normalizer(y[i]) - add(normalizer(A[i, j] * x[j]), j = i+1..n);
-      #x[i] := normalizer(s/A[r[i], i]);
-      x[i] := normalizer(s/A[i, i]);
+      s := normalizer(y[i]) - add(normalizer(A[r[i],j] * x[j]), j = i+1..n);
+      x[i] := normalizer(s/A[r[i], i]);
     end do;
 
     # Return solution vector x
@@ -590,6 +520,11 @@ Veil := proc( coefficient )
     printf("LU_NAG matrix...      ");
     LU_NAG := L + U - Matrix(LinearAlgebra[RowDimension](L), shape = identity);
     printf("DONE\n");
+
+    #print(LinearAlgebra[Diagonal](L), 'L' = L);
+    #print(LinearAlgebra[Diagonal](U), 'U' = U);
+    #print('r' = r);
+    #print('LU_NAG' = LU_NAG);
 
     # Solve the linear system Ax=b given the LU decomposition (PA=LU).
     printf("SolveSquareLUpivot... ");
