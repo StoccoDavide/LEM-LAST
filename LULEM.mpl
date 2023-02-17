@@ -131,7 +131,7 @@ LULEM := module()
     description "Initialize 'LULEM' module internal variables";
 
     # Define module variables
-    UnVeilTable := table();
+    UnVeilTable := table('sparse');
   end proc: # InitLULEM
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -199,7 +199,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  NextLabel := proc(
+  NextLabel := proc( # FIXME: NOT USED
     label::{symbol},
     vars::{set},
     $)
@@ -273,16 +273,16 @@ LULEM := module()
 
     description "UnVeil the expression <x> up to <n> levels.";
 
-    local a, b, i, level, label;
+    local a, b, level, label;
 
     label := `if`(procname::indexed, op(procname), '_V');
     level := `if`(nargs<2, 1, min(LastUsed[label]+1, n));
     a := x;
     # Always do at least 1 unveiling
-    b := eval(a, [seq(label[i] = UnVeilTable[label,i], i = 1..LastUsed[label])]);
+    b := eval(a, op(eval(UnVeilTable[label]))[2]);
     from 2 to level while not Testzero(a - b) do
       a := b;
-      b := eval(a, [seq(label[i] = UnVeilTable[label,i], i = 1..LastUsed[label])]);
+      b := eval(a, op(eval(UnVeilTable[label]))[2]);
     end do;
     return b;
   end proc;
@@ -303,7 +303,12 @@ LULEM := module()
     unprotect(LastUsed);
     LastUsed[label] := LastUsed[label] + 1;
     protect(LastUsed);
-    UnVeilTable[label, LastUsed[label]] := x;
+    if LastUsed[label] = 1 then
+      UnVeilTable[label] := table('sparse');
+      UnVeilTable[label][label[LastUsed[label]]] := x;
+    else
+      UnVeilTable[label][label[LastUsed[label]]] := x;
+    end if;
     return label[LastUsed[label]]
   end proc: # auxiliary;
 
@@ -325,8 +330,7 @@ LULEM := module()
     $)
 
     description "Return a list of the veiling variables labelled as <label>.";
-
-    return [seq(label[i] = UnVeil[label](label[i], 1), i = 1..LastUsed[label])]:
+    return op(eval(UnVeilTable[label]))[2]:
   end proc: # ListVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -339,7 +343,11 @@ LULEM := module()
     description "Substitute the reversed veiling variables of the veiling label "
       "<label> in the expression <x>.";
 
-    return subs(op(ListTools[Reverse](ListVeil(label))), x);
+    if x::atomic then
+      return UnVeil[label](x, infinity);
+    else
+      return map(UnVeil[label], x, infinity);
+    end;
   end proc: # SubsVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -352,11 +360,12 @@ LULEM := module()
 
     local i;
 
-    subsop(4 = NULL, eval(Signature));
+    # subsop(4 = NULL, eval(Signature)); # FIXME: Signature only used here
     unprotect(LastUsed);
     LastUsed[label] := 0;
     protect(LastUsed);
-    UnVeilTable := table();
+    UnVeilTable[label] := evaln(UnVeilTable[label]);
+    forget(auxiliary);
     return NULL;
   end proc: # ForgetVeil
 
