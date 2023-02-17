@@ -131,7 +131,7 @@ LULEM := module()
     description "Initialize 'LULEM' module internal variables";
 
     # Define module variables
-    UnVeilTable := table('sparse');
+    UnVeilTable := table('sparse' = table('sparse' = (0 = 0)));
   end proc: # InitLULEM
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -304,7 +304,7 @@ LULEM := module()
     LastUsed[label] := LastUsed[label] + 1;
     protect(LastUsed);
     if LastUsed[label] = 1 then
-      UnVeilTable[label] := table('sparse');
+      UnVeilTable[label] := table('sparse' = (0 = 0));
       UnVeilTable[label][label[LastUsed[label]]] := x;
     else
       UnVeilTable[label][label[LastUsed[label]]] := x;
