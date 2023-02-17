@@ -21,6 +21,7 @@
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+unprotect(LULEM);
 LULEM := module()
 
   # Exported variables
@@ -120,6 +121,10 @@ LULEM := module()
   ModuleUnload := proc()
 
     description "Module 'LULEM' module unload procedure";
+
+    unprotect(LastUsed);
+    LastUsed := NULL;
+    UnVeilTable := NULL;
 
     printf("Unloading 'LULEM'\n");
   end proc: # ModuleUnload
@@ -330,7 +335,7 @@ LULEM := module()
     $)
 
     description "Return a list of the veiling variables labelled as <label>.";
-    return op(eval(UnVeilTable[label]))[2]:
+    return sort(op(eval(UnVeilTable[label]))[2]):
   end proc: # ListVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -343,11 +348,7 @@ LULEM := module()
     description "Substitute the reversed veiling variables of the veiling label "
       "<label> in the expression <x>.";
 
-    if x::atomic then
-      return UnVeil[label](x, infinity);
-    else
-      return map(UnVeil[label], x, infinity);
-    end;
+    return subs(op(ListTools[Reverse](ListVeil(label))), x);
   end proc: # SubsVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -709,7 +710,7 @@ LULEM := module()
     description "Pivoting strategy: choose the pivot with the largest numeric "
       "value between expressions <x> and <y>.";
 
-    return evalb((abs(x) - abs(y)) > 0);
+    return evalb(evalf((abs(x) - abs(y)) > 0));
   end proc: # PivotStrategy_numeric
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
