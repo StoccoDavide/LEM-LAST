@@ -394,9 +394,9 @@ LULEM := module()
   LUD := proc(
     A::{Matrix},                   # Linear system matrix A
     Q::{symbol},                   # Symbol for the veiling
-    Strategy_Veiling::{procedure}, # Veiling strategy
-    Strategy_Pivots::{procedure},  # Pivoting strategy procedure
-    Strategy_Zero::{procedure},    # Zero recognition strategy procedure
+    Strategy_Veiling::{procedure} := VeilingStrategy_n,    # Veiling strategy
+    Strategy_Pivots::{procedure} := PivotStrategy_Slength, # Pivoting strategy procedure
+    Strategy_Zero::{procedure} := ZeroStrategy_length,     # Zero recognition strategy procedure
     $)
 
     description "Compute the LU decomposition of a square matrix <A> using the "
@@ -407,7 +407,7 @@ LULEM := module()
       row, flag, z;
 
     # Copy the input matrix
-    M := copy(LU_NAG);
+    M := copy(A);
     n := LinearAlgebra[RowDimension](M):
     m := LinearAlgebra[ColumnDimension](M);
 
@@ -525,7 +525,7 @@ LULEM := module()
     userinfo(2, SolvePivotingLU, `b`, b, `r`, r);
 
     # Get number of rows in matrix A
-    n := LinearAlgebra[RowDimension](A);
+    n := LinearAlgebra[RowDimension](LU_NAG);
 
     # Create vector for solution of Ly=Pb
     y := Vector(n);
@@ -539,14 +539,14 @@ LULEM := module()
     userinfo(3, SolvePivotingLU,`n`, n, `y`, y);
     y[1] := normalizer(b[r[1]]);
     for i from 2 to n do
-        y[i] := normalizer(b[r[i]]) - add(normalizer(A[i, j] * y[j]), j = 1..i-1);
+        y[i] := normalizer(b[r[i]]) - add(normalizer(LU_NAG[i, j] * y[j]), j = 1..i-1);
     end do;
 
     # Perform backward substitution to solve Ux=y
-    x[n] := normalizer(y[n]/A[n, n]);
+    x[n] := normalizer(y[n]/LU_NAG[n, n]);
     for i from n-1 to 1 by -1 do
-      s := normalizer(y[i]) - add(normalizer(A[i, j] * x[j]), j = i+1..n);
-      x[i] := normalizer(s/A[i, i]);
+      s := normalizer(y[i]) - add(normalizer(LU_NAG[i, j] * x[j]), j = i+1..n);
+      x[i] := normalizer(s/LU_NAG[i, i]);
     end do;
 
     # Return solution vector x
@@ -559,9 +559,9 @@ LULEM := module()
     A::{Matrix},                   # Linear system matrix A
     b::{Vector},                   # Linear system vector b
     Q::{symbol},                   # Symbol for the veiling
-    Strategy_Veiling::{procedure}, # Veiling strategy
-    Strategy_Pivots::{procedure},  # Pivoting strategy procedure
-    Strategy_Zero::{procedure},    # Zero recognition strategy procedure
+    Strategy_Veiling::{procedure} := VeilingStrategy_n,    # Veiling strategy
+    Strategy_Pivots::{procedure} := PivotStrategy_Slength, # Pivoting strategy procedure
+    Strategy_Zero::{procedure} := ZeroStrategy_length,     # Zero recognition strategy procedure
     $)
 
     description "Solve the linear system Ax=b using LULEM algorithm, privided the "
