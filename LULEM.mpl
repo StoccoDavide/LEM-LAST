@@ -392,17 +392,16 @@ LULEM := module()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   LUD := proc(
-    LU_NAG::{Matrix},              # Compact LU matrix (NAG-style form)
+    A::{Matrix},                   # Linear system matrix A
     Q::{symbol},                   # Symbol for the veiling
     Strategy_Veiling::{procedure}, # Veiling strategy
     Strategy_Pivots::{procedure},  # Pivoting strategy procedure
     Strategy_Zero::{procedure},    # Zero recognition strategy procedure
     $)
 
-    description "Compute the LU decomposition of a square matrix provided the "
-      "NAG-style LU matrix <LU_NAG> using the LEM strategy <Strategy_Veiling>, "
-      "the veiling symbol <Q>, the pivoting strategy <Strategy_Pivots> and the "
-      "zero recognition strategy <Strategy_Zero>.";
+    description "Compute the LU decomposition of a square matrix <A> using the "
+      "LEM strategy <Strategy_Veiling>, the veiling symbol <Q>, the pivoting "
+      "strategy <Strategy_Pivots> and the zero recognition strategy <Strategy_Zero>.";
 
     local P, M, n, k, i, ii, j, m, L, U, mltip, l, r, kp, p, temp, normalize,
       row, flag, z;
@@ -510,7 +509,7 @@ LULEM := module()
   # Solve the linear system Ax=b given the LU decomposition (PA=LU) in NAG-style.
   # NOTE: The pivot vector r is returned from LUD function.
   SolvePivotingLU := proc(
-    A::{Matrix},                   # Linear system matrix A
+    LU_NAG::{Matrix},              # Compact LU matrix (NAG-style form)
     r::{Vector},                   # Pivot vector
     b::{Vector},                   # Linear system vector b
     Q::{symbol},                   # Symbol for the veiling
@@ -518,8 +517,8 @@ LULEM := module()
     $)
 
     description "Solve the linear system Ax=b given the LU decomposition (PA=LU) "
-      "privided the matrix <A>, the pivot vector <r>, the vector <b>, the veiling "
-      "label <Q> and the veiling strategy <Strategy_Veiling> for the veiling.";
+      "provided the NAG_style matrix <LU_NAG>, the pivot vector <r>, the vector <b>, "
+      "the veiling label <Q> and the veiling strategy <Strategy_Veiling> for the veiling.";
 
     local y, x, i, s, j, n, normalizer:
 
