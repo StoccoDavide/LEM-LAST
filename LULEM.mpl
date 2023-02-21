@@ -1,23 +1,30 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # #
-#          _    _   _ _     _____ __  __          #
-#         | |  | | | | |   | ____|  \/  |         #
-#         | |  | | | | |   |  _| | |\/| |         #
-#         | |__| |_| | |___| |___| |  | |         #
-#         |_____\___/|_____|_____|_|  |_|         #
-# LU Decomposition for Large Expression Matrices  #
-# # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#            _    _   _ _     _____ __  __            #
+#           | |  | | | | |   | ____|  \/  |           #
+#           | |  | | | | |   |  _| | |\/| |           #
+#           | |__| |_| | |___| |___| |  | |           #
+#           |_____\___/|_____|_____|_|  |_|           #
+#  LU Decomposition with Large Expression Management  #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Authors: Davide Stocco and Matteo Larcher
+# Authors: Davide Stocco, Matteo Larcher, Wenqin Zhou, Jacques Carette and
+#          Robert M. Corless
 # Date:    12/01/2023
 
 # This is a module for the LULEM package. It contains the functions to solve
-# systems of linear equations with large expressions. The module uses the LU
-# decomposition of the matrix of the system. The module is hopefully a better
-# version of the code provided in the following PhD thesis:
+# systems of linear equations with large expressions management. The module uses
+# the pivoting LU decomposition to solve the system. The module is hopefully an
+# improved version of the code provided in the following PhD thesis:
 #
 #   Wenqin Zhou, Symbolic Computation Techniques for Solveing Large Expressions
 #   Problems from Mathematics and Engineering (2007), Faculty of Graduate Studies,
 #   The University of Western Ontario London, Ontario, Canada.
+#
+# We would like to thank Jacques Carette for providing the original code that we
+# have used to develop this module.
+#
+# The module is distributed under the BSD 3-clause License. See the LICENSE file
+# for more information.
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -46,9 +53,7 @@ LULEM := module()
           PivotStrategy_numeric,
           ZeroStrategy_length,
           ZeroStrategy_normalizer,
-          Info,
-          LastUsed,
-          License;
+          LastUsed;
 
   # Local variables
   local   ModuleLoad,
@@ -91,9 +96,9 @@ LULEM := module()
 
     # Display module init message
     printf(cat(
-      "'LULEM' module version beta-0.0, ",
-      "MIT License - Copyright (C) 2023, D. Stocco & M. Larcher, ",
-      "University of Trento, Italy"
+      "'LULEM' module version 1.0, ",
+      "BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, ",
+      "E. Bertolazzi, W. Zhou, J. Carette and R. M. Corless."
       ));
 
     # Library path
@@ -392,11 +397,11 @@ LULEM := module()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   LUD := proc(
-    A::{Matrix},                   # Linear system matrix A
-    Q::{symbol},                   # Symbol for the veiling
-    Strategy_Veiling::{procedure} := VeilingStrategy_n,    # Veiling strategy
-    Strategy_Pivots::{procedure} := PivotStrategy_Slength, # Pivoting strategy procedure
-    Strategy_Zero::{procedure} := ZeroStrategy_length,     # Zero recognition strategy procedure
+    A::{Matrix},                                            # Linear system matrix A
+    Q::{symbol},                                            # Symbol for the veiling
+    Strategy_Veiling::{procedure} := VeilingStrategy_n,     # Veiling strategy
+    Strategy_Pivots::{procedure}  := PivotStrategy_Slength, # Pivoting strategy procedure
+    Strategy_Zero::{procedure}    := ZeroStrategy_length,   # Zero recognition strategy procedure
     $)
 
     description "Compute the LU decomposition of a square matrix <A> using the "
@@ -558,7 +563,7 @@ LULEM := module()
   Solve := proc(
     A::{Matrix},                   # Linear system matrix A
     b::{Vector},                   # Linear system vector b
-    Q::{symbol},                   # Symbol for the veiling
+    Q::{symbol, function},         # Symbol for the veiling
     Strategy_Veiling::{procedure} := VeilingStrategy_n,    # Veiling strategy
     Strategy_Pivots::{procedure} := PivotStrategy_Slength, # Pivoting strategy procedure
     Strategy_Zero::{procedure} := ZeroStrategy_length,     # Zero recognition strategy procedure
@@ -742,70 +747,6 @@ LULEM := module()
 
     return Normalizer(x)
   end proc: # ZeroStrategy_normalizer
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  #   __  __ _
-  #  |  \/  (_)___  ___
-  #  | |\/| | / __|/ __|
-  #  | |  | | \__ \ (__
-  #  |_|  |_|_|___/\___|
-  #
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  Info := proc(
-    $)::{nothing};
-
-    description "Print the information about the package.";
-
-    printf(cat(
-      "This is a module for the LULEM package. It contains the functions to solve\n",
-      "systems of linear equations with large expressions. The module uses the LU\n",
-      "decomposition of the matrix of the system. The module is hopefully a better\n",
-      "version of the code provided in the following PhD thesis:\n",
-      "\n",
-      "  Wenqin Zhou, Symbolic Computation Techniques for Solveing Large Expressions\n",
-      "  Problems from Mathematics and Engineering (2007), Faculty of Graduate\n",
-      "  Studies, The University of Western Ontario London, Ontario, Canada.\n"
-    ));
-
-    return NULL;
-  end proc: # Info
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  License := proc(
-    $)::{nothing};
-
-    description "Print the license of the package.";
-
-    printf(cat(
-      "MIT License\n",
-      "\n",
-      "Copyright (c) 2023, Davide Stocco and Matteo Larcher\n",
-      "\n",
-      "Permission is hereby granted, free of charge, to any person obtaining a copy\n",
-      "of this software and associated documentation files (the ""Software""), to deal\n",
-      "in the Software without restriction, including without limitation the rights\n",
-      "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n",
-      "copies of the Software, and to permit persons to whom the Software is\n",
-      "furnished to do so, subject to the following conditions:\n",
-      "\n",
-      "The above copyright notice and this permission notice shall be included in all\n",
-      "copies or substantial portions of the Software.\n",
-      "\n",
-      "THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n",
-      "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n",
-      "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n",
-      "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n",
-      "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n",
-      "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n",
-      "SOFTWARE.\n"
-    ));
-
-    return NULL;
-  end proc: # License
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
