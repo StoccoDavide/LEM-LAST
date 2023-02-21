@@ -32,7 +32,7 @@ We would like to thank *Jacques Carette* for providing the original code that we
   Department of Applied Mathematics \
   University of Western Ontario \
 
-- *Jacques Carette*
+- *Jacques Carette* \
   Department of Computing and Software \
   McMaster University
 
