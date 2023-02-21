@@ -26,7 +26,7 @@ We would like to thank *Jacques Carette* for providing the original code that we
 
 - *Enrico Bertolazzi* \
   Department of Industrial Engineering \
-  University of Trento \
+  University of Trento
 
 - *Wenqin Zhou*
 
