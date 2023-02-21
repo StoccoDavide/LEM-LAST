@@ -30,7 +30,7 @@ We would like to thank *Jacques Carette* for providing the original code that we
 
 - *Wenqin Zhou* (former affiliation) \
   Department of Applied Mathematics \
-  University of Western Ontario \
+  University of Western Ontario
 
 - *Jacques Carette* \
   Department of Computing and Software \
