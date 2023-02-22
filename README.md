@@ -14,6 +14,7 @@ To install the package you must have first installed Maple. Then copy the releas
 - OSX: `/Library/Frameworks/Maple.framework/Versions/2017/toolbox`;
 - Windows: `C:/Programs/Maple/toolbox/`;
 - Linux: `???`.
+
 If the toolbox folder does not exist, create it.
 
 Then load the library in a Maple worksheet or document by typing:
