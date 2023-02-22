@@ -10,10 +10,11 @@ We would like to thank *Jacques Carette* for providing the original code that we
 
 ## Installation
 
-To install the package you must have first installed Maple. Then copy the released MLA (Maple Library Archive) file `LULEM.mla` in the toolbox folder of Maple installation:
-- OSX: `/Library/Frameworks/Maple.framework/Versions/2017/toolbox`;
+To install the package you must have first installed Maple. Then copy the released MLA (Maple Library Archive) file `LULEM.mla` in the toolbox folder of Maple installation, which should be:
+
+- OSX: `/Library/Frameworks/Maple.framework/Versions/20XX/toolbox` (susbitutite the `20XX` version with the one you have installed);
 - Windows: `C:/Programs/Maple/toolbox/`;
-- Linux: `???`.
+- Linux: `???` (if you managed to install Linux probably you know better than me where is the right folder 🫡).
 
 If the toolbox folder does not exist, create it.
 
@@ -45,20 +46,32 @@ Generate a linear system of the type Ax=B
 Perform the LU decomposition
 > P, L, U, r := LUD(A, Q, VeilingStrategy, PivotStrategy, ZeroStrategy);
 
-Let us see how many veiling variables we have
-> LastUsed[Q];
-
-Let us see the veiling variables
-> ShowVeil(Q);
-
-But not we want to forget about them
-> ForgetVeil(Q);
-
 Check the LU decomposition
 > simplify(SubsVeil(Q, P.A -~ L.U));
 
+Let us see how many Q veiling variables we have
+> LastUsed[Q];
+
+Let us see the Q veiling variables
+> ShowVeil(Q);
+
+But now we want to forget about the Q veiling variables
+> ForgetVeil(Q);
+
+Now let us find the solution of the linear system
+> sol := Solve(A, B, K, VeilingStrategy, PivotStrategy, ZeroStrategy);
+
 Check the solution
-> simplify(SubsVeil(Q, A.sol-B)):
+> simplify(SubsVeil(K, A.sol-B)):
+
+Let us see how many K veiling variables we have
+> LastUsed[K];
+
+Let us see the K veiling variables
+> ShowVeil(K);
+
+But now we want to forget about the K veiling variables
+> ForgetVeil(K);
 ```
 
 Notice that the available veiling, pivoting and zero detection strategies should be chosen between:
