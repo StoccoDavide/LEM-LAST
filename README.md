@@ -39,9 +39,12 @@ In case you are lazy as I am here is a simple worked example.
 > with(LULEM);
 
 Generate a linear system of the type Ax=B
-> D := 3;
-> A := Matrix(D, D, symbol = a):
-> B := Vector(D, symbol = b);
+> d := 3;
+> A := Matrix(d, d, symbol = a);
+> B := Vector(d, symbol = b);
+
+Set A[1,1] element equal to zero to force permutation (optional)
+> A[1,1] := 0;
 
 Perform the LU decomposition
 > P, L, U, r := LUD(A, Q, VeilingStrategy, PivotStrategy, ZeroStrategy);
