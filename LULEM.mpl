@@ -96,9 +96,9 @@ LULEM := module()
 
     # Display module init message
     printf(cat(
-      "'LULEM' module version 1.0, ",
+      "'LULEM' module version 1.1, ",
       "BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, ",
-      "E. Bertolazzi, W. Zhou, J. Carette and R. M. Corless."
+      "E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless."
       ));
 
     # Library path

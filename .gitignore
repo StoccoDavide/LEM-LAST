@@ -36,5 +36,7 @@
 *.bak
 
 # Folders
-.DS_Store
 ./lib
+
+# MacOS
+.DS_Store
