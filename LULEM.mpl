@@ -98,7 +98,7 @@ LULEM := module()
     printf(cat(
       "'LULEM' module version 1.1, ",
       "BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, ",
-      "E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless."
+      "E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
       ));
 
     # Library path
@@ -506,7 +506,11 @@ LULEM := module()
     P := PermutationMatrix(r);
 
     # Return the LU decomposition and the pivot vector
-    return P, L, U, r;
+    if (_nresults = 4) then
+      return P, L, U, r;
+    else
+      return P, L, U;
+    end if;
   end proc: # LUD
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -544,7 +548,7 @@ LULEM := module()
     userinfo(3, SolvePivotingLU,`n`, n, `y`, y);
     y[1] := normalizer(b[r[1]]);
     for i from 2 to n do
-        y[i] := normalizer(b[r[i]]) - add(normalizer(LU_NAG[i, j] * y[j]), j = 1..i-1);
+      y[i] := normalizer(b[r[i]]) - add(normalizer(LU_NAG[i, j] * y[j]), j = 1..i-1);
     end do;
 
     # Perform backward substitution to solve Ux=y
@@ -586,7 +590,13 @@ LULEM := module()
     x := SolvePivotingLU(LU_NAG, r, b, Q, Strategy_Veiling);
 
     # Return solution vector x and the LU decomposition data
-    return x; #, P, L, U, r;
+    if (_nresults = 5) then
+      return x, P, L, U, r;
+    elif (_nresults = 4) then
+      return x, P, L, U;
+    else
+      return x;
+    end if;
   end proc: # Solve
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

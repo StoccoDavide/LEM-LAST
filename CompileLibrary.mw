@@ -111,7 +111,8 @@ currentdir();</Text-field>
 <Group labelreference="L256749" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">read(&quot;./LULEM.mpl&quot;);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.</Text-field>
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+</Text-field>
 </Output>
 </Group>
 <Group hide-input="false" labelreference="L256755" drawlabel="true">
@@ -170,7 +171,8 @@ Unloading 'LULEM'
 <Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LULEM);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.</Text-field>
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+</Text-field>
 </Output>
 <Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZQLUkjbWlHRiQ2JVErRm9yZ2V0VmVpbEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEkTFVERidGMkY1RjgtRi82JVEpTGFzdFVzZWRGJ0YyRjVGOC1GLzYlUSlMaXN0VmVpbEYnRjJGNUY4LUYvNiVRMlBlcm11dGF0aW9uTWF0cml4RidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9MaW5kZXRzRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9MbGVuZ3RoRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9TaW5kZXRzRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9TbGVuZ3RoRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9udW1lcmljRidGMkY1RjgtRi82JVExU2V0TW9kdWxlT3B0aW9uc0YnRjJGNUY4LUYvNiVRKVNob3dWZWlsRidGMkY1RjgtRi82JVEmU29sdmVGJ0YyRjVGOC1GLzYlUSlTdWJzVmVpbEYnRjJGNUY4LUYvNiVRJ1VuVmVpbEYnRjJGNUY4LUYvNiVRJVZlaWxGJ0YyRjVGOC1GLzYlUTJWZWlsaW5nU3RyYXRlZ3lfTEYnRjJGNUY4LUYvNiVRM1ZlaWxpbmdTdHJhdGVneV9MQkYnRjJGNUY4LUYvNiVRM1ZlaWxpbmdTdHJhdGVneV9Mc0YnRjJGNUY4LUYvNiVRMlZlaWxpbmdTdHJhdGVneV9uRidGMkY1RjgtRi82JVE0WmVyb1N0cmF0ZWd5X2xlbmd0aEYnRjJGNUY4LUYvNiVROFplcm9TdHJhdGVneV9ub3JtYWxpemVyRidGMkY1LyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0ZARjxGPC8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7Ric=">NzhJK0ZvcmdldFZlaWxHNiJJJExVREdGJEkpTGFzdFVzZWRHRiRJKUxpc3RWZWlsR0YkSTJQZXJtdXRhdGlvbk1hdHJpeEdGJEk2UGl2b3RTdHJhdGVneV9MaW5kZXRzR0YkSTZQaXZvdFN0cmF0ZWd5X0xsZW5ndGhHRiRJNlBpdm90U3RyYXRlZ3lfU2luZGV0c0dGJEk2UGl2b3RTdHJhdGVneV9TbGVuZ3RoR0YkSTZQaXZvdFN0cmF0ZWd5X251bWVyaWNHRiRJMVNldE1vZHVsZU9wdGlvbnNHRiRJKVNob3dWZWlsR0YkSSZTb2x2ZUdGJEkpU3Vic1ZlaWxHRiRJJ1VuVmVpbEdGJEklVmVpbEdGJEkyVmVpbGluZ1N0cmF0ZWd5X0xHRiRJM1ZlaWxpbmdTdHJhdGVneV9MQkdGJEkzVmVpbGluZ1N0cmF0ZWd5X0xzR0YkSTJWZWlsaW5nU3RyYXRlZ3lfbkdGJEk0WmVyb1N0cmF0ZWd5X2xlbmd0aEdGJEk4WmVyb1N0cmF0ZWd5X25vcm1hbGl6ZXJHRiQ=</Equation></Text-field>
 </Output>

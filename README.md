@@ -8,7 +8,7 @@ We would like to thank *Jacques Carette* for providing the original code that we
 
 To install the package you must have first installed Maple. Then copy the released MLA (Maple Library Archive) file `LULEM.mla` in the toolbox folder of Maple installation, which should be:
 
-- OSX: `/Library/Frameworks/Maple.framework/Versions/20XX/toolbox` (susbitutite the `20XX` version with the one you have installed);
+- OSX: `/Library/Frameworks/Maple.framework/Versions/Current/toolbox`;
 - Windows: `C:/Programs/Maple/toolbox/`;
 - Linux: `???` (if you managed to install Linux probably you know better than me where is the right folder 🫡).
 
@@ -133,6 +133,7 @@ ZeroStrategy    -> ZeroStrategy_length
   school = {University of Western Ontario}
 }
 ```
+
 ```
 inproceedings{zhou2006hierarchical,
   title = {Hierarchical representations with signatures for large expression management},
@@ -144,6 +145,7 @@ inproceedings{zhou2006hierarchical,
   organization = {Springer}
 }
 ```
+
 ```
 @inproceedings{carette2006linear,
   title = {Linear algebra using Maple’s LargeExpressions package},
