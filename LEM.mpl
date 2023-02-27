@@ -38,27 +38,24 @@
 
 LEM := module()
 
-  export
-    Veil,
-    UnVeil,
-    VeilLabels,
-    ListVeil,
-    SubsVeil,
-    ForgetVeil,
-    LastUsed;
+  export Veil,
+         UnVeil,
+         VeilLabels,
+         ListVeil,
+         SubsVeil,
+         ForgetVeil,
+         LastUsed;
 
-  local
-    ModuleLoad,
-    ModuleUnload,
-    auxiliary,
-    InitLEM,
-    UnVeilTable,
-    lib_base_path;
+  local  ModuleLoad,
+         ModuleUnload,
+         auxiliary,
+         InitLEM,
+         UnVeilTable,
+         lib_base_path;
 
-  option
-    package,
-    load   = ModuleLoad,
-    unload = ModuleUnload;
+  option package,
+         load   = ModuleLoad,
+         unload = ModuleUnload;
 
   description "Large Expressions Management module";
 
@@ -72,14 +69,12 @@ LEM := module()
 
     local i;
 
-    # Display module init message
     printf(cat(
       "'LEM' module version 1.0, ",
       "BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, ",
       "E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
       ));
 
-    # Library path
     lib_base_path := null;
     for i in [libname] do
       if (StringTools[Search]("LEM", i) <> 0) then
@@ -90,7 +85,6 @@ LEM := module()
       error "Cannot find 'LEM' module" ;
     end if;
 
-    # Initialize the module variables
     InitLEM();
 
     return NULL;
@@ -106,8 +100,6 @@ LEM := module()
     LastUsed := NULL;
     UnVeilTable := NULL;
     unprotect(LEM);
-
-    #printf("Unloading 'LEM'\n");
   end proc: # ModuleUnload
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -116,7 +108,6 @@ LEM := module()
 
     description "Initialize 'LEM' module internal variables";
 
-    # Define module variables
     UnVeilTable := table('sparse' = table('sparse' = (0 = 0)));
   end proc: # InitLEM
 
@@ -270,6 +261,8 @@ LEM := module()
       forget(auxiliary);
     end if;
   end proc: # ForgetVeil
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 end module: # LEM
 
