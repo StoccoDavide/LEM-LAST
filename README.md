@@ -8,11 +8,7 @@ We would like to thank *Jacques Carette* for providing the original code that we
 
 ## Installation
 
-To install the package you must have first installed Maple. Then follow the instructions in one of the following sections.
-
-### Use the precompiled MLA file
-
-Firsly, navigate to the toolbox folder of Maple installation, which should be:
+To install the package you must have first installed Maple. Then navigate to the toolbox folder of Maple installation, which should be:
 - OSX: `/Library/Frameworks/Maple.framework/Versions/Current/toolbox`;
 - Windows: `C:/Programs/Maple/toolbox/`;
 - Linux: `???` (if you managed to install Linux probably you know better than me where is the right folder 🫡).
@@ -25,10 +21,6 @@ Then test the library in a Maple worksheet or document by typing:
 > with(LEM);
 ```
 Alternatively, you can use the `test.mw` file provided in the repository. If the package is loaded without errors, it is done!
-
-### Compile the library manually
-
-This installation option is maintained only for OSX users. It is intended to be used by experienced Maple users that can edit and run the `CompileLibrary.mw` according to their OS.
 
 ## Package description
 
