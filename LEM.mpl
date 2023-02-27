@@ -36,8 +36,6 @@
 # We would like to thank Jacques Carette for providing the original code that
 # have been used to develop this module.
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 LEM := module()
 
   export
@@ -62,19 +60,9 @@ LEM := module()
     load   = ModuleLoad,
     unload = ModuleUnload;
 
-  description
-    "Large Expressions Management module";
+  description "Large Expressions Management module";
 
   LastUsed := table('sparse');
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  #   __  __           _       _
-  #  |  \/  | ___   __| |_   _| | ___
-  #  | |\/| |/ _ \ / _` | | | | |/ _ \
-  #  | |  | | (_) | (_| | |_| | |  __/
-  #  |_|  |_|\___/ \__,_|\__,_|_|\___|
-  #
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -134,15 +122,6 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  #   _____                       _
-  #  | ____|_  ___ __   ___  _ __| |_
-  #  |  _| \ \/ / '_ \ / _ \| '__| __|
-  #  | |___ >  <| |_) | (_) | |  | |_
-  #  |_____/_/\_\ .__/ \___/|_|   \__|
-  #             |_|
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
   Veil := proc(
     x::{anything},
     $)::{anything};
@@ -188,8 +167,7 @@ LEM := module()
     n::{nonnegint, infinity},
     $)::{anything};
 
-    description
-      "UnVeil the expression <x> up to <n> levels.";
+    description "UnVeil the expression <x> up to <n> levels.";
 
     local
       a, b, level, label;
@@ -214,10 +192,10 @@ LEM := module()
     label::{symbol},
     $)::{anything};
 
-    description
-      "Auxiliary procedure to scope LastUsed etc and use option remember to "
-      "detect duplicates. There is no nontrivial storage duplication because "
-      "objects are hashed and stored uniquely. All this costs is a pointer.";
+    description "Auxiliary procedure to scope LastUsed etc and use option "
+      "remember to detect duplicates. There is no nontrivial storage duplication "
+      "because objects are hashed and stored uniquely. All this costs is a "
+      "pointer.";
 
     option remember;
 
