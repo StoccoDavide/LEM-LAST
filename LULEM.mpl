@@ -7,9 +7,15 @@
 #  LU Decomposition with Large Expression Management  #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Authors: Davide Stocco, Matteo Larcher, Wenqin Zhou, Jacques Carette and
-#          Robert M. Corless
-# Date:    12/01/2023
+# LULEM module version 1.1
+# BSD 3-Clause License - Copyright (C) 2023
+#
+# Package created by
+# W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless
+#
+# Extended version by
+# D. Stocco, M. Larcher, E. Bertolazzi
+#
 
 # This is a module for the LULEM package. It contains the functions to solve
 # systems of linear equations with large expressions management. The module uses
@@ -32,46 +38,46 @@ unprotect(LULEM);
 LULEM := module()
 
   # Exported variables
-  export  SetModuleOptions,
-          Veil,
-          UnVeil,
-          ShowVeil,
-          ListVeil,
-          SubsVeil,
-          ForgetVeil,
-          PermutationMatrix,
-          LUD,
-          Solve,
-          VeilingStrategy_n,
-          VeilingStrategy_L,
-          VeilingStrategy_Ls,
-          VeilingStrategy_LB,
-          PivotStrategy_Llength,
-          PivotStrategy_Slength,
-          PivotStrategy_Lindets,
-          PivotStrategy_Sindets,
-          PivotStrategy_numeric,
-          ZeroStrategy_length,
-          ZeroStrategy_normalizer,
-          LastUsed;
+  export SetModuleOptions,
+         Veil,
+         UnVeil,
+         ShowVeil,
+         ListVeil,
+         SubsVeil,
+         ForgetVeil,
+         PermutationMatrices,
+         LUD,
+         Solve,
+         VeilingStrategy_n,
+         VeilingStrategy_L,
+         VeilingStrategy_Ls,
+         VeilingStrategy_LB,
+         PivotStrategy_Llength,
+         PivotStrategy_Slength,
+         PivotStrategy_Lindets,
+         PivotStrategy_Sindets,
+         PivotStrategy_numeric,
+         ZeroStrategy_length,
+         ZeroStrategy_normalizer,
+         LastUsed;
 
   # Local variables
-  local   ModuleLoad,
-          auxiliary,
-          SolvePivotingLU,
-          ModuleUnload,
-          InitLULEM,
-          Protect,
-          NextLabel,
-          Signature,
-          UnVeilTable,
-          lib_base_path;
+  local ModuleLoad,
+        auxiliary,
+        SolvePivotingLU,
+        ModuleUnload,
+        InitLULEM,
+        Protect,
+        ##NextLabel,
+        ##Signature,
+        UnVeilTable,
+        lib_base_path;
 
 
   # Package options
-  option  package,
-          load   = ModuleLoad,
-          unload = ModuleUnload;
+  option package,
+         load   = ModuleLoad,
+         unload = ModuleUnload;
 
   description "LU Decomposition for Large Expression Matrices";
 
@@ -99,7 +105,7 @@ LULEM := module()
       "'LULEM' module version 1.1, ",
       "BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, ",
       "E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
-      ));
+    ));
 
     # Library path
     lib_base_path := null;
@@ -165,65 +171,66 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  Signature := proc(
-    f,           # TODO
-    p::{posint}, # TODO
-    A,           # TODO
-    $)
-
-    description "???"; # TODO
-
-    local t, sig;
-    option remember;
-
-    if (f::'rational') then
-      f mod p;
-    elif (f::'symbol') then
-      Signature(f, p, A) := rand() mod p;
-    elif (f::'indexed') then
-      if type(f, A[anything]) then
-        Signature(UnVeil(f, 1), p, A)
-      else
-        Signature(f, p, A) := rand() mod p;
-      end if;
-    elif (f::`+`) then
-      add(Signature(t, p, A) mod p, t = f) mod p;
-    elif (f::`*`) then
-      sig := 1;
-      for t in f do
-        sig := sig * Signature(t, p, A) mod p;
-      end do;
-      sig;
-    elif f::(anything^rational) then
-      Signature(op(1, f), p, A) &^ op(2, f) mod p;
-    elif f::(anything^polynom) then
-      sig := numtheory['phi'](p);
-      t := Signature(op(2, f), sig, A);
-      Signature(op(1, f), p, A) &^ t mod p;
-    else
-      ERROR(
-        "LULEM::Signature(...): expressions involving %1 not done.", f
-        );
-    end if;
-  end: # Signature
+  ## Signature := proc(
+  ##   f,           # TODO
+  ##   p::{posint}, # TODO
+  ##   A,           # TODO
+  ##   $
+  ## )
+##
+  ##   description "???"; # TODO
+##
+  ##   local  t, sig;
+  ##   option remember;
+##
+  ##   if (f::'rational') then
+  ##     f mod p;
+  ##   elif (f::'symbol') then
+  ##     Signature(f, p, A) := rand() mod p;
+  ##   elif (f::'indexed') then
+  ##     if type(f, A[anything]) then
+  ##       Signature(UnVeil(f, 1), p, A)
+  ##     else
+  ##       Signature(f, p, A) := rand() mod p;
+  ##     end if;
+  ##   elif (f::`+`) then
+  ##     add(Signature(t, p, A) mod p, t = f) mod p;
+  ##   elif (f::`*`) then
+  ##     sig := 1;
+  ##     for t in f do
+  ##       sig := sig * Signature(t, p, A) mod p;
+  ##     end do;
+  ##     sig;
+  ##   elif f::(anything^rational) then
+  ##     Signature(op(1, f), p, A) &^ op(2, f) mod p;
+  ##   elif f::(anything^polynom) then
+  ##     sig := numtheory['phi'](p);
+  ##     t := Signature(op(2, f), sig, A);
+  ##     Signature(op(1, f), p, A) &^ t mod p;
+  ##   else
+  ##     ERROR(
+  ##       "LULEM::Signature(...): expressions involving %1 not done.", f
+  ##     );
+  ##   end if;
+  ## end proc: # Signature
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  NextLabel := proc( # FIXME: NOT USED
-    label::{symbol},
-    vars::{set},
-    $)
-
-    description "Calculate the next veiling label for a given label <lapel> and "
-      "a optional set of variables <vars>.";
-
-    option remember;
-
-    unprotect(LastUsed);
-    LastUsed[label] := LastUsed[label] + 1;
-    protect(LastUsed);
-    label[LastUsed[label], `if`(nargs = 2, vars, NULL)]; # ???
-  end proc: # NextLabel
+  ## NextLabel := proc( # FIXME: NOT USED
+  ##   label::{symbol},
+  ##   vars::{set},
+  ##   $)
+  ##
+  ##   description "Calculate the next veiling label for a given label <lapel> and "
+  ##               "a optional set of variables <vars>.";
+  ##
+  ##   option remember;
+  ##
+  ##   unprotect(LastUsed);
+  ##   LastUsed[label] := LastUsed[label] + 1;
+  ##   protect(LastUsed);
+  ##   label[LastUsed[label], `if`(nargs = 2, vars, NULL)]; # ???
+  ## end proc: # NextLabel
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -248,7 +255,7 @@ LULEM := module()
 
 	  if (label <> eval(label, 2)) then
 	    error "LULEM::Veil(...): label %a is assigned a value already, please save"
-        " its contents and unassign it.", label;
+            " its contents and unassign it.", label;
 	  end if;
 
     # Recognize zero if we can, so that we don't hide zeros.
@@ -305,8 +312,8 @@ LULEM := module()
     $)
 
     description "Auxiliary procedure to scope LastUsed etc and use option "
-      "remember to detect duplicates. There is no nontrivial storage duplication "
-      "because objects are hashed and stored uniquely. All this costs is a pointer.";
+                "remember to detect duplicates. There is no nontrivial storage duplication "
+                "because objects are hashed and stored uniquely. All this costs is a pointer.";
 
     option remember;
 
@@ -377,22 +384,28 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  PermutationMatrix := proc(
+  PermutationMatrices := proc(
     r::{Vector}, # Pivot vector (NAG-style form)
+    c::{Vector}, # Pivot vector (NAG-style form)
     $)
 
     description "Compute the LU decomposition premutation matrix provided the "
-      "NAG-style the pivot vector <r>.";
+                "NAG-style the pivot vector <r>.";
 
-    local dim, out, i;
+    local nr, nc, P, Q, i;
 
-    dim := LinearAlgebra[RowDimension](r):
-    out := Matrix(dim, dim);
-    for i from 1 to dim by 1 do
-      out[i, r[i]] := 1;
+    nr := LinearAlgebra[RowDimension](r):
+    nc := LinearAlgebra[RowDimension](c):
+    P  := Matrix(nr,nr);
+    Q  := Matrix(nc,nc);
+    for i from 1 to nr by 1 do
+      P[i, r[i]] := 1;
     end do;
-    return out;
-  end proc: # PermutationMatrix
+    for i from 1 to nc by 1 do
+      Q[c[i],i] := 1;
+    end do;
+    return P, Q;
+  end proc: # PermutationMatrices
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -405,11 +418,11 @@ LULEM := module()
     $)
 
     description "Compute the LU decomposition of a square matrix <A> using the "
-      "LEM strategy <Strategy_Veiling>, the veiling symbol <Q>, the pivoting "
-      "strategy <Strategy_Pivots> and the zero recognition strategy <Strategy_Zero>.";
+                "LEM strategy <Strategy_Veiling>, the veiling symbol <Q>, the pivoting "
+                "strategy <Strategy_Pivots> and the zero recognition strategy <Strategy_Zero>.";
 
-    local P, M, n, k, i, ii, j, m, L, U, mltip, l, r, kp, p, temp, normalize,
-      row, flag, z;
+    local PP, QQ, LL, DD, UU, M, Mij, Mkk, n, m, nm, i, j, k, mltip, r, c, temp, normalize,
+          row, pivot_is_zero, z;
 
     # Copy the input matrix
     M := copy(A);
@@ -417,99 +430,105 @@ LULEM := module()
     m := LinearAlgebra[ColumnDimension](M);
 
     # Check if the input matrix is square
-    if (m <> n) then
-      ERROR(
-        "LULEM::LUD(...): the input matrix should be square."
-        );
-    end if;
-
-    # L is lower matrix with l's as diagonal entries
-    L := Matrix(LinearAlgebra[IdentityMatrix](n), shape = triangular[lower]);
-
-    # U is upper matrix.
-    U := Matrix(n, n, shape = triangular[upper]):
+    # DA RIMUOVERE
+    #if (m <> n) then
+    #  ERROR( "LULEM::LUD(...): the input matrix should be square." );
+    #end if;
 
     # Create pivot vector
     r := Vector(n, k -> k);
+    c := Vector(m, k -> k);
 
     normalize := z -> `if`(Strategy_Veiling(z) > 0, Veil[Q](z), z);
 
-    # Loop over columns and find the pivot element among the entries M[r[kp], kp],
-    # M[r[kp+1], kp], ... M[r[n], kp] according to different pivoting strategies.
-    # Interchange entries in pivot vector.
+    # Loop over rows and find the pivot element among pivot columns among
+    # the entries M[r[kp], kp], M[r[kp+1], kp], ... M[r[n], kp] of the permuted rows
+    # according to different pivoting strategies.
+    # Interchange entries rows by interchange elements in pivot vector.
 
-    row := 1;
-    for kp from 1 to m while (row <= n) do
-      p := row;
-      flag := evalb(Strategy_Zero(M[r[row], kp]) = 0);
-      for i from (row + 1) to n do
-        if (flag or Strategy_Pivots(M[r[i], kp], M[r[p], kp])) and
-            not (Strategy_Zero(M[r[i], kp]) = 0) then
-          p := i;
-          break; # Once a pivot is found -- not "best"!
-        end if;
+    nm := min(n,m);
+    for k from 1 to nm do
+      # check if M[r[k],c[k]] = 0, if not true it is the pivot
+      Mkk := M[r[k],c[k]];
+      pivot_is_zero := evalb(Strategy_Zero(Mkk) = 0);
+      # search for a nonzero pivot
+      for j from k to m do
+        for i from k to n do
+          Mij := M[r[i],c[j]];
+          if pivot_is_zero then
+            if not evalb(Strategy_Zero(Mij) = 0) then
+              # found better pivot
+              pivot_is_zero := false;
+              (r[i], r[k]) := (r[k], r[i]);
+              (c[j], c[k]) := (c[k], c[j]);
+            end if;
+          elif Strategy_Pivots( Mkk, Mij ) then
+            (r[i], r[k]) := (r[k], r[i]);
+            (c[j], c[k]) := (c[k], c[j]);
+            # break; # Once a pivot is found -- not "best"!
+          end if;
+        end do;
       end do;
 
       # Only when the pivot is not equal to zero, the row elimination is performed
       # (the whole if statement). Else we will continue with the next column.
 
-      if (Strategy_Zero(M[r[p], kp]) = 0) then
-
-        WARNING(
-          "LULEM::LUD(...): the matrix appears to be singular."
-          );
-
-      else
-
-        if (p <> row) then
-          (r[p], r[row]) := (r[row], r[p]);
-        end if;
-
-        userinfo(3, LUD, 'kp', kp, 'r', r);
-
-        # Now do Gauss elimination steps to get new M and also keep L information
-        # in new M. Packing everything into the M matrix during the computation of
-        # the factors. The reason is that this code can be ported to restricted
-        # memory environments, or equally, applied to very large matrices in a
-        # large memory environment.
-
-        for i from (row + 1) to n do
-          mltip := normalize(M[r[i], kp]/M[r[row], kp]);
-          M[r[i], kp] := mltip;
-          for j from (kp + 1) to m do
-            z := M[r[i], j] - mltip * M[r[row], j] ;
-            M[r[i], j] := `if`(Strategy_Veiling(z) > 0, Veil[Q](z), z);
-          end do;
-        end do;
-
-        userinfo(3, LUD, `M`, M);
-
+      if ( pivot_is_zero ) then
+        WARNING( "LULEM::LUD(...): the matrix appears not full rank." );
+        break;
       end if;
-      row := row + 1;
 
+      # userinfo(3, LUD, 'kp', kp, 'r', r);
+
+      # Now do Gauss elimination steps to get new M and also keep L information
+      # in new M. Packing everything into the M matrix during the computation of
+      # the factors. The reason is that this code can be ported to restricted
+      # memory environments, or equally, applied to very large matrices in a
+      # large memory environment.
+
+      Mkk := M[r[k],c[k]];
+      for i from k+1 to n do
+        mltip        := normalize(M[r[i],c[k]]/Mkk);
+        M[r[i],c[k]] := mltip;
+        for j from k+1 to m do
+          z := M[r[i],c[j]] - mltip * M[r[k],c[j]]; # si puo mettere j = c[j]?
+          M[r[i],c[j]] := `if`(Strategy_Veiling(z) > 0, Veil[Q](z), z);
+        end do;
+      end do;
+      # userinfo(3, LUD, `M`, M);
     end do:
 
-    userinfo(2, LUD, `r`, r, `M`, M);
+    #userinfo(2, LUD, `r`, r, `M`, M);
+
+    # L is lower matrix with l's as diagonal entries
+    LL := Matrix(LinearAlgebra[IdentityMatrix](n), shape = triangular[lower]);
+
+    # D is lower matrix with l's as diagonal entries
+    DD := Matrix(n, n, shape = diagonal);
+
+    # U is upper matrix.
+    UU := Matrix(n, m, shape = triangular[upper]);
 
     # Seperate new M into L and U
     for i from 1 to n do
       for j from 1 to m do
+        z := M[r[i],c[j]];
         if (i <= j) then
-          U[i, j] := M[r[i], j];
+          UU[i,j] := z;
         else
-          L[i, j] := M[r[i], j];
+          LL[i,j] := z;
         end if
       end do;
     end do;
 
     # Compute the LU decomposition premutation matrix
-    P := PermutationMatrix(r);
+    PP, QQ := PermutationMatrices(r,c);
 
     # Return the LU decomposition and the pivot vector
-    if (_nresults = 4) then
-      return P, L, U, r;
+    if (_nresults = 5) then
+      return PP, QQ, LL, UU, r;
     else
-      return P, L, U;
+      return PP, QQ, LL, UU;
     end if;
   end proc: # LUD
 
@@ -755,7 +774,7 @@ LULEM := module()
 
     description "Zero recognition strategy: normalizer of expression <x>.";
 
-    return Normalizer(x)
+    return Normalizer(x);
   end proc: # ZeroStrategy_normalizer
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
