@@ -1,8 +1,6 @@
 # LEM (Large Expressions Management)
 
-This is a module for the `LEM` (Large Expressions Management) package. It contains the functions to deal with large expressions management. The module can be used to veil and unveil large expressions to avoid expression swell.
-
-The module is very similar to the 'LargeExpressions' module provided by Maple. The main difference is that the 'LEM' module has some additional built-in functions to display, list and substitute veiled expressions.
+This is a module for the `LEM` (Large Expressions Management) package. It contains the functions to deal with large expressions management. The module can be used to veil and unveil large expressions to avoid expression swell. The module is very similar to the `LargeExpressions` module provided by Maple. The main difference is that the 'LEM' module has some additional built-in functions to display, list and substitute veiled expressions.
 
 The code in this repository hopefully is an improved version of the code provided in Wenqin Zhou's PhD thesis *Symbolic Computation Techniques for Solving Large Expressions*.
 
@@ -14,15 +12,15 @@ To install the package you must have first installed Maple. Then follow the inst
 
 ### Use the precompiled MLA file
 
-Copy the latest [released](https://github.com/StoccoDavide/LEM/releases) MLA (Maple Library Archive) file `LEM.mla` in the toolbox folder of Maple installation, which should be:
-
+Firsly, navigate to the toolbox folder of Maple installation, which should be:
 - OSX: `/Library/Frameworks/Maple.framework/Versions/Current/toolbox`;
 - Windows: `C:/Programs/Maple/toolbox/`;
 - Linux: `???` (if you managed to install Linux probably you know better than me where is the right folder 🫡).
+If the `toolbox` folder does not exist, create it.
 
-If the toolbox folder does not exist, create it.
+Make a folder named `LEM` and inside this folder create anoother one nemed `lib`. Copy the latest [released](https://github.com/StoccoDavide/LEM/releases) MLA (Maple Library Archive) file `LEM.mla` in the `lib` that you have just created.
 
-Then load the library in a Maple worksheet or document by typing:
+Then test the library in a Maple worksheet or document by typing:
 ```
 > with(LEM);
 ```
