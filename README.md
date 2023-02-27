@@ -14,7 +14,7 @@ To install the package you must have first installed Maple. Then navigate to the
 - Linux: `???` (if you managed to install Linux probably you know better than me where is the right folder 🫡).
 If the `toolbox` folder does not exist, create it.
 
-Make a folder named `LEM` and inside this folder create anoother one nemed `lib`. Copy the latest [released](https://github.com/StoccoDavide/LEM/releases) MLA (Maple Library Archive) file `LEM.mla` in the `lib` that you have just created.
+Make a folder named `LEM` and inside this folder create another one named `lib`. Copy the latest [released](https://github.com/StoccoDavide/LEM/releases) MLA (Maple Library Archive) file `LEM.mla` in the `lib` that you have just created.
 
 Then test the library in a Maple worksheet or document by typing:
 ```
