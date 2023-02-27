@@ -2,7 +2,7 @@
 
 This is a module for the `LEM` (Large Expressions Management) package. It contains the functions to deal with large expressions management. The module can be used to veil and unveil large expressions to avoid expression swell. The module is very similar to the `LargeExpressions` module provided by Maple. The main difference is that the 'LEM' module has some additional built-in functions to display, list and substitute veiled expressions.
 
-The code in this repository hopefully is an improved version of the code provided in Wenqin Zhou's PhD thesis *Symbolic Computation Techniques for Solving Large Expressions*.
+The code in this repository is hopefully an improved version of the code provided in Wenqin Zhou's PhD thesis *Symbolic Computation Techniques for Solving Large Expressions*.
 
 We would like to thank *Jacques Carette* for providing the original code that we used to develop this module.
 
