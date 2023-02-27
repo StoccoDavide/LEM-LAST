@@ -39,6 +39,7 @@ LULEM := module()
 
   # Exported variables
   export SetModuleOptions,
+         SetVerbose,
          Veil,
          UnVeil,
          ShowVeil,
@@ -71,7 +72,8 @@ LULEM := module()
         ##NextLabel,
         ##Signature,
         UnVeilTable,
-        lib_base_path;
+        lib_base_path,
+        verbose;
 
 
   # Package options
@@ -148,6 +150,7 @@ LULEM := module()
 
     # Define module variables
     UnVeilTable := table('sparse' = table('sparse' = (0 = 0)));
+    verbose     := false;
   end proc: # InitLULEM
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -159,6 +162,13 @@ LULEM := module()
     #);
 
   end proc: # Protect
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  SetVerbose := proc( value::boolean )
+    verbose := value;
+  end proc:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -429,38 +439,29 @@ LULEM := module()
     n := LinearAlgebra[RowDimension](M):
     m := LinearAlgebra[ColumnDimension](M);
 
-    # Check if the input matrix is square
-    # DA RIMUOVERE
-    #if (m <> n) then
-    #  ERROR( "LULEM::LUD(...): the input matrix should be square." );
-    #end if;
-
     # Create pivot vector
     r := Vector(n, k -> k);
     c := Vector(m, k -> k);
 
+    # check if Veil or not
     normalize := z -> `if`(Strategy_Veiling(z) > 0, Veil[Q](z), z);
 
-    # Loop over rows and find the pivot element among pivot columns among
-    # the entries M[r[kp], kp], M[r[kp+1], kp], ... M[r[n], kp] of the permuted rows
-    # according to different pivoting strategies.
-    # Interchange entries rows by interchange elements in pivot vector.
+    # Gauss Elimination main loop
 
     nm  := min(n,m);
     rnk := nm;
     for k from 1 to nm do
-      printf("Process row N.%d\n",k);
+      if verbose then
+        printf("Process row N.%d\n",k);
+      end;
       # check if M[r[k],c[k]] = 0, if not true it is the pivot
       Mkk := M[r[k],c[k]];
       try
         pivot_is_zero := evalb(Strategy_Zero(SubsVeil(Q,Mkk)) = 0);
         #pivot_is_zero := evalb(Strategy_Zero(Normalizer(Mkk)) = 0);
       catch:
-        printf("Mkk\n");
+        print("divide by 0 or numerical exception\n");
         print(Mkk);
-        ShowVeil(Q);
-        print(SubsVeil(Q,Mkk));
-        print(Normalizer(SubsVeil(Q,Mkk)));
         pivot_is_zero := true;
       end try;
       # search for a nonzero pivot
@@ -471,11 +472,8 @@ LULEM := module()
             Mij_is_zero := evalb(Strategy_Zero(SubsVeil(Q,Mij)) = 0);
             #Mij_is_zero := evalb(Strategy_Zero(Normalizer(Mij)) = 0);
           catch:
-            printf("Mij\n");
+            print("divide by 0 or numerical exception\n");
             print(Mij);
-            ShowVeil(Q);
-            print(SubsVeil(Q,Mij));
-            print(Normalizer(SubsVeil(Q,Mij)));
             Mij_is_zero := true;
           end try;
           if not Mij_is_zero then
@@ -498,7 +496,9 @@ LULEM := module()
 
       if pivot_is_zero then
         rnk := k;
-        WARNING( "LULEM::LUD(...): the matrix appears not full rank." );
+        if verbose then
+          WARNING( "LULEM::LUD(...): the matrix appears not full rank." );
+        end;
         break;
       end if;
 
@@ -510,10 +510,10 @@ LULEM := module()
       # memory environments, or equally, applied to very large matrices in a
       # large memory environment.
 
-      printf("Pivot done for row N.%d\n",k);
-
       Mkk := M[r[k],c[k]];
-      print(Mkk);
+      if verbose then
+        print("PIVOT:",Mkk);
+      end;
 
       for i from k+1 to n do
         # per azzerare M[r[i],...]
@@ -525,7 +525,6 @@ LULEM := module()
           M[r[i],c[j]] := normalize(z);
         end do;
       end do;
-      printf("k=%d\n",k);
       # userinfo(3, LUD, `M`, M);
     end do:
 
