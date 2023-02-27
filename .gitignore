@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# Maple
+*.mla
+*.bak
+
+# Folders
+./lib
+
+# MacOS
+.DS_Store
