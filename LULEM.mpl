@@ -1,4 +1,4 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #            _    _   _ _     _____ __  __            #
 #           | |  | | | | |   | ____|  \/  |           #
 #           | |  | | | | |   |  _| | |\/| |           #
@@ -421,8 +421,8 @@ LULEM := module()
                 "LEM strategy <Strategy_Veiling>, the veiling symbol <Q>, the pivoting "
                 "strategy <Strategy_Pivots> and the zero recognition strategy <Strategy_Zero>.";
 
-    local PP, QQ, LL, DD, UU, M, Mij, Mkk, n, m, nm, i, j, k, mltip, r, c, temp, normalize,
-          row, pivot_is_zero, z;
+    local LL, DD, UU, M, Mij, Mkk, n, m, nm, i, j, k, rnk, mltip, r, c, temp, normalize,
+          pivot_is_zero, Mij_is_zero, z;
 
     # Copy the input matrix
     M := copy(A);
@@ -446,26 +446,49 @@ LULEM := module()
     # according to different pivoting strategies.
     # Interchange entries rows by interchange elements in pivot vector.
 
-    nm := min(n,m);
+    nm  := min(n,m);
+    rnk := nm;
     for k from 1 to nm do
+      printf("Process row N.%d\n",k);
       # check if M[r[k],c[k]] = 0, if not true it is the pivot
       Mkk := M[r[k],c[k]];
-      pivot_is_zero := evalb(Strategy_Zero(Mkk) = 0);
+      try
+        pivot_is_zero := evalb(Strategy_Zero(SubsVeil(Q,Mkk)) = 0);
+        #pivot_is_zero := evalb(Strategy_Zero(Normalizer(Mkk)) = 0);
+      catch:
+        printf("Mkk\n");
+        print(Mkk);
+        ShowVeil(Q);
+        print(SubsVeil(Q,Mkk));
+        print(Normalizer(SubsVeil(Q,Mkk)));
+        pivot_is_zero := true;
+      end try;
       # search for a nonzero pivot
       for j from k to m do
         for i from k to n do
           Mij := M[r[i],c[j]];
-          if pivot_is_zero then
-            if not evalb(Strategy_Zero(Mij) = 0) then
+          try
+            Mij_is_zero := evalb(Strategy_Zero(SubsVeil(Q,Mij)) = 0);
+            #Mij_is_zero := evalb(Strategy_Zero(Normalizer(Mij)) = 0);
+          catch:
+            printf("Mij\n");
+            print(Mij);
+            ShowVeil(Q);
+            print(SubsVeil(Q,Mij));
+            print(Normalizer(SubsVeil(Q,Mij)));
+            Mij_is_zero := true;
+          end try;
+          if not Mij_is_zero then
+            if pivot_is_zero then
               # found better pivot
               pivot_is_zero := false;
               (r[i], r[k]) := (r[k], r[i]);
               (c[j], c[k]) := (c[k], c[j]);
+            elif Strategy_Pivots( Mij, Mkk ) then
+              (r[i], r[k]) := (r[k], r[i]);
+              (c[j], c[k]) := (c[k], c[j]);
+              # break; # Once a pivot is found -- not "best"!
             end if;
-          elif Strategy_Pivots( Mkk, Mij ) then
-            (r[i], r[k]) := (r[k], r[i]);
-            (c[j], c[k]) := (c[k], c[j]);
-            # break; # Once a pivot is found -- not "best"!
           end if;
         end do;
       end do;
@@ -473,7 +496,8 @@ LULEM := module()
       # Only when the pivot is not equal to zero, the row elimination is performed
       # (the whole if statement). Else we will continue with the next column.
 
-      if ( pivot_is_zero ) then
+      if pivot_is_zero then
+        rnk := k;
         WARNING( "LULEM::LUD(...): the matrix appears not full rank." );
         break;
       end if;
@@ -486,15 +510,22 @@ LULEM := module()
       # memory environments, or equally, applied to very large matrices in a
       # large memory environment.
 
+      printf("Pivot done for row N.%d\n",k);
+
       Mkk := M[r[k],c[k]];
+      print(Mkk);
+
       for i from k+1 to n do
-        mltip        := normalize(M[r[i],c[k]]/Mkk);
+        # per azzerare M[r[i],...]
+        # M[r[i],...] = M[r[i],...] - mltip*M[r[k],...]
+        mltip        := Normalizer(M[r[i],c[k]]/Mkk);
         M[r[i],c[k]] := mltip;
         for j from k+1 to m do
-          z := M[r[i],c[j]] - mltip * M[r[k],c[j]]; # si puo mettere j = c[j]?
-          M[r[i],c[j]] := `if`(Strategy_Veiling(z) > 0, Veil[Q](z), z);
+          z := Normalizer(M[r[i],c[j]] - mltip * M[r[k],c[j]]); # si puo mettere j = c[j]?
+          M[r[i],c[j]] := normalize(z);
         end do;
       end do;
+      printf("k=%d\n",k);
       # userinfo(3, LUD, `M`, M);
     end do:
 
@@ -522,14 +553,10 @@ LULEM := module()
     end do;
 
     # Compute the LU decomposition premutation matrix
-    PP, QQ := PermutationMatrices(r,c);
+    # PP, QQ := PermutationMatrices(r,c);
 
     # Return the LU decomposition and the pivot vector
-    if (_nresults = 5) then
-      return PP, QQ, LL, UU, r;
-    else
-      return PP, QQ, LL, UU;
-    end if;
+    return LL, UU, r, c, rnk;
   end proc: # LUD
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -538,7 +565,8 @@ LULEM := module()
   # NOTE: The pivot vector r is returned from LUD function.
   SolvePivotingLU := proc(
     LU_NAG::{Matrix},              # Compact LU matrix (NAG-style form)
-    r::{Vector},                   # Pivot vector
+    r::{Vector},                   # row exchange
+    c::{Vector},                   # column exchange
     b::{Vector},                   # Linear system vector b
     Q::{symbol},                   # Symbol for the veiling
     Strategy_Veiling::{procedure}, # Veiling strategy
@@ -571,10 +599,10 @@ LULEM := module()
     end do;
 
     # Perform backward substitution to solve Ux=y
-    x[n] := normalizer(y[n]/LU_NAG[n, n]);
+    x[c[n]] := normalizer(y[n]/LU_NAG[n, n]);
     for i from n-1 to 1 by -1 do
-      s := normalizer(y[i]) - add(normalizer(LU_NAG[i, j] * x[j]), j = i+1..n);
-      x[i] := normalizer(s/LU_NAG[i, i]);
+      s := normalizer(y[i]) - add(normalizer(LU_NAG[i, j] * x[c[j]]), j = i+1..n);
+      x[c[i]] := normalizer(s/LU_NAG[i, i]);
     end do;
 
     # Return solution vector x
@@ -588,8 +616,8 @@ LULEM := module()
     b::{Vector},                   # Linear system vector b
     Q::{symbol, function},         # Symbol for the veiling
     Strategy_Veiling::{procedure} := VeilingStrategy_n,    # Veiling strategy
-    Strategy_Pivots::{procedure} := PivotStrategy_Slength, # Pivoting strategy procedure
-    Strategy_Zero::{procedure} := ZeroStrategy_length,     # Zero recognition strategy procedure
+    Strategy_Pivots::{procedure}  := PivotStrategy_Slength, # Pivoting strategy procedure
+    Strategy_Zero::{procedure}    := ZeroStrategy_length,     # Zero recognition strategy procedure
     $)
 
     description "Solve the linear system Ax=b using LULEM algorithm, privided the "
@@ -704,7 +732,7 @@ LULEM := module()
     description "Pivoting strategy: choose the pivot with the smallest length "
       "between expressions <x> and <y>.";
 
-    return evalb(length(x) - length(y) < 0);
+    return evalb(length(x) < length(y));
   end proc: # PivotStrategy_Slength
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
