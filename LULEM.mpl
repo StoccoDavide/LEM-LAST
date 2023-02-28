@@ -360,13 +360,13 @@ LULEM := module()
     # Check if matrix A is square
     assert(
       n = LinearAlgebra[ColumnDimension](b),
-      "LULEM::SolveLUD(...): matrix A is not square."
+      "LULEM::SolveLUD(...): input matrix A is not square."
     );
 
     # Check if the linear system is consistent
     assert(
       n = m,
-      "LULEM::SolveLUD(...): the linear system is not consistent."
+      "LULEM::SolveLUD(...): the linear system Ax=b is not consistent."
     );
 
     # Get LUD decomposition of A
@@ -400,8 +400,8 @@ LULEM := module()
     # Return solution vector x and the LU decomposition data
     if (_nresults = 6) then
       return x, L, U, r, c, rnk;
-    elif (_nresults = 4) then
-      return x, L, U;
+    elif (_nresults = 2) then
+      return x, rnk;
     else
       return x;
     end if;
