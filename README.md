@@ -140,6 +140,8 @@ List all veiling variables
 
 ## Authors
 
+### Current version
+
 - *Davide Stocco* (maintainer) \
   Department of Industrial Engineering \
   University of Trento \
@@ -153,6 +155,9 @@ List all veiling variables
 - *Enrico Bertolazzi* \
   Department of Industrial Engineering \
   University of Trento
+  email: enrico.bertolazzi@unitn.it
+
+### Original code
 
 - *Wenqin Zhou* (former affiliation) \
   Department of Applied Mathematics \

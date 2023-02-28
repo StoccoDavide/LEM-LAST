@@ -7,13 +7,16 @@
 #                         Large Expressions Management                        #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Authors: Davide Stocco (University of Trento)
-#          Matteo Larcher (University of Trento)
-#          Enrico Bertolazzi (University of Trento)
-#          Wenqin Zhou (University of Western Ontario) - former affiliation
-#          David J. Jeffrey (University of Western Ontario)
-#          Jacques Carette (McMaster University)
-#          Robert M. Corless (University of Western Ontario)
+# Authors of the current version:
+#  Davide Stocco (University of Trento)
+#  Matteo Larcher (University of Trento)
+#  Enrico Bertolazzi (University of Trento)
+#
+# Author of the original code:
+#   Wenqin Zhou (University of Western Ontario) - Former affiliation
+#   David J. Jeffrey (University of Western Ontario)
+#   Jacques Carette (McMaster University)
+#   Robert M. Corless (University of Western Ontario)
 #
 # License: BSD 3-Clause License
 #
@@ -26,8 +29,8 @@
 # label at a time. Moreover, it has some built-in functions to display, list and
 # substitute the veiled expressions.
 #
-# The following code is hopefully an improved version of the version provided in
-# the following PhD thesis:
+# The following code is hopefully an improved version of the original version
+# provided inthe following PhD thesis:
 #
 #   Wenqin Zhou, Symbolic Computation Techniques for Solveing Large Expressions
 #   Problems from Mathematics and Engineering (2007), Faculty of Graduate Studies,
@@ -48,7 +51,7 @@ LEM := module()
 
   local  ModuleLoad,
          ModuleUnload,
-         auxiliary,
+         Auxiliary,
          InitLEM,
          UnVeilTable,
          lib_base_path;
@@ -82,7 +85,7 @@ LEM := module()
       end if;
     end do;
     if (lib_base_path = null) then
-      error "Cannot find 'LEM' module" ;
+      error "Cannot find 'LEM' module";
     end if;
 
     InitLEM();
@@ -100,6 +103,8 @@ LEM := module()
     LastUsed := NULL;
     UnVeilTable := NULL;
     unprotect(LEM);
+
+    return NULL;
   end proc: # ModuleUnload
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -109,6 +114,8 @@ LEM := module()
     description "Initialize 'LEM' module internal variables";
 
     UnVeilTable := table('sparse' = table('sparse' = (0 = 0)));
+
+    return NULL;
   end proc: # InitLEM
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -140,15 +147,15 @@ LEM := module()
       s := sign(c); # sign is weak
       # Don't do anything if we can tell that the coefficient is just a number
       # or a simple multiple of a name (simple or indexed)
-      if (s*i = c) or type(s*c/i,'name') then
-        return c
+      if (s*i = c) or type(s*c/i, 'name') then
+        return c;
       end if;
     catch:
       s := 1;
     end try;
     # Only if there is something complicated to hide we do actually hide it and
     # return a label.
-    return s * i * auxiliary(s*c/i, label);
+    return s * i * Auxiliary(s*c/i, label);
   end proc; # Veil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -178,7 +185,7 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  auxiliary := proc(
+  Auxiliary := proc(
     x::{anything},
     label::{symbol},
     $)::{anything};
@@ -200,7 +207,7 @@ LEM := module()
       UnVeilTable[label][label[LastUsed[label]]] := x;
     end if;
     return label[LastUsed[label]]
-  end proc: # auxiliary;
+  end proc: # Auxiliary;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -258,8 +265,10 @@ LEM := module()
       LastUsed[label] := 0;
       protect(LastUsed);
       UnVeilTable[label] := evaln(UnVeilTable[label]);
-      forget(auxiliary);
+      forget(Auxiliary);
     end if;
+
+    return NULL;
   end proc: # ForgetVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
