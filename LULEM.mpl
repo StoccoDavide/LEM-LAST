@@ -48,6 +48,7 @@ LULEM := module()
          ForgetVeil,
          PermutationMatrices,
          LUD,
+         FFLUD,
          Solve,
          VeilingStrategy_n,
          VeilingStrategy_L,
@@ -410,7 +411,67 @@ LULEM := module()
                 "LEM strategy <Strategy_Veiling>, the veiling symbol <Q>, the pivoting "
                 "strategy <Strategy_Pivots> and the zero recognition strategy <Strategy_Zero>.";
 
-    local LL, SS, UU, PP, M, Mij, Mkk, Mik, n, m, nm, i, j, k, ri, rk, rnk, r, c, check_veil, pivot_is_zero, Mij_is_zero, z, tmp;
+    local LL, UU, M, Mkk, n, m, nm, i, j, k, ri, rk, rnk, r, c, check_veil, pivot_is_zero, Mij_is_zero, z, tmp;
+
+    n, m := LinearAlgebra[Dimensions](A):
+
+    # Create pivot vector
+    r := Vector(n, k -> k);
+    c := Vector(m, k -> k);
+
+    # check if Veil or not
+    check_veil := z -> `if`(Strategy_Veiling(z) > 0, Veil[Q](z), z);
+
+    # Gauss Elimination main loop
+    M   := copy(A);  # make a working copy
+    nm  := min(n,m);
+    rnk := nm;
+    for k from 1 to nm-1 do
+      if verbose then
+        printf("Process row N.%d\n",k);
+      end;
+      pivot_is_zero, Mkk := LUPivoting( k, M, Q, r, c, Strategy_Veiling, Strategy_Pivots, Strategy_Zero );
+
+      if pivot_is_zero then
+        rnk := k;
+        if verbose then
+          WARNING( "LULEM::LUD(...): the matrix appears not full rank." );
+        end;
+        break;
+      end if;
+
+      if verbose then
+        print("PIVOT:",Mkk);
+      end;
+
+      # Shur complement
+      tmp        := [k+1..-1];
+      M[tmp,k]   := M[tmp,k]/Mkk;
+      M[tmp,tmp] := check_veil~(Normalizer~(M[tmp,tmp]-M[tmp,k].M[k,tmp]));
+    end do:
+
+    LL := Matrix(M[1..n,1..n], shape = triangular[lower,unit]);
+    UU := Matrix(M, shape = triangular[upper]);
+
+    # Return the LU decomposition and the pivot vector
+    return LL, UU, r, c, rnk;
+  end proc: # LUD
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  FFLUD := proc(
+    A::{Matrix},                                            # Linear system matrix A
+    Q::{symbol},                                            # Symbol for the veiling
+    Strategy_Veiling::{procedure} := VeilingStrategy_n,     # Veiling strategy
+    Strategy_Pivots::{procedure}  := PivotStrategy_Slength, # Pivoting strategy procedure
+    Strategy_Zero::{procedure}    := ZeroStrategy_length,   # Zero recognition strategy procedure
+    $)
+
+    description "Compute the LU decomposition of a square matrix <A> using the "
+                "LEM strategy <Strategy_Veiling>, the veiling symbol <Q>, the pivoting "
+                "strategy <Strategy_Pivots> and the zero recognition strategy <Strategy_Zero>.";
+
+    local SS, M, Mkk, n, m, nm, i, j, k, ri, rk, rnk, r, c, check_veil, pivot_is_zero, Mij_is_zero, z, tmp;
 
     n, m := LinearAlgebra[Dimensions](A):
 
@@ -445,19 +506,14 @@ LULEM := module()
       end;
 
       SS[k] := Mkk;
-      # Shur complement
+      # Scaled Shur complement
       tmp        := [k+1..-1];
-      M[tmp,k]   := M[tmp,k]/Mkk;
-      M[tmp,tmp] := check_veil~(Normalizer~(M[tmp,tmp]-M[tmp,k].M[k,tmp]));
-      #M[tmp,tmp] := check_veil~(Normalizer~(Mkk*M[tmp,tmp]-M[tmp,k].M[k,tmp]));
+      M[tmp,tmp] := check_veil~(Normalizer~(Mkk*M[tmp,tmp]-M[tmp,k].M[k,tmp]));
     end do:
 
-    LL := Matrix(M[1..n,1..n], shape = triangular[lower,unit]);
-    UU := Matrix(M, shape = triangular[upper]);
-
     # Return the LU decomposition and the pivot vector
-    return LL, SS, UU, r, c, rnk;
-  end proc: # LUD
+    return M, SS, r, c, rnk;
+  end proc: # FFLUD
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
