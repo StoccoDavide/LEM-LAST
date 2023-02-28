@@ -4,7 +4,7 @@
 <Label-Scheme value="2" prefix=""/>
 <View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1120" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1600" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -102,6 +102,9 @@
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:
 currentdir();</Text-field>
 </Input>
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">Unloading 'LULEM'
+</Text-field>
+</Output>
 <Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkjbXNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2I1FXL1VzZXJzL2Vucmljby9SaWNlcmNhL1NvZnR3YXJlL1JFUE9TL2dpdFByb2plY3RzL0xVTEVNRic=">UVcvVXNlcnMvZW5yaWNvL1JpY2VyY2EvU29mdHdhcmUvUkVQT1MvZ2l0UHJvamVjdHMvTFVMRU02Ig==</Equation></Text-field>
 </Output>
 </Group>
@@ -160,114 +163,14 @@ end proc:
 <Group hide-input="false" labelreference="L256750" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">Unloading 'LULEM'
-Unloading 'LULEM'
-</Text-field>
-</Output>
 </Group>
 <Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LULEM);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
-</Text-field>
-</Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZSLUkjbWlHRiQ2JVErRm9yZ2V0VmVpbEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEkTFVERidGMkY1RjgtRi82JVEpTGFzdFVzZWRGJ0YyRjVGOC1GLzYlUSlMaXN0VmVpbEYnRjJGNUY4LUYvNiVRNFBlcm11dGF0aW9uTWF0cmljZXNGJ0YyRjVGOC1GLzYlUTZQaXZvdFN0cmF0ZWd5X0xpbmRldHNGJ0YyRjVGOC1GLzYlUTZQaXZvdFN0cmF0ZWd5X0xsZW5ndGhGJ0YyRjVGOC1GLzYlUTZQaXZvdFN0cmF0ZWd5X1NpbmRldHNGJ0YyRjVGOC1GLzYlUTZQaXZvdFN0cmF0ZWd5X1NsZW5ndGhGJ0YyRjVGOC1GLzYlUTZQaXZvdFN0cmF0ZWd5X251bWVyaWNGJ0YyRjVGOC1GLzYlUTFTZXRNb2R1bGVPcHRpb25zRidGMkY1RjgtRi82JVErU2V0VmVyYm9zZUYnRjJGNUY4LUYvNiVRKVNob3dWZWlsRidGMkY1RjgtRi82JVEmU29sdmVGJ0YyRjVGOC1GLzYlUSlTdWJzVmVpbEYnRjJGNUY4LUYvNiVRJ1VuVmVpbEYnRjJGNUY4LUYvNiVRJVZlaWxGJ0YyRjVGOC1GLzYlUTJWZWlsaW5nU3RyYXRlZ3lfTEYnRjJGNUY4LUYvNiVRM1ZlaWxpbmdTdHJhdGVneV9MQkYnRjJGNUY4LUYvNiVRM1ZlaWxpbmdTdHJhdGVneV9Mc0YnRjJGNUY4LUYvNiVRMlZlaWxpbmdTdHJhdGVneV9uRidGMkY1RjgtRi82JVE0WmVyb1N0cmF0ZWd5X2xlbmd0aEYnRjJGNUY4LUYvNiVROFplcm9TdHJhdGVneV9ub3JtYWxpemVyRidGMkY1LyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0ZARjxGPC8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7Ric=">NzlJK0ZvcmdldFZlaWxHNiJJJExVREdGJEkpTGFzdFVzZWRHRiRJKUxpc3RWZWlsR0YkSTRQZXJtdXRhdGlvbk1hdHJpY2VzR0YkSTZQaXZvdFN0cmF0ZWd5X0xpbmRldHNHRiRJNlBpdm90U3RyYXRlZ3lfTGxlbmd0aEdGJEk2UGl2b3RTdHJhdGVneV9TaW5kZXRzR0YkSTZQaXZvdFN0cmF0ZWd5X1NsZW5ndGhHRiRJNlBpdm90U3RyYXRlZ3lfbnVtZXJpY0dGJEkxU2V0TW9kdWxlT3B0aW9uc0dGJEkrU2V0VmVyYm9zZUdGJEkpU2hvd1ZlaWxHRiRJJlNvbHZlR0YkSSlTdWJzVmVpbEdGJEknVW5WZWlsR0YkSSVWZWlsR0YkSTJWZWlsaW5nU3RyYXRlZ3lfTEdGJEkzVmVpbGluZ1N0cmF0ZWd5X0xCR0YkSTNWZWlsaW5nU3RyYXRlZ3lfTHNHRiRJMlZlaWxpbmdTdHJhdGVneV9uR0YkSTRaZXJvU3RyYXRlZ3lfbGVuZ3RoR0YkSThaZXJvU3RyYXRlZ3lfbm9ybWFsaXplckdGJA==</Equation></Text-field>
-</Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LULEM):</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">
-# LU Decomposition for Large Expression Matrices
-module LULEM:
-
-    SetModuleOptions::symbol = LULEM:-SetModuleOptions
-
-    SetVerbose( value::boolean )
-
-    # Veil an expression &lt;x&gt; and return a label to it.
-    Veil( x, $ )
-
-    # UnVeil the expression &lt;x&gt; up to &lt;n&gt; levels.
-    UnVeil( x, n::{infinity, nonnegint}, $ )
-
-    # Show the veiling variables of the veiling label &lt;label&gt;.
-    ShowVeil( label::{symbol}, $ )
-
-    # Return a list of the veiling variables labelled as &lt;label&gt;.
-    ListVeil( label::{symbol}, $ )
-
-    # Substitute the reversed veiling variables of the veiling label &lt;label&gt; in 
-    # the expression &lt;x&gt;.
-    SubsVeil( label::{symbol}, x, $ )
-
-    # Clear all the veiling variables of the veiling label &lt;label&gt;.
-    ForgetVeil( label::{symbol}, $ )
-
-    # Compute the LU decomposition premutation matrix provided the NAG-style 
-    # the pivot vector &lt;r&gt;.
-    PermutationMatrices( r::{Vector}, c::{Vector}, $ )
-
-    # Compute the LU decomposition of a square matrix &lt;A&gt; using the LEM 
-    # strategy &lt;Strategy_Veiling&gt;, the veiling symbol &lt;Q&gt;, the pivoting 
-    # strategy &lt;Strategy_Pivots&gt; and the zero recognition strategy 
-    # &lt;Strategy_Zero&gt;.
-    LUD( A::{Matrix}, Q::{symbol}, 
-         Strategy_Veiling::{procedure} := _VeilingStrategy_n, 
-         Strategy_Pivots::{procedure} := _PivotStrategy_Slength, 
-         Strategy_Zero::{procedure} := _ZeroStrategy_length, $ )
-
-    # Solve the linear system Ax=b using LULEM algorithm, privided the matrix 
-    # &lt;A&gt;, the vector &lt;b&gt;, the veiling symbol &lt;Q&gt;, the veiling strategy 
-    # &lt;Strategy_Veiling&gt;, the pivoting strategy &lt;Strategy_Pivots&gt; and the zero 
-    # recognition strategy &lt;Strategy_Zero&gt;.
-    Solve( A::{Matrix}, b::{Vector}, Q::{symbol, function}, 
-           Strategy_Veiling::{procedure} := _VeilingStrategy_n, 
-           Strategy_Pivots::{procedure} := _PivotStrategy_Slength, 
-           Strategy_Zero::{procedure} := _ZeroStrategy_length, $ )
-
-    # Veiling strategy: number of indeterminates in expression &lt;x&gt; minus 4.
-    VeilingStrategy_n( x, $ ) :: {integer}
-
-    # Veiling strategy: length of expression &lt;x&gt; minus 50.
-    VeilingStrategy_L( x, $ ) :: {integer}
-
-    # Veiling strategy: length of expression &lt;x&gt; minus 120.
-    VeilingStrategy_Ls( x, $ ) :: {integer}
-
-    # Veiling strategy: length of expression &lt;x&gt; minus 260.
-    VeilingStrategy_LB( x, $ ) :: {integer}
-
-    # Pivoting strategy: choose the pivot with the largest length between 
-    # expressions &lt;x&gt; and &lt;y&gt;.
-    PivotStrategy_Llength( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
-
-    # Pivoting strategy: choose the pivot with the smallest length between 
-    # expressions &lt;x&gt; and &lt;y&gt;.
-    PivotStrategy_Slength( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
-
-    # Pivoting strategy: choose the pivot with the largest number of 
-    # indeterminates between expressions &lt;x&gt; and &lt;y&gt;.
-    PivotStrategy_Lindets( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
-
-    # Pivoting strategy: choose the pivot with the smallest number of 
-    # indeterminates between expressions &lt;x&gt; and &lt;y&gt;.
-    PivotStrategy_Sindets( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
-
-    # Pivoting strategy: choose the pivot with the largest numeric value 
-    # between expressions &lt;x&gt; and &lt;y&gt;.
-    PivotStrategy_numeric( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
-
-    # Zero recognition strategy: length of expression &lt;x&gt;.
-    ZeroStrategy_length( x::{algebraic}, $ ) :: {integer}
-
-    # Zero recognition strategy: normalizer of expression &lt;x&gt;.
-    ZeroStrategy_normalizer( x::{algebraic}, $ )
-
-    package LastUsed:
-
-</Text-field>
-</Output>
 </Group>
 <Group labelreference="L256752" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
@@ -275,7 +178,7 @@ module LULEM:
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>
