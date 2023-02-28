@@ -39,8 +39,12 @@ LULEM := module()
           ListVeil,
           SubsVeil,
           ForgetVeil,
+          AssignData,
+          SubsData,
+          UnAssignData,
           PermutationMatrix,
           LUD,
+          FFLUD,
           Solve,
           VeilingStrategy_n,
           VeilingStrategy_L,
@@ -61,10 +65,8 @@ LULEM := module()
           SolvePivotingLU,
           ModuleUnload,
           InitLULEM,
-          Protect,
-          NextLabel,
-          Signature,
           UnVeilTable,
+          StoredData,
           lib_base_path;
 
 
@@ -106,17 +108,14 @@ LULEM := module()
     for i in [libname] do
       if (StringTools[Search]("LULEM", i) <> 0) then
         lib_base_path := i;
-      end;
-    end;
+      end if;
+    end do;
     if (lib_base_path = null) then
       error "Cannot find 'LULEM' module" ;
-    end:
+    end if;
 
     # Initialize the module variables
     InitLULEM();
-
-    # Protect module keywords
-    Protect();
 
     return NULL;
   end proc: # ModuleLoad
@@ -128,8 +127,9 @@ LULEM := module()
     description "Module 'LULEM' module unload procedure";
 
     unprotect(LastUsed);
-    LastUsed := NULL;
+    LastUsed    := NULL;
     UnVeilTable := NULL;
+    UnAssignData();
 
     printf("Unloading 'LULEM'\n");
   end proc: # ModuleUnload
@@ -141,89 +141,9 @@ LULEM := module()
     description "Initialize 'LULEM' module internal variables";
 
     # Define module variables
-    UnVeilTable := table('sparse' = table('sparse' = (0 = 0)));
+    UnVeilTable  := table('sparse' = table('sparse' = (0 = 0)));
+    StoredData := [];
   end proc: # InitLULEM
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  Protect := proc()
-
-    # Protect global variables
-    #protect(
-    #);
-
-  end proc: # Protect
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  #   _                    _
-  #  | |    ___   ___ __ _| |
-  #  | |   / _ \ / __/ _` | |
-  #  | |__| (_) | (_| (_| | |
-  #  |_____\___/ \___\__,_|_|
-  #
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  Signature := proc(
-    f,           # TODO
-    p::{posint}, # TODO
-    A,           # TODO
-    $)
-
-    description "???"; # TODO
-
-    local t, sig;
-    option remember;
-
-    if (f::'rational') then
-      f mod p;
-    elif (f::'symbol') then
-      Signature(f, p, A) := rand() mod p;
-    elif (f::'indexed') then
-      if type(f, A[anything]) then
-        Signature(UnVeil(f, 1), p, A)
-      else
-        Signature(f, p, A) := rand() mod p;
-      end if;
-    elif (f::`+`) then
-      add(Signature(t, p, A) mod p, t = f) mod p;
-    elif (f::`*`) then
-      sig := 1;
-      for t in f do
-        sig := sig * Signature(t, p, A) mod p;
-      end do;
-      sig;
-    elif f::(anything^rational) then
-      Signature(op(1, f), p, A) &^ op(2, f) mod p;
-    elif f::(anything^polynom) then
-      sig := numtheory['phi'](p);
-      t := Signature(op(2, f), sig, A);
-      Signature(op(1, f), p, A) &^ t mod p;
-    else
-      ERROR(
-        "LULEM::Signature(...): expressions involving %1 not done.", f
-        );
-    end if;
-  end: # Signature
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  NextLabel := proc( # FIXME: NOT USED
-    label::{symbol},
-    vars::{set},
-    $)
-
-    description "Calculate the next veiling label for a given label <lapel> and "
-      "a optional set of variables <vars>.";
-
-    option remember;
-
-    unprotect(LastUsed);
-    LastUsed[label] := LastUsed[label] + 1;
-    protect(LastUsed);
-    label[LastUsed[label], `if`(nargs = 2, vars, NULL)]; # ???
-  end proc: # NextLabel
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -353,7 +273,7 @@ LULEM := module()
     description "Substitute the reversed veiling variables of the veiling label "
       "<label> in the expression <x>.";
 
-    return subs(op(ListTools[Reverse](ListVeil(label))), x);
+    return subs[eval](op(ListTools[Reverse](ListVeil(label))), x);
   end proc: # SubsVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -374,6 +294,49 @@ LULEM := module()
     forget(auxiliary);
     return NULL;
   end proc: # ForgetVeil
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  AssignData := proc(
+    x::{list, set}, # The list to be assigned
+    $)
+
+    description "Assign the list <x> to the local variable <StoredData>.";
+
+    StoredData := x;
+    return NULL;
+  end proc: # AssignData
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  SubsData := proc(
+    x::{anything}, # The expression to substitute
+    $)
+    local label, tmp_x, i;
+
+    description "Substitute the local variable <StoredData> in the expression <x>.";
+
+    label := lhs~(op(op(LastUsed))[2..-1]);
+    tmp_x := copy(x);
+    if (nops(StoredData) > 0) then
+      for i in label do
+        tmp_x := subs[eval](StoredData, subs[eval](op(ListTools[Reverse](ListVeil(i))), tmp_x));
+      end do;
+    end if;
+
+    return tmp_x;
+  end proc: # SubsData
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  UnAssignData := proc(
+    $)
+
+    description "Unassign the local variable <StoredData>.";
+
+    StoredData := [];
+    return NULL;
+  end proc: # UnAssignData
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -426,7 +389,7 @@ LULEM := module()
     # L is lower matrix with l's as diagonal entries
     L := Matrix(LinearAlgebra[IdentityMatrix](n), shape = triangular[lower]);
 
-    # U is upper matrix.
+    # U is upper matrix
     U := Matrix(n, n, shape = triangular[upper]):
 
     # Create pivot vector
@@ -496,7 +459,7 @@ LULEM := module()
       for j from 1 to m do
         if (i <= j) then
           U[i, j] := M[r[i], j];
-        else
+        else # (i > j)
           L[i, j] := M[r[i], j];
         end if
       end do;
@@ -552,14 +515,18 @@ LULEM := module()
     end do;
 
     # Perform backward substitution to solve Ux=y
-    x[n] := normalizer(y[n]/LU_NAG[n, n]);
+    x[n] := normalizer(y[n] / LU_NAG[n, n]);
     for i from n-1 to 1 by -1 do
       s := normalizer(y[i]) - add(normalizer(LU_NAG[i, j] * x[j]), j = i+1..n);
-      x[i] := normalizer(s/LU_NAG[i, i]);
+      x[i] := normalizer(s / LU_NAG[i, i]);
     end do;
 
     # Return solution vector x
-    return x;
+    if (_nresults = 1) then
+      return x;
+    else
+      return x, r;
+    end if;
   end proc: # SolvePivotingLU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -581,7 +548,7 @@ LULEM := module()
     local x, P, L, U, r, LU_NAG:
 
     # Get LU decomposition of A
-    P, L, U, r := LUD(A, Q, Strategy_Veiling, Strategy_Pivots, Strategy_Zero);
+    P, L, U, r := FFLUD(A, Q, Strategy_Veiling, Strategy_Pivots, Strategy_Zero);
 
     # Built the LU matrix (NAG-style)
     LU_NAG := L + U - Matrix(LinearAlgebra[RowDimension](L), shape = identity);
@@ -672,7 +639,7 @@ LULEM := module()
     description "Pivoting strategy: choose the pivot with the largest length "
       "between expressions <x> and <y>.";
 
-    return evalb(length(x) - length(y) > 0);
+    return evalb(length(SubsData(x)) - length(SubsData(y)) > 0);
   end proc: # PivotStrategy_Llength
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -744,7 +711,14 @@ LULEM := module()
 
     description "Zero recognition strategy: length of expression <x>.";
 
-    return length(x);
+    local tmp;
+
+    tmp := SubsData(x);
+    if evalb((evalf(abs(tmp)) = 0.0)) then
+      return length(0);
+    else
+      return length(tmp);
+    end if;
   end proc: # ZeroStrategy_length
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -755,7 +729,7 @@ LULEM := module()
 
     description "Zero recognition strategy: normalizer of expression <x>.";
 
-    return Normalizer(x)
+    return Normalizer(SubsData(x));
   end proc: # ZeroStrategy_normalizer
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

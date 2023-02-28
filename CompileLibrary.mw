@@ -174,7 +174,7 @@ Unloading 'LULEM'
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZQLUkjbWlHRiQ2JVErRm9yZ2V0VmVpbEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEkTFVERidGMkY1RjgtRi82JVEpTGFzdFVzZWRGJ0YyRjVGOC1GLzYlUSlMaXN0VmVpbEYnRjJGNUY4LUYvNiVRMlBlcm11dGF0aW9uTWF0cml4RidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9MaW5kZXRzRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9MbGVuZ3RoRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9TaW5kZXRzRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9TbGVuZ3RoRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9udW1lcmljRidGMkY1RjgtRi82JVExU2V0TW9kdWxlT3B0aW9uc0YnRjJGNUY4LUYvNiVRKVNob3dWZWlsRidGMkY1RjgtRi82JVEmU29sdmVGJ0YyRjVGOC1GLzYlUSlTdWJzVmVpbEYnRjJGNUY4LUYvNiVRJ1VuVmVpbEYnRjJGNUY4LUYvNiVRJVZlaWxGJ0YyRjVGOC1GLzYlUTJWZWlsaW5nU3RyYXRlZ3lfTEYnRjJGNUY4LUYvNiVRM1ZlaWxpbmdTdHJhdGVneV9MQkYnRjJGNUY4LUYvNiVRM1ZlaWxpbmdTdHJhdGVneV9Mc0YnRjJGNUY4LUYvNiVRMlZlaWxpbmdTdHJhdGVneV9uRidGMkY1RjgtRi82JVE0WmVyb1N0cmF0ZWd5X2xlbmd0aEYnRjJGNUY4LUYvNiVROFplcm9TdHJhdGVneV9ub3JtYWxpemVyRidGMkY1LyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0ZARjxGPC8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7Ric=">NzhJK0ZvcmdldFZlaWxHNiJJJExVREdGJEkpTGFzdFVzZWRHRiRJKUxpc3RWZWlsR0YkSTJQZXJtdXRhdGlvbk1hdHJpeEdGJEk2UGl2b3RTdHJhdGVneV9MaW5kZXRzR0YkSTZQaXZvdFN0cmF0ZWd5X0xsZW5ndGhHRiRJNlBpdm90U3RyYXRlZ3lfU2luZGV0c0dGJEk2UGl2b3RTdHJhdGVneV9TbGVuZ3RoR0YkSTZQaXZvdFN0cmF0ZWd5X251bWVyaWNHRiRJMVNldE1vZHVsZU9wdGlvbnNHRiRJKVNob3dWZWlsR0YkSSZTb2x2ZUdGJEkpU3Vic1ZlaWxHRiRJJ1VuVmVpbEdGJEklVmVpbEdGJEkyVmVpbGluZ1N0cmF0ZWd5X0xHRiRJM1ZlaWxpbmdTdHJhdGVneV9MQkdGJEkzVmVpbGluZ1N0cmF0ZWd5X0xzR0YkSTJWZWlsaW5nU3RyYXRlZ3lfbkdGJEk0WmVyb1N0cmF0ZWd5X2xlbmd0aEdGJEk4WmVyb1N0cmF0ZWd5X25vcm1hbGl6ZXJHRiQ=</Equation></Text-field>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZYLUkjbWlHRiQ2JVErQXNzaWduRGF0YUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEmRkZMVURGJ0YyRjVGOC1GLzYlUStGb3JnZXRWZWlsRidGMkY1RjgtRi82JVEkTFVERidGMkY1RjgtRi82JVEpTGFzdFVzZWRGJ0YyRjVGOC1GLzYlUSlMaXN0VmVpbEYnRjJGNUY4LUYvNiVRMlBlcm11dGF0aW9uTWF0cml4RidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9MaW5kZXRzRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9MbGVuZ3RoRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9TaW5kZXRzRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9TbGVuZ3RoRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9udW1lcmljRidGMkY1RjgtRi82JVExU2V0TW9kdWxlT3B0aW9uc0YnRjJGNUY4LUYvNiVRKVNob3dWZWlsRidGMkY1RjgtRi82JVEmU29sdmVGJ0YyRjVGOC1GLzYlUSlTdWJzRGF0YUYnRjJGNUY4LUYvNiVRKVN1YnNWZWlsRidGMkY1RjgtRi82JVEtVW5Bc3NpZ25EYXRhRidGMkY1RjgtRi82JVEnVW5WZWlsRidGMkY1RjgtRi82JVElVmVpbEYnRjJGNUY4LUYvNiVRMlZlaWxpbmdTdHJhdGVneV9MRidGMkY1RjgtRi82JVEzVmVpbGluZ1N0cmF0ZWd5X0xCRidGMkY1RjgtRi82JVEzVmVpbGluZ1N0cmF0ZWd5X0xzRidGMkY1RjgtRi82JVEyVmVpbGluZ1N0cmF0ZWd5X25GJ0YyRjVGOC1GLzYlUTRaZXJvU3RyYXRlZ3lfbGVuZ3RoRidGMkY1RjgtRi82JVE4WmVyb1N0cmF0ZWd5X25vcm1hbGl6ZXJGJ0YyRjUvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRkBGPEY8LyUlb3BlbkdRJyZsc3FiO0YnLyUmY2xvc2VHUScmcnNxYjtGJw==">NzxJK0Fzc2lnbkRhdGFHNiJJJkZGTFVER0YkSStGb3JnZXRWZWlsR0YkSSRMVURHRiRJKUxhc3RVc2VkR0YkSSlMaXN0VmVpbEdGJEkyUGVybXV0YXRpb25NYXRyaXhHRiRJNlBpdm90U3RyYXRlZ3lfTGluZGV0c0dGJEk2UGl2b3RTdHJhdGVneV9MbGVuZ3RoR0YkSTZQaXZvdFN0cmF0ZWd5X1NpbmRldHNHRiRJNlBpdm90U3RyYXRlZ3lfU2xlbmd0aEdGJEk2UGl2b3RTdHJhdGVneV9udW1lcmljR0YkSTFTZXRNb2R1bGVPcHRpb25zR0YkSSlTaG93VmVpbEdGJEkmU29sdmVHRiRJKVN1YnNEYXRhR0YkSSlTdWJzVmVpbEdGJEktVW5Bc3NpZ25EYXRhR0YkSSdVblZlaWxHRiRJJVZlaWxHRiRJMlZlaWxpbmdTdHJhdGVneV9MR0YkSTNWZWlsaW5nU3RyYXRlZ3lfTEJHRiRJM1ZlaWxpbmdTdHJhdGVneV9Mc0dGJEkyVmVpbGluZ1N0cmF0ZWd5X25HRiRJNFplcm9TdHJhdGVneV9sZW5ndGhHRiRJOFplcm9TdHJhdGVneV9ub3JtYWxpemVyR0Yk</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -205,6 +205,15 @@ module LULEM:
     # Clear all the veiling variables of the veiling label &lt;label&gt;.
     ForgetVeil( label::{symbol}, $ )
 
+    # Assign the list &lt;x&gt; to the local variable &lt;StoredData&gt;.
+    AssignData( x::{list, set}, $ )
+
+    # Substitute the local variable &lt;StoredData&gt; in the expression &lt;x&gt;.
+    SubsData( x::{anything}, $ )
+
+    # Unassign the local variable &lt;StoredData&gt;.
+    UnAssignData( $ )
+
     # Compute the LU decomposition premutation matrix provided the NAG-style 
     # the pivot vector &lt;r&gt;.
     PermutationMatrix( r::{Vector}, $ )
@@ -217,6 +226,15 @@ module LULEM:
          Strategy_Veiling::{procedure} := _VeilingStrategy_n, 
          Strategy_Pivots::{procedure} := _PivotStrategy_Slength, 
          Strategy_Zero::{procedure} := _ZeroStrategy_length, $ )
+
+    # Compute the LU decomposition of a square matrix &lt;A&gt; using the LEM 
+    # strategy &lt;Strategy_Veiling&gt;, the veiling symbol &lt;Q&gt;, the pivoting 
+    # strategy &lt;Strategy_Pivots&gt; and the zero recognition strategy 
+    # &lt;Strategy_Zero&gt;.
+    FFLUD( A::{Matrix}, Q::{symbol}, 
+           Strategy_Veiling::{procedure} := _VeilingStrategy_n, 
+           Strategy_Pivots::{procedure} := _PivotStrategy_Slength, 
+           Strategy_Zero::{procedure} := _ZeroStrategy_length, $ )
 
     # Solve the linear system Ax=b using LULEM algorithm, privided the matrix 
     # &lt;A&gt;, the vector &lt;b&gt;, the veiling symbol &lt;Q&gt;, the veiling strategy 
