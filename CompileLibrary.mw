@@ -102,16 +102,14 @@
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:
 currentdir();</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">Unloading 'LULEM'
-</Text-field>
-</Output>
 <Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkjbXNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2I1FCL1VzZXJzL2RhdmlkZS9Eb2N1bWVudHMvR2l0L0xVTEVNRic=">UUIvVXNlcnMvZGF2aWRlL0RvY3VtZW50cy9HaXQvTFVMRU02Ig==</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256749" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">read(&quot;./LULEM.mpl&quot;);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
 </Group>
@@ -163,10 +161,6 @@ end proc:
 <Group hide-input="false" labelreference="L256750" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">Unloading 'LULEM'
-Unloading 'LULEM'
-</Text-field>
-</Output>
 </Group>
 <Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LULEM);</Text-field>
@@ -174,116 +168,85 @@ Unloading 'LULEM'
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZYLUkjbWlHRiQ2JVErQXNzaWduRGF0YUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEmRkZMVURGJ0YyRjVGOC1GLzYlUStGb3JnZXRWZWlsRidGMkY1RjgtRi82JVEkTFVERidGMkY1RjgtRi82JVEpTGFzdFVzZWRGJ0YyRjVGOC1GLzYlUSlMaXN0VmVpbEYnRjJGNUY4LUYvNiVRMlBlcm11dGF0aW9uTWF0cml4RidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9MaW5kZXRzRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9MbGVuZ3RoRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9TaW5kZXRzRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9TbGVuZ3RoRidGMkY1RjgtRi82JVE2UGl2b3RTdHJhdGVneV9udW1lcmljRidGMkY1RjgtRi82JVExU2V0TW9kdWxlT3B0aW9uc0YnRjJGNUY4LUYvNiVRKVNob3dWZWlsRidGMkY1RjgtRi82JVEmU29sdmVGJ0YyRjVGOC1GLzYlUSlTdWJzRGF0YUYnRjJGNUY4LUYvNiVRKVN1YnNWZWlsRidGMkY1RjgtRi82JVEtVW5Bc3NpZ25EYXRhRidGMkY1RjgtRi82JVEnVW5WZWlsRidGMkY1RjgtRi82JVElVmVpbEYnRjJGNUY4LUYvNiVRMlZlaWxpbmdTdHJhdGVneV9MRidGMkY1RjgtRi82JVEzVmVpbGluZ1N0cmF0ZWd5X0xCRidGMkY1RjgtRi82JVEzVmVpbGluZ1N0cmF0ZWd5X0xzRidGMkY1RjgtRi82JVEyVmVpbGluZ1N0cmF0ZWd5X25GJ0YyRjVGOC1GLzYlUTRaZXJvU3RyYXRlZ3lfbGVuZ3RoRidGMkY1RjgtRi82JVE4WmVyb1N0cmF0ZWd5X25vcm1hbGl6ZXJGJ0YyRjUvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRkBGPEY8LyUlb3BlbkdRJyZsc3FiO0YnLyUmY2xvc2VHUScmcnNxYjtGJw==">NzxJK0Fzc2lnbkRhdGFHNiJJJkZGTFVER0YkSStGb3JnZXRWZWlsR0YkSSRMVURHRiRJKUxhc3RVc2VkR0YkSSlMaXN0VmVpbEdGJEkyUGVybXV0YXRpb25NYXRyaXhHRiRJNlBpdm90U3RyYXRlZ3lfTGluZGV0c0dGJEk2UGl2b3RTdHJhdGVneV9MbGVuZ3RoR0YkSTZQaXZvdFN0cmF0ZWd5X1NpbmRldHNHRiRJNlBpdm90U3RyYXRlZ3lfU2xlbmd0aEdGJEk2UGl2b3RTdHJhdGVneV9udW1lcmljR0YkSTFTZXRNb2R1bGVPcHRpb25zR0YkSSlTaG93VmVpbEdGJEkmU29sdmVHRiRJKVN1YnNEYXRhR0YkSSlTdWJzVmVpbEdGJEktVW5Bc3NpZ25EYXRhR0YkSSdVblZlaWxHRiRJJVZlaWxHRiRJMlZlaWxpbmdTdHJhdGVneV9MR0YkSTNWZWlsaW5nU3RyYXRlZ3lfTEJHRiRJM1ZlaWxpbmdTdHJhdGVneV9Mc0dGJEkyVmVpbGluZ1N0cmF0ZWd5X25HRiRJNFplcm9TdHJhdGVneV9sZW5ndGhHRiRJOFplcm9TdHJhdGVneV9ub3JtYWxpemVyR0Yk</Equation></Text-field>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZILUkjbWlHRiQ2JVErQXNzaWduRGF0YUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVErRm9yZ2V0RGF0YUYnRjJGNUY4LUYvNiVRJExVREYnRjJGNUY4LUYvNiVRNFBlcm11dGF0aW9uTWF0cmljZXNGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X0xpbmRldHNGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X0xsZW5ndGhGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X1NpbmRldHNGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X1NsZW5ndGhGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X251bWVyaWNGJ0YyRjVGOC1GLzYlUStTZXRWZXJib3NlRidGMkY1RjgtRi82JVEpU29sdmVMVURGJ0YyRjVGOC1GLzYlUSlTdWJzRGF0YUYnRjJGNUY4LUYvNiVRMlZlaWxpbmdTdHJhdGVneV9MRidGMkY1RjgtRi82JVEzVmVpbGluZ1N0cmF0ZWd5X0xCRidGMkY1RjgtRi82JVEzVmVpbGluZ1N0cmF0ZWd5X0xzRidGMkY1RjgtRi82JVEyVmVpbGluZ1N0cmF0ZWd5X25GJ0YyRjVGOC1GLzYlUTRaZXJvU3RyYXRlZ3lfbGVuZ3RoRidGMkY1RjgtRi82JVE4WmVyb1N0cmF0ZWd5X25vcm1hbGl6ZXJGJ0YyRjUvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRkBGPEY8LyUlb3BlbkdRJyZsc3FiO0YnLyUmY2xvc2VHUScmcnNxYjtGJw==">NzRJK0Fzc2lnbkRhdGFHNiJJK0ZvcmdldERhdGFHRiRJJExVREdGJEk0UGVybXV0YXRpb25NYXRyaWNlc0dGJEk5UGl2b3RpbmdTdHJhdGVneV9MaW5kZXRzR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X0xsZW5ndGhHRiRJOVBpdm90aW5nU3RyYXRlZ3lfU2luZGV0c0dGJEk5UGl2b3RpbmdTdHJhdGVneV9TbGVuZ3RoR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X251bWVyaWNHRiRJK1NldFZlcmJvc2VHRiRJKVNvbHZlTFVER0YkSSlTdWJzRGF0YUdGJEkyVmVpbGluZ1N0cmF0ZWd5X0xHRiRJM1ZlaWxpbmdTdHJhdGVneV9MQkdGJEkzVmVpbGluZ1N0cmF0ZWd5X0xzR0YkSTJWZWlsaW5nU3RyYXRlZ3lfbkdGJEk0WmVyb1N0cmF0ZWd5X2xlbmd0aEdGJEk4WmVyb1N0cmF0ZWd5X25vcm1hbGl6ZXJHRiQ=</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LULEM):</Text-field>
 </Input>
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">
-# LU Decomposition for Large Expression Matrices
+# LU and QR decomposition with LEM (Large Expressions Management).
 module LULEM:
 
-    SetModuleOptions::symbol = LULEM:-SetModuleOptions
-
-    # Veil an expression &lt;x&gt; and return a label to it.
-    Veil( x, $ )
-
-    # UnVeil the expression &lt;x&gt; up to &lt;n&gt; levels.
-    UnVeil( x, n::{infinity, nonnegint}, $ )
-
-    # Show the veiling variables of the veiling label &lt;label&gt;.
-    ShowVeil( label::{symbol}, $ )
-
-    # Return a list of the veiling variables labelled as &lt;label&gt;.
-    ListVeil( label::{symbol}, $ )
-
-    # Substitute the reversed veiling variables of the veiling label &lt;label&gt; in 
-    # the expression &lt;x&gt;.
-    SubsVeil( label::{symbol}, x, $ )
-
-    # Clear all the veiling variables of the veiling label &lt;label&gt;.
-    ForgetVeil( label::{symbol}, $ )
-
-    # Assign the list &lt;x&gt; to the local variable &lt;StoredData&gt;.
-    AssignData( x::{list, set}, $ )
+    # Assign the data list &lt;x&gt; to the local variable &lt;StoredData&gt;.
+    AssignData( x::{list, set}, $ ) :: {nothing}
 
     # Substitute the local variable &lt;StoredData&gt; in the expression &lt;x&gt;.
-    SubsData( x::{anything}, $ )
+    SubsData( x::{anything}, $ ) :: {anything}
 
     # Unassign the local variable &lt;StoredData&gt;.
-    UnAssignData( $ )
+    ForgetData( $ )
 
-    # Compute the LU decomposition premutation matrix provided the NAG-style 
-    # the pivot vector &lt;r&gt;.
-    PermutationMatrix( r::{Vector}, $ )
+    SetVerbose( value::boolean )
+
+    # Compute the LU decomposition premutation matrix provided the rows the 
+    # pivot vector &lt;r&gt; and the columns the pivot vector &lt;c&gt;.
+    PermutationMatrices( r::{Vector}, c::{Vector}, $ )
 
     # Compute the LU decomposition of a square matrix &lt;A&gt; using the LEM 
-    # strategy &lt;Strategy_Veiling&gt;, the veiling symbol &lt;Q&gt;, the pivoting 
-    # strategy &lt;Strategy_Pivots&gt; and the zero recognition strategy 
-    # &lt;Strategy_Zero&gt;.
+    # strategy &lt;VeilingStrategy&gt;, the veiling symbol &lt;Q&gt;, the pivoting strategy 
+    # &lt;PivotingStrategy&gt; and the zero recognition strategy &lt;ZeroStrategy&gt;.
     LUD( A::{Matrix}, Q::{symbol}, 
-         Strategy_Veiling::{procedure} := _VeilingStrategy_n, 
-         Strategy_Pivots::{procedure} := _PivotStrategy_Slength, 
-         Strategy_Zero::{procedure} := _ZeroStrategy_length, $ )
-
-    # Compute the LU decomposition of a square matrix &lt;A&gt; using the LEM 
-    # strategy &lt;Strategy_Veiling&gt;, the veiling symbol &lt;Q&gt;, the pivoting 
-    # strategy &lt;Strategy_Pivots&gt; and the zero recognition strategy 
-    # &lt;Strategy_Zero&gt;.
-    FFLUD( A::{Matrix}, Q::{symbol}, 
-           Strategy_Veiling::{procedure} := _VeilingStrategy_n, 
-           Strategy_Pivots::{procedure} := _PivotStrategy_Slength, 
-           Strategy_Zero::{procedure} := _ZeroStrategy_length, $ )
+         VeilingStrategy::{procedure} := _VeilingStrategy_n, 
+         PivotingStrategy::{procedure} := _PivotingStrategy_Slength, 
+         ZeroStrategy::{procedure} := _ZeroStrategy_length, $ )
 
     # Solve the linear system Ax=b using LULEM algorithm, privided the matrix 
     # &lt;A&gt;, the vector &lt;b&gt;, the veiling symbol &lt;Q&gt;, the veiling strategy 
-    # &lt;Strategy_Veiling&gt;, the pivoting strategy &lt;Strategy_Pivots&gt; and the zero 
-    # recognition strategy &lt;Strategy_Zero&gt;.
-    Solve( A::{Matrix}, b::{Vector}, Q::{symbol, function}, 
-           Strategy_Veiling::{procedure} := _VeilingStrategy_n, 
-           Strategy_Pivots::{procedure} := _PivotStrategy_Slength, 
-           Strategy_Zero::{procedure} := _ZeroStrategy_length, $ )
+    # &lt;VeilingStrategy&gt;, the pivoting strategy &lt;PivotingStrategy&gt; and the zero 
+    # recognition strategy &lt;ZeroStrategy&gt;.
+    SolveLUD( A::{Matrix}, b::{Vector}, Q::{symbol, function}, 
+              VeilingStrategy::{procedure} := _VeilingStrategy_n, 
+              PivotingStrategy::{procedure} := _PivotingStrategy_Slength, 
+              ZeroStrategy::{procedure} := _ZeroStrategy_length, $ )
 
     # Veiling strategy: number of indeterminates in expression &lt;x&gt; minus 4.
-    VeilingStrategy_n( x, $ ) :: {integer}
+    VeilingStrategy_n( x::{algebraic}, $ ) :: {integer}
 
     # Veiling strategy: length of expression &lt;x&gt; minus 50.
-    VeilingStrategy_L( x, $ ) :: {integer}
+    VeilingStrategy_L( x::{algebraic}, $ ) :: {integer}
 
     # Veiling strategy: length of expression &lt;x&gt; minus 120.
-    VeilingStrategy_Ls( x, $ ) :: {integer}
+    VeilingStrategy_Ls( x::{algebraic}, $ ) :: {integer}
 
     # Veiling strategy: length of expression &lt;x&gt; minus 260.
-    VeilingStrategy_LB( x, $ ) :: {integer}
+    VeilingStrategy_LB( x::{algebraic}, $ ) :: {integer}
 
     # Pivoting strategy: choose the pivot with the largest length between 
     # expressions &lt;x&gt; and &lt;y&gt;.
-    PivotStrategy_Llength( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
+    PivotingStrategy_Llength( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
 
     # Pivoting strategy: choose the pivot with the smallest length between 
     # expressions &lt;x&gt; and &lt;y&gt;.
-    PivotStrategy_Slength( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
+    PivotingStrategy_Slength( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
 
     # Pivoting strategy: choose the pivot with the largest number of 
     # indeterminates between expressions &lt;x&gt; and &lt;y&gt;.
-    PivotStrategy_Lindets( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
+    PivotingStrategy_Lindets( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
 
     # Pivoting strategy: choose the pivot with the smallest number of 
     # indeterminates between expressions &lt;x&gt; and &lt;y&gt;.
-    PivotStrategy_Sindets( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
+    PivotingStrategy_Sindets( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
 
     # Pivoting strategy: choose the pivot with the largest numeric value 
     # between expressions &lt;x&gt; and &lt;y&gt;.
-    PivotStrategy_numeric( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
+    PivotingStrategy_numeric( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
 
     # Zero recognition strategy: length of expression &lt;x&gt;.
     ZeroStrategy_length( x::{algebraic}, $ ) :: {integer}
 
     # Zero recognition strategy: normalizer of expression &lt;x&gt;.
     ZeroStrategy_normalizer( x::{algebraic}, $ )
-
-    package LastUsed:
 
 </Text-field>
 </Output>
@@ -294,7 +257,7 @@ module LULEM:
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>
