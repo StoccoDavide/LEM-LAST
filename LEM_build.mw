@@ -116,10 +116,8 @@
 </Output>
 </Group>
 <Group view="code" hide-input="false" labelreference="L697" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LICENSE := FileTools[Text][ReadFile](&quot;LICENSE&quot;);</Text-field>
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LICENSE := FileTools[Text][ReadFile](&quot;LICENSE&quot;):</Text-field>
 </Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVEoTElDRU5TRUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RKSZBc3NpZ247RicvRjNRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y9LyUpc3RyZXRjaHlHRj0vJSpzeW1tZXRyaWNHRj0vJShsYXJnZW9wR0Y9LyUubW92YWJsZWxpbWl0c0dGPS8lJ2FjY2VudEdGPS8lJ2xzcGFjZUdRLDAuMjc3Nzc3OGVtRicvJSdyc3BhY2VHRkwtSSNtc0dGJDYjUWFfcUJTRH4zLUNsYXVzZX5MaWNlbnNlfCt8K0NvcHlyaWdodH4oYyl+MjAyMyx+RGF2aWRlflN0b2Njbyx+TWF0dGVvfkxhcmNoZXIsfkVucmljb35CZXJ0b2xhenppLHwrV2VucWluflpob3UsfkRhdmlkfkoufkplZmZyZXksfkphY3F1ZXN+Q2FyZXR0ZX5hbmR+Um9iZXJ0fk0ufkNvcmxlc3MufCt8K1JlZGlzdHJpYnV0aW9ufmFuZH51c2V+aW5+c291cmNlfmFuZH5iaW5hcnl+Zm9ybXMsfndpdGh+b3J+d2l0aG91dHwrbW9kaWZpY2F0aW9uLH5hcmV+cGVybWl0dGVkfnByb3ZpZGVkfnRoYXR+dGhlfmZvbGxvd2luZ35jb25kaXRpb25zfmFyZX5tZXQ6fCt8KzEuflJlZGlzdHJpYnV0aW9uc35vZn5zb3VyY2V+Y29kZX5tdXN0fnJldGFpbn50aGV+YWJvdmV+Y29weXJpZ2h0fm5vdGljZSx+dGhpc3wrfn5+bGlzdH5vZn5jb25kaXRpb25zfmFuZH50aGV+Zm9sbG93aW5nfmRpc2NsYWltZXIufCt8KzIuflJlZGlzdHJpYnV0aW9uc35pbn5iaW5hcnl+Zm9ybX5tdXN0fnJlcHJvZHVjZX50aGV+YWJvdmV+Y29weXJpZ2h0fm5vdGljZSx8K35+fnRoaXN+bGlzdH5vZn5jb25kaXRpb25zfmFuZH50aGV+Zm9sbG93aW5nfmRpc2NsYWltZXJ+aW5+dGhlfmRvY3VtZW50YXRpb258K35+fmFuZC9vcn5vdGhlcn5tYXRlcmlhbHN+cHJvdmlkZWR+d2l0aH50aGV+ZGlzdHJpYnV0aW9uLnwrfCszLn5OZWl0aGVyfnRoZX5uYW1lfm9mfnRoZX5jb3B5cmlnaHR+aG9sZGVyfm5vcn50aGV+bmFtZXN+b2Z+aXRzfCt+fn5jb250cmlidXRvcnN+bWF5fmJlfnVzZWR+dG9+ZW5kb3JzZX5vcn5wcm9tb3RlfnByb2R1Y3RzfmRlcml2ZWR+ZnJvbXwrfn5+dGhpc35zb2Z0d2FyZX53aXRob3V0fnNwZWNpZmljfnByaW9yfndyaXR0ZW5+cGVybWlzc2lvbi58K3wrVEhJU35TT0ZUV0FSRX5JU35QUk9WSURFRH5CWX5USEV+Q09QWVJJR0hUfkhPTERFUlN+QU5EfkNPTlRSSUJVVE9SU34iQVN+SVMifCtBTkR+QU5ZfkVYUFJFU1N+T1J+SU1QTElFRH5XQVJSQU5USUVTLH5JTkNMVURJTkcsfkJVVH5OT1R+TElNSVRFRH5UTyx+VEhFfCtJTVBMSUVEfldBUlJBTlRJRVN+T0Z+TUVSQ0hBTlRBQklMSVRZfkFORH5GSVRORVNTfkZPUn5BflBBUlRJQ1VMQVJ+UFVSUE9TRX5BUkV8K0RJU0NMQUlNRUQufklOfk5PfkVWRU5UflNIQUxMflRIRX5DT1BZUklHSFR+SE9MREVSfk9SfkNPTlRSSUJVVE9SU35CRX5MSUFCTEV8K0ZPUn5BTll+RElSRUNULH5JTkRJUkVDVCx+SU5DSURFTlRBTCx+U1BFQ0lBTCx+RVhFTVBMQVJZLH5PUn5DT05TRVFVRU5USUFMfCtEQU1BR0VTfihJTkNMVURJTkcsfkJVVH5OT1R+TElNSVRFRH5UTyx+UFJPQ1VSRU1FTlR+T0Z+U1VCU1RJVFVURX5HT09EU35PUnwrU0VSVklDRVM7fkxPU1N+T0Z+VVNFLH5EQVRBLH5PUn5QUk9GSVRTO35PUn5CVVNJTkVTU35JTlRFUlJVUFRJT04pfkhPV0VWRVJ8K0NBVVNFRH5BTkR+T05+QU5ZflRIRU9SWX5PRn5MSUFCSUxJVFksfldIRVRIRVJ+SU5+Q09OVFJBQ1QsflNUUklDVH5MSUFCSUxJVFksfCtPUn5UT1JUfihJTkNMVURJTkd+TkVHTElHRU5DRX5PUn5PVEhFUldJU0UpfkFSSVNJTkd+SU5+QU5ZfldBWX5PVVR+T0Z+VEhFflVTRXwrT0Z+VEhJU35TT0ZUV0FSRSx+RVZFTn5JRn5BRFZJU0VEfk9GflRIRX5QT1NTSUJJTElUWX5PRn5TVUNIfkRBTUFHRS58K0YnRjk=">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SShMSUNFTlNFR0YoUWFfcUJTRH4zLUNsYXVzZX5MaWNlbnNlfCt8K0NvcHlyaWdodH4oYyl+MjAyMyx+RGF2aWRlflN0b2Njbyx+TWF0dGVvfkxhcmNoZXIsfkVucmljb35CZXJ0b2xhenppLHwrV2VucWluflpob3UsfkRhdmlkfkoufkplZmZyZXksfkphY3F1ZXN+Q2FyZXR0ZX5hbmR+Um9iZXJ0fk0ufkNvcmxlc3MufCt8K1JlZGlzdHJpYnV0aW9ufmFuZH51c2V+aW5+c291cmNlfmFuZH5iaW5hcnl+Zm9ybXMsfndpdGh+b3J+d2l0aG91dHwrbW9kaWZpY2F0aW9uLH5hcmV+cGVybWl0dGVkfnByb3ZpZGVkfnRoYXR+dGhlfmZvbGxvd2luZ35jb25kaXRpb25zfmFyZX5tZXQ6fCt8KzEuflJlZGlzdHJpYnV0aW9uc35vZn5zb3VyY2V+Y29kZX5tdXN0fnJldGFpbn50aGV+YWJvdmV+Y29weXJpZ2h0fm5vdGljZSx+dGhpc3wrfn5+bGlzdH5vZn5jb25kaXRpb25zfmFuZH50aGV+Zm9sbG93aW5nfmRpc2NsYWltZXIufCt8KzIuflJlZGlzdHJpYnV0aW9uc35pbn5iaW5hcnl+Zm9ybX5tdXN0fnJlcHJvZHVjZX50aGV+YWJvdmV+Y29weXJpZ2h0fm5vdGljZSx8K35+fnRoaXN+bGlzdH5vZn5jb25kaXRpb25zfmFuZH50aGV+Zm9sbG93aW5nfmRpc2NsYWltZXJ+aW5+dGhlfmRvY3VtZW50YXRpb258K35+fmFuZC9vcn5vdGhlcn5tYXRlcmlhbHN+cHJvdmlkZWR+d2l0aH50aGV+ZGlzdHJpYnV0aW9uLnwrfCszLn5OZWl0aGVyfnRoZX5uYW1lfm9mfnRoZX5jb3B5cmlnaHR+aG9sZGVyfm5vcn50aGV+bmFtZXN+b2Z+aXRzfCt+fn5jb250cmlidXRvcnN+bWF5fmJlfnVzZWR+dG9+ZW5kb3JzZX5vcn5wcm9tb3RlfnByb2R1Y3RzfmRlcml2ZWR+ZnJvbXwrfn5+dGhpc35zb2Z0d2FyZX53aXRob3V0fnNwZWNpZmljfnByaW9yfndyaXR0ZW5+cGVybWlzc2lvbi58K3wrVEhJU35TT0ZUV0FSRX5JU35QUk9WSURFRH5CWX5USEV+Q09QWVJJR0hUfkhPTERFUlN+QU5EfkNPTlRSSUJVVE9SU34iQVN+SVMifCtBTkR+QU5ZfkVYUFJFU1N+T1J+SU1QTElFRH5XQVJSQU5USUVTLH5JTkNMVURJTkcsfkJVVH5OT1R+TElNSVRFRH5UTyx+VEhFfCtJTVBMSUVEfldBUlJBTlRJRVN+T0Z+TUVSQ0hBTlRBQklMSVRZfkFORH5GSVRORVNTfkZPUn5BflBBUlRJQ1VMQVJ+UFVSUE9TRX5BUkV8K0RJU0NMQUlNRUQufklOfk5PfkVWRU5UflNIQUxMflRIRX5DT1BZUklHSFR+SE9MREVSfk9SfkNPTlRSSUJVVE9SU35CRX5MSUFCTEV8K0ZPUn5BTll+RElSRUNULH5JTkRJUkVDVCx+SU5DSURFTlRBTCx+U1BFQ0lBTCx+RVhFTVBMQVJZLH5PUn5DT05TRVFVRU5USUFMfCtEQU1BR0VTfihJTkNMVURJTkcsfkJVVH5OT1R+TElNSVRFRH5UTyx+UFJPQ1VSRU1FTlR+T0Z+U1VCU1RJVFVURX5HT09EU35PUnwrU0VSVklDRVM7fkxPU1N+T0Z+VVNFLH5EQVRBLH5PUn5QUk9GSVRTO35PUn5CVVNJTkVTU35JTlRFUlJVUFRJT04pfkhPV0VWRVJ8K0NBVVNFRH5BTkR+T05+QU5ZflRIRU9SWX5PRn5MSUFCSUxJVFksfldIRVRIRVJ+SU5+Q09OVFJBQ1QsflNUUklDVH5MSUFCSUxJVFksfCtPUn5UT1JUfihJTkNMVURJTkd+TkVHTElHRU5DRX5PUn5PVEhFUldJU0UpfkFSSVNJTkd+SU5+QU5ZfldBWX5PVVR+T0Z+VEhFflVTRXwrT0Z+VEhJU35TT0ZUV0FSRSx+RVZFTn5JRn5BRFZJU0VEfk9GflRIRX5QT1NTSUJJTElUWX5PRn5TVUNIfkRBTUFHRS58K0YoNyNGLg==</Equation></Text-field>
-</Output>
 </Group>
 <Group view="code" hide-input="false" labelreference="L693" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">MODULE_NAME   := &quot;LEM&quot;:</Text-field>
@@ -214,7 +212,9 @@ end proc:</Text-field>
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">InstallerBuilder[Build](
   MODULE_NAME,
   'uninstaller' = false,
-  'version'     = &quot;1.0&quot;,  'height'      = 600,  'width'       = 1000,
+  'version'     = &quot;1.0&quot;,
+  'height'      = 600,
+  'width'       = 1000,
   'author'      = &quot;D.Stocco &amp; M.Larcher &amp; E.Bertolazzi&quot;,
   'welcome'     = [text = &quot;LEM (Large Expressions Management) Toolbox&quot;, image=&quot;LEM_logo.png&quot;],
   'finish'      = [text = &quot;LEM (Large Expressions Management) Toolbox&quot;, image=&quot;LEM_logo.png&quot;],
@@ -226,11 +226,11 @@ end proc:</Text-field>
       local src, dest, n, r, d, f, limb, ds;
       ds   := kernelopts('dirsep');
       src  := cat(interface(worksheetdir),ds,&quot;bin&quot;);
-      dest := cat(kernelopts(mapledir),ds,&quot;toolbox&quot;,ds,&quot;LEM&quot;,ds);
+      dest := cat(kernelopts(mapledir),ds,&quot;toolbox&quot;,ds,&quot;LEM&quot;,ds,&quot;lib&quot;,ds);
       if FT:-Exists(dest) then
         FT:-RemoveDirectory(dest,recurse=true,forceremove=true);
       end if;
-      FT:-MakeDirectory(dest);
+      FT:-MakeDirectory(dest,recurse=true);
       n  := 1+length(src);
       for r in FT:-Walk(src,'topdown','followlinks') do
         limb := cat(dest, ds, r:-dir[n..], ds);
