@@ -34,6 +34,7 @@
 # Maple
 *.mla
 *.bak
+#!installer/bin/LEM.mla
 
 # Folders
 ./lib
