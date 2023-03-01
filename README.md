@@ -1,6 +1,6 @@
-# LULEM (LU Decomposition Large Expressions Management)
+# LULEM (LU decomposition with Large Expressions Management)
 
-This is a module for the `LULEM` (LU decomposition with Large Expression Management) package. It contains the functions to solve linear systems of equations with large symbolic expressions. The module uses a Lower-Diagonal-Upper (LDU) decomposition with full pivoting to solve the system of equations using the `LEM` (Large Expressions Management) package to avoid expression swell.
+This is a module for the `LULEM` (LU decomposition with Large Expressions Management) package. It contains the functions to solve linear systems of equations with large symbolic expressions. The module uses a Lower-Diagonal-Upper (LDU) decomposition with full pivoting to solve the system of equations using the `LEM` (Large Expressions Management) package to avoid expression swell.
 
 The code in this repository is hopefully an improved version of the code provided in Wenqin Zhou's PhD thesis *Symbolic Computation Techniques for Solving Large Expressions*.
 
@@ -8,7 +8,7 @@ We would like to thank *Jacques Carette* for providing the original code that we
 
 ## Dependencies
 
-The `LULEM` Maple package depends on the `LEM` (Large Expressions Management) package. This package contains functions to avoid expression swell
+The `LULEM` Maple package depends on the `LEM` (Large Expressions Management) package. This package contains functions to avoid expression swell and it is freely available at this [link](https://github.com/StoccoDavide/LEM).
 
 ## Installation
 

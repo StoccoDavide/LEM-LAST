@@ -4,7 +4,7 @@
 #           | |  | | | | |   |  _| | |\/| |           #
 #           | |__| |_| | |___| |___| |  | |           #
 #           |_____\___/|_____|_____|_|  |_|           #
-#  LU Decomposition with Large Expression Management  #
+#  LU Decomposition with Large Expressions Management  #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Authors of the current version:
@@ -12,16 +12,17 @@
 #  Matteo Larcher (University of Trento)
 #  Enrico Bertolazzi (University of Trento)
 #
-# Author of the original code:
+# Authors of the original code:
 #   Wenqin Zhou (University of Western Ontario) - Former affiliation
 #   David J. Jeffrey (University of Western Ontario)
 #   Jacques Carette (McMaster University)
 #   Robert M. Corless (University of Western Ontario)
 #
+# License: BSD 3-Clause License
 #
-# This is a module for the 'LULEM' (LU Decomposition Large Expressions Management)
+# This is a module for the 'LULEM' (LU decomposition Large Expressions Management)
 # package. It contains the functions to solve systems of linear equations with
-# LEM (Large Wxpressions Management). The module uses the pivoting LU decomposition
+# LEM (Large Expressions Management). The module uses the pivoting LU decomposition
 # to solve the system.
 #
 # The following code is hopefully an improved version of the original version
@@ -71,8 +72,6 @@ LULEM := module()
           StoredData,
           lib_base_path,
           Verbose;
-
-  uses LEM;
 
   option  package,
           load   = ModuleLoad,
@@ -231,12 +230,12 @@ LULEM := module()
     n, m := LinearAlgebra[Dimensions](M):
 
     # Check if to veil or not
-    apply_veil := (z) -> `if`(VeilingStrategy(z) > 0, Veil[Q](z), z);
+    apply_veil := (z) -> `if`(VeilingStrategy(z) > 0, LEM[Veil][Q](z), z);
 
     # Check if M[r[k],c[k]] = 0, if not true it is the pivot
     Mkk := M[k,k];
     try
-      pivot_is_zero := evalb(ZeroStrategy(SubsVeil(Mkk, Q)) = 0);
+      pivot_is_zero := evalb(ZeroStrategy(LEM[SubsVeil](Mkk, Q)) = 0);
       #pivot_is_zero := evalb(ZeroStrategy(Normalizer(Mkk)) = 0);
     catch:
       print("Mkk: Division by 0 or numerical exception.\n");
@@ -251,7 +250,7 @@ LULEM := module()
         # Look for a non-zero pivot
         Mij := M[i,j];
         try
-          Mij_is_zero := evalb(ZeroStrategy(SubsVeil(Mij, Q)) = 0);
+          Mij_is_zero := evalb(ZeroStrategy(LEM[SubsVeil](Mij, Q)) = 0);
           #Mij_is_zero := evalb(ZeroStrategy(Normalizer(Mij)) = 0);
         catch:
           print("Mij: Division by 0 or numerical exception.\n");
@@ -316,7 +315,7 @@ LULEM := module()
     c := Vector(m, k -> k);
 
     # Check if to veil or not
-    apply_veil := (z) -> `if`(VeilingStrategy(z) > 0, Veil[Q](z), z);
+    apply_veil := (z) -> `if`(VeilingStrategy(z) > 0, LEM[Veil][Q](z), z);
 
     # Perform Gaussian elimination
     M   := copy(A);
@@ -403,7 +402,7 @@ LULEM := module()
     x := Vector(n);
 
     # Create a normalizer function
-    apply_veil := (y) -> `if`(VeilingStrategy(y) > 0, Veil[Q](y), y);
+    apply_veil := (y) -> `if`(VeilingStrategy(y) > 0, LEM[Veil][Q](y), y);
 
     # Perform forward substitution to solve Ly=Pb
     y[1] := apply_veil(b[r[1]]);
@@ -429,16 +428,16 @@ LULEM := module()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   FFLU := proc(
-    A::{Matrix},                                            # Linear system matrix A
-    Q::{symbol},                                            # Symbol for the veiling
-    VeilingStrategy::{procedure} := VeilingStrategy_n,     # Veiling strategy
-    PivotingStrategy::{procedure}  := PivotStrategy_Slength, # Pivoting strategy procedure
-    ZeroStrategy::{procedure}    := ZeroStrategy_length,   # Zero recognition strategy procedure
+    A::{Matrix},
+    Q::{symbol},
+    VeilingStrategy::{procedure}  := VeilingStrategy_n,
+    PivotingStrategy::{procedure} := PivotStrategy_Slength,
+    ZeroStrategy::{procedure}     := ZeroStrategy_length,
     $)
 
     description "Compute the LU decomposition of a square matrix <A> using the "
-                "LEM strategy <VeilingStrategy>, the veiling symbol <Q>, the pivoting "
-                "strategy <PivotingStrategy> and the zero recognition strategy <ZeroStrategy>.";
+      "veiling strategy <VeilingStrategy>, the veiling symbol <Q>, the pivoting"
+      "strategy <PivotingStrategy> and the zero recognition strategy <ZeroStrategy>.";
 
     local SS, M, Mkk, n, m, nm, i, j, k, ri, rk, rnk, r, c, apply_veil, pivot_is_zero, Mij_is_zero, z, tmp;
 
@@ -449,7 +448,7 @@ LULEM := module()
     c := Vector(m, k -> k);
 
     # check if Veil or not
-    apply_veil := z -> `if`(VeilingStrategy(z) > 0, Veil[Q](z), z);
+    apply_veil := z -> `if`(VeilingStrategy(z) > 0, LEM[Veil][Q](z), z);
 
     # Gauss Elimination main loop
     M   := copy(A);  # make a working copy
@@ -458,20 +457,22 @@ LULEM := module()
     SS  := Vector(nm);
     for k from 1 to nm-1 do
       if Verbose then
-        printf("Process row N.%d\n",k);
+        printf("LULEM::FFLU(...): processing %d-th row.\n", k)
       end;
-      pivot_is_zero, Mkk := LUPivoting( k, M, Q, r, c, VeilingStrategy, PivotingStrategy, ZeroStrategy );
+      pivot_is_zero, Mkk := LUPivoting(
+        k, M, Q, r, c, VeilingStrategy, PivotingStrategy, ZeroStrategy
+      );
 
       if pivot_is_zero then
         rnk := k;
         if Verbose then
-          WARNING( "LULEM::LUD(...): the matrix appears not full rank." );
+          WARNING("LULEM::LU(...): the matrix appears not full rank.");
         end;
         break;
       end if;
 
       if Verbose then
-        print("PIVOT:",Mkk);
+        print("LULEM::FFLU(...): pivot:", Mkk);
       end;
 
       SS[k] := Mkk;
@@ -483,8 +484,6 @@ LULEM := module()
     # Return the LU decomposition and the pivot vector
     return M, SS, r, c, rnk;
   end proc: # FFLU
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
