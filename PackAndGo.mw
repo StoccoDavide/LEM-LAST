@@ -97,63 +97,130 @@
     <Task-category name="&lt;default&gt;"/>
 </Task-table>
 <Task/>
-<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Generate Library</Text-field></Title>
+<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Build the Library</Text-field></Title>
 <Group hide-input="false" labelreference="L256747" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:
-currentdir();</Text-field>
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
 </Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkjbXNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2I1FAL1VzZXJzL2RhdmlkZS9Eb2N1bWVudHMvR2l0L0xFTUYn">UUAvVXNlcnMvZGF2aWRlL0RvY3VtZW50cy9HaXQvTEVNNiI=</Equation></Text-field>
-</Output>
 </Group>
-<Group labelreference="L256749" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">read(&quot;./LEM.mpl&quot;);</Text-field>
+<Group labelreference="L256765" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">ds := kernelopts('dirsep'):</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+</Group><Presentation-Block>
+<Group view="code" hide-input="false" labelreference="L256770" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">MODULE_NAME := &quot;LEM&quot;:</Text-field>
+</Input>
+</Group>
+<Group view="code" labelreference="L256772" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">SOURCE_DIR  := cat(currentdir(), ds, &quot;lib&quot;):</Text-field>
+</Input>
+</Group>
+<Group view="code" hide-input="false" labelreference="L256771" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">BINARY_DIR  := cat(currentdir(), ds, &quot;installer&quot;, ds, &quot;bin&quot;):</Text-field>
+</Input>
+</Group>
+<Group view="code" hide-input="false" labelreference="L256769" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LIBRARY_MLA := cat(BINARY_DIR, ds, MODULE_NAME, &quot;.mla&quot;):
 </Text-field>
-</Output>
-</Group>
-<Group hide-input="false" labelreference="L256755" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LibraryName := &quot;LEM&quot;;</Text-field>
 </Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVEsTGlicmFyeU5hbWVGJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRictSSNtb0dGJDYtUSkmQXNzaWduO0YnL0YzUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGPS8lKXN0cmV0Y2h5R0Y9LyUqc3ltbWV0cmljR0Y9LyUobGFyZ2VvcEdGPS8lLm1vdmFibGVsaW1pdHNHRj0vJSdhY2NlbnRHRj0vJSdsc3BhY2VHUSwwLjI3Nzc3NzhlbUYnLyUncnNwYWNlR0ZMLUkjbXNHRiQ2I1EkTEVNRidGOQ==">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSxMaWJyYXJ5TmFtZUdGKFEkTEVNRig3I0Yu</Equation></Text-field>
-</Output>
-</Group>
-<Group hide-input="false" labelreference="L256761" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Remove curren library file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">DIR := cat(currentdir(), &quot;/lib/&quot;, LibraryName, &quot;/lib/&quot;);
-FileTools[RemoveDirectory](DIR, recurse = true);
-FileTools[MakeDirectory](DIR);</Text-field>
+</Group></Presentation-Block>
+<Group labelreference="L256768" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Check bin directory</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if not FileTools[Exists](BINARY_DIR) then
+  FileTools[MakeDirectory](BINARY_DIR);
+end if;
+</Text-field>
 </Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVEkRElSRicvJSdpdGFsaWNHUSV0cnVlRicvJSxtYXRodmFyaWFudEdRJ2l0YWxpY0YnLUkjbW9HRiQ2LVEpJkFzc2lnbjtGJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1JI21zR0YkNiNRTS9Vc2Vycy9kYXZpZGUvRG9jdW1lbnRzL0dpdC9MRU0vbGliL0xFTS9saWIvRidGOQ==">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSRESVJHRihRTS9Vc2Vycy9kYXZpZGUvRG9jdW1lbnRzL0dpdC9MRU0vbGliL0xFTS9saWIvRig3I0Yu</Equation></Text-field>
-</Output>
 </Group>
-<Group labelreference="L256759" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Font style="Text">Function to generate the library</Font>
-GEN := proc(BASE)
-  local filename;
-  global savelibname;
-  filename := cat(DIR, BASE, &quot;.mla&quot;);
-  march('create', filename);
-  savelibname := filename;
-  savelibname := savelib(BASE);
+<Group labelreference="L256773" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Check MLA file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](LIBRARY_MLA) then
+  FileTools[Remove](LIBRARY_MLA);
+end if;
+</Text-field>
+</Input>
+</Group>
+<Group labelreference="L256777" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Library generation procedure</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN := proc( MODULE_NAME::{string} )
+
+  local bin_path, src_path;
+
+  bin_path := cat(BINARY_DIR, ds, MODULE_NAME, &quot;.mla&quot;);
+  src_path := cat(SOURCE_DIR, ds, MODULE_NAME, &quot;.mpl&quot;);
+
+  if FileTools[Exists](src_path) then
+    if not FileTools[Exists](BINARY_DIR) then
+      FileTools[MakeDirectory](BINARY_DIR);
+    end if;
+    if FileTools[Exists](bin_path) then
+      FileTools[Remove](bin_path):
+    end if;
+    read(src_path);
+    march('create', bin_path );
+    savelib(convert(MODULE_NAME, symbol), bin_path);
+  else
+<Font encoding="UTF-8">    error &quot;Missing file %1.\134n&quot;, </Font>src_path;
+  end if;
+
 end proc:
 </Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L256760" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(LEM);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);
+</Text-field>
+</Input>
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+</Text-field>
+</Output>
+</Group>
+<Group hide-input="false" labelreference="L256774" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Create sources path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">file := cat(interface(worksheetdir), ds, &quot;installer&quot;, ds, &quot;bin&quot;);
+</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVElZmlsZUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RKSZBc3NpZ247RicvRjNRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y9LyUpc3RyZXRjaHlHRj0vJSpzeW1tZXRyaWNHRj0vJShsYXJnZW9wR0Y9LyUubW92YWJsZWxpbWl0c0dGPS8lJ2FjY2VudEdGPS8lJ2xzcGFjZUdRLDAuMjc3Nzc3OGVtRicvJSdyc3BhY2VHRkwtSSNtc0dGJDYjUU4vVXNlcnMvZGF2aWRlL0RvY3VtZW50cy9HaXQvTEVNL2luc3RhbGxlci9iaW5GJ0Y5">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSVmaWxlR0YoUU4vVXNlcnMvZGF2aWRlL0RvY3VtZW50cy9HaXQvTEVNL2luc3RhbGxlci9iaW5GKDcjRi4=</Equation></Text-field>
+</Output>
+</Group>
+<Group hide-input="false" labelreference="L256788" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Create destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">dest := cat(kernelopts(mapledir), ds, &quot;toolbox&quot;, ds, MODULE_NAME, ds, &quot;lib&quot;, ds);
+</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVElZGVzdEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RKSZBc3NpZ247RicvRjNRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y9LyUpc3RyZXRjaHlHRj0vJSpzeW1tZXRyaWNHRj0vJShsYXJnZW9wR0Y9LyUubW92YWJsZWxpbWl0c0dGPS8lJ2FjY2VudEdGPS8lJ2xzcGFjZUdRLDAuMjc3Nzc3OGVtRicvJSdyc3BhY2VHRkwtSSNtc0dGJDYjUV1vL0xpYnJhcnkvRnJhbWV3b3Jrcy9NYXBsZS5mcmFtZXdvcmsvVmVyc2lvbnMvMjAyMC90b29sYm94L0xFTS9saWIvRidGOQ==">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSVkZXN0R0YoUV1vL0xpYnJhcnkvRnJhbWV3b3Jrcy9NYXBsZS5mcmFtZXdvcmsvVmVyc2lvbnMvMjAyMC90b29sYm94L0xFTS9saWIvRig3I0Yu</Equation></Text-field>
+</Output>
+</Group>
+<Group hide-input="false" labelreference="L256797" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Create destination file path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">destfile := cat(dest, MODULE_NAME, &quot;.mla&quot;);</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVEpZGVzdGZpbGVGJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRictSSNtb0dGJDYtUSkmQXNzaWduO0YnL0YzUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGPS8lKXN0cmV0Y2h5R0Y9LyUqc3ltbWV0cmljR0Y9LyUobGFyZ2VvcEdGPS8lLm1vdmFibGVsaW1pdHNHRj0vJSdhY2NlbnRHRj0vJSdsc3BhY2VHUSwwLjI3Nzc3NzhlbUYnLyUncnNwYWNlR0ZMLUkjbXNHRiQ2I1Fkby9MaWJyYXJ5L0ZyYW1ld29ya3MvTWFwbGUuZnJhbWV3b3JrL1ZlcnNpb25zLzIwMjAvdG9vbGJveC9MRU0vbGliL0xFTS5tbGFGJ0Y5">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSlkZXN0ZmlsZUdGKFFkby9MaWJyYXJ5L0ZyYW1ld29ya3MvTWFwbGUuZnJhbWV3b3JrL1ZlcnNpb25zLzIwMjAvdG9vbGJveC9MRU0vbGliL0xFTS5tbGFGKDcjRi4=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L256798" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Delete destination file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](destfile) then
+  FileTools[Remove](destfile);
+end if;
+</Text-field>
 </Input>
 </Group>
-<Group labelreference="L256758" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Copy the library in the toolbox folder (Only for OSX!)</Text-field>
+<Group labelreference="L256787" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Check destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](dest) then
+  FileTools[RemoveDirectory](dest, recurse = true, forceremove = true);
+end if;
+FileTools[MakeDirectory](dest, recurse = true);</Text-field>
+</Input>
+<Output><Text-field style="HyperlinkError" layout="HyperlinkError"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Error,%20(in%20rmdir)%20directory,%20%2FLibrary%2FFrameworks%2FMaple.framework%2FVersions%2F2020%2Ftoolbox%2FLEM%2Flib%2F,%20exists%20and%20is%20not%20empty" hyperlink="true"><Font style="HyperlinkError">Error, (in rmdir) directory, /Library/Frameworks/Maple.framework/Versions/2020/toolbox/LEM/lib/, exists and is not empty</Font></Hyperlink></Text-field>
+</Output>
+</Group>
+<Group hide-input="false" labelreference="L256785" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Copy the binaries in the toolbox folder</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">n := 1 + length(file):</Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L256748" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">system(cat(&quot;sudo -S cp -R ./lib/&quot;, LibraryName, &quot; /Library/Frameworks/Maple.framework/Versions/Current/toolbox/&quot;)):</Text-field>
+<Group hide-input="false" labelreference="L256784" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">for r in FileTools[Walk](file, 'topdown', 'followlinks') do
+  limb := cat(dest, ds, r[dir][n..], ds);
+  for d in r[subdirs] do
+    ((d) -&gt; `if`(FileTools[Exists](d), 0, FileTools[MakeDirectory](d)))(cat(limb, d));
+  end do;  seq(FileTools[Copy](cat(r[dir], ds, f), cat(limb, f)), f = r[files]);
+end do:</Text-field>
 </Input>
-</Group>
-<Group hide-input="false" labelreference="L256753" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">system(cat(&quot;sudo chmod -R 777 /Library/Frameworks/Maple.framework/Versions/Current/toolbox/&quot;)):</Text-field>
-</Input>
+<Output><Text-field style="HyperlinkError" layout="HyperlinkError"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Error,%20(in%20FileTools%3A-Copy)%20destination%20file%20exists%3A%20%2FLibrary%2FFrameworks%2FMaple.framework%2FVersions%2F2020%2Ftoolbox%2FLEM%2Flib%2F%2F%2F.DS_Store" hyperlink="true"><Font style="HyperlinkError">Error, (in FileTools:-Copy) destination file exists: /Library/Frameworks/Maple.framework/Versions/2020/toolbox/LEM/lib///.DS_Store</Font></Hyperlink></Text-field>
+</Output>
 </Group>
 </Section>
 <Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Test the Library</Text-field></Title>
@@ -164,45 +231,14 @@ end proc:
 <Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LEM);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
-</Text-field>
-</Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDYyLUkjbWlHRiQ2JVErRm9yZ2V0VmVpbEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEpTGFzdFVzZWRGJ0YyRjVGOC1GLzYlUSlMaXN0VmVpbEYnRjJGNUY4LUYvNiVRKVN1YnNWZWlsRidGMkY1RjgtRi82JVEnVW5WZWlsRidGMkY1RjgtRi82JVElVmVpbEYnRjJGNUY4LUYvNiVRK1ZlaWxMYWJlbHNGJ0YyRjUvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRkBGPEY8LyUlb3BlbkdRJyZsc3FiO0YnLyUmY2xvc2VHUScmcnNxYjtGJw==">NylJK0ZvcmdldFZlaWxHNiJJKUxhc3RVc2VkR0YkSSlMaXN0VmVpbEdGJEkpU3Vic1ZlaWxHRiRJJ1VuVmVpbEdGJEklVmVpbEdGJEkrVmVpbExhYmVsc0dGJA==</Equation></Text-field>
+<Output><Text-field style="HyperlinkError" layout="HyperlinkError"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Error,%20invalid%20input%3A%20with%20expects%20its%201st%20argument,%20pname,%20to%20be%20of%20type%20%7B%60module%60,%20package%7D,%20but%20received%20LEM" hyperlink="true"><Font style="HyperlinkError">Error, invalid input: with expects its 1st argument, pname, to be of type {`module`, package}, but received LEM</Font></Hyperlink></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LEM):</Text-field>
 </Input>
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">
-# Large Expressions Management module
-module LEM:
-
-    # Veil an expression &lt;x&gt; and return a label to it.
-    Veil( x::{anything}, $ ) :: {anything}
-
-    # UnVeil the expression &lt;x&gt; up to &lt;n&gt; levels.
-    UnVeil( x::{anything}, n::{infinity, nonnegint}, $ ) :: {anything}
-
-    # Return a list of the veiling labels.
-    VeilLabels( $ )
-
-    # Return a list of the veiling variables labelled as &lt;label&gt;. If &lt;label&gt; is 
-    # not given, return a list of all veiling variables.
-    ListVeil( label::{symbol, list(symbol)} := _VeilLabels(), $ )
-            :: {list(anything)}
-
-    # Substitute the reversed veiling variables of the veiling label &lt;label&gt; in 
-    # the expression &lt;x&gt;. If &lt;label&gt; is not given, substitute the reversed 
-    # veiling variables of all veiling labels.
-    SubsVeil( x::{anything}, label::{symbol, list(symbol)} := _VeilLabels(), 
-              $ ) :: {anything}
-
-    # Clear all the veiling variables of the veiling label &lt;label&gt;. If &lt;label&gt; 
-    # is not given, clear all the veiling variables.
-    ForgetVeil( label::{symbol, list(symbol)} := _VeilLabels(), $ )
-              :: {nothing}
-
-    package LastUsed:
+LEM::symbol = LEM
 
 </Text-field>
 </Output>

@@ -8,19 +8,13 @@ We would like to thank *Jacques Carette* for providing the original code that we
 
 ## Installation
 
-To install the package you must have first installed Maple. Then navigate to the toolbox folder of Maple installation, which should be:
-- OSX: `/Library/Frameworks/Maple.framework/Versions/Current/toolbox`;
-- Windows: `C:/Programs/Maple/toolbox/`;
-- Linux: `???` (if you managed to install Linux probably you know better than me where is the right folder 🫡).
-If the `toolbox` folder does not exist, create it.
-
-Make a folder named `LEM` and inside this folder create another one named `lib`. Copy the latest [released](https://github.com/StoccoDavide/LEM/releases) MLA (Maple Library Archive) file `LEM.mla` in the `lib` that you have just created.
+To install the package you must have first installed Maple. Then open the `PackAndGo.mw` file and use the `!!!` button to *execute the entire worksheet*.
 
 Then test the library in a Maple worksheet or document by typing:
 ```
 > with(LEM);
 ```
-Alternatively, you can use the `test.mw` file provided in the repository. If the package is loaded without errors, it is done!
+Alternatively, you can use one of the tests file provided in the `tests` folder. If the package is loaded without errors, it is done!
 
 ## Package description
 
