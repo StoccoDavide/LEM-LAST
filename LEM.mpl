@@ -12,7 +12,7 @@
 #  Matteo Larcher (University of Trento)
 #  Enrico Bertolazzi (University of Trento)
 #
-# Author of the original code:
+# Authors of the original code:
 #   Wenqin Zhou (University of Western Ontario) - Former affiliation
 #   David J. Jeffrey (University of Western Ontario)
 #   Jacques Carette (McMaster University)
@@ -20,7 +20,7 @@
 #
 # License: BSD 3-Clause License
 #
-# This is a module for the 'LEM' (Large Expression Management) package. It
+# This is a module for the 'LEM' (Large Expressions Management) package. It
 # contains the functions to deal with large expressions management. The module
 # can be used to veil and unveil large expressions to avoid expression swell.
 #

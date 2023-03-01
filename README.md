@@ -142,12 +142,12 @@ List all veiling variables
 
 ### Current version
 
-- *Davide Stocco* (maintainer) \
+- *Davide Stocco* \
   Department of Industrial Engineering \
   University of Trento \
   email: davide.stocco@unitn.it
 
-- *Matteo Larcher* (maintainer) \
+- *Matteo Larcher* \
   Department of Industrial Engineering \
   University of Trento \
   email: matteo.larcher@unitn.it
