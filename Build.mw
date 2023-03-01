@@ -219,15 +219,35 @@ end proc:
   'installation' = [
      'validate' = proc()
 
-        local file, dest, n, r, d, f, limb, ds;
+        local file, dest, n, r, d, f, limb, ds, RmDir;
 
         ds   := kernelopts('dirsep');
         file := cat(interface(worksheetdir), ds, &quot;bin&quot;);
-        dest := cat(kernelopts(mapledir), ds, &quot;toolbox&quot;, ds, &quot;LEM&quot;, ds, &quot;lib&quot;, ds);
+        dest := cat(kernelopts(mapledir), ds, &quot;toolbox&quot;, ds, &quot;LEM&quot;, ds, &quot;lib&quot;, ds);        ###        RmDir := proc( dirpath::{string}, $ )
 
-        if FileTools[Exists](dest) then
-          FileTools[RemoveDirectory](dest, recurse = true, forceremove = true);
-        end if;
+          local d, dd, ds;
+
+          ds := kernelopts('dirsep');
+          if FileTools[Exists](dirpath) and FileTools[IsDirectory](dirpath) then
+            for d in FileTools[ListDirectory](dirpath, 'all') do
+              if evalb((d &lt;&gt; &quot;.&quot;) and (d &lt;&gt; &quot;..&quot;)) then
+                dd := cat(dirpath, ds, d);
+                if FileTools[Exists](dd) then
+                  if FileTools[IsDirectory](dd) then
+                    RmDir(dd);
+                    # FileTools[RemoveDirectory](dd, forceremove = true);
+                  else
+                   FileTools[Remove](dd);
+                  end if;
+                end if;
+              end if;
+            end do;
+            FileTools[RemoveDirectory](dirpath, forceremove = true);
+          end if;
+          return;
+        
+        end proc:        ###
+        RmDir(dest);        
         FileTools[MakeDirectory](dest, recurse = true);
         n  := 1 + length(file);
         for r in FileTools[Walk](file, 'topdown', 'followlinks') do
@@ -253,7 +273,7 @@ end proc:
 </Group></Presentation-Block>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L681" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>

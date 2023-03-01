@@ -191,21 +191,32 @@ end proc:
 <Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVEpZGVzdGZpbGVGJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRictSSNtb0dGJDYtUSkmQXNzaWduO0YnL0YzUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGPS8lKXN0cmV0Y2h5R0Y9LyUqc3ltbWV0cmljR0Y9LyUobGFyZ2VvcEdGPS8lLm1vdmFibGVsaW1pdHNHRj0vJSdhY2NlbnRHRj0vJSdsc3BhY2VHUSwwLjI3Nzc3NzhlbUYnLyUncnNwYWNlR0ZMLUkjbXNHRiQ2I1Fkby9MaWJyYXJ5L0ZyYW1ld29ya3MvTWFwbGUuZnJhbWV3b3JrL1ZlcnNpb25zLzIwMjAvdG9vbGJveC9MRU0vbGliL0xFTS5tbGFGJ0Y5">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSlkZXN0ZmlsZUdGKFFkby9MaWJyYXJ5L0ZyYW1ld29ya3MvTWFwbGUuZnJhbWV3b3JrL1ZlcnNpb25zLzIwMjAvdG9vbGJveC9MRU0vbGliL0xFTS5tbGFGKDcjRi4=</Equation></Text-field>
 </Output>
 </Group>
-<Group labelreference="L256798" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Delete destination file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](destfile) then
-  FileTools[Remove](destfile);
-end if;
-</Text-field>
+<Group labelreference="L256799" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Procedure for deep directory removal</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir := proc( dirpath::{string}, $ )
+
+  local d, dd, ds;  ds := kernelopts('dirsep');  if FileTools[Exists](dirpath) and FileTools[IsDirectory](dirpath) then
+    for d in FileTools[ListDirectory](dirpath, 'all') do
+      if evalb((d &lt;&gt; &quot;.&quot;) and (d &lt;&gt; &quot;..&quot;)) then
+        dd := cat(dirpath, ds, d);
+        if FileTools[Exists](dd) then
+          if FileTools[IsDirectory](dd) then
+            RmDir(dd);
+            # FileTools[RemoveDirectory](dd, forceremove = true);
+          else
+           FileTools[Remove](dd);
+          end if;
+        end if;
+      end if;
+    end do;
+    FileTools[RemoveDirectory](dirpath, forceremove = true);
+  end if;
+  return;end proc:</Text-field>
 </Input>
 </Group>
-<Group labelreference="L256787" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](dest) then
-  FileTools[RemoveDirectory](dest, recurse = true, forceremove = true);
-end if;
-FileTools[MakeDirectory](dest, recurse = true);</Text-field>
+<Group hide-input="false" labelreference="L256787" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Check destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir(dest);FileTools[MakeDirectory](dest, recurse = true);
+</Text-field>
 </Input>
-<Output><Text-field style="HyperlinkError" layout="HyperlinkError"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Error,%20(in%20rmdir)%20directory,%20%2FLibrary%2FFrameworks%2FMaple.framework%2FVersions%2F2020%2Ftoolbox%2FLEM%2Flib%2F,%20exists%20and%20is%20not%20empty" hyperlink="true"><Font style="HyperlinkError">Error, (in rmdir) directory, /Library/Frameworks/Maple.framework/Versions/2020/toolbox/LEM/lib/, exists and is not empty</Font></Hyperlink></Text-field>
-</Output>
 </Group>
 <Group hide-input="false" labelreference="L256785" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Copy the binaries in the toolbox folder</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">n := 1 + length(file):</Text-field>
@@ -216,11 +227,10 @@ FileTools[MakeDirectory](dest, recurse = true);</Text-field>
   limb := cat(dest, ds, r[dir][n..], ds);
   for d in r[subdirs] do
     ((d) -&gt; `if`(FileTools[Exists](d), 0, FileTools[MakeDirectory](d)))(cat(limb, d));
-  end do;  seq(FileTools[Copy](cat(r[dir], ds, f), cat(limb, f)), f = r[files]);
+  end do;
+  seq(FileTools[Copy](cat(r[dir], ds, f), cat(limb, f)), f = r[files]);
 end do:</Text-field>
 </Input>
-<Output><Text-field style="HyperlinkError" layout="HyperlinkError"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Error,%20(in%20FileTools%3A-Copy)%20destination%20file%20exists%3A%20%2FLibrary%2FFrameworks%2FMaple.framework%2FVersions%2F2020%2Ftoolbox%2FLEM%2Flib%2F%2F%2F.DS_Store" hyperlink="true"><Font style="HyperlinkError">Error, (in FileTools:-Copy) destination file exists: /Library/Frameworks/Maple.framework/Versions/2020/toolbox/LEM/lib///.DS_Store</Font></Hyperlink></Text-field>
-</Output>
 </Group>
 </Section>
 <Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Test the Library</Text-field></Title>
@@ -231,14 +241,45 @@ end do:</Text-field>
 <Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LEM);</Text-field>
 </Input>
-<Output><Text-field style="HyperlinkError" layout="HyperlinkError"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Error,%20invalid%20input%3A%20with%20expects%20its%201st%20argument,%20pname,%20to%20be%20of%20type%20%7B%60module%60,%20package%7D,%20but%20received%20LEM" hyperlink="true"><Font style="HyperlinkError">Error, invalid input: with expects its 1st argument, pname, to be of type {`module`, package}, but received LEM</Font></Hyperlink></Text-field>
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+</Text-field>
+</Output>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDYyLUkjbWlHRiQ2JVErRm9yZ2V0VmVpbEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEpTGFzdFVzZWRGJ0YyRjVGOC1GLzYlUSlMaXN0VmVpbEYnRjJGNUY4LUYvNiVRKVN1YnNWZWlsRidGMkY1RjgtRi82JVEnVW5WZWlsRidGMkY1RjgtRi82JVElVmVpbEYnRjJGNUY4LUYvNiVRK1ZlaWxMYWJlbHNGJ0YyRjUvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRkBGPEY8LyUlb3BlbkdRJyZsc3FiO0YnLyUmY2xvc2VHUScmcnNxYjtGJw==">NylJK0ZvcmdldFZlaWxHNiJJKUxhc3RVc2VkR0YkSSlMaXN0VmVpbEdGJEkpU3Vic1ZlaWxHRiRJJ1VuVmVpbEdGJEklVmVpbEdGJEkrVmVpbExhYmVsc0dGJA==</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LEM):</Text-field>
 </Input>
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">
-LEM::symbol = LEM
+# Large Expressions Management module
+module LEM:
+
+    # Veil an expression &lt;x&gt; and return a label to it.
+    Veil( x::{anything}, $ ) :: {anything}
+
+    # UnVeil the expression &lt;x&gt; up to &lt;n&gt; levels.
+    UnVeil( x::{anything}, n::{infinity, nonnegint}, $ ) :: {anything}
+
+    # Return a list of the veiling labels.
+    VeilLabels( $ )
+
+    # Return a list of the veiling variables labelled as &lt;label&gt;. If &lt;label&gt; is 
+    # not given, return a list of all veiling variables.
+    ListVeil( label::{symbol, list(symbol)} := _VeilLabels(), $ )
+            :: {list(anything)}
+
+    # Substitute the reversed veiling variables of the veiling label &lt;label&gt; in 
+    # the expression &lt;x&gt;. If &lt;label&gt; is not given, substitute the reversed 
+    # veiling variables of all veiling labels.
+    SubsVeil( x::{anything}, label::{symbol, list(symbol)} := _VeilLabels(), 
+              $ ) :: {anything}
+
+    # Clear all the veiling variables of the veiling label &lt;label&gt;. If &lt;label&gt; 
+    # is not given, clear all the veiling variables.
+    ForgetVeil( label::{symbol, list(symbol)} := _VeilLabels(), $ )
+              :: {nothing}
+
+    package LastUsed:
 
 </Text-field>
 </Output>
@@ -249,7 +290,7 @@ LEM::symbol = LEM
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>
