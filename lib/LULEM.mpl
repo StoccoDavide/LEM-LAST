@@ -46,18 +46,17 @@ LULEM := module()
           SubsData,
           ForgetData,
           SetVerbosity,
-          PermutationMatrices,
+          Permutatiomnatrices,
           LU,
           LUPivoting,
           SolveLU,
           FFLU,
           FF2LU,
           SolveFFLU,
-          # TODO: QR,
+          QR,
           # TODO: SolveQR,
-          # TODO: QR,
-          # TODO: FF2QR,
-          # TODO: SolveQR,
+          # TODO: FFQR,
+          # TODO: SolveFFQR,
           VeilingStrategy_n,
           VeilingStrategy_L,
           VeilingStrategy_Ls,
@@ -191,7 +190,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  PermutationMatrices := proc(
+  Permutatiomnatrices := proc(
     r::{Vector},
     c::{Vector},
     $)
@@ -212,14 +211,14 @@ LULEM := module()
       Q[c[i], i] := 1;
     end do;
     return P, Q;
-  end proc: # PermutationMatrices
+  end proc: # Permutatiomnatrices
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   LUPivoting := proc(
     k::{integer},
     M::{Matrix},
-    Q::{symbol},
+    V::{symbol},
     r::{Vector(integer)},
     c::{Vector(integer)},
     VeilingStrategy::{procedure},
@@ -228,7 +227,7 @@ LULEM := module()
     $)
 
     description "Compute the LU decomposition pivot vector provided the step <k>, "
-      "the temporary LU (NAG) matrix <M>, the veiling symbol <Q>, the rows the "
+      "the temporary LU (NAG) matrix <M>, the veiling symbol <V>, the rows the "
       "pivot vector <r>, the columns the pivot vector <c>, the veiling strategy "
       "<VeilingStrategy>, the pivoting strategy <PivotingStrategy> and the zero "
       "recognition strategy <ZeroStrategy>.";
@@ -239,12 +238,12 @@ LULEM := module()
     m, n := LinearAlgebra[Dimensions](M):
 
     # Check if to veil or not
-    apply_veil := (z) -> `if`(VeilingStrategy(z) > 0, LEM[Veil][Q](z), z);
+    apply_veil := (z) -> `if`(VeilingStrategy(z) > 0, LEM[Veil][V](z), z);
 
     # Check if M[r[k],c[k]] = 0, if not true it is the pivot
     Mkk := M[k, k];
     try
-      pivot_is_zero := evalb(ZeroStrategy(LEM[SubsVeil](Mkk, Q)) = 0);
+      pivot_is_zero := evalb(ZeroStrategy(LEM[SubsVeil](Mkk, V)) = 0);
       #pivot_is_zero := evalb(ZeroStrategy(Normalizer(Mkk)) = 0);
     catch:
       print("Mkk: Division by 0 or numerical exception.\n");
@@ -259,7 +258,7 @@ LULEM := module()
         # Look for a non-zero pivot
         Mij := M[i, j];
         try
-          Mij_is_zero := evalb(ZeroStrategy(LEM[SubsVeil](Mij, Q)) = 0);
+          Mij_is_zero := evalb(ZeroStrategy(LEM[SubsVeil](Mij, V)) = 0);
           #Mij_is_zero := evalb(ZeroStrategy(Normalizer(Mij)) = 0);
         catch:
           if Verbose then
@@ -306,18 +305,18 @@ LULEM := module()
 
   LU := proc(
     A::{Matrix},
-    Q::{symbol},
+    V::{symbol},
     VeilingStrategy::{procedure}  := VeilingStrategy_n,
     PivotingStrategy::{procedure} := PivotingStrategy_Slength,
     ZeroStrategy::{procedure}     := ZeroStrategy_length,
-    $)
+    $)::{table};
 
     description "Compute the LU decomposition of a square matrix <A> using the "
-      "veiling strategy <VeilingStrategy>, the veiling symbol <Q>, the pivoting "
+      "veiling strategy <VeilingStrategy>, the veiling symbol <V>, the pivoting "
       "strategy <PivotingStrategy> and the zero recognition strategy "
       "<ZeroStrategy>.";
 
-    local M, L, U, Mkk, m, n, nm, k, rnk, r, c, apply_veil, pivot_is_zero, Mij_is_zero, tmp;
+    local M, L, U, Mkk, m, n, mn, k, rnk, r, c, apply_veil, pivot_is_zero, Mij_is_zero, tmp;
 
     m, n := LinearAlgebra[Dimensions](A):
 
@@ -326,18 +325,18 @@ LULEM := module()
     c := Vector(n, k -> k);
 
     # Check if to veil or not
-    apply_veil := (z) -> `if`(VeilingStrategy(z) > 0, LEM[Veil][Q](z), z);
+    apply_veil := (z) -> `if`(VeilingStrategy(z) > 0, LEM[Veil][V](z), z);
 
     # Perform Gaussian elimination
     M   := copy(A);
-    nm  := min(m, n);
-    rnk := nm;
-    for k from 1 to (nm - 1) do
+    mn  := min(m, n);
+    rnk := mn;
+    for k from 1 to (mn - 1) do
       if Verbose then
         printf("LULEM::LU(...): processing %d-th row.\n", k);
       end;
       pivot_is_zero, Mkk := LUPivoting(
-        k, M, Q, r, c, VeilingStrategy, PivotingStrategy, ZeroStrategy
+        k, M, V, r, c, VeilingStrategy, PivotingStrategy, ZeroStrategy
       );
 
       if pivot_is_zero then
@@ -361,19 +360,19 @@ LULEM := module()
     L := Matrix(M[1..m, 1..m], shape = triangular[lower, unit]);
     U := Matrix(M, shape = triangular[upper]);
 
-    # Return the LU decomposition as a table
-    return table( [
+    # Return the LU decomposition
+    return table([
       "methos"   = "LU",
       "L"        = L,
       "U"        = U,
-      "Q"        = Q,
+      "V"        = V,
       "r"        = r,
       "c"        = c,
       "rank"     = rnk,
       "L_length" = length(L),
       "U_length" = length(U),
-      "Q_length" = length(LEM[ListVeil](Q))
-    ] );
+      "V_length" = length(LEM[ListVeil](V))
+    ]);
   end proc: # LU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -381,13 +380,13 @@ LULEM := module()
   SolveLU := proc(
     T::{table},
     b::{Vector},
-    Q::{symbol, function},
+    V::{symbol, function},
     VeilingStrategy::{procedure} := VeilingStrategy_n,
     $)
 
-    description "Solve the linear system Ax=b using LU decomposition, provided "
-      "the matrix <A>, the vector <b>, the veiling symbol <Q> and the veiling "
-      "strategy <VeilingStrategy>.";
+    description "Solve the linear system Ax=b using LU decomposition <T>, "
+      "provided the vector <b>, the veiling symbol <V> and the veiling strategy "
+      "<VeilingStrategy>.";
 
     local L, U, r, c, m, n, rnk, LU_NAG, apply_veil, y, i, j, x, s:
 
@@ -413,10 +412,10 @@ LULEM := module()
     x := Vector(n);
 
     # Get permutation matrices
-    PP, QQ := PermutationMatrices(r, c);
+    PP, QQ := Permutatiomnatrices(r, c);
 
     # Create a normalizer function
-    apply_veil := (y) -> `if`(VeilingStrategy(y) > 0, LEM[Veil][Q](y), y);
+    apply_veil := (y) -> `if`(VeilingStrategy(y) > 0, LEM[Veil][V](y), y);
 
     # Perform forward substitution to solve Ly=b[r]
     y[1] := apply_veil(b[r[1]]);
@@ -443,17 +442,19 @@ LULEM := module()
 
   FFLU := proc(
     A::{Matrix},
-    Q::{symbol},
+    V::{symbol},
     VeilingStrategy::{procedure}  := VeilingStrategy_n,
     PivotingStrategy::{procedure} := PivotStrategy_Slength,
     ZeroStrategy::{procedure}     := ZeroStrategy_length,
-    $)
+    $)::{table};
 
-    description "Compute the LU decomposition of a square matrix <A> using the "
-      "veiling strategy <VeilingStrategy>, the veiling symbol <Q>, the pivoting"
-      "strategy <PivotingStrategy> and the zero recognition strategy <ZeroStrategy>.";
+    description "Compute the Fracton-Free LU decomposition of a square matrix "
+      "<A> using the veiling strategy <VeilingStrategy>, the veiling symbol <V>, "
+      "the pivoting strategy <PivotingStrategy> and the zero recognition strategy "
+      "<ZeroStrategy>.";
 
-    local SS, M, Mkk, m, n, nm, i, j, k, ri, rk, rnk, r, c, apply_veil, pivot_is_zero, Mij_is_zero, z, tmp;
+    local SS, M, Mkk, m, n, mn, i, j, k, ri, rk, rnk, r, c, apply_veil,
+      pivot_is_zero, Mij_is_zero, z, tmp;
 
     m, n := LinearAlgebra[Dimensions](A):
 
@@ -462,19 +463,19 @@ LULEM := module()
     c := Vector(n, k -> k);
 
     # check if Veil or not
-    apply_veil := z -> `if`(VeilingStrategy(z) > 0, LEM[Veil][Q](z), z);
+    apply_veil := z -> `if`(VeilingStrategy(z) > 0, LEM[Veil][V](z), z);
 
     # Gauss Elimination main loop
-    M   := copy(A);  # make a working copy
-    nm  := min(m,n);
-    rnk := nm;
-    SS  := Vector(nm);
-    for k from 1 to nm-1 do
+    M   := copy(A);
+    mn  := min(m, n);
+    rnk := mn;
+    SS  := Vector(mn);
+    for k from 1 to mn-1 do
       if Verbose then
         printf("LULEM::FFLU(...): processing %d-th row.\n", k)
       end;
       pivot_is_zero, Mkk := LUPivoting(
-        k, M, Q, r, c, VeilingStrategy, PivotingStrategy, ZeroStrategy
+        k, M, V, r, c, VeilingStrategy, PivotingStrategy, ZeroStrategy
       );
 
       if pivot_is_zero then
@@ -496,19 +497,19 @@ LULEM := module()
       #M[tmp,tmp] := apply_veil~(Normalizer~(Mkk*M[tmp,tmp]-M[tmp,k].M[k,tmp]));
     end do:
 
-    # Return the LU decomposition and the pivot vector
-    return table( [
+    # Return the FFLU decomposition
+    return table([
       "method"   = "FFLU",
       "M"        = M,
-      "Q"        = Q,
+      "V"        = V,
       "S"        = SS,
       "r"        = r,
       "c"        = c,
       "rank"     = rnk,
       "M_length" = length(M),
       "S_length" = length(SS),
-      "Q_length" = length(LEM[ListVeil](Q))
-    ] );
+      "V_length" = length(LEM[ListVeil](V))
+    ]);
   end proc: # FFLU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -551,6 +552,128 @@ LULEM := module()
     return L_list, D_list, Matrix(M, shape = triangular[upper]);
   end proc: # FF2LU
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  SolveFFLU := proc(
+    T::{table},
+    b::{Vector},
+    V::{symbol, function},
+    VeilingStrategy::{procedure} := VeilingStrategy_n,
+    $)
+
+    description "Solve the linear system Ax=b using FFLU decomposition <T>, "
+      "provided the vector <b>, the veiling symbol <V> and the veiling strategy "
+      "<VeilingStrategy>.";
+
+  end proc: # SolveFFLU
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  QR := proc(
+    A::{Matrix},
+    V::{symbol},
+    VeilingStrategy::{procedure}  := VeilingStrategy_n,
+    PivotingStrategy::{procedure} := PivotStrategy_Slength,
+    ZeroStrategy::{procedure}     := ZeroStrategy_length,
+    $)::{table};
+
+    description "Compute the Householder QR decomposition of a square matrix <A> "
+      "using the veiling strategy <VeilingStrategy>, the veiling symbol <V>, "
+      "the pivoting strategy <PivotingStrategy> and the zero recognition strategy "
+      "<ZeroStrategy>.";
+
+    local m, n, z, k, Q, R, M, norm_x, s, u1, w, tau;
+
+    # Extract the dimensions of the matrix A
+    m, n := LinearAlgebra[Dimensions](A):
+
+    # Check if the matrix A valid
+    assert(
+      m >= n,
+      "LULEM::QR(...): invalid matrix A(m,n) detected, got (m >= n)."
+    );
+
+    # Initialize some variables
+    z := Vector(n, k -> 0);
+    Q := Matrix(LinearAlgebra[IdentityMatrix](m)); # Orthogonal transformation so far
+    R := copy(A);                                  # Transformed matrix so far
+
+    # Compute the Householder QR decomposition with veiling
+    for k from 1 to n do
+
+      # Find H = I-tau*w*w’ to put zeros below R[j,j]
+      norm_x := LinearAlgebra[Norm](R[k..-1,k], 2);
+      s      := -sign(R[k, k]);
+      u1     := R[k, k] - s*norm_x;
+      w      := R[k..-1,k]/u1;
+      w[1]   := 1;
+      tau    := -s*u1/norm_x;
+
+      # Update R = HR and Q = QH
+      R[k..-1, 1..-1] := R[k..-1, 1..-1] - tau.w.LinearAlgebra[Transpose](w).R[k..-1,1..-1];
+      Q[1..-1, k..-1] := Q[1..-1, k..-1] - tau.Q[1..-1, k..-1].w.LinearAlgebra[Transpose](w);
+
+    end do;
+
+    # Return the QR decomposition
+    return table([
+      "method"   = "QR",
+      "Q"        = Q,
+      "R"        = R,
+      "V"        = V,
+      "Q_length" = length(Q),
+      "R_length" = length(R),
+      "V_length" = length(LEM[ListVeil](V))
+    ]);
+  end proc: # QR
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(*
+  SolveQR := proc(
+    T::{table},
+    b::{Vector},
+    V::{symbol, function},
+    VeilingStrategy::{procedure} := VeilingStrategy_n,
+    $)
+
+    description "Solve the linear system Ax=b using QR decomposition <T>, "
+      "provided the vector <b>, the veiling symbol <V> and the veiling strategy "
+      "<VeilingStrategy>.";
+
+  end proc: # SolveQR
+*)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(*
+  FFQR := proc(
+    A::{Matrix},
+    V::{symbol},
+    VeilingStrategy::{procedure}  := VeilingStrategy_n,
+    PivotingStrategy::{procedure} := PivotStrategy_Slength,
+    ZeroStrategy::{procedure}     := ZeroStrategy_length,
+    $)::{table};
+
+    description "Compute the Fracton-Free QR decomposition of a square matrix "
+      "<A> using the veiling strategy <VeilingStrategy>, the veiling symbol <V>, "
+      "the pivoting strategy <PivotingStrategy> and the zero recognition strategy "
+      "<ZeroStrategy>.";
+
+  end proc: # QR
+*)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(*
+  SolveFFQR := proc(
+    T::{table},
+    b::{Vector},
+    V::{symbol, function},
+    VeilingStrategy::{procedure} := VeilingStrategy_n,
+    $)
+
+    description "Solve the linear system Ax=b using FFQR decomposition <T>, "
+      "provided the vector <b>, the veiling symbol <V> and the veiling strategy "
+      "<VeilingStrategy>.";
+
+  end proc: # SolveFFQR
+*)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   #  __     __   _ _ _

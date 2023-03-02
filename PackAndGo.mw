@@ -170,9 +170,9 @@ end proc:
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="HyperlinkWarning" layout="HyperlinkWarning"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Warning,%20(in%20LULEM%3A-SolveLU)%20%60PP%60%20is%20implicitly%20declared%20local%20%7C%2FUsers%2Fdavide%2FDocuments%2FGit%2FLULEM%2Flib%2FLULEM.mpl%3A381%7C" hyperlink="true"><Font style="HyperlinkWarning">Warning, (in LULEM:-SolveLU) `PP` is implicitly declared local |/Users/davide/Documents/Git/LULEM/lib/LULEM.mpl:381|</Font></Hyperlink></Text-field>
+<Output><Text-field style="HyperlinkWarning" layout="HyperlinkWarning"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Warning,%20(in%20LULEM%3A-SolveLU)%20%60PP%60%20is%20implicitly%20declared%20local%20%7C%2FUsers%2Fdavide%2FDocuments%2FGit%2FLULEM%2Flib%2FLULEM.mpl%3A380%7C" hyperlink="true"><Font style="HyperlinkWarning">Warning, (in LULEM:-SolveLU) `PP` is implicitly declared local |/Users/davide/Documents/Git/LULEM/lib/LULEM.mpl:380|</Font></Hyperlink></Text-field>
 </Output>
-<Output><Text-field style="HyperlinkWarning" layout="HyperlinkWarning"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Warning,%20(in%20LULEM%3A-SolveLU)%20%60QQ%60%20is%20implicitly%20declared%20local%20%7C%2FUsers%2Fdavide%2FDocuments%2FGit%2FLULEM%2Flib%2FLULEM.mpl%3A381%7C" hyperlink="true"><Font style="HyperlinkWarning">Warning, (in LULEM:-SolveLU) `QQ` is implicitly declared local |/Users/davide/Documents/Git/LULEM/lib/LULEM.mpl:381|</Font></Hyperlink></Text-field>
+<Output><Text-field style="HyperlinkWarning" layout="HyperlinkWarning"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Warning,%20(in%20LULEM%3A-SolveLU)%20%60QQ%60%20is%20implicitly%20declared%20local%20%7C%2FUsers%2Fdavide%2FDocuments%2FGit%2FLULEM%2Flib%2FLULEM.mpl%3A380%7C" hyperlink="true"><Font style="HyperlinkWarning">Warning, (in LULEM:-SolveLU) `QQ` is implicitly declared local |/Users/davide/Documents/Git/LULEM/lib/LULEM.mpl:380|</Font></Hyperlink></Text-field>
 </Output>
 </Group>
 <Group hide-input="false" labelreference="L256774" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -255,7 +255,7 @@ end do:</Text-field>
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZSLUkjbWlHRiQ2JVErQXNzaWduRGF0YUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEmRkYyTFVGJ0YyRjVGOC1GLzYlUSVGRkxVRidGMkY1RjgtRi82JVErRm9yZ2V0RGF0YUYnRjJGNUY4LUYvNiVRI0xVRidGMkY1RjgtRi82JVErTFVQaXZvdGluZ0YnRjJGNUY4LUYvNiVRNFBlcm11dGF0aW9uTWF0cmljZXNGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X0xpbmRldHNGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X0xsZW5ndGhGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X1NpbmRldHNGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X1NsZW5ndGhGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X251bWVyaWNGJ0YyRjVGOC1GLzYlUS1TZXRWZXJib3NpdHlGJ0YyRjVGOC1GLzYlUSpTb2x2ZUZGTFVGJ0YyRjVGOC1GLzYlUShTb2x2ZUxVRidGMkY1RjgtRi82JVEpU3Vic0RhdGFGJ0YyRjVGOC1GLzYlUTJWZWlsaW5nU3RyYXRlZ3lfTEYnRjJGNUY4LUYvNiVRM1ZlaWxpbmdTdHJhdGVneV9MQkYnRjJGNUY4LUYvNiVRM1ZlaWxpbmdTdHJhdGVneV9Mc0YnRjJGNUY4LUYvNiVRMlZlaWxpbmdTdHJhdGVneV9uRidGMkY1RjgtRi82JVE1WmVyb1N0cmF0ZWd5X0RsZW5ndGhGJ0YyRjVGOC1GLzYlUTRaZXJvU3RyYXRlZ3lfbGVuZ3RoRidGMkY1RjgtRi82JVE4WmVyb1N0cmF0ZWd5X25vcm1hbGl6ZXJGJ0YyRjUvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRkBGPEY8LyUlb3BlbkdRJyZsc3FiO0YnLyUmY2xvc2VHUScmcnNxYjtGJw==">NzlJK0Fzc2lnbkRhdGFHNiJJJkZGMkxVR0YkSSVGRkxVR0YkSStGb3JnZXREYXRhR0YkSSNMVUdGJEkrTFVQaXZvdGluZ0dGJEk0UGVybXV0YXRpb25NYXRyaWNlc0dGJEk5UGl2b3RpbmdTdHJhdGVneV9MaW5kZXRzR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X0xsZW5ndGhHRiRJOVBpdm90aW5nU3RyYXRlZ3lfU2luZGV0c0dGJEk5UGl2b3RpbmdTdHJhdGVneV9TbGVuZ3RoR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X251bWVyaWNHRiRJLVNldFZlcmJvc2l0eUdGJEkqU29sdmVGRkxVR0YkSShTb2x2ZUxVR0YkSSlTdWJzRGF0YUdGJEkyVmVpbGluZ1N0cmF0ZWd5X0xHRiRJM1ZlaWxpbmdTdHJhdGVneV9MQkdGJEkzVmVpbGluZ1N0cmF0ZWd5X0xzR0YkSTJWZWlsaW5nU3RyYXRlZ3lfbkdGJEk1WmVyb1N0cmF0ZWd5X0RsZW5ndGhHRiRJNFplcm9TdHJhdGVneV9sZW5ndGhHRiRJOFplcm9TdHJhdGVneV9ub3JtYWxpemVyR0Yk</Equation></Text-field>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZULUkjbWlHRiQ2JVErQXNzaWduRGF0YUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEmRkYyTFVGJ0YyRjVGOC1GLzYlUSVGRkxVRidGMkY1RjgtRi82JVErRm9yZ2V0RGF0YUYnRjJGNUY4LUYvNiVRI0xVRidGMkY1RjgtRi82JVErTFVQaXZvdGluZ0YnRjJGNUY4LUYvNiVRNFBlcm11dGF0aW9tbmF0cmljZXNGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X0xpbmRldHNGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X0xsZW5ndGhGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X1NpbmRldHNGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X1NsZW5ndGhGJ0YyRjVGOC1GLzYlUTlQaXZvdGluZ1N0cmF0ZWd5X251bWVyaWNGJ0YyRjVGOC1GLzYlUSNRUkYnRjJGNUY4LUYvNiVRLVNldFZlcmJvc2l0eUYnRjJGNUY4LUYvNiVRKlNvbHZlRkZMVUYnRjJGNUY4LUYvNiVRKFNvbHZlTFVGJ0YyRjVGOC1GLzYlUSlTdWJzRGF0YUYnRjJGNUY4LUYvNiVRMlZlaWxpbmdTdHJhdGVneV9MRidGMkY1RjgtRi82JVEzVmVpbGluZ1N0cmF0ZWd5X0xCRidGMkY1RjgtRi82JVEzVmVpbGluZ1N0cmF0ZWd5X0xzRidGMkY1RjgtRi82JVEyVmVpbGluZ1N0cmF0ZWd5X25GJ0YyRjVGOC1GLzYlUTVaZXJvU3RyYXRlZ3lfRGxlbmd0aEYnRjJGNUY4LUYvNiVRNFplcm9TdHJhdGVneV9sZW5ndGhGJ0YyRjVGOC1GLzYlUThaZXJvU3RyYXRlZ3lfbm9ybWFsaXplckYnRjJGNS8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdGQEY8RjwvJSVvcGVuR1EnJmxzcWI7RicvJSZjbG9zZUdRJyZyc3FiO0Yn">NzpJK0Fzc2lnbkRhdGFHNiJJJkZGMkxVR0YkSSVGRkxVR0YkSStGb3JnZXREYXRhR0YkSSNMVUdGJEkrTFVQaXZvdGluZ0dGJEk0UGVybXV0YXRpb21uYXRyaWNlc0dGJEk5UGl2b3RpbmdTdHJhdGVneV9MaW5kZXRzR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X0xsZW5ndGhHRiRJOVBpdm90aW5nU3RyYXRlZ3lfU2luZGV0c0dGJEk5UGl2b3RpbmdTdHJhdGVneV9TbGVuZ3RoR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X251bWVyaWNHRiRJI1FSR0YkSS1TZXRWZXJib3NpdHlHRiRJKlNvbHZlRkZMVUdGJEkoU29sdmVMVUdGJEkpU3Vic0RhdGFHRiRJMlZlaWxpbmdTdHJhdGVneV9MR0YkSTNWZWlsaW5nU3RyYXRlZ3lfTEJHRiRJM1ZlaWxpbmdTdHJhdGVneV9Mc0dGJEkyVmVpbGluZ1N0cmF0ZWd5X25HRiRJNVplcm9TdHJhdGVneV9EbGVuZ3RoR0YkSTRaZXJvU3RyYXRlZ3lfbGVuZ3RoR0YkSThaZXJvU3RyYXRlZ3lfbm9ybWFsaXplckdGJA==</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -279,42 +279,56 @@ module LULEM:
 
     # Compute the LU decomposition premutation matrix provided the rows the 
     # pivot vector &lt;r&gt; and the columns the pivot vector &lt;c&gt;.
-    PermutationMatrices( r::{Vector}, c::{Vector}, $ )
+    Permutatiomnatrices( r::{Vector}, c::{Vector}, $ )
 
     # Compute the LU decomposition of a square matrix &lt;A&gt; using the veiling 
-    # strategy &lt;VeilingStrategy&gt;, the veiling symbol &lt;Q&gt;, the pivoting strategy 
+    # strategy &lt;VeilingStrategy&gt;, the veiling symbol &lt;V&gt;, the pivoting strategy 
     # &lt;PivotingStrategy&gt; and the zero recognition strategy &lt;ZeroStrategy&gt;.
-    LU( A::{Matrix}, Q::{symbol}, 
+    LU( A::{Matrix}, V::{symbol}, 
         VeilingStrategy::{procedure} := _VeilingStrategy_n, 
         PivotingStrategy::{procedure} := _PivotingStrategy_Slength, 
-        ZeroStrategy::{procedure} := _ZeroStrategy_length, $ )
+        ZeroStrategy::{procedure} := _ZeroStrategy_length, $ ) :: {table}
 
     # Compute the LU decomposition pivot vector provided the step &lt;k&gt;, the 
-    # temporary LU (NAG) matrix &lt;M&gt;, the veiling symbol &lt;Q&gt;, the rows the pivot 
+    # temporary LU (NAG) matrix &lt;M&gt;, the veiling symbol &lt;V&gt;, the rows the pivot 
     # vector &lt;r&gt;, the columns the pivot vector &lt;c&gt;, the veiling strategy 
     # &lt;VeilingStrategy&gt;, the pivoting strategy &lt;PivotingStrategy&gt; and the zero 
     # recognition strategy &lt;ZeroStrategy&gt;.
-    LUPivoting( k::{integer}, M::{Matrix}, Q::{symbol}, r::{Vector(integer)}, 
+    LUPivoting( k::{integer}, M::{Matrix}, V::{symbol}, r::{Vector(integer)}, 
                 c::{Vector(integer)}, VeilingStrategy::{procedure}, 
                 PivotingStrategy::{procedure}, ZeroStrategy::{procedure}, $ )
 
-    # Solve the linear system Ax=b using LU decomposition, provided the matrix 
-    # &lt;A&gt;, the vector &lt;b&gt;, the veiling symbol &lt;Q&gt; and the veiling strategy 
+    # Solve the linear system Ax=b using LU decomposition &lt;T&gt;, provided the 
+    # vector &lt;b&gt;, the veiling symbol &lt;V&gt; and the veiling strategy 
     # &lt;VeilingStrategy&gt;.
-    SolveLU( T::{table}, b::{Vector}, Q::{symbol, function}, 
+    SolveLU( T::{table}, b::{Vector}, V::{symbol, function}, 
              VeilingStrategy::{procedure} := _VeilingStrategy_n, $ )
 
-    # Compute the LU decomposition of a square matrix &lt;A&gt; using the veiling 
-    # strategy &lt;VeilingStrategy&gt;, the veiling symbol &lt;Q&gt;, the pivotingstrategy 
-    # &lt;PivotingStrategy&gt; and the zero recognition strategy &lt;ZeroStrategy&gt;.
-    FFLU( A::{Matrix}, Q::{symbol}, 
+    # Compute the Fracton-Free LU decomposition of a square matrix &lt;A&gt; using 
+    # the veiling strategy &lt;VeilingStrategy&gt;, the veiling symbol &lt;V&gt;, the 
+    # pivoting strategy &lt;PivotingStrategy&gt; and the zero recognition strategy 
+    # &lt;ZeroStrategy&gt;.
+    FFLU( A::{Matrix}, V::{symbol}, 
           VeilingStrategy::{procedure} := _VeilingStrategy_n, 
           PivotingStrategy::{procedure} := PivotStrategy_Slength, 
-          ZeroStrategy::{procedure} := _ZeroStrategy_length, $ )
+          ZeroStrategy::{procedure} := _ZeroStrategy_length, $ ) :: {table}
 
     FF2LU( T::{table}, $ )
 
-    SolveFFLU::symbol = LULEM:-SolveFFLU
+    # Solve the linear system Ax=b using FFLU decomposition &lt;T&gt;, provided the 
+    # vector &lt;b&gt;, the veiling symbol &lt;V&gt; and the veiling strategy 
+    # &lt;VeilingStrategy&gt;.
+    SolveFFLU( T::{table}, b::{Vector}, V::{symbol, function}, 
+               VeilingStrategy::{procedure} := _VeilingStrategy_n, $ )
+
+    # Compute the Householder QR decomposition of a square matrix &lt;A&gt; using the 
+    # veiling strategy &lt;VeilingStrategy&gt;, the veiling symbol &lt;V&gt;, the pivoting 
+    # strategy &lt;PivotingStrategy&gt; and the zero recognition strategy 
+    # &lt;ZeroStrategy&gt;.
+    QR( A::{Matrix}, V::{symbol}, 
+        VeilingStrategy::{procedure} := _VeilingStrategy_n, 
+        PivotingStrategy::{procedure} := PivotStrategy_Slength, 
+        ZeroStrategy::{procedure} := _ZeroStrategy_length, $ ) :: {table}
 
     # Veiling strategy: number of indeterminates in expression &lt;x&gt; minus 4.
     VeilingStrategy_n( x::{algebraic}, $ ) :: {integer}
@@ -367,7 +381,7 @@ module LULEM:
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>
