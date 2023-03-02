@@ -199,16 +199,16 @@ LULEM := module()
     description "Compute the LU decomposition premutation matrix provided the "
                 "rows the pivot vector <r> and the columns the pivot vector <c>.";
 
-    local n, m, i, P, Q;
+    local m, n, i, P, Q;
 
-    n := LinearAlgebra[RowDimension](r):
-    m := LinearAlgebra[RowDimension](c):
-    P := Matrix(n, n);
-    Q := Matrix(m, m);
-    for i from 1 to n by 1 do
+    m := LinearAlgebra[RowDimension](r):
+    n := LinearAlgebra[RowDimension](c):
+    P := Matrix(m, m);
+    Q := Matrix(n, n);
+    for i from 1 to m by 1 do
       P[i, r[i]] := 1;
     end do;
-    for i from 1 to m by 1 do
+    for i from 1 to n by 1 do
       Q[c[i], i] := 1;
     end do;
     return P, Q;
@@ -233,16 +233,16 @@ LULEM := module()
       "<VeilingStrategy>, the pivoting strategy <PivotingStrategy> and the zero "
       "recognition strategy <ZeroStrategy>.";
 
-    local Mij, Mkk, n, m, i, j, apply_veil, pivot_is_zero, Mij_is_zero, z, tmp;
+    local Mij, Mkk, m, n, i, j, apply_veil, pivot_is_zero, Mij_is_zero, z, tmp;
 
     # Extract dimensions
-    n, m := LinearAlgebra[Dimensions](M):
+    m, n := LinearAlgebra[Dimensions](M):
 
     # Check if to veil or not
     apply_veil := (z) -> `if`(VeilingStrategy(z) > 0, LEM[Veil][Q](z), z);
 
     # Check if M[r[k],c[k]] = 0, if not true it is the pivot
-    Mkk := M[k,k];
+    Mkk := M[k, k];
     try
       pivot_is_zero := evalb(ZeroStrategy(LEM[SubsVeil](Mkk, Q)) = 0);
       #pivot_is_zero := evalb(ZeroStrategy(Normalizer(Mkk)) = 0);
@@ -253,11 +253,11 @@ LULEM := module()
     end try;
 
     # Iterate over the columns and rows
-    for j from k to m do
-      for i from k to n do
+    for j from k to n do
+      for i from k to m do
 
         # Look for a non-zero pivot
-        Mij := M[i,j];
+        Mij := M[i, j];
         try
           Mij_is_zero := evalb(ZeroStrategy(LEM[SubsVeil](Mij, Q)) = 0);
           #Mij_is_zero := evalb(ZeroStrategy(Normalizer(Mij)) = 0);
@@ -317,20 +317,20 @@ LULEM := module()
       "strategy <PivotingStrategy> and the zero recognition strategy "
       "<ZeroStrategy>.";
 
-    local M, L, U, Mkk, n, m, nm, k, rnk, r, c, apply_veil, pivot_is_zero, Mij_is_zero, tmp;
+    local M, L, U, Mkk, m, n, nm, k, rnk, r, c, apply_veil, pivot_is_zero, Mij_is_zero, tmp;
 
-    n, m := LinearAlgebra[Dimensions](A):
+    m, n := LinearAlgebra[Dimensions](A):
 
     # Create pivot vector
-    r := Vector(n, k -> k);
-    c := Vector(m, k -> k);
+    r := Vector(m, k -> k);
+    c := Vector(n, k -> k);
 
     # Check if to veil or not
     apply_veil := (z) -> `if`(VeilingStrategy(z) > 0, LEM[Veil][Q](z), z);
 
     # Perform Gaussian elimination
     M   := copy(A);
-    nm  := min(n, m);
+    nm  := min(m, n);
     rnk := nm;
     for k from 1 to (nm - 1) do
       if Verbose then
@@ -358,94 +358,85 @@ LULEM := module()
       M[tmp, tmp] := apply_veil~(Normalizer~(M[tmp, tmp] - M[tmp, k].M[k, tmp]));
     end do:
 
-    L := Matrix(M[1..n, 1..n], shape = triangular[lower, unit]);
+    L := Matrix(M[1..m, 1..m], shape = triangular[lower, unit]);
     U := Matrix(M, shape = triangular[upper]);
 
-    # Return the LU decomposition and the pivot vector
-    #if (_nresults = 5) then
-    #  return L, U, r, c, rnk;
-    #else
-    #  return M, r, c, rnk;
-    #end if;
-    # Return the LU decomposition and the pivot vector
+    # Return the LU decomposition as a table
     return table( [
-      "L" = L,
-      "U" = U,
-      "Q" = Q,
-      "r" = r,
-      "c" = c,
-      "rank" = rnk,
+      "methos"   = "LU",
+      "L"        = L,
+      "U"        = U,
+      "Q"        = Q,
+      "r"        = r,
+      "c"        = c,
+      "rank"     = rnk,
       "L_length" = length(L),
       "U_length" = length(U),
-      "Q_length" = length(LEM:-ListVeil())
+      "Q_length" = length(LEM[ListVeil](Q))
     ] );
   end proc: # LU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   SolveLU := proc(
-    A::{Matrix},
+    T::{table},
     b::{Vector},
     Q::{symbol, function},
-    VeilingStrategy::{procedure}  := VeilingStrategy_n,
-    PivotingStrategy::{procedure} := PivotingStrategy_Slength,
-    ZeroStrategy::{procedure}     := ZeroStrategy_length,
+    VeilingStrategy::{procedure} := VeilingStrategy_n,
     $)
 
     description "Solve the linear system Ax=b using LU decomposition, provided "
-      "the matrix <A>, the vector <b>, the veiling symbol <Q>, the veiling "
-      "strategy <VeilingStrategy>, the pivoting strategy <PivotingStrategy> and "
-      "the zero recognition strategy <ZeroStrategy>.";
+      "the matrix <A>, the vector <b>, the veiling symbol <Q> and the veiling "
+      "strategy <VeilingStrategy>.";
 
-    local n, m, M, r, c, rnk, LU_NAG, apply_veil, y, i, j, x, s:
+    local L, U, r, c, m, n, rnk, LU_NAG, apply_veil, y, i, j, x, s:
+
+    # Extract the LU decomposition
+    L := T["L"];
+    U := T["U"];
+    r := T["r"];
+    c := T["c"];
 
     # Get linear system dimension
-    n := LinearAlgebra[RowDimension](A);
-    m := LinearAlgebra[ColumnDimension](A);
-
-    # Check if matrix A is square
-    assert(
-      n = LinearAlgebra[ColumnDimension](b),
-      "LULEM::SolveLU(...): input matrix A is not square."
-    );
+    m, n := LinearAlgebra[Dimensions](A);
 
     # Check if the linear system is consistent
     assert(
-      n = m,
-      "LULEM::SolveLU(...): the linear system Ax=b is not consistent."
+      LinearAlgebra[RowDimension](L) = LinearAlgebra[ColumnDimension](b),
+      "LULEM::SolveLU(...): inconsistent linear system."
     );
 
-    # Get LU decomposition of A (NAG-style)
-    M, r, c, rnk := LU(A, Q, VeilingStrategy, PivotingStrategy, ZeroStrategy);
-
     # Create vector for solution of Ly=Pb
-    y := Vector(n);
+    y := Vector(m);
 
     # Create vector for solution of Ux=y
     x := Vector(n);
+
+    # Get permutation matrices
+    PP, QQ := PermutationMatrices(r, c);
 
     # Create a normalizer function
     apply_veil := (y) -> `if`(VeilingStrategy(y) > 0, LEM[Veil][Q](y), y);
 
     # Perform forward substitution to solve Ly=Pb
     y[1] := apply_veil(b[r[1]]);
-    for i from 2 to n do
-      y[i] := apply_veil(b[r[i]]) - add(apply_veil(M[i, j] * y[j]), j = 1..i-1);
+    for i from 2 to m do
+      y[i] := apply_veil(b[r[i]]) - add(apply_veil(L[i, j] * y[j]), j = 1..i-1);
     end do;
 
-    # Perform backward substitution to solve Ux=y
-    x[c[n]] := apply_veil(y[n] / M[n, n]);
+    print(simplify(LEM[SubsVeil]([L.y, PP.b])));
+
+    # Perform backward substitution to solve Ux=Qy
+    x[c[n]] := apply_veil(y[n] / U[n, n]);
     for i from (n - 1) to 1 by -1 do
-      s := apply_veil(y[i]) - add(apply_veil(M[i, j] * x[c[j]]), j = i+1..n);
-      x[c[i]] := apply_veil(s / M[i, i]);
+      s := apply_veil(y[i]) - add(apply_veil(U[i, j] * x[c[j]]), j = i+1..n);
+      x[c[i]] := apply_veil(s / U[i, i]);
     end do;
+
+    print(simplify(LEM[SubsVeil]([U.x, QQ.y])));
 
     # Return outputs
-    if (_nresults = 2) then
-      return x, rnk;
-    else
-      return x;
-    end if;
+    return x;
   end proc: # SolveLUD
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -462,20 +453,20 @@ LULEM := module()
       "veiling strategy <VeilingStrategy>, the veiling symbol <Q>, the pivoting"
       "strategy <PivotingStrategy> and the zero recognition strategy <ZeroStrategy>.";
 
-    local SS, M, Mkk, n, m, nm, i, j, k, ri, rk, rnk, r, c, apply_veil, pivot_is_zero, Mij_is_zero, z, tmp;
+    local SS, M, Mkk, m, n, nm, i, j, k, ri, rk, rnk, r, c, apply_veil, pivot_is_zero, Mij_is_zero, z, tmp;
 
-    n, m := LinearAlgebra[Dimensions](A):
+    m, n := LinearAlgebra[Dimensions](A):
 
     # Create pivot vector
-    r := Vector(n, k -> k);
-    c := Vector(m, k -> k);
+    r := Vector(m, k -> k);
+    c := Vector(n, k -> k);
 
     # check if Veil or not
     apply_veil := z -> `if`(VeilingStrategy(z) > 0, LEM[Veil][Q](z), z);
 
     # Gauss Elimination main loop
     M   := copy(A);  # make a working copy
-    nm  := min(n,m);
+    nm  := min(m,n);
     rnk := nm;
     SS  := Vector(nm);
     for k from 1 to nm-1 do
@@ -507,23 +498,26 @@ LULEM := module()
 
     # Return the LU decomposition and the pivot vector
     return table( [
-      "M" = M,
-      "Q" = Q,
-      "S" = SS,
-      "r" = r,
-      "c" = c,
-      "rank" = rnk,
+      "method"   = "FFLU",
+      "M"        = M,
+      "Q"        = Q,
+      "S"        = SS,
+      "r"        = r,
+      "c"        = c,
+      "rank"     = rnk,
       "M_length" = length(M),
       "S_length" = length(SS),
-      "Q_length" = length(LEM:-ListVeil())
+      "Q_length" = length(LEM[ListVeil](Q))
     ] );
   end proc: # FFLU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  FF2LU := proc( T::{table}, $)
+  FF2LU := proc(
+    T::{table},
+    $)
 
-    local M, SS, r, c, rk, m, n, L, DG, L_list, D_list, U, i, j, k;
+    local M, SS, r, c, rk, n, m, L, DG, L_list, D_list, U, i, j, k;
 
     M  := T["M"];
     SS := T["S"];
@@ -531,7 +525,7 @@ LULEM := module()
     c  := T["c"];
     rk := T["rank"];
 
-    n, m := LinearAlgebra[Dimensions](M):
+    m, n := LinearAlgebra[Dimensions](M):
 
     L_list := [];
     D_list := [];
@@ -545,11 +539,11 @@ LULEM := module()
     #   +             + +         +      +            +       +             + +            +
     #
     for k from 1 to rk do
-      L            := Matrix( n, n, shape = triangular[lower, unit]);
+      L            := Matrix( m, m, shape = triangular[lower, unit]);
       L[k+1..-1,k] := M[k+1..-1,k];
       L_list       := [ op(L_list), L ];
-      DG           := Matrix( LinearAlgebra[IdentityMatrix](n), shape = diagonal );
-      for j from k+1 to n do
+      DG           := Matrix( LinearAlgebra[IdentityMatrix](m), shape = diagonal );
+      for j from k+1 to m do
         DG[j,j] := SS[k];
       end;
       D_list := [ op(D_list), DG ];
