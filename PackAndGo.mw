@@ -194,7 +194,10 @@ end proc:
 <Group labelreference="L256799" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Procedure for deep directory removal</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir := proc( dirpath::{string}, $ )
 
-  local d, dd, ds;  ds := kernelopts('dirsep');  if FileTools[Exists](dirpath) and FileTools[IsDirectory](dirpath) then
+  local d, dd, ds;
+
+  ds := kernelopts('dirsep');
+  if FileTools[Exists](dirpath) and FileTools[IsDirectory](dirpath) then
     for d in FileTools[ListDirectory](dirpath, 'all') do
       if evalb((d &lt;&gt; &quot;.&quot;) and (d &lt;&gt; &quot;..&quot;)) then
         dd := cat(dirpath, ds, d);
@@ -210,11 +213,15 @@ end proc:
     end do;
     FileTools[RemoveDirectory](dirpath, forceremove = true);
   end if;
-  return;end proc:</Text-field>
+  return;
+
+end proc:
+</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L256787" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir(dest);FileTools[MakeDirectory](dest, recurse = true);
+<Input><Text-field style="Text" layout="Normal">Check destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir(dest);
+FileTools[MakeDirectory](dest, recurse = true);
 </Text-field>
 </Input>
 </Group>
@@ -290,7 +297,7 @@ module LEM:
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>
