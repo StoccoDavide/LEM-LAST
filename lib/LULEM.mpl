@@ -1,11 +1,11 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#            _    _   _ _     _____ __  __            #
-#           | |  | | | | |   | ____|  \/  |           #
-#           | |  | | | | |   |  _| | |\/| |           #
-#           | |__| |_| | |___| |___| |  | |           #
-#           |_____\___/|_____|_____|_|  |_|           #
-#  LU Decomposition with Large Expressions Management  #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                        _    _   _ _     _____ __  __                        #
+#                       | |  | | | | |   | ____|  \/  |                       #
+#                       | |  | | | | |   |  _| | |\/| |                       #
+#                       | |__| |_| | |___| |___| |  | |                       #
+#                       |_____\___/|_____|_____|_|  |_|                       #
+#          LU and QR decomposition with Large Expressions Management          #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Authors of the current version:
 #  Davide Stocco (University of Trento)
@@ -20,10 +20,12 @@
 #
 # License: BSD 3-Clause License
 #
-# This is a module for the 'LULEM' (LU decomposition Large Expressions Management)
-# package. It contains the functions to solve systems of linear equations with
-# LEM (Large Expressions Management). The module uses the pivoting LU decomposition
-# to solve the system.
+# This is a module for the 'LULEM' (LU and QR decomposition Large Expressions
+# Management) package. It contains the functions to solve linear systems of
+# equations with large symbolic expressions. The module uses a symbolic full
+# pivoting LU decomposition to solve linear systems. The `LEM` (Large Expressions
+# Management) package is used to avoid expression swell. Moreover, it also
+# provides a full symbolic QR decomposition.
 #
 # The following code is hopefully an improved version of the original version
 # provided inthe following PhD thesis:
@@ -49,10 +51,13 @@ LULEM := module()
           LUPivoting,
           SolveLU,
           FFLU,
-          FFtoLU,
+          FF2LU,
           SolveFFLU,
-          #TODO: QR,
-          #TODO: SolveQR,
+          # TODO: QR,
+          # TODO: SolveQR,
+          # TODO: QR,
+          # TODO: FF2QR,
+          # TODO: SolveQR,
           VeilingStrategy_n,
           VeilingStrategy_L,
           VeilingStrategy_Ls,
@@ -137,6 +142,8 @@ LULEM := module()
 
     StoredData := [];
     Verbose    := false;
+
+    return NULL;
   end proc: # InitLULEM
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -514,7 +521,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  FFtoLU := proc( T::{table}, $)
+  FF2LU := proc( T::{table}, $)
 
     local M, SS, r, c, rk, m, n, L, DG, L_list, D_list, U, i, j, k;
 
@@ -548,7 +555,7 @@ LULEM := module()
       D_list := [ op(D_list), DG ];
     end;
     return L_list, D_list, Matrix(M, shape = triangular[upper]);
-  end proc: # FFtoLU
+  end proc: # FF2LU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -695,13 +702,6 @@ LULEM := module()
 
     description "Zero recognition strategy: length of expression <x>.";
 
-    #local tmp;
-    #tmp := SubsData(x);
-    #if evalb((evalf(abs(tmp)) = 0.0)) then
-    #  return length(0);
-    #else
-    #  return length(tmp);
-    #end if;
     return length(x);
   end proc: # ZeroStrategy_length
 
@@ -711,7 +711,8 @@ LULEM := module()
     x::{algebraic},
     $)::{integer};
 
-    description "Zero recognition strategy: length of expression <x>.";
+    description "Zero recognition strategy: length of expression <x> substituted "
+      "with assigned data.";
 
     local tmp;
     tmp := SubsData(x);

@@ -1,6 +1,6 @@
-# LULEM (LU decomposition with Large Expressions Management)
+# LULEM (LU and QR decomposition with Large Expressions Management)
 
-This is a module for the `LULEM` (LU decomposition with Large Expressions Management) package. It contains the functions to solve linear systems of equations with large symbolic expressions. The module uses a Lower-Diagonal-Upper (LDU) decomposition with full pivoting to solve the system of equations using the `LEM` (Large Expressions Management) package to avoid expression swell.
+This is a module for the `LULEM` (LU and QR decomposition with Large Expressions Management) package. It contains the functions to solve linear systems of equations with large symbolic expressions. The module uses a symbolic full pivoting LU decomposition to solve linear systems. The `LEM` (Large Expressions Management) package is used to avoid expression swell. Moreover, it also provides a full symbolic QR decomposition.
 
 The code in this repository is hopefully an improved version of the code provided in Wenqin Zhou's PhD thesis *Symbolic Computation Techniques for Solving Large Expressions*.
 
@@ -14,19 +14,13 @@ The `LULEM` Maple package depends on the `LEM` (Large Expressions Management) pa
 
 Firstly, install the dependency. The `LEM` package is freely available at this [link](https://github.com/StoccoDavide/LEM). For the installation of this dependency package, refer to the instructions present on the repository homepage.
 
-To install the package you must have first installed Maple. Then navigate to the toolbox folder of Maple installation, which should be:
-- OSX: `/Library/Frameworks/Maple.framework/Versions/Current/toolbox`;
-- Windows: `C:/Programs/Maple/toolbox/`;
-- Linux: `???` (if you managed to install Linux probably you know better than me where is the right folder 🫡).
-If the `toolbox` folder does not exist, create it.
-
-Make a folder named `LULEM` and inside this folder create another one named `lib`. Copy the latest [released](https://github.com/StoccoDavide/LULEM/releases) MLA (Maple Library Archive) file `LULEM.mla` in the `lib` that you have just created.
+To install the package you must have first installed Maple. Then open the `PackAndGo.mw` file and use the `!!!` button to *execute the entire worksheet*.
 
 Then test the library in a Maple worksheet or document by typing:
 ```
-> with(LULEM);
+> with(LEM);
 ```
-Alternatively, you can use the `test.mw` file provided in the repository. If the package is loaded without errors, it is done!
+Alternatively, you can use one of the tests file provided in the `tests` folder. If the package is loaded without errors, it is done!
 
 ## Usage
 
