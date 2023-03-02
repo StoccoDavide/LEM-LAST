@@ -406,10 +406,10 @@ LULEM := module()
       "LULEM::SolveLU(...): inconsistent linear system."
     );
 
-    # Create vector for solution of Ly=Pb
+    # Create vector for solution of Ly=b[r]
     y := Vector(m);
 
-    # Create vector for solution of Ux=y
+    # Create vector for solution of Ux=y[c]
     x := Vector(n);
 
     # Get permutation matrices
@@ -418,7 +418,7 @@ LULEM := module()
     # Create a normalizer function
     apply_veil := (y) -> `if`(VeilingStrategy(y) > 0, LEM[Veil][Q](y), y);
 
-    # Perform forward substitution to solve Ly=Pb
+    # Perform forward substitution to solve Ly=b[r]
     y[1] := apply_veil(b[r[1]]);
     for i from 2 to m do
       y[i] := apply_veil(b[r[i]]) - add(apply_veil(L[i, j] * y[j]), j = 1..i-1);
@@ -426,7 +426,7 @@ LULEM := module()
 
     print(simplify(LEM[SubsVeil]([L.y, PP.b])));
 
-    # Perform backward substitution to solve Ux=Qy
+    # Perform backward substitution to solve Ux[c]=y
     x[c[n]] := apply_veil(y[n] / U[n, n]);
     for i from (n - 1) to 1 by -1 do
       s := apply_veil(y[i]) - add(apply_veil(U[i, j] * x[c[j]]), j = i+1..n);
@@ -434,6 +434,7 @@ LULEM := module()
     end do;
 
     print(simplify(LEM[SubsVeil]([U.x, QQ.y])));
+    print(simplify(LEM[SubsVeil]([PP.L.U.x.QQ - b])));
 
     # Return outputs
     return x;
