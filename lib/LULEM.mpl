@@ -434,7 +434,6 @@ LULEM := module()
     end do;
 
     print(simplify(LEM[SubsVeil]([U.x, QQ.y])));
-    print(simplify(LEM[SubsVeil]([PP.L.U.x.QQ - b])));
 
     # Return outputs
     return x;
