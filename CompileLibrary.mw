@@ -167,7 +167,7 @@ end proc:
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZOLUkjbWlHRiQ2JVErQXNzaWduRGF0YUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVElRkZMVUYnRjJGNUY4LUYvNiVRK0ZvcmdldERhdGFGJ0YyRjVGOC1GLzYlUSNMVUYnRjJGNUY4LUYvNiVRK0xVUGl2b3RpbmdGJ0YyRjVGOC1GLzYlUTRQZXJtdXRhdGlvbk1hdHJpY2VzRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9MaW5kZXRzRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9MbGVuZ3RoRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9TaW5kZXRzRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9TbGVuZ3RoRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9udW1lcmljRidGMkY1RjgtRi82JVEtU2V0VmVyYm9zaXR5RidGMkY1RjgtRi82JVEqU29sdmVGRkxVRidGMkY1RjgtRi82JVEoU29sdmVMVUYnRjJGNUY4LUYvNiVRKVN1YnNEYXRhRidGMkY1RjgtRi82JVEyVmVpbGluZ1N0cmF0ZWd5X0xGJ0YyRjVGOC1GLzYlUTNWZWlsaW5nU3RyYXRlZ3lfTEJGJ0YyRjVGOC1GLzYlUTNWZWlsaW5nU3RyYXRlZ3lfTHNGJ0YyRjVGOC1GLzYlUTJWZWlsaW5nU3RyYXRlZ3lfbkYnRjJGNUY4LUYvNiVRNFplcm9TdHJhdGVneV9sZW5ndGhGJ0YyRjVGOC1GLzYlUThaZXJvU3RyYXRlZ3lfbm9ybWFsaXplckYnRjJGNS8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdGQEY8RjwvJSVvcGVuR1EnJmxzcWI7RicvJSZjbG9zZUdRJyZyc3FiO0Yn">NzdJK0Fzc2lnbkRhdGFHNiJJJUZGTFVHRiRJK0ZvcmdldERhdGFHRiRJI0xVR0YkSStMVVBpdm90aW5nR0YkSTRQZXJtdXRhdGlvbk1hdHJpY2VzR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X0xpbmRldHNHRiRJOVBpdm90aW5nU3RyYXRlZ3lfTGxlbmd0aEdGJEk5UGl2b3RpbmdTdHJhdGVneV9TaW5kZXRzR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X1NsZW5ndGhHRiRJOVBpdm90aW5nU3RyYXRlZ3lfbnVtZXJpY0dGJEktU2V0VmVyYm9zaXR5R0YkSSpTb2x2ZUZGTFVHRiRJKFNvbHZlTFVHRiRJKVN1YnNEYXRhR0YkSTJWZWlsaW5nU3RyYXRlZ3lfTEdGJEkzVmVpbGluZ1N0cmF0ZWd5X0xCR0YkSTNWZWlsaW5nU3RyYXRlZ3lfTHNHRiRJMlZlaWxpbmdTdHJhdGVneV9uR0YkSTRaZXJvU3RyYXRlZ3lfbGVuZ3RoR0YkSThaZXJvU3RyYXRlZ3lfbm9ybWFsaXplckdGJA==</Equation></Text-field>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZQLUkjbWlHRiQ2JVErQXNzaWduRGF0YUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVElRkZMVUYnRjJGNUY4LUYvNiVRK0ZvcmdldERhdGFGJ0YyRjVGOC1GLzYlUSNMVUYnRjJGNUY4LUYvNiVRK0xVUGl2b3RpbmdGJ0YyRjVGOC1GLzYlUTRQZXJtdXRhdGlvbk1hdHJpY2VzRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9MaW5kZXRzRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9MbGVuZ3RoRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9TaW5kZXRzRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9TbGVuZ3RoRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9udW1lcmljRidGMkY1RjgtRi82JVEtU2V0VmVyYm9zaXR5RidGMkY1RjgtRi82JVEqU29sdmVGRkxVRidGMkY1RjgtRi82JVEoU29sdmVMVUYnRjJGNUY4LUYvNiVRKVN1YnNEYXRhRidGMkY1RjgtRi82JVEyVmVpbGluZ1N0cmF0ZWd5X0xGJ0YyRjVGOC1GLzYlUTNWZWlsaW5nU3RyYXRlZ3lfTEJGJ0YyRjVGOC1GLzYlUTNWZWlsaW5nU3RyYXRlZ3lfTHNGJ0YyRjVGOC1GLzYlUTJWZWlsaW5nU3RyYXRlZ3lfbkYnRjJGNUY4LUYvNiVRNVplcm9TdHJhdGVneV9EbGVuZ3RoRidGMkY1RjgtRi82JVE0WmVyb1N0cmF0ZWd5X2xlbmd0aEYnRjJGNUY4LUYvNiVROFplcm9TdHJhdGVneV9ub3JtYWxpemVyRidGMkY1LyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0ZARjxGPC8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7Ric=">NzhJK0Fzc2lnbkRhdGFHNiJJJUZGTFVHRiRJK0ZvcmdldERhdGFHRiRJI0xVR0YkSStMVVBpdm90aW5nR0YkSTRQZXJtdXRhdGlvbk1hdHJpY2VzR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X0xpbmRldHNHRiRJOVBpdm90aW5nU3RyYXRlZ3lfTGxlbmd0aEdGJEk5UGl2b3RpbmdTdHJhdGVneV9TaW5kZXRzR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X1NsZW5ndGhHRiRJOVBpdm90aW5nU3RyYXRlZ3lfbnVtZXJpY0dGJEktU2V0VmVyYm9zaXR5R0YkSSpTb2x2ZUZGTFVHRiRJKFNvbHZlTFVHRiRJKVN1YnNEYXRhR0YkSTJWZWlsaW5nU3RyYXRlZ3lfTEdGJEkzVmVpbGluZ1N0cmF0ZWd5X0xCR0YkSTNWZWlsaW5nU3RyYXRlZ3lfTHNHRiRJMlZlaWxpbmdTdHJhdGVneV9uR0YkSTVaZXJvU3RyYXRlZ3lfRGxlbmd0aEdGJEk0WmVyb1N0cmF0ZWd5X2xlbmd0aEdGJEk4WmVyb1N0cmF0ZWd5X25vcm1hbGl6ZXJHRiQ=</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -219,8 +219,8 @@ module LULEM:
              PivotingStrategy::{procedure} := _PivotingStrategy_Slength, 
              ZeroStrategy::{procedure} := _ZeroStrategy_length, $ )
 
-    # Compute the LU decomposition of a square matrix &lt;A&gt; using the LEM 
-    # strategy &lt;VeilingStrategy&gt;, the veiling symbol &lt;Q&gt;, the pivoting strategy 
+    # Compute the LU decomposition of a square matrix &lt;A&gt; using the veiling 
+    # strategy &lt;VeilingStrategy&gt;, the veiling symbol &lt;Q&gt;, the pivotingstrategy 
     # &lt;PivotingStrategy&gt; and the zero recognition strategy &lt;ZeroStrategy&gt;.
     FFLU( A::{Matrix}, Q::{symbol}, 
           VeilingStrategy::{procedure} := _VeilingStrategy_n, 
@@ -264,6 +264,9 @@ module LULEM:
     # Zero recognition strategy: length of expression &lt;x&gt;.
     ZeroStrategy_length( x::{algebraic}, $ ) :: {integer}
 
+    # Zero recognition strategy: length of expression &lt;x&gt;.
+    ZeroStrategy_Dlength( x::{algebraic}, $ ) :: {integer}
+
     # Zero recognition strategy: normalizer of expression &lt;x&gt;.
     ZeroStrategy_normalizer( x::{algebraic}, $ )
 
@@ -276,7 +279,7 @@ module LULEM:
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>

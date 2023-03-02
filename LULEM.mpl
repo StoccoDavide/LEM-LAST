@@ -37,6 +37,7 @@
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+unprotect(LULEM);
 LULEM := module()
 
   export  AssignData,
@@ -61,6 +62,7 @@ LULEM := module()
           PivotingStrategy_Sindets,
           PivotingStrategy_numeric,
           ZeroStrategy_length,
+          ZeroStrategy_Dlength,
           ZeroStrategy_normalizer;
 
   local   ModuleLoad,
@@ -145,6 +147,8 @@ LULEM := module()
     description "Assign the data list <x> to the local variable <StoredData>.";
 
     StoredData := x;
+
+    return NULL;
   end proc: # AssignData
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -155,15 +159,12 @@ LULEM := module()
 
     description "Substitute the local variable <StoredData> in the expression <x>.";
 
-    local label, out, i;
+    local out, i;
 
-    label := lhs~(op(op(LastUsed))[2..-1]);
     out := copy(x);
     if (nops(StoredData) > 0) then
       for i in label do
-        out := subs[eval](StoredData,
-          subs[eval](op(ListTools[Reverse](ListVeil(i))), out)
-        );
+        out := subs[eval](StoredData, out);
       end do;
     end if;
 
@@ -253,8 +254,10 @@ LULEM := module()
           Mij_is_zero := evalb(ZeroStrategy(LEM[SubsVeil](Mij, Q)) = 0);
           #Mij_is_zero := evalb(ZeroStrategy(Normalizer(Mij)) = 0);
         catch:
-          print("Mij: Division by 0 or numerical exception.\n");
-          print(Mij);
+          if Verbose then
+            print("Mij: Division by 0 or numerical exception.\n");
+            print(Mij);
+          end if;
           Mij_is_zero := true;
         end try;
 
@@ -638,6 +641,23 @@ LULEM := module()
     #  return length(tmp);
     #end if;
     return length(x);
+  end proc: # ZeroStrategy_length
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  ZeroStrategy_Dlength := proc(
+    x::{algebraic},
+    $)::{integer};
+
+    description "Zero recognition strategy: length of expression <x>.";
+
+    local tmp;
+    tmp := SubsData(x);
+    if evalb((evalf(abs(tmp)) = 0.0)) then
+      return length(0);
+    else
+      return length(tmp);
+    end if;
   end proc: # ZeroStrategy_length
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
