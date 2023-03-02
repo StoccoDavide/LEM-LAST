@@ -19,6 +19,7 @@
 <Font name="Ordered List 1" background="[255,255,255]" bold="false" executable="false" family="Avenir Next" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Maple Input" background="[255,255,255]" bold="true" executable="true" family="Menlo" foreground="[19,82,186]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Text Output" background="[255,255,255]" bold="false" executable="false" family="Menlo" foreground="[2,100,2]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Page Number" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="10" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Ordered List 2" background="[255,255,255]" bold="false" executable="false" family="Avenir Next" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Ordered List 3" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Ordered List 4" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -96,189 +97,186 @@
 <Task-table>
     <Task-category name="&lt;default&gt;"/>
 </Task-table>
+<Annotation-table>
+    <Annotation-category name="&lt;default&gt;"/>
+</Annotation-table>
 <Task/>
-<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Generate Library</Text-field></Title>
-<Group hide-input="false" labelreference="L256747" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:
-currentdir();</Text-field>
+<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Build the Library</Text-field></Title><Presentation-Block>
+<Group view="code" labelreference="L515" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
 </Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkjbXNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2I1FCL1VzZXJzL2RhdmlkZS9Eb2N1bWVudHMvR2l0L0xVTEVNRic=">UUIvVXNlcnMvZGF2aWRlL0RvY3VtZW50cy9HaXQvTFVMRU02Ig==</Equation></Text-field>
-</Output>
 </Group>
-<Group labelreference="L256749" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">read(&quot;./LULEM.mpl&quot;);</Text-field>
+<Group view="code" hide-input="false" labelreference="L695" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">ds := kernelopts('dirsep'):</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+</Group>
+<Group view="code" hide-input="false" labelreference="L693" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">MODULE_NAME := &quot;LULEM&quot;:</Text-field>
+</Input>
+</Group>
+<Group view="code" labelreference="L633" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">SOURCE_DIR  := cat(currentdir(), ds, &quot;lib&quot;):</Text-field>
+</Input>
+</Group>
+<Group view="code" hide-input="false" labelreference="L634" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">BINARY_DIR  := cat(currentdir(), ds, &quot;installer&quot;, ds, &quot;bin&quot;):</Text-field>
+</Input>
+</Group>
+<Group view="code" hide-input="false" labelreference="L692" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LIBRARY_MLA := cat(BINARY_DIR, ds, &quot;bin&quot;, ds, MODULE_NAME, &quot;.mla&quot;):</Text-field>
+</Input>
+</Group>
+<Group view="code" labelreference="L698" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">INSTALL_MLA := cat(currentdir(), ds, &quot;installer&quot;, ds, MODULE_NAME, &quot;_install_binary.mla&quot;):
 </Text-field>
-</Output>
-</Group>
-<Group hide-input="false" labelreference="L256755" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LibraryName := &quot;LULEM&quot;;</Text-field>
 </Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVEsTGlicmFyeU5hbWVGJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRictSSNtb0dGJDYtUSkmQXNzaWduO0YnL0YzUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGPS8lKXN0cmV0Y2h5R0Y9LyUqc3ltbWV0cmljR0Y9LyUobGFyZ2VvcEdGPS8lLm1vdmFibGVsaW1pdHNHRj0vJSdhY2NlbnRHRj0vJSdsc3BhY2VHUSwwLjI3Nzc3NzhlbUYnLyUncnNwYWNlR0ZMLUkjbXNHRiQ2I1EmTFVMRU1GJ0Y5">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSxMaWJyYXJ5TmFtZUdGKFEmTFVMRU1GKDcjRi4=</Equation></Text-field>
-</Output>
 </Group>
-<Group hide-input="false" labelreference="L256761" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Remove curren library file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">DIR := cat(currentdir(), &quot;/lib/&quot;, LibraryName, &quot;/lib/&quot;);
-FileTools[RemoveDirectory](DIR, recurse = true);
-FileTools[MakeDirectory](DIR);</Text-field>
+<Group view="code" labelreference="L699" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Check bin directory</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if not FileTools[Exists](BINARY_DIR) then
+  FileTools[MakeDirectory](BINARY_DIR);
+end if;
+</Text-field>
 </Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVEkRElSRicvJSdpdGFsaWNHUSV0cnVlRicvJSxtYXRodmFyaWFudEdRJ2l0YWxpY0YnLUkjbW9HRiQ2LVEpJkFzc2lnbjtGJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1JI21zR0YkNiNRUS9Vc2Vycy9kYXZpZGUvRG9jdW1lbnRzL0dpdC9MVUxFTS9saWIvTFVMRU0vbGliL0YnRjk=">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSRESVJHRihRUS9Vc2Vycy9kYXZpZGUvRG9jdW1lbnRzL0dpdC9MVUxFTS9saWIvTFVMRU0vbGliL0YoNyNGLg==</Equation></Text-field>
-</Output>
 </Group>
-<Group labelreference="L256759" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Font style="Text">Function to generate the library</Font>
-GEN := proc(BASE)
-  local filename;
-  global savelibname;
-  filename := cat(DIR, BASE, &quot;.mla&quot;);
-  march('create', filename);
-  savelibname := filename;
-  savelibname := savelib(BASE);
+<Group view="code" labelreference="L700" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Check MLA file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](LIBRARY_MLA) then
+  FileTools[Remove](LIBRARY_MLA);
+end if;
+</Text-field>
+</Input>
+</Group>
+<Group view="code" labelreference="L709" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Check MLA installer file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](INSTALL_MLA) then
+  FileTools[Remove](INSTALL_MLA);
+end if;
+</Text-field>
+</Input>
+</Group>
+<Group view="code" labelreference="L701" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Library generation procedure</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN := proc( MODULE_NAME::{string} )
+
+  local bin_path, src_path;
+
+  bin_path := cat(BINARY_DIR, ds, MODULE_NAME, &quot;.mla&quot;);
+  src_path := cat(SOURCE_DIR, ds, MODULE_NAME, &quot;.mpl&quot;);
+
+  if FileTools[Exists](src_path) then
+    if not FileTools[Exists](BINARY_DIR) then
+      FileTools[MakeDirectory](BINARY_DIR);
+    end if;
+    if FileTools[Exists](bin_path) then
+      FileTools[Remove](bin_path):
+    end if;
+    read(src_path);
+    march('create', bin_path );
+    savelib(convert(MODULE_NAME, symbol), bin_path);
+  else
+<Font encoding="UTF-8">    error &quot;Missing file %1.\134n&quot;, </Font>src_path;
+  end if;
+
 end proc:
 </Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L256760" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(LULEM);</Text-field>
-</Input>
-</Group>
-<Group labelreference="L256758" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Copy the library in the toolbox folder (Only for OSX!)</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256748" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">system(cat(&quot;sudo -S cp -R ./lib/&quot;, LibraryName, &quot; /Library/Frameworks/Maple.framework/Versions/Current/toolbox/&quot;)):</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256753" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">system(cat(&quot;sudo chmod -R 777 /Library/Frameworks/Maple.framework/Versions/Current/toolbox/&quot;)):</Text-field>
-</Input>
-</Group>
-</Section>
-<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Test the Library</Text-field></Title>
-<Group hide-input="false" labelreference="L256750" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LULEM);</Text-field>
+<Group view="code" labelreference="L710" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);</Text-field>
 </Input>
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.1, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZQLUkjbWlHRiQ2JVErQXNzaWduRGF0YUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVElRkZMVUYnRjJGNUY4LUYvNiVRK0ZvcmdldERhdGFGJ0YyRjVGOC1GLzYlUSNMVUYnRjJGNUY4LUYvNiVRK0xVUGl2b3RpbmdGJ0YyRjVGOC1GLzYlUTRQZXJtdXRhdGlvbk1hdHJpY2VzRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9MaW5kZXRzRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9MbGVuZ3RoRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9TaW5kZXRzRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9TbGVuZ3RoRidGMkY1RjgtRi82JVE5UGl2b3RpbmdTdHJhdGVneV9udW1lcmljRidGMkY1RjgtRi82JVEtU2V0VmVyYm9zaXR5RidGMkY1RjgtRi82JVEqU29sdmVGRkxVRidGMkY1RjgtRi82JVEoU29sdmVMVUYnRjJGNUY4LUYvNiVRKVN1YnNEYXRhRidGMkY1RjgtRi82JVEyVmVpbGluZ1N0cmF0ZWd5X0xGJ0YyRjVGOC1GLzYlUTNWZWlsaW5nU3RyYXRlZ3lfTEJGJ0YyRjVGOC1GLzYlUTNWZWlsaW5nU3RyYXRlZ3lfTHNGJ0YyRjVGOC1GLzYlUTJWZWlsaW5nU3RyYXRlZ3lfbkYnRjJGNUY4LUYvNiVRNVplcm9TdHJhdGVneV9EbGVuZ3RoRidGMkY1RjgtRi82JVE0WmVyb1N0cmF0ZWd5X2xlbmd0aEYnRjJGNUY4LUYvNiVROFplcm9TdHJhdGVneV9ub3JtYWxpemVyRidGMkY1LyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0ZARjxGPC8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7Ric=">NzhJK0Fzc2lnbkRhdGFHNiJJJUZGTFVHRiRJK0ZvcmdldERhdGFHRiRJI0xVR0YkSStMVVBpdm90aW5nR0YkSTRQZXJtdXRhdGlvbk1hdHJpY2VzR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X0xpbmRldHNHRiRJOVBpdm90aW5nU3RyYXRlZ3lfTGxlbmd0aEdGJEk5UGl2b3RpbmdTdHJhdGVneV9TaW5kZXRzR0YkSTlQaXZvdGluZ1N0cmF0ZWd5X1NsZW5ndGhHRiRJOVBpdm90aW5nU3RyYXRlZ3lfbnVtZXJpY0dGJEktU2V0VmVyYm9zaXR5R0YkSSpTb2x2ZUZGTFVHRiRJKFNvbHZlTFVHRiRJKVN1YnNEYXRhR0YkSTJWZWlsaW5nU3RyYXRlZ3lfTEdGJEkzVmVpbGluZ1N0cmF0ZWd5X0xCR0YkSTNWZWlsaW5nU3RyYXRlZ3lfTHNHRiRJMlZlaWxpbmdTdHJhdGVneV9uR0YkSTVaZXJvU3RyYXRlZ3lfRGxlbmd0aEdGJEk0WmVyb1N0cmF0ZWd5X2xlbmd0aEdGJEk4WmVyb1N0cmF0ZWd5X25vcm1hbGl6ZXJHRiQ=</Equation></Text-field>
-</Output>
-</Group>
-<Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LULEM):</Text-field>
+</Group></Presentation-Block>
+</Section>
+<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Create the Installer</Text-field></Title><Presentation-Block>
+<Group view="code" hide-input="false" labelreference="L735" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LICENSE := FileTools[Text][ReadFile](&quot;LICENSE&quot;):</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">
-# LU decomposition with LEM (Large Expressions Management).
-module LULEM:
+</Group>
+<Group view="code" hide-input="false" labelreference="L734" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LOGO    := cat(&quot;installer&quot;, ds, &quot;logo_installer.png&quot;):</Text-field>
+</Input>
+</Group></Presentation-Block><Presentation-Block>
+<Group hide-input="false" labelreference="L728" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">InstallerBuilder[Build](
+  MODULE_NAME,
+  'uninstaller' = false,
+  'version'     = &quot;1.0&quot;,
+  'height'      = 550,
+  'width'       = 1000,
+  'author'      = &quot;D. Stocco, M. Larcher and E. Bertolazzi&quot;,
+  'welcome'     = [
+     'text'  = &quot;Welcome to the LEM (Large Expressions Management) toolbox installer.&quot;,
+     'image' = LOGO
+   ],
+  'finish'      = [
+     'text'  = &quot;The LEM (Large Expressions Management) toolbox has been succesfully installed.&quot;, 
+     'image' = LOGO
+   ],
+  'target'      = INSTALL_MLA,
+  'license'     = [
+     'text'  = LICENSE,
+     'image' = LOGO
+   ],
+  'installation' = [
+     'validate' = proc()
 
-    # Assign the data list &lt;x&gt; to the local variable &lt;StoredData&gt;.
-    AssignData( x::{list, set}, $ ) :: {nothing}
+        local file, dest, n, r, d, f, limb, ds, RmDir;
 
-    # Substitute the local variable &lt;StoredData&gt; in the expression &lt;x&gt;.
-    SubsData( x::{anything}, $ ) :: {anything}
+        ds   := kernelopts('dirsep');
+        file := cat(interface(worksheetdir), ds, &quot;bin&quot;);
+        dest := cat(kernelopts(mapledir), ds, &quot;toolbox&quot;, ds, &quot;LULEM&quot;, ds, &quot;lib&quot;, ds);
 
-    # Unassign the local variable &lt;StoredData&gt;.
-    ForgetData( $ )
+        ###
+        RmDir := proc( dirpath::{string}, $ )
 
-    # Set the verbosity of the package to &lt;x&gt;.
-    SetVerbosity( x::{boolean}, $ ) :: {nothing}
+          local d, dd, ds;
 
-    # Compute the LU decomposition premutation matrix provided the rows the 
-    # pivot vector &lt;r&gt; and the columns the pivot vector &lt;c&gt;.
-    PermutationMatrices( r::{Vector}, c::{Vector}, $ )
-
-    # Compute the LU decomposition of a square matrix &lt;A&gt; using the veiling 
-    # strategy &lt;VeilingStrategy&gt;, the veiling symbol &lt;Q&gt;, the pivoting strategy 
-    # &lt;PivotingStrategy&gt; and the zero recognition strategy &lt;ZeroStrategy&gt;.
-    LU( A::{Matrix}, Q::{symbol}, 
-        VeilingStrategy::{procedure} := _VeilingStrategy_n, 
-        PivotingStrategy::{procedure} := _PivotingStrategy_Slength, 
-        ZeroStrategy::{procedure} := _ZeroStrategy_length, $ )
-
-    # Compute the LU decomposition pivot vector provided the step &lt;k&gt;, the 
-    # temporary LU (NAG) matrix &lt;M&gt;, the veiling symbol &lt;Q&gt;, the rows the pivot 
-    # vector &lt;r&gt;, the columns the pivot vector &lt;c&gt;, the veiling strategy 
-    # &lt;VeilingStrategy&gt;, the pivoting strategy &lt;PivotingStrategy&gt; and the zero 
-    # recognition strategy &lt;ZeroStrategy&gt;.
-    LUPivoting( k::{integer}, M::{Matrix}, Q::{symbol}, r::{Vector(integer)}, 
-                c::{Vector(integer)}, VeilingStrategy::{procedure}, 
-                PivotingStrategy::{procedure}, ZeroStrategy::{procedure}, $ )
-
-    # Solve the linear system Ax=b using LU decomposition, provided the matrix 
-    # &lt;A&gt;, the vector &lt;b&gt;, the veiling symbol &lt;Q&gt;, the veiling strategy 
-    # &lt;VeilingStrategy&gt;, the pivoting strategy &lt;PivotingStrategy&gt; and the zero 
-    # recognition strategy &lt;ZeroStrategy&gt;.
-    SolveLU( A::{Matrix}, b::{Vector}, Q::{symbol, function}, 
-             VeilingStrategy::{procedure} := _VeilingStrategy_n, 
-             PivotingStrategy::{procedure} := _PivotingStrategy_Slength, 
-             ZeroStrategy::{procedure} := _ZeroStrategy_length, $ )
-
-    # Compute the LU decomposition of a square matrix &lt;A&gt; using the veiling 
-    # strategy &lt;VeilingStrategy&gt;, the veiling symbol &lt;Q&gt;, the pivotingstrategy 
-    # &lt;PivotingStrategy&gt; and the zero recognition strategy &lt;ZeroStrategy&gt;.
-    FFLU( A::{Matrix}, Q::{symbol}, 
-          VeilingStrategy::{procedure} := _VeilingStrategy_n, 
-          PivotingStrategy::{procedure} := PivotStrategy_Slength, 
-          ZeroStrategy::{procedure} := _ZeroStrategy_length, $ )
-
-    SolveFFLU::symbol = LULEM:-SolveFFLU
-
-    # Veiling strategy: number of indeterminates in expression &lt;x&gt; minus 4.
-    VeilingStrategy_n( x::{algebraic}, $ ) :: {integer}
-
-    # Veiling strategy: length of expression &lt;x&gt; minus 50.
-    VeilingStrategy_L( x::{algebraic}, $ ) :: {integer}
-
-    # Veiling strategy: length of expression &lt;x&gt; minus 120.
-    VeilingStrategy_Ls( x::{algebraic}, $ ) :: {integer}
-
-    # Veiling strategy: length of expression &lt;x&gt; minus 260.
-    VeilingStrategy_LB( x::{algebraic}, $ ) :: {integer}
-
-    # Pivoting strategy: choose the pivot with the largest length between 
-    # expressions &lt;x&gt; and &lt;y&gt;.
-    PivotingStrategy_Llength( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
-
-    # Pivoting strategy: choose the pivot with the smallest length between 
-    # expressions &lt;x&gt; and &lt;y&gt;.
-    PivotingStrategy_Slength( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
-
-    # Pivoting strategy: choose the pivot with the largest number of 
-    # indeterminates between expressions &lt;x&gt; and &lt;y&gt;.
-    PivotingStrategy_Lindets( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
-
-    # Pivoting strategy: choose the pivot with the smallest number of 
-    # indeterminates between expressions &lt;x&gt; and &lt;y&gt;.
-    PivotingStrategy_Sindets( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
-
-    # Pivoting strategy: choose the pivot with the largest numeric value 
-    # between expressions &lt;x&gt; and &lt;y&gt;.
-    PivotingStrategy_numeric( x::{algebraic}, y::{algebraic}, $ ) :: {boolean}
-
-    # Zero recognition strategy: length of expression &lt;x&gt;.
-    ZeroStrategy_length( x::{algebraic}, $ ) :: {integer}
-
-    # Zero recognition strategy: length of expression &lt;x&gt;.
-    ZeroStrategy_Dlength( x::{algebraic}, $ ) :: {integer}
-
-    # Zero recognition strategy: normalizer of expression &lt;x&gt;.
-    ZeroStrategy_normalizer( x::{algebraic}, $ )
-
+          ds := kernelopts('dirsep');
+          if FileTools[Exists](dirpath) and FileTools[IsDirectory](dirpath) then
+            for d in FileTools[ListDirectory](dirpath, 'all') do
+              if evalb((d &lt;&gt; &quot;.&quot;) and (d &lt;&gt; &quot;..&quot;)) then
+                dd := cat(dirpath, ds, d);
+                if FileTools[Exists](dd) then
+                  if FileTools[IsDirectory](dd) then
+                    RmDir(dd);
+                    # FileTools[RemoveDirectory](dd, forceremove = true);
+                  else
+                   FileTools[Remove](dd);
+                  end if;
+                end if;
+              end if;
+            end do;
+            FileTools[RemoveDirectory](dirpath, forceremove = true);
+          end if;
+          return;
+        
+        end proc:
+        ###
+        RmDir(dest);        
+        FileTools[MakeDirectory](dest, recurse = true);
+        n  := 1 + length(file);
+        for r in FileTools[Walk](file, 'topdown', 'followlinks') do
+          limb := cat(dest, ds, r[dir][n..], ds);
+          for d in r[subdirs] do
+            ((d) -&gt; `if`(FileTools[Exists](d), 0, FileTools[MakeDirectory](d)))(cat(limb, d));
+          end do;
+          seq(FileTools[Copy](cat(r[dir], ds, f), cat(limb, f)), f = r[files]) 
+        end do;
+        return true;
+      end proc, 
+      'image' = LOGO
+   ]
+);
 </Text-field>
-</Output>
-</Group>
-<Group labelreference="L256752" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
 </Input>
 </Group>
+<Group view="code" hide-input="false" labelreference="L729" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#kernelopts(mapledir);
+#interface(worksheetdir);
+</Text-field>
+</Input>
+</Group></Presentation-Block>
 </Section><Presentation-Block>
-<Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Group view="presentation" inline-output="false" labelreference="L681" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>

@@ -1,4 +1,4 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #            _    _   _ _     _____ __  __            #
 #           | |  | | | | |   | ____|  \/  |           #
 #           | |  | | | | |   |  _| | |\/| |           #
@@ -49,6 +49,7 @@ LULEM := module()
           LUPivoting,
           SolveLU,
           FFLU,
+          FFtoLU,
           SolveFFLU,
           #TODO: QR,
           #TODO: SolveQR,
@@ -354,11 +355,23 @@ LULEM := module()
     U := Matrix(M, shape = triangular[upper]);
 
     # Return the LU decomposition and the pivot vector
-    if (_nresults = 5) then
-      return L, U, r, c, rnk;
-    else
-      return M, r, c, rnk;
-    end if;
+    #if (_nresults = 5) then
+    #  return L, U, r, c, rnk;
+    #else
+    #  return M, r, c, rnk;
+    #end if;
+    # Return the LU decomposition and the pivot vector
+    return table( [
+      "L" = L,
+      "U" = U,
+      "Q" = Q,
+      "r" = r,
+      "c" = c,
+      "rank" = rnk,
+      "L_length" = length(L),
+      "U_length" = length(U),
+      "Q_length" = length(LEM:-ListVeil())
+    ] );
   end proc: # LU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -377,7 +390,7 @@ LULEM := module()
       "strategy <VeilingStrategy>, the pivoting strategy <PivotingStrategy> and "
       "the zero recognition strategy <ZeroStrategy>.";
 
-    local n, m, M, r, c, rnk, LU_NAG, apply_veil, y, i, x, s:
+    local n, m, M, r, c, rnk, LU_NAG, apply_veil, y, i, j, x, s:
 
     # Get linear system dimension
     n := LinearAlgebra[RowDimension](A);
@@ -481,12 +494,61 @@ LULEM := module()
       SS[k] := Mkk;
       # Scaled Shur complement
       tmp        := [k+1..-1];
-      M[tmp,tmp] := apply_veil~(Normalizer~(Mkk*M[tmp,tmp]-M[tmp,k].M[k,tmp]));
+      M[tmp,tmp] := apply_veil~(simplify(Mkk*M[tmp,tmp]-M[tmp,k].M[k,tmp],size));
+      #M[tmp,tmp] := apply_veil~(Normalizer~(Mkk*M[tmp,tmp]-M[tmp,k].M[k,tmp]));
     end do:
 
     # Return the LU decomposition and the pivot vector
-    return M, SS, r, c, rnk;
+    return table( [
+      "M" = M,
+      "Q" = Q,
+      "S" = SS,
+      "r" = r,
+      "c" = c,
+      "rank" = rnk,
+      "M_length" = length(M),
+      "S_length" = length(SS),
+      "Q_length" = length(LEM:-ListVeil())
+    ] );
   end proc: # FFLU
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  FFtoLU := proc( T::{table}, $)
+
+    local M, SS, r, c, rk, m, n, L, DG, L_list, D_list, U, i, j, k;
+
+    M  := T["M"];
+    SS := T["S"];
+    r  := T["r"];
+    c  := T["c"];
+    rk := T["rank"];
+
+    n, m := LinearAlgebra[Dimensions](M):
+
+    L_list := [];
+    D_list := [];
+
+    #
+    #   +             + +         +      +            +       +             + +            +
+    #   |  1          | | 1       |      | 1          |       | 1           | | 1          |
+    #   | -x  1       | |   q     | ==>  | -x q       |  ==>  |   1/q       | | x  1       |
+    #   | -x     1    | |     q   |      | -x    q    |       |      1/q    | | x     1    |
+    #   | -x        1 | |       q |      | -x       q |       |         1/q | | x        1 |
+    #   +             + +         +      +            +       +             + +            +
+    #
+    for k from 1 to rk do
+      L            := Matrix( n, n, shape = triangular[lower, unit]);
+      L[k+1..-1,k] := M[k+1..-1,k];
+      L_list       := [ op(L_list), L ];
+      DG           := Matrix( LinearAlgebra[IdentityMatrix](n), shape = diagonal );
+      for j from k+1 to n do
+        DG[j,j] := SS[k];
+      end;
+      D_list := [ op(D_list), DG ];
+    end;
+    return L_list, D_list, Matrix(M, shape = triangular[upper]);
+  end proc: # FFtoLU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
