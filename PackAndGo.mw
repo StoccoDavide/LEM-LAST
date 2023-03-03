@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Worksheet>
-<Version major="2020" minor="2"/>
+<Version major="2021" minor="2"/>
 <Label-Scheme value="2" prefix=""/>
 <View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="960" rtablesize="[10, 10]" useclientjvm="true" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1600" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -167,7 +167,9 @@ end proc:
 <Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);
 </Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023
+D. Stocco, M. Larcher, E. Bertolazzi,
+W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
 </Group>
@@ -238,7 +240,9 @@ end do:</Text-field>
 <Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LEM);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023
+D. Stocco, M. Larcher, E. Bertolazzi,
+W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
 <Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDYyLUkjbWlHRiQ2JVErRm9yZ2V0VmVpbEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEpTGFzdFVzZWRGJ0YyRjVGOC1GLzYlUSlMaXN0VmVpbEYnRjJGNUY4LUYvNiVRKVN1YnNWZWlsRidGMkY1RjgtRi82JVEnVW5WZWlsRidGMkY1RjgtRi82JVElVmVpbEYnRjJGNUY4LUYvNiVRK1ZlaWxMYWJlbHNGJ0YyRjUvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRkBGPEY8LyUlb3BlbkdRJyZsc3FiO0YnLyUmY2xvc2VHUScmcnNxYjtGJw==">NylJK0ZvcmdldFZlaWxHNiJJKUxhc3RVc2VkR0YkSSlMaXN0VmVpbEdGJEkpU3Vic1ZlaWxHRiRJJ1VuVmVpbEdGJEklVmVpbEdGJEkrVmVpbExhYmVsc0dGJA==</Equation></Text-field>
@@ -262,8 +266,8 @@ module LEM:
 
     # Return a list of the veiling variables labelled as &lt;label&gt;. If &lt;label&gt; is 
     # not given, return a list of all veiling variables.
-    ListVeil( label::{symbol, list(symbol)} := _VeilLabels(), $ )
-            :: {list(anything)}
+    ListVeil( label::{symbol, list(symbol)} := _VeilLabels(), 
+              reverse_order::{boolean} := false, $ ) :: {list(anything)}
 
     # Substitute the reversed veiling variables of the veiling label &lt;label&gt; in 
     # the expression &lt;x&gt;. If &lt;label&gt; is not given, substitute the reversed 
