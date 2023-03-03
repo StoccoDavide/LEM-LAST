@@ -216,13 +216,15 @@ LULEM := module()
                 "pivot vector <r>, the columns the pivot vector <c>, the veiling strategy "
                 "<VeilingStrategy> and the pivoting strategy <PivotingStrategy>.";
 
-    local Mij, Mkk, m, n, i, j, ii, jj, apply_veil, pivot_is_zero, Mij_is_zero, z, tmp;
+    local Mij, Mkk, m, n, i, j, ii, jj, apply_veil, apply_unveil, pivot_is_zero, Mij_is_zero, z, tmp;
 
     # Extract dimensions
     m, n := LinearAlgebra[Dimensions](M):
 
     # Check if to veil or not
-    apply_veil := (z) -> `if`( VeilingStrategy(z), LEM[Veil][V](z), z);
+    apply_veil   := (z) -> `if`( VeilingStrategy(z), LEM[Veil][V](z), z);
+    apply_unveil := (z) -> Normalizer(LEM[SubsVeil](z, V));
+
 
     # Check if M[r[k],c[k]] = 0, if not true it is the pivot
     Mkk := M[k,k];
@@ -232,7 +234,7 @@ LULEM := module()
       Mkk           := Normalizer(Mkk);
       pivot_is_zero := evalb( Mkk = 0 );
       if not pivot_is_zero then
-        pivot_is_zero := evalb( Normalizer(LEM[SubsVeil](Mkk, V)) = 0 );
+        pivot_is_zero := evalb( apply_unveil(Mkk) = 0 );
       end;
     catch:
       print("Mkk: Division by 0 or numerical exception.\n");
@@ -253,7 +255,7 @@ LULEM := module()
           if not Mij_is_zero then
             printf("DoPivoting %d %d %d\n", k, i, j);
             print( Mij );
-            Mij_is_zero := evalb( Normalizer(LEM[SubsVeil](Mij,V)) = 0 );
+            Mij_is_zero := evalb( apply_unveil(Mij) = 0 );
           end;
         catch:
           if Verbose then
