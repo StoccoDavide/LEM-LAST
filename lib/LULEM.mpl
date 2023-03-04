@@ -216,15 +216,19 @@ LULEM := module()
                 "pivot vector <r>, the columns the pivot vector <c>, the veiling strategy "
                 "<VeilingStrategy> and the pivoting strategy <PivotingStrategy>.";
 
-    local Mij, Mkk, m, n, i, j, ii, jj, apply_veil, apply_unveil, pivot_is_zero, Mij_is_zero, z, tmp;
+    local Mij, Mkk, uMij, uMkk, LV, m, n, i, j, ii, jj,
+          apply_veil, apply_unveil, max_size_expression, pivot_is_zero, Mij_is_zero, z, tmp;
+
+    max_size_expression := 1000;
 
     # Extract dimensions
     m, n := LinearAlgebra[Dimensions](M):
 
     # Check if to veil or not
     apply_veil   := (z) -> `if`( VeilingStrategy(z), LEM[Veil][V](z), z);
-    apply_unveil := (z) -> Normalizer(LEM[SubsVeil](z, V));
-
+    LV           := LEM[ListVeil](V,true);
+    #apply_unveil := (z) -> Normalizer(subs[eval](op( LV ), z ));
+    apply_unveil := (z) -> subs( op( LV ), z );
 
     # Check if M[r[k],c[k]] = 0, if not true it is the pivot
     Mkk := M[k,k];
@@ -234,28 +238,33 @@ LULEM := module()
       Mkk           := Normalizer(Mkk);
       pivot_is_zero := evalb( Mkk = 0 );
       if not pivot_is_zero then
-        pivot_is_zero := evalb( apply_unveil(Mkk) = 0 );
+        uMkk := apply_unveil(Mkk);
+        if length(uMkk) < max_size_expression then
+          uMkk := Normalizer(eval(uMkk));
+          pivot_is_zero := evalb( uMkk = 0 );
+        end if;
       end;
     catch:
       print("Mkk: Division by 0 or numerical exception.\n");
-      print(Mkk);
+      print(uMkk);
       pivot_is_zero := true;
     end try;
 
-    printf("enter DoPivoting\n");
     # Iterate over the columns and rows
     for j from k to n do
       for i from k to m do
-        #printf("DoPivoting %d %d\n", i, j);
         # Look for a non-zero pivot
         Mij := M[i,j];
         try
           Mij         := Normalizer(Mij);
           Mij_is_zero := evalb( Mij = 0 );
           if not Mij_is_zero then
-            printf("DoPivoting %d %d %d\n", k, i, j);
-            print( Mij );
-            Mij_is_zero := evalb( apply_unveil(Mij) = 0 );
+            uMij := apply_unveil(Mij);
+            if length(uMij) < max_size_expression then
+              # timelimit required because sometime Normalizer stuck
+              uMij        := timelimit( 0.5, eval(Normalizer(eval(uMij))) );
+              Mij_is_zero := evalb( uMij = 0 );
+            end if;
           end;
         catch:
           if Verbose then
@@ -265,12 +274,18 @@ LULEM := module()
           Mij_is_zero := true;
         end try;
 
-        if not Mij_is_zero and (pivot_is_zero or PivotingStrategy(Mij, Mkk)) then
-          # A better pivot is found
-          pivot_is_zero := false;
-          Mkk := Mij;
-          ii  := i;
-          jj  := j;
+        if not Mij_is_zero then
+          # found non zero pivot, check if it is better
+          if pivot_is_zero or PivotingStrategy(Mij,Mkk) then
+            # A better pivot is found
+            pivot_is_zero := false;
+            Mkk := Mij;
+            ii  := i;
+            jj  := j;
+            if nops(indets(Mkk)) = 0 then
+              break 2;
+            end if;
+          end
         end if;
 
       end do;
@@ -290,22 +305,14 @@ LULEM := module()
       end if;
     end if;
 
-    printf( "exit Pivoting\n" );
-    print(  Mkk );
-
     return pivot_is_zero, Mkk;
   end proc: # DoPivoting
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SetVerbosity := proc(
-    x::{boolean},
-    $)::{nothing};
-
+  SetVerbosity := proc( x::{boolean}, $ )::{nothing};
     description "Set the verbosity of the package to <x>.";
-
     Verbose := x;
-
     return NULL;
   end proc:
 
@@ -421,7 +428,6 @@ LULEM := module()
           k, length(convert(M,list)), length(LEM[ListVeil](V))
         );
       end;
-      printf("DoPivoting\n");
       pivot_is_zero, Mkk := DoPivoting( k, M, V, r, c, VeilingStrategy, PivotingStrategy );
 
       if pivot_is_zero then
@@ -442,7 +448,7 @@ LULEM := module()
       # Scaled Shur complement
       tmp        := [k+1..-1];
       M[tmp, k]  := apply_veil~(Normalizer~(M[tmp, k]*bot));
-      M[tmp,tmp] := apply_veil~(simplify~( top*M[tmp,tmp] - M[tmp,k].M[k,tmp]) );
+      M[tmp,tmp] := apply_veil~(Normalizer~( top*M[tmp,tmp] - M[tmp,k].M[k,tmp]) );
     end do:
 
     # Return the FFLU decomposition
@@ -634,8 +640,8 @@ LULEM := module()
     $)::{table};
 
     description "Compute the Householder QR decomposition of a square matrix <A> "
-      "using the veiling strategy <VeilingStrategy>, the veiling symbol <V> and "
-      "the pivoting strategy <PivotingStrategy>.";
+                "using the veiling strategy <VeilingStrategy>, the veiling symbol <V> and "
+                "the pivoting strategy <PivotingStrategy>.";
 
     local m, n, z, k, Q, R, M, norm_x, s, u1, w, tau;
 
@@ -738,46 +744,29 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilingStrategy_n := proc(
-    x::{algebraic},
-    $)::{boolean};
-
-    description "Veiling strategy: number of indeterminates in expression <x> "
-      "minus 4.";
-
+  VeilingStrategy_n := proc( x::{algebraic}, $ )::{boolean};
+    description "Veiling strategy: number of indeterminates in expression <x> minus 4.";
     return evalb( nops(indets(x)) > 4 and  length(x) > 50);
   end proc: # VeilingStrategy_n
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilingStrategy_L := proc(
-    x::{algebraic},
-    $)::{boolean};
-
+  VeilingStrategy_L := proc( x::{algebraic}, $ )::{boolean};
     description "Veiling strategy: length of expression <x> minus 50.";
-
     return evalb(length(x) > 50);
   end proc: # VeilingStrategy_L
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilingStrategy_Ls := proc(
-    x::{algebraic},
-    $)::{boolean};
-
+  VeilingStrategy_Ls := proc( x::{algebraic}, $ )::{boolean};
     description "Veiling strategy: length of expression <x> minus 120.";
-
     return evalb(length(x) > 120);
   end proc: # VeilingStrategy_Ls
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilingStrategy_LB := proc(
-    x::{algebraic},
-    $)::{boolean};
-
+  VeilingStrategy_LB := proc( x::{algebraic}, $ )::{boolean};
     description "Veiling strategy: length of expression <x> minus 260.";
-
     return evalb(length(x) > 260);
   end proc: # VeilingStrategy_LB
 
@@ -803,7 +792,7 @@ LULEM := module()
   PivotingStrategy_Slength := proc( x::{algebraic}, y::{algebraic}, $ )::{boolean};
     description "Pivoting strategy: choose the pivot with the smallest length "
                 "between expressions <x> and <y>.";
-    return evalb( nops(indets(x)) < nops(indets(y)) and nops(indets(x)) < nops(indets(y)) );
+    return evalb( nops(indets(x)) < nops(indets(y)) );
   end proc: # PivotingStrategy_Slength
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
