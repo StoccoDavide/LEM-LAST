@@ -37,8 +37,10 @@ DoPivoting := proc(
   pivot_cost    := 0;
 
   # Iterate over the columns and rows
-  for jj from k to n do
-    for ii from k to m do
+  #for jj from k to n do
+  #  for ii from k to m do
+  for ii from k to m do
+    for jj from k to n do
       # Look for a non-zero pivot
       Mij      := M[ii,jj];
       Mij_cost := LULEM:-PivotCost(Mij);

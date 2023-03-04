@@ -114,7 +114,7 @@ end proc: # FF2LU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-SolveFractionalFreeLU := proc(
+FFLUsolve := proc(
   T::{table},
   b::{Vector},
   V::{symbol, function},
@@ -125,19 +125,30 @@ SolveFractionalFreeLU := proc(
               "provided the vector <b>, the veiling symbol <V> and the "
               "veiling strategy <VeilingStrategy>.";
 
-  local m, n, M, S, r, c, rk, x, i, s,  apply_veil;
+  local m, n, M, S, r, c, rnk, x, y, i, s,  apply_veil;
 
-  M  := T["M"];
-  S  := T["S"];
-  r  := T["r"];
-  c  := T["c"];
-  rk := T["rank"];
+  M   := T["M"];
+  S   := T["S"];
+  r   := T["r"];
+  c   := T["c"];
+  rnk := T["rank"];
 
   # Get linear system dimension
   m, n := LinearAlgebra[Dimensions](M);
 
   # Check if the linear system is consistent
-  assert( m = n, "LULEM::SolveFractionalFreeLU(...): rectangular linear system." );
+  assert(
+    m = n,
+    "LULEM::FFLUsolve(...): only square system can be solved.\n"
+    "M is %d x %d\n", m, n
+  );
+
+  # Check if the linear system is consistent
+  assert(
+    n = rnk,
+    "LULEM::FFLUsolve(...): only full rank linear system can be solved.\n"
+    "rank is %d expected %d\n", rnk, n
+  );
 
   # Create a normalizer function
   apply_veil := (y) -> `if`(VeilingStrategy(y), LEM:-Veil[V](y), y);
@@ -146,23 +157,27 @@ SolveFractionalFreeLU := proc(
   x := b[convert(r,list)];
 
   # Perform forward substitution to solve Ly=b[r]
-  for i from 1 to rk-1 do
-    x[i+1..-1] := S[i] * x[i+1..-1]; # apply D
-    x[i+1..-1] := apply_veil~( x[i+1..-1] - x[i]*M[i+1..-1,i]);
+  for i from 2 to n do
+    x[i..-1] := S[i-1] * x[i..-1]; # apply D
+    x[i..-1] := apply_veil~( x[i..-1] - x[i-1]*M[i..-1,i-1]);
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
-  print(M[n-1..n,n-1..n]);
+  #print(M[n-1..n,n-1..n]);
   x[n] := apply_veil(x[n]/M[n,n]);
   for i from n-1 to 1 by -1 do
-    s    := apply_veil( x[i] - add(M[i,i+1..n] *~ x[i+1..n]) );
+    s    := x[i] - add(M[i,i+1..n] *~ x[i+1..n]);
     x[i] := apply_veil( s / M[i,i] );
   end do;
 
-  # apply permutation
-  x := x[convert(c,list)];
+  # apply inverse permutation Q
+  y := Vector[column](n);
+  for i from 1 to n do
+    y[c[i]] := x[i];
+  end do;
+
   # Return outputs
-  return x;
-end proc: # SolveFractionalFreeLU
+  return y;
+end proc: # FFLUsolve
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

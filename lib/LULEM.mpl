@@ -61,9 +61,8 @@ LULEM := module()
           ModuleUnload,
           PivotCost,
           DoPivoting,
-          SolveLU,
-          SolveFractionalFreeLU,
-          SolvePivotingLU,
+          LUsolve,
+          FFLUsolve,
           InitLULEM,
           Verbose;
 
@@ -165,9 +164,9 @@ LULEM := module()
     $)
 
     if T["method"] = "LU" then
-      SolveLU( T, b, V, VeilingStrategy );
+      LUsolve( T, b, V, VeilingStrategy );
     elif T["method"] = "FFLU" then
-      SolveFractionalFreeLU( T, b, V, VeilingStrategy );
+      FFLUsolve( T, b, V, VeilingStrategy );
     end
   end proc: # SolveLinearSystem
 

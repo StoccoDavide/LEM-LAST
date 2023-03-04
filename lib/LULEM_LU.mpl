@@ -16,7 +16,7 @@ LU := proc(
               "veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
 
   local M, L, U, Mkk, m, n, mn, k, rnk, r, c,
-        apply_veil, pivot_is_zero, Mij_is_zero, tmp;
+        apply_veil, pivot_is_zero, tmp;
 
   m, n := LinearAlgebra[Dimensions](A):
 
@@ -81,7 +81,7 @@ end proc: # LU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-SolveLU := proc(
+LUsolve := proc(
   T::{table},
   b::{Vector},
   V::{symbol, function},
@@ -92,21 +92,31 @@ SolveLU := proc(
               "provided the vector <b>, the veiling symbol <V> and the "
               "veiling strategy <VeilingStrategy>.";
 
-  local L, U, r, c, m, n, rnk, apply_veil, x, y, i, j, s:
+  local L, U, r, c, m, n, p, q, apply_veil, x, y, i, j, s, rnk:
 
   # Extract the LU decomposition
-  L := T["L"];
-  U := T["U"];
-  r := T["r"];
-  c := T["c"];
+  L   := T["L"];
+  U   := T["U"];
+  r   := T["r"];
+  c   := T["c"];
+  rnk := T["rank"];
 
   # Get linear system dimension
   m, n := LinearAlgebra[Dimensions](L);
+  p, q := LinearAlgebra[Dimensions](U);
 
   # Check if the linear system is consistent
   assert(
-    LinearAlgebra[RowDimension](L) = LinearAlgebra[ColumnDimension](b),
-    "LULEM::SolveLU(...): inconsistent linear system."
+    (m = n) and (p = q),
+    "LULEM::LUsolve(...): only square system can be solved.\n"
+    "L is %d x %d, U is %d x %d\n", m, n, p, q
+  );
+
+  # Check if the linear system is consistent
+  assert(
+    n = rnk,
+    "LULEM::LUsolve(...): only full rank linear system can be solved.\n"
+    "rank is %d expected %d\n", rnk, n
   );
 
   # Create a normalizer function
@@ -123,13 +133,16 @@ SolveLU := proc(
   # Perform backward substitution to solve Ux[c]=y
   x[n] := apply_veil(x[n]/U[n,n]);
   for i from n-1 to 1 by -1 do
-    s    := apply_veil( x[i] - add(U[i,i+1..n] *~ x[i+1..n]) );
+    s    := apply_veil( x[i] - add(U[i,i+1..n] *~ x[i+1..n]));
     x[i] := apply_veil( s / U[i,i] );
   end do;
 
-  # apply permutation
-  x := x[convert(c,list)];
+  # apply inverse permutation Q
+  y := Vector[column](n);
+  for i from 1 to n do
+    y[c[i]] := x[i];
+  end do;
 
   # Return outputs
-  return x;
-end proc: # SolveLU
+  return y;
+end proc: # LUsolve

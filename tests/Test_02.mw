@@ -253,7 +253,7 @@ res[&quot;L_length&quot;]+res[&quot;U_length&quot;]+res[&quot;V_length&quot;];</
 </Output>
 </Group>
 <Group hide-input="false" labelreference="L235" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">X := Vector(44,k-&gt;k):</Text-field>
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">X := Vector(44,k-&gt;k+1):</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L236" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
