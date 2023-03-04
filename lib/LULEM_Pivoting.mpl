@@ -42,8 +42,6 @@ DoPivoting := proc(
   n_found := 0;
   for jj from k to n do
     for ii from k to m do
-  #for ii from k to m do
-  #  for jj from k to n do
       # Look for a non-zero pivot
       Mij                 := M[ii,jj];
       Mij_cost, Mij_value := LULEM:-PivotCost(Mij);
@@ -66,7 +64,9 @@ DoPivoting := proc(
         Mij_is_zero := true;
       end try;
 
-      if not Mij_is_zero then
+      if Mij_is_zero then
+        M[ii,jj] := 0;
+      else
         # found non zero pivot, check if it is better
         if pivot_is_zero then
           # fist non zero pivot!

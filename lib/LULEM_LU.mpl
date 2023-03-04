@@ -31,7 +31,7 @@ LU := proc(
   M   := copy(A);
   mn  := min(m, n);
   rnk := mn;
-  for k from 1 to (mn - 1) do
+  for k from 1 to mn do
     if LULEM:-Verbose then
       printf(
         "LULEM::LU(...): processing %d-th row. Length %d:%d\n",
@@ -50,13 +50,13 @@ LU := proc(
     end if;
 
     if LULEM:-Verbose then
-      print( "LULEM::LU(...): pivot:", Mkk, pivot_cost );
+      printf( "LULEM::LU(...): M[%d,%d] = %a, cost=%d\n", k, k, Mkk, pivot_cost );
     end;
 
     # Shur complement
     tmp         := [k+1..-1];
     M[k,k]      := apply_veil(Mkk);
-    M[tmp, k]   := apply_veil~(Normalizer~(M[tmp, k]))/Mkk[k,k];
+    M[tmp, k]   := apply_veil~(Normalizer~(M[tmp, k]))/Mkk;
     M[k, tmp]   := apply_veil~(Normalizer~(M[k, tmp]));
     M[tmp, tmp] := apply_veil~(Normalizer~(M[tmp, tmp] - M[tmp, k].M[k, tmp]));
   end do:
