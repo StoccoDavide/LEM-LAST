@@ -61,7 +61,7 @@ LEM := module()
          load   = ModuleLoad,
          unload = ModuleUnload;
 
-  description "Large Expressions Management module";
+  description "LEM (Large Expressions Management) module.";
 
   LastUsed := table('sparse');
 
@@ -69,14 +69,14 @@ LEM := module()
 
   ModuleLoad := proc()
 
-    description "'LEM' module load procedure";
+    description "'LEM' module load procedure.";
 
     local i;
 
     printf(
       "'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023\n"
-      "D. Stocco, M. Larcher, E. Bertolazzi,\n"
-      "W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
+      "Current version: D. Stocco, M. Larcher, E. Bertolazzi,\n"
+      "Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
     );
 
     lib_base_path := null;
@@ -98,7 +98,7 @@ LEM := module()
 
   ModuleUnload := proc()
 
-    description "Module 'LEM' module unload procedure";
+    description "Module 'LEM' module unload procedure.";
 
     unprotect(LastUsed);
     LastUsed    := NULL;
@@ -112,7 +112,7 @@ LEM := module()
 
   InitLEM := proc()
 
-    description "Initialize 'LEM' module internal variables";
+    description "Initialize 'LEM' module internal variables.";
 
     UnVeilTable := table('sparse' = table('sparse' = (0 = 0)));
 
@@ -121,7 +121,9 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  Veil := proc( x::{anything}, $ )::{anything};
+  Veil := proc(
+    x::{anything},
+    $)::{anything};
 
     description "Veil an expression <x> and return a label to it.";
 
@@ -159,7 +161,10 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UnVeil := proc( x::{anything}, n::{nonnegint, infinity}, $ )::{anything};
+  UnVeil := proc(
+    x::{anything},
+    n::{nonnegint, infinity},
+    $)::{anything};
 
     description "UnVeil the expression <x> up to <n> levels.";
 
@@ -224,13 +229,13 @@ LEM := module()
 
     local comparator;
     if reverse_order then
-      comparator := (a,b) -> evalb( op(1,lhs(a)) > op(1,lhs(b)) );
+      comparator := (a,b) -> evalb(op(1,lhs(a)) > op(1,lhs(b)));
     else
-      comparator := (a,b) -> evalb( op(1,lhs(a)) < op(1,lhs(b)) );
+      comparator := (a,b) -> evalb(op(1,lhs(a)) < op(1,lhs(b)));
     end if;
 
     if type(label,list) then
-      return map(x -> op(ListVeil(x,reverse_order)), label);
+      return map((x) -> op(ListVeil(x,reverse_order)), label);
     else
       return sort(op(eval(UnVeilTable[label]))[2],comparator):
     end if;
@@ -248,18 +253,20 @@ LEM := module()
                 "If <label> is not given, substitute the reversed veiling "
                 "variables of all veiling labels.";
 
-    return subs[eval](op( ListVeil(label,true) ), x );
+    return subs[eval](op(ListVeil(label,true)), x);
   end proc: # SubsVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  ForgetVeil := proc( label::{symbol,list(symbol)} := VeilLabels(), $ )::{nothing};
+  ForgetVeil := proc(
+    label::{symbol,list(symbol)} := VeilLabels(),
+    $)::{nothing};
 
     description "Clear all the veiling variables of the veiling label <label>. "
                 "If <label> is not given, clear all the veiling variables.";
 
     if type(label, list) then
-      map(x -> ForgetVeil(x), label);
+      map((x) -> ForgetVeil(x), label);
     else
       unprotect(LastUsed);
       LastUsed[label] := 0;
