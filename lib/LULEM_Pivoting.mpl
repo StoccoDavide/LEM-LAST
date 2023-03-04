@@ -21,8 +21,9 @@ DoPivoting := proc(
               "the rows the pivot vector <r>, the columns the pivot vector <c> "
               "and the veiling strategy <VeilingStrategy>.";
 
-  local Mij, uMij, Mij_is_zero, Mij_cost, pivot_is_zero, pivot_cost,
-        LV, m, n, i, j, ii, jj,
+  local Mij, uMij, Mij_is_zero, Mij_cost, Mij_value,
+        pivot_is_zero, pivot_cost, pivot_value,
+        LV, m, n, i, j, ii, jj, n_found,
         apply_veil, apply_unveil, z, tmp;
 
   # Extract dimensions
@@ -35,28 +36,31 @@ DoPivoting := proc(
 
   pivot_is_zero := true;
   pivot_cost    := 0;
+  pivot_value   := 0;
 
   # Iterate over the columns and rows
-  #for jj from k to n do
-  #  for ii from k to m do
-  for ii from k to m do
-    for jj from k to n do
+  n_found := 0;
+  for jj from k to n do
+    for ii from k to m do
+  #for ii from k to m do
+  #  for jj from k to n do
       # Look for a non-zero pivot
-      Mij      := M[ii,jj];
-      Mij_cost := LULEM:-PivotCost(Mij);
+      Mij                 := M[ii,jj];
+      Mij_cost, Mij_value := LULEM:-PivotCost(Mij);
       try
         Mij         := Normalizer(Mij);
-        Mij_cost    := LULEM:-PivotCost(Mij); # recalculate, might be better
         Mij_is_zero := evalb( Mij = 0 );
         if not Mij_is_zero then
-          uMij := apply_unveil(Mij);
+          uMij                := eval(apply_unveil(Mij));
+          Mij_cost, Mij_value := LULEM:-PivotCost(uMij); # recalculate
           # timelimit required because sometime Normalizer stuck
-          uMij        := timelimit( 0.5, eval(Normalizer(eval(uMij))) );
+          uMij        := timelimit( 0.5, eval(Normalizer(uMij)) );
           Mij_is_zero := evalb( uMij = 0 );
         end;
       catch:
         if LULEM:-Verbose then
-          print("Mij: Division by 0 or numerical exception.\n");
+          print("Mij: Division by 0 or another exception.\n");
+          #print(lastexception);
           print(Mij);
         end if;
         Mij_is_zero := true;
@@ -68,17 +72,32 @@ DoPivoting := proc(
           # fist non zero pivot!
           pivot_is_zero := false;
           pivot_cost    := Mij_cost;
+          pivot_value   := Mij_value;
           i             := ii;
           j             := jj;
         #elif Mij_cost = pivot_cost then
-        elif Mij_cost < pivot_cost then
+        elif Mij_cost < pivot_cost or ( Mij_cost = pivot_cost and Mij_value > pivot_value ) then
           # A better pivot is found
-          pivot_cost := Mij_cost;
+          pivot_cost  := Mij_cost;
+          pivot_value := Mij_value;
           i          := ii;
           j          := jj;
         end
       end if;
     end do;
+    # check if found pivot
+    if not pivot_is_zero then
+      if pivot_cost = 0 then
+        break;
+      end;
+      if pivot_cost = 1 and n_found > 0 then
+        break;
+      end;
+      if pivot_cost > 1 and n_found > 1 then
+        break;
+      end;
+      n_found := n_found+1;
+    end if;
   end do;
 
   if not pivot_is_zero then
@@ -92,14 +111,25 @@ DoPivoting := proc(
     end if;
   end if;
 
-  return pivot_is_zero, M[k,k];
+  return pivot_is_zero, M[k,k], pivot_cost;
 
 end proc: # DoPivoting
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotCost := proc( x::{algebraic}, $ )::{integer};
-  return nops(indets(x));
+  if type(x,'integer') or type(x,'float') then
+    if evalb( x = 0 ) then
+      return 0, 0;
+    else
+      return 1, abs(x);
+    end if;
+  elif type(x,'symbol') then
+    return 2, infinity;
+  #elif type(x,'algebraic') then
+  #  return infinity, 1;
+  end if;
+  return 2+length(x), infinity;
 end proc: # PivotCost
 
 (*

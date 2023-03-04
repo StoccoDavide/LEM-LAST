@@ -16,7 +16,7 @@ LU := proc(
               "veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
 
   local M, L, U, Mkk, m, n, mn, k, rnk, r, c,
-        apply_veil, pivot_is_zero, tmp;
+        apply_veil, pivot_is_zero, pivot_cost, tmp;
 
   m, n := LinearAlgebra[Dimensions](A):
 
@@ -39,7 +39,7 @@ LU := proc(
       );
     end;
 
-    pivot_is_zero, Mkk := DoPivoting( k, M, V, r, c, VeilingStrategy );
+    pivot_is_zero, Mkk, pivot_cost := DoPivoting( k, M, V, r, c, VeilingStrategy );
 
     if pivot_is_zero then
       rnk := k;
@@ -50,15 +50,15 @@ LU := proc(
     end if;
 
     if LULEM:-Verbose then
-      print( "LULEM::LU(...): pivot:", Mkk );
+      print( "LULEM::LU(...): pivot:", Mkk, pivot_cost );
     end;
 
     # Shur complement
     tmp         := [k+1..-1];
-    M[tmp, k]   := apply_veil~(Normalizer~(M[tmp, k] / Mkk));
+    M[k,k]      := apply_veil(Mkk);
+    M[tmp, k]   := apply_veil~(Normalizer~(M[tmp, k]))/Mkk[k,k];
+    M[k, tmp]   := apply_veil~(Normalizer~(M[k, tmp]));
     M[tmp, tmp] := apply_veil~(Normalizer~(M[tmp, tmp] - M[tmp, k].M[k, tmp]));
-    #M[tmp, k]   := apply_veil~(simplify~(M[tmp, k] / Mkk));
-    #M[tmp, tmp] := apply_veil~(simplify~(M[tmp, tmp] - M[tmp, k].M[k, tmp]));
   end do:
 
   L := Matrix(M[1..m, 1..m], shape = triangular[lower, unit]);

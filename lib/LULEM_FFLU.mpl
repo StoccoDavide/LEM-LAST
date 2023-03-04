@@ -18,7 +18,7 @@ FFLU := proc(
               "<A> using the veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
 
   local SS, M, Mkk, m, n, mn, i, j, k, ri, rk, rnk, r, c, apply_veil,
-        pivot_is_zero, Mij_is_zero, z, tmp, bot, top;
+        pivot_is_zero, pivot_cost, Mij_is_zero, z, tmp, bot, top;
 
   m, n := LinearAlgebra[Dimensions](A):
 
@@ -42,7 +42,7 @@ FFLU := proc(
       );
     end;
 
-    pivot_is_zero, Mkk := DoPivoting( k, M, V, r, c, VeilingStrategy );
+    pivot_is_zero, Mkk, pivot_cost := DoPivoting( k, M, V, r, c, VeilingStrategy );
 
     if pivot_is_zero then
       rnk := k;
@@ -52,7 +52,7 @@ FFLU := proc(
       break;
     end if;
     if LULEM:-Verbose then
-      print("LULEM::FFLU(...): pivot:", Mkk);
+      print("LULEM::FFLU(...): pivot:", Mkk, pivot_cost );
     end;
     top   := apply_veil(Normalizer(numer(Mkk)));
     bot   := apply_veil(Normalizer(denom(Mkk)));
