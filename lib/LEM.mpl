@@ -74,8 +74,8 @@ LEM := module()
     local i;
 
     printf(
-      "'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023\n"
-      "Current version: D. Stocco, M. Larcher, E. Bertolazzi,\n"
+      "'LEM' module version 1.0, BSD 3-Clause License - Copyright (c) 2023\n"
+      "Current version: D. Stocco, M. Larcher, E. Bertolazzi.\n"
       "Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
     );
 
@@ -98,7 +98,7 @@ LEM := module()
 
   ModuleUnload := proc()
 
-    description "Module 'LEM' module unload procedure.";
+    description "Module 'LEM' unload procedure.";
 
     unprotect(LastUsed);
     LastUsed    := NULL;
@@ -112,7 +112,7 @@ LEM := module()
 
   InitLEM := proc()
 
-    description "Initialize 'LEM' module internal variables.";
+    description "Initialize 'LEM' internal variables.";
 
     UnVeilTable := table('sparse' = table('sparse' = (0 = 0)));
 
