@@ -4,7 +4,7 @@
 <Label-Scheme value="2" prefix=""/>
 <View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1600" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1120" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -167,6 +167,10 @@ end proc:
 <Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);
 </Text-field>
 </Input>
+<Output><Text-field style="HyperlinkWarning" layout="HyperlinkWarning"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Warning,%20(in%20LEM%3A-UnVeil)%20%60perm%60%20is%20implicitly%20declared%20local%20%7C%2FUsers%2Fenrico%2FRicerca%2FSoftware%2FREPOS%2FmyReposGit%2FLEM%2Flib%2FLEM.mpl%3A169%7C" hyperlink="true"><Font style="HyperlinkWarning">Warning, (in LEM:-UnVeil) `perm` is implicitly declared local |/Users/enrico/Ricerca/Software/REPOS/myReposGit/LEM/lib/LEM.mpl:169|</Font></Hyperlink></Text-field>
+</Output>
+<Output><Text-field style="HyperlinkWarning" layout="HyperlinkWarning"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Warning,%20(in%20LEM%3A-UnVeil)%20%60i%60%20is%20implicitly%20declared%20local%20%7C%2FUsers%2Fenrico%2FRicerca%2FSoftware%2FREPOS%2FmyReposGit%2FLEM%2Flib%2FLEM.mpl%3A180%7C" hyperlink="true"><Font style="HyperlinkWarning">Warning, (in LEM:-UnVeil) `i` is implicitly declared local |/Users/enrico/Ricerca/Software/REPOS/myReposGit/LEM/lib/LEM.mpl:180|</Font></Hyperlink></Text-field>
+</Output>
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023
 D. Stocco, M. Larcher, E. Bertolazzi,
 W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
@@ -245,7 +249,7 @@ D. Stocco, M. Larcher, E. Bertolazzi,
 W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDY2LUkjbWlHRiQ2JVEnVW5WZWlsRicvJSdpdGFsaWNHUSV0cnVlRicvJSxtYXRodmFyaWFudEdRJ2l0YWxpY0YnLUkjbW9HRiQ2LVEiLEYnL0Y2USdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGNC8lKXN0cmV0Y2h5R0ZALyUqc3ltbWV0cmljR0ZALyUobGFyZ2VvcEdGQC8lLm1vdmFibGVsaW1pdHNHRkAvJSdhY2NlbnRHRkAvJSdsc3BhY2VHUSYwLjBlbUYnLyUncnNwYWNlR1EsMC4zMzMzMzMzZW1GJy1GLzYlUSVWZWlsRidGMkY1RjgtRi82JVErVmVpbEZvcmdldEYnRjJGNUY4LUYvNiVRLFZlaWxHZXRMYXN0RidGMkY1RjgtRi82JVErVmVpbExhYmVsc0YnRjJGNUY4LUYvNiVRLVZlaWxMYXN0VXNlZEYnRjJGNUY4LUYvNiVRKVZlaWxMaXN0RidGMkY1RjgtRi82JVEpVmVpbFN1YnNGJ0YyRjVGOC1GLzYlUSpWZWlsU3ViczJGJ0YyRjUvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRkBGPEY8LyUlb3BlbkdRJyZsc3FiO0YnLyUmY2xvc2VHUScmcnNxYjtGJw==">NytJJ1VuVmVpbEc2IkklVmVpbEdGJEkrVmVpbEZvcmdldEdGJEksVmVpbEdldExhc3RHRiRJK1ZlaWxMYWJlbHNHRiRJLVZlaWxMYXN0VXNlZEdGJEkpVmVpbExpc3RHRiRJKVZlaWxTdWJzR0YkSSpWZWlsU3ViczJHRiQ=</Equation></Text-field>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDY6LUkjbWlHRiQ2JVEnVW5WZWlsRicvJSdpdGFsaWNHUSV0cnVlRicvJSxtYXRodmFyaWFudEdRJ2l0YWxpY0YnLUkjbW9HRiQ2LVEiLEYnL0Y2USdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGNC8lKXN0cmV0Y2h5R0ZALyUqc3ltbWV0cmljR0ZALyUobGFyZ2VvcEdGQC8lLm1vdmFibGVsaW1pdHNHRkAvJSdhY2NlbnRHRkAvJSdsc3BhY2VHUSYwLjBlbUYnLyUncnNwYWNlR1EsMC4zMzMzMzMzZW1GJy1GLzYlUSVWZWlsRidGMkY1RjgtRi82JVErVmVpbEZvcmdldEYnRjJGNUY4LUYvNiVRK1ZlaWxMYWJlbHNGJ0YyRjVGOC1GLzYlUSlWZWlsTGlzdEYnRjJGNUY4LUYvNiVRKVZlaWxTdWJzRidGMkY1RjgtRi82JVEqVmVpbFN1YnMyRidGMkY1RjgtRi82JVEwVmVpbFRhYmxlQXBwZW5kRidGMkY1RjgtRi82JVEuVmVpbFRhYmxlSW1hcEYnRjJGNUY4LUYvNiVRLlZlaWxUYWJsZVNpemVGJ0YyRjVGOC1GLzYlUTJWZWlsVW5vcmRlcmVkTGlzdEYnRjJGNS8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdGQEY8RjwvJSVvcGVuR1EnJmxzcWI7RicvJSZjbG9zZUdRJyZyc3FiO0Yn">Ny1JJ1VuVmVpbEc2IkklVmVpbEdGJEkrVmVpbEZvcmdldEdGJEkrVmVpbExhYmVsc0dGJEkpVmVpbExpc3RHRiRJKVZlaWxTdWJzR0YkSSpWZWlsU3ViczJHRiRJMFZlaWxUYWJsZUFwcGVuZEdGJEkuVmVpbFRhYmxlSW1hcEdGJEkuVmVpbFRhYmxlU2l6ZUdGJEkyVmVpbFVub3JkZXJlZExpc3RHRiQ=</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -259,15 +263,28 @@ module LEM:
     Veil( x::{anything}, $ ) :: {anything}
 
     # UnVeil the expression &lt;x&gt; up to &lt;n&gt; levels.
-    UnVeil( x::{anything}, n::{infinity, nonnegint}, $ ) :: {anything}
+    UnVeil( x::{anything}, $ ) :: {anything}
 
-    # Return a list of the veiling labels.
-    VeilLabels( $ )
+    # 
+    VeilUnorderedList( label::{symbol}, $ ) :: {anything}
 
     # Return a list of the veiling variables labelled as &lt;label&gt;. If &lt;label&gt; is 
     # not given, return a list of all veiling variables.
     VeilList( label::{symbol, list(symbol)} := _VeilLabels(), 
               reverse_order::{boolean} := false, $ ) :: {list(anything)}
+
+    # 
+    VeilTableSize( label::{symbol}, $ ) :: {nonnegint}
+
+    # 
+    VeilTableImap( label::{symbol}, reverse_order::{boolean}, $ )
+                 :: {table, list[nonnegint]}
+
+    # 
+    VeilTableAppend( label::{symbol}, x::{anything}, $ ) :: {anything}
+
+    # Return a list of the veiling labels.
+    VeilLabels( $ )
 
     # Substitute the reversed veiling variables of the veiling label &lt;label&gt; in 
     # the expression &lt;x&gt;. If &lt;label&gt; is not given, substitute the reversed 
@@ -285,10 +302,6 @@ module LEM:
     # is not given, clear all the veiling variables.
     VeilForget( label::{symbol, list(symbol)} := _VeilLabels(), $ )
               :: {nothing}
-
-    package VeilLastUsed:
-
-    VeilGetLast( label::{symbol}, $ ) :: {anything}
 
 </Text-field>
 </Output>

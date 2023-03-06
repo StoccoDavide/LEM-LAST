@@ -44,27 +44,29 @@ LEM := module()
 
   export Veil,
          UnVeil,
-         VeilLabels,
+         VeilUnorderedList,
          VeilList,
+         VeilTableSize,
+         VeilTableImap,
+         VeilTableAppend,
+
+         VeilLabels,
          VeilSubs,
          VeilSubs2,
-         VeilForget,
-         VeilLastUsed,
-         VeilGetLast;
+         VeilForget;
 
   local  ModuleLoad,
          ModuleUnload,
+         UnVeilTables,  # table of table
+         UnVeilLabels,
          Auxiliary,
-         InitLEM,
-         UnVeilTable;
+         InitLEM;
 
   option package,
          load   = ModuleLoad,
          unload = ModuleUnload;
 
   description "Large Expressions Management module";
-
-  VeilLastUsed := table('sparse');
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -98,10 +100,7 @@ LEM := module()
 
   ModuleUnload := proc()
     description "Module 'LEM' module unload procedure";
-    unprotect(LEM:-VeilLastUsed);
-    LEM:-VeilLastUsed := NULL;
-    LEM:-UnVeilTable  := NULL;
-    protect(LEM:-VeilLastUsed);
+    LEM:-UnVeilTables := NULL;
     return NULL;
   end proc: # ModuleUnload
 
@@ -109,9 +108,23 @@ LEM := module()
 
   InitLEM := proc()
     description "Initialize 'LEM' module internal variables";
-    LEM:-UnVeilTable := table('sparse' = table('sparse' = (0 = 0)));
+    LEM:-UnVeilTables := table([]);
     return NULL;
   end proc: # InitLEM
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  VeilUnorderedList := proc( label::{symbol}, $ )::{anything};
+
+    description "";
+
+    if type( LEM:-UnVeilTables[label], 'table' ) then
+      return op(eval(LEM:-UnVeilTables[label]));
+    else
+      return [];
+    end if;
+
+  end proc: # VeilUnorderedList;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -119,7 +132,7 @@ LEM := module()
 
     description "Veil an expression <x> and return a label to it.";
 
-    local i, s, c, label;
+    local label, i, s, c;
 
 	  label := `if`(procname::{indexed}, op(procname), '_V');
 
@@ -148,66 +161,82 @@ LEM := module()
     end try;
     # Only if there is something complicated to hide we do actually hide it and
     # return a label.
-    return s * i * LEM:-Auxiliary(s*c/i, label);
+    return s * i * LEM:-VeilTableAppend(label,s*c/i);
   end proc; # Veil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UnVeil := proc( x::{anything}, n::{nonnegint, infinity}, $ )::{anything};
+  UnVeil := proc( x::{anything}, $ )::{anything};
 
     description "UnVeil the expression <x> up to <n> levels.";
 
-    local a, b, level, label;
+    local label, level, a, b, T;
 
-    label := `if`(procname::{indexed}, op(procname), '_V');
-    level := `if`(nargs < 2, 1, min(LEM:-VeilLastUsed[label]+1, n));
+	  label := `if`(procname::{indexed}, op(procname), '_V');
 
-    # Always do at least 1 unveiling
-    a := copy(x);
-    b := eval(a, op(eval(LEM:-UnVeilTable[label]))[2]);
-    from 2 to level while not Testzero(a - b) do
-      a := b;
-      b := eval(a, op(eval(LEM:-UnVeilTable[label]))[2]);
-    end do;
-    return b;
-  end proc;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  VeilGetLast := proc( label::{symbol}, $ )::{anything};
-    local id;
-    id := label[LEM:-VeilLastUsed[label]];
-    return id, LEM:-UnVeilTable[label][id];
-  end proc;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  Auxiliary := proc( x::{anything}, label::{symbol}, $ )::{anything};
-
-    description "Auxiliary procedure to scope VeilLastUsed etc and use option "
-                "remember to detect duplicates. There is no nontrivial storage"
-                "duplication because objects are hashed and stored uniquely. "
-                "All this costs is a pointer.";
-
-    local  tmp;
-    option remember;
-
-    unprotect(LEM:-VeilLastUsed);
-    LEM:-VeilLastUsed[label] := LEM:-VeilLastUsed[label] + 1;
-    protect(LEM:-VeilLastUsed);
-    if LEM:-VeilLastUsed[label] = 1 then
-      LEM:-UnVeilTable[label] := table('sparse' = (0 = 0));
+    if false then
+      T, perm := LEM:-VeilTableImap(label,true);
+      b := copy(x);
+      for i from 1 to nops(perm) do
+        a := b;
+        b := subs[eval](T[perm[i]],a);
+      end do;
+      return b;
+    else
+      T := LEM:-VeilUnorderedList(label); # get the table for symbol 'label'
+      # Always do at least 1 unveiling
+      b := copy(x);
+      while has(b,label) do
+        a := b;
+        b := eval(a,T);
+      end do;
+      return b;
     end if;
-    tmp := label[LEM:-VeilLastUsed[label]];
-    LEM:-UnVeilTable[label][tmp] := x;
-    return tmp;
+  end proc;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  VeilTableSize := proc( label::{symbol}, $ )::{nonnegint};
+    description "";
+    return numelems(LEM:-VeilUnorderedList(label));
+  end proc;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  VeilTableImap := proc( label::{symbol}, reverse_order::{boolean}, $ )::{table,list[nonnegint]};
+    description "";
+    local T, a, b, comparator;
+    T := LEM:-VeilUnorderedList(label); # get the table for symbol 'label'
+    if reverse_order then
+      comparator := (a,b)->evalb( op(1,lhs(a)) > op(1,lhs(b)) );
+    else
+      comparator := (a,b)->evalb( op(1,lhs(a)) < op(1,lhs(b)) );
+    end if;
+    return T, sort( T, output='permutation', comparator );
+  end proc;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  VeilTableAppend := proc( label::{symbol}, x::{anything}, $ )::{anything};
+
+    description "";
+
+    local k := 1;
+    if type( LEM:-UnVeilTables[label], 'table' ) then
+      k := numelems(op(eval(LEM:-UnVeilTables[label])))+1;
+      LEM:-UnVeilTables[label][label[k]] := x;
+    else
+      LEM:-UnVeilTables[label] := table([label[1]=x]);
+    end if;
+
+    return label[k];
   end proc: # Auxiliary;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   VeilLabels := proc( $ )::{list(symbol)};
     description "Return a list of the veiling labels.";
-    return map(lhs, op(op(LEM:-VeilLastUsed))[2..-1]);
+    return [indices(LEM:-UnVeilTables,'nolist')];
   end proc: # VeilLabels
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -221,17 +250,12 @@ LEM := module()
     description "Return a list of the veiling variables labelled as <label>. "
                 "If <label> is not given, return a list of all veiling variables.";
 
-    local comparator;
-    if reverse_order then
-      comparator := (a,b) -> evalb( op(1,lhs(a)) > op(1,lhs(b)) );
-    else
-      comparator := (a,b) -> evalb( op(1,lhs(a)) < op(1,lhs(b)) );
-    end if;
-
+    local T, perm;
     if type(label,list) then
       return map(x -> op(LEM:-VeilList(x,reverse_order)), label);
     else
-      return sort(op(eval(LEM:-UnVeilTable[label]))[2],comparator):
+      T, perm := LEM:-VeilTableImap(label,reverse_order);
+      return T[perm]:
     end if;
   end proc: # VeilList
 
@@ -279,11 +303,8 @@ LEM := module()
     if type(label, list) then
       map(x -> LEM:-VeilForget(x), label);
     else
-      unprotect(LEM:-VeilLastUsed);
-      LEM:-VeilLastUsed[label] := 0;
-      protect(LEM:-VeilLastUsed);
-      LEM:-UnVeilTable[label] := evaln(LEM:-UnVeilTable[label]);
-      forget(LEM:-Auxiliary);
+      LEM:-UnVeilLabels[label] := evaln(LEM:-UnVeilLabels[label]);
+      LEM:-UnVeilTables[label] := evaln(LEM:-UnVeilTables[label]);
     end if;
 
     return NULL;
