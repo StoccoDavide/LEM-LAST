@@ -19,7 +19,6 @@ LU := proc(
         apply_veil, pivot_is_zero, pivot_cost, tmp;
 
   LEM:-VeilForget(V);
-  LULEM:-VeilUnrolled := [];
 
   m, n := LinearAlgebra[Dimensions](A):
 
@@ -29,7 +28,6 @@ LU := proc(
 
   # Check if to veil or not
   apply_veil := (z) -> `if`(VeilingStrategy(z), LEM:-Veil[V](z), z);
-  #apply_veil := (z) -> ApplyVeil( V, VeilingStrategy, z );
 
   # Perform Gaussian elimination
   M   := copy(A);
@@ -125,7 +123,6 @@ LUsolve := proc(
 
   # Create a normalizer function
   apply_veil := (y) -> `if`(VeilingStrategy(y), LEM:-Veil[V](y), y);
-  #apply_veil := (y) -> ApplyVeil( V, VeilingStrategy, y );
 
   # apply permutation P
   x := b[convert(r,list)];

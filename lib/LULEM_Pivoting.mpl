@@ -31,7 +31,6 @@ DoPivoting := proc(
   # Check if to veil or not to veil
   LV           := LEM:-VeilList(V,true);
   apply_unveil := (z) -> subs[eval](op( LV ), x );
-  #apply_unveil := (z) -> LULEM:-ApplyUnVeil( z );
 
   pivot_is_zero := true;
   pivot_cost    := 0;

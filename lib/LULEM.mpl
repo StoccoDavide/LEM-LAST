@@ -45,10 +45,6 @@ LULEM := module()
   export  SetVerbosity,
           PermutationMatrices,
           SolveLinearSystem,
-          ApplyVeil,
-          ApplyUnVeil,
-          PrintVeilUnrolled,
-          ListVeilUnrolled,
           LU,
           FFLU,
           FF2LU,
@@ -67,7 +63,6 @@ LULEM := module()
           DoPivoting,
           LUsolve,
           FFLUsolve,
-          VeilUnrolled,
           InitLULEM,
           Verbose;
 
@@ -125,8 +120,7 @@ LULEM := module()
 
   InitLULEM := proc()
     description "Initialize 'LULEM' module internal variables";
-    LULEM:-Verbose      := false;
-    LULEM:-VeilUnrolled := [];
+    LULEM:-Verbose := false;
     return NULL;
   end proc: # InitLULEM
 
@@ -184,50 +178,6 @@ LULEM := module()
   #    \ V /  __/ | | | | | | (_| |
   #     \_/ \___|_|_|_|_| |_|\__, |
   #                          |___/
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  ApplyVeil := proc(
-    V::{symbol},
-    VeilingStrategy::{procedure},
-    z::{algebraic},
-    $)
-    local res, rres;
-    if VeilingStrategy(z) then
-      LEM:-Veil[V](z);
-      res, rres := LEM:-VeilGetLast(V);
-      LULEM:-VeilUnrolled := [ res=simplify(subs(LULEM:-VeilUnrolled,rres)), op(LULEM:-VeilUnrolled) ];
-      return res;
-    else
-      return z;
-    end if;
-  end proc;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  ApplyUnVeil := proc( z::{algebraic}, $)
-    local S, res;
-    res := z;
-    for S in LULEM:-VeilUnrolled do
-      res := Normalizer(subs[eval](S,res));
-    end do;
-    return res; #Normalizer(subs[eval](op(LULEM:-VeilUnrolled),z));
-  end proc;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  PrintVeilUnrolled := proc( $ )
-    local elem;
-    for elem in LULEM:-VeilUnrolled do
-      print(elem);
-    end do;
-  end proc;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  ListVeilUnrolled := proc( $ )
-    return LULEM:-VeilUnrolled;
-  end proc;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

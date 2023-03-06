@@ -21,7 +21,6 @@ FFLU := proc(
         pivot_is_zero, pivot_cost, Mij_is_zero, z, tmp, bot, top;
 
   LEM:-VeilForget(V);
-  LULEM:-VeilUnrolled := [];
 
   m, n := LinearAlgebra[Dimensions](A):
 
@@ -30,8 +29,7 @@ FFLU := proc(
   c := Vector(n, k -> k);
 
   # check if Veil or not
-  #apply_veil := z -> `if`(VeilingStrategy(z), LEM:-Veil[V](z), z);
-  apply_veil := (z) -> ApplyVeil( V, VeilingStrategy, z );
+  apply_veil := z -> `if`(VeilingStrategy(z), LEM:-Veil[V](z), z);
 
   # Gauss Elimination main loop
   M   := copy(A);
@@ -155,8 +153,7 @@ FFLUsolve := proc(
   );
 
   # Create a normalizer function
-  #apply_veil := (y) -> `if`(VeilingStrategy(y), LEM:-Veil[V](y), y);
-  apply_veil := (y) -> ApplyVeil( V, VeilingStrategy, y );
+  apply_veil := (y) -> `if`(VeilingStrategy(y), LEM:-Veil[V](y), y);
 
   # apply permutation P
   x := b[convert(r,list)];

@@ -12,7 +12,6 @@
     local m, n, z, k, Q, R, M, norm_x, s, u1, w, tau;
 
     LEM:-VeilForget(V);
-    LULEM:-VeilUnrolled := [];
 
     # Extract the dimensions of the matrix A
     m, n := LinearAlgebra[Dimensions](A):
