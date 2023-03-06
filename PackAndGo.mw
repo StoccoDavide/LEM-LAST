@@ -4,7 +4,7 @@
 <Label-Scheme value="2" prefix=""/>
 <View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1120" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1600" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -255,7 +255,7 @@ D. Stocco, M. Larcher, E. Bertolazzi,
 W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDY6LUkjbWlHRiQ2JVEmRkYyTFVGJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRictSSNtb0dGJDYtUSIsRicvRjZRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y0LyUpc3RyZXRjaHlHRkAvJSpzeW1tZXRyaWNHRkAvJShsYXJnZW9wR0ZALyUubW92YWJsZWxpbWl0c0dGQC8lJ2FjY2VudEdGQC8lJ2xzcGFjZUdRJjAuMGVtRicvJSdyc3BhY2VHUSwwLjMzMzMzMzNlbUYnLUYvNiVRJUZGTFVGJ0YyRjVGOC1GLzYlUSNMVUYnRjJGNUY4LUYvNiVRNFBlcm11dGF0aW9uTWF0cmljZXNGJ0YyRjVGOC1GLzYlUSNRUkYnRjJGNUY4LUYvNiVRLVNldFZlcmJvc2l0eUYnRjJGNUY4LUYvNiVRMlNvbHZlTGluZWFyU3lzdGVtRidGMkY1RjgtRi82JVEyVmVpbGluZ1N0cmF0ZWd5X0xGJ0YyRjVGOC1GLzYlUTNWZWlsaW5nU3RyYXRlZ3lfTEJGJ0YyRjVGOC1GLzYlUTNWZWlsaW5nU3RyYXRlZ3lfTHNGJ0YyRjVGOC1GLzYlUTJWZWlsaW5nU3RyYXRlZ3lfbkYnRjJGNS8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdGQEY8RjwvJSVvcGVuR1EnJmxzcWI7RicvJSZjbG9zZUdRJyZyc3FiO0Yn">Ny1JJkZGMkxVRzYiSSVGRkxVR0YkSSNMVUdGJEk0UGVybXV0YXRpb25NYXRyaWNlc0dGJEkjUVJHRiRJLVNldFZlcmJvc2l0eUdGJEkyU29sdmVMaW5lYXJTeXN0ZW1HRiRJMlZlaWxpbmdTdHJhdGVneV9MR0YkSTNWZWlsaW5nU3RyYXRlZ3lfTEJHRiRJM1ZlaWxpbmdTdHJhdGVneV9Mc0dGJEkyVmVpbGluZ1N0cmF0ZWd5X25HRiQ=</Equation></Text-field>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZCLUkjbWlHRiQ2JVEsQXBwbHlVblZlaWxGJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRictSSNtb0dGJDYtUSIsRicvRjZRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y0LyUpc3RyZXRjaHlHRkAvJSpzeW1tZXRyaWNHRkAvJShsYXJnZW9wR0ZALyUubW92YWJsZWxpbWl0c0dGQC8lJ2FjY2VudEdGQC8lJ2xzcGFjZUdRJjAuMGVtRicvJSdyc3BhY2VHUSwwLjMzMzMzMzNlbUYnLUYvNiVRKkFwcGx5VmVpbEYnRjJGNUY4LUYvNiVRJkZGMkxVRidGMkY1RjgtRi82JVElRkZMVUYnRjJGNUY4LUYvNiVRI0xVRidGMkY1RjgtRi82JVExTGlzdFZlaWxVbnJvbGxlZEYnRjJGNUY4LUYvNiVRNFBlcm11dGF0aW9uTWF0cmljZXNGJ0YyRjVGOC1GLzYlUTJQcmludFZlaWxVbnJvbGxlZEYnRjJGNUY4LUYvNiVRI1FSRidGMkY1RjgtRi82JVEtU2V0VmVyYm9zaXR5RidGMkY1RjgtRi82JVEyU29sdmVMaW5lYXJTeXN0ZW1GJ0YyRjVGOC1GLzYlUTJWZWlsaW5nU3RyYXRlZ3lfTEYnRjJGNUY4LUYvNiVRM1ZlaWxpbmdTdHJhdGVneV9MQkYnRjJGNUY4LUYvNiVRM1ZlaWxpbmdTdHJhdGVneV9Mc0YnRjJGNUY4LUYvNiVRMlZlaWxpbmdTdHJhdGVneV9uRidGMkY1LyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0ZARjxGPC8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7Ric=">NzFJLEFwcGx5VW5WZWlsRzYiSSpBcHBseVZlaWxHRiRJJkZGMkxVR0YkSSVGRkxVR0YkSSNMVUdGJEkxTGlzdFZlaWxVbnJvbGxlZEdGJEk0UGVybXV0YXRpb25NYXRyaWNlc0dGJEkyUHJpbnRWZWlsVW5yb2xsZWRHRiRJI1FSR0YkSS1TZXRWZXJib3NpdHlHRiRJMlNvbHZlTGluZWFyU3lzdGVtR0YkSTJWZWlsaW5nU3RyYXRlZ3lfTEdGJEkzVmVpbGluZ1N0cmF0ZWd5X0xCR0YkSTNWZWlsaW5nU3RyYXRlZ3lfTHNHRiRJMlZlaWxpbmdTdHJhdGVneV9uR0Yk</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -274,6 +274,14 @@ module LULEM:
 
     SolveLinearSystem( T::{table}, b::{Vector}, V::{symbol, function}, 
                        VeilingStrategy::{procedure} := _VeilingStrategy_n, $ )
+
+    ApplyVeil( V::{symbol}, VeilingStrategy::{procedure}, z::{algebraic}, $ )
+
+    ApplyUnVeil( z::{algebraic}, $ )
+
+    PrintVeilUnrolled( $ )
+
+    ListVeilUnrolled( $ )
 
     # Compute the LU decomposition of a square matrix &lt;A&gt; using the veiling 
     # strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
@@ -313,7 +321,7 @@ module LULEM:
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>

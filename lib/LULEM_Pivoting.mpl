@@ -13,7 +13,6 @@ DoPivoting := proc(
   V::{symbol},
   r::{Vector(integer)},
   c::{Vector(integer)},
-  VeilingStrategy::{procedure},
   $)
 
   description "Compute the LU decomposition pivot vector provided the step <k>, "
@@ -24,15 +23,15 @@ DoPivoting := proc(
   local Mij, uMij, Mij_is_zero, Mij_cost, Mij_value,
         pivot_is_zero, pivot_cost, pivot_value,
         LV, m, n, i, j, ii, jj, n_found,
-        apply_veil, apply_unveil, z, tmp;
+        apply_unveil, z, tmp;
 
   # Extract dimensions
   m, n := LinearAlgebra[Dimensions](M):
 
   # Check if to veil or not to veil
-  apply_veil   := (z) -> `if`( VeilingStrategy(z), LEM:-Veil[V](z), z);
   LV           := LEM:-VeilList(V,true);
-  apply_unveil := (z) -> subs( op( LV ), z );
+  apply_unveil := (z) -> subs[eval](op( LV ), x );
+  #apply_unveil := (z) -> LULEM:-ApplyUnVeil( z );
 
   pivot_is_zero := true;
   pivot_cost    := 0;
@@ -49,15 +48,15 @@ DoPivoting := proc(
         Mij         := Normalizer(Mij);
         Mij_is_zero := evalb( Mij = 0 );
         if not Mij_is_zero then
-          uMij                := eval(apply_unveil(Mij));
+          uMij                := apply_unveil(Mij);
           Mij_cost, Mij_value := LULEM:-PivotCost(uMij); # recalculate
           # timelimit required because sometime Normalizer stuck
           uMij        := timelimit( 0.5, eval(Normalizer(uMij)) );
           Mij_is_zero := evalb( uMij = 0 );
         end;
       catch:
+        print("Mij: Division by 0 or another exception.\n");
         if LULEM:-Verbose then
-          print("Mij: Division by 0 or another exception.\n");
           #print(lastexception);
           print(Mij);
         end if;
@@ -86,18 +85,18 @@ DoPivoting := proc(
       end if;
     end do;
     # check if found pivot
-    if not pivot_is_zero then
-      if pivot_cost = 0 then
-        break;
-      end;
-      if pivot_cost = 1 and n_found > 0 then
-        break;
-      end;
-      if pivot_cost > 1 and n_found > 1 then
-        break;
-      end;
-      n_found := n_found+1;
-    end if;
+    #if not pivot_is_zero then
+    #  if pivot_cost = 0 then
+    #    break;
+    #  end;
+    #  if pivot_cost = 1 and n_found > 0 then
+    #    break;
+    #  end;
+    #  if pivot_cost > 1 and n_found > 1 then
+    #    break;
+    #  end;
+    #  n_found := n_found+1;
+    #end if;
   end do;
 
   if not pivot_is_zero then

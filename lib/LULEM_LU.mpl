@@ -18,6 +18,9 @@ LU := proc(
   local M, L, U, Mkk, m, n, mn, k, rnk, r, c,
         apply_veil, pivot_is_zero, pivot_cost, tmp;
 
+  LEM:-VeilForget(V);
+  LULEM:-VeilUnrolled := [];
+
   m, n := LinearAlgebra[Dimensions](A):
 
   # Create pivot vector
@@ -26,6 +29,7 @@ LU := proc(
 
   # Check if to veil or not
   apply_veil := (z) -> `if`(VeilingStrategy(z), LEM:-Veil[V](z), z);
+  #apply_veil := (z) -> ApplyVeil( V, VeilingStrategy, z );
 
   # Perform Gaussian elimination
   M   := copy(A);
@@ -39,7 +43,7 @@ LU := proc(
       );
     end;
 
-    pivot_is_zero, Mkk, pivot_cost := DoPivoting( k, M, V, r, c, VeilingStrategy );
+    pivot_is_zero, Mkk, pivot_cost := DoPivoting( k, M, V, r, c );
 
     if pivot_is_zero then
       rnk := k;
@@ -121,18 +125,28 @@ LUsolve := proc(
 
   # Create a normalizer function
   apply_veil := (y) -> `if`(VeilingStrategy(y), LEM:-Veil[V](y), y);
+  #apply_veil := (y) -> ApplyVeil( V, VeilingStrategy, y );
 
   # apply permutation P
   x := b[convert(r,list)];
 
   # Perform forward substitution to solve Ly=b[r]
   for i from 2 to m do
+    if LULEM:-Verbose then
+      printf("LULEM:-LUsolve, forward %d\n",i);
+    end if;
     x[i] := apply_veil( x[i] - add(L[i,1..i-1]*~x[1..i-1]) );
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
+  if LULEM:-Verbose then
+    printf("LULEM:-LUsolve, divide by Unn\n");
+  end if;
   x[n] := apply_veil(x[n]/U[n,n]);
   for i from n-1 to 1 by -1 do
+    if LULEM:-Verbose then
+      printf("LULEM:-LUsolve, backward %d\n",i);
+    end if;
     s    := apply_veil( x[i] - add(U[i,i+1..n] *~ x[i+1..n]));
     x[i] := apply_veil( s / U[i,i] );
   end do;
