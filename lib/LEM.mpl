@@ -49,7 +49,8 @@ LEM := module()
          VeilSubs,
          VeilSubs2,
          VeilForget,
-         VeilLastUsed;
+         VeilLastUsed,
+         VeilGetLast;
 
   local  ModuleLoad,
          ModuleUnload,
@@ -169,6 +170,14 @@ LEM := module()
       b := eval(a, op(eval(LEM:-UnVeilTable[label]))[2]);
     end do;
     return b;
+  end proc;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  VeilGetLast := proc( label::{symbol}, $ )::{anything};
+    local id;
+    id := label[LEM:-VeilLastUsed[label]];
+    return id, LEM:-UnVeilTable[label][id];
   end proc;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
