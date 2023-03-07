@@ -1,60 +1,78 @@
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  QR := proc(
-    A::{Matrix},
-    V::{symbol},
-    VeilingStrategy::{procedure}  := VeilingStrategy_n,
-    $)::{table};
+QR := proc(
+  A::{Matrix},
+  V::{symbol},
+  VeilingStrategy::{procedure}  := VeilingStrategy_n,
+  $)::{table};
 
-    description "Compute the Householder QR decomposition of a square matrix <A> "
-                "using the veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
+  description "Compute the Givens QR decomposition of a square matrix <A> "
+              "using the veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
 
-    local m, n, z, k, Q, R, M, norm_x, s, u1, w, tau;
+  local m, n, z, a, b, c, s, r, i, j, k, Q, R, apply_veil;
 
-    LEM:-VeilForget(V);
+  LEM:-VeilForget(V);
 
-    # Extract the dimensions of the matrix A
-    m, n := LinearAlgebra[Dimensions](A):
+  # Check if to veil or not
+  apply_veil := (z) -> `if`(VeilingStrategy(z), LEM:-Veil[V](z), z);
 
-    # Check if the matrix A valid
-    assert(
-      m >= n,
-      "LULEM::QR(...): invalid matrix A(m,n) detected, got (m >= n)."
-    );
+  # Extract the dimensions of the matrix A
+  m, n := LinearAlgebra[Dimensions](A):
 
-    # Initialize some variables
-    z := Vector(n, k -> 0);
-    Q := Matrix(LinearAlgebra[IdentityMatrix](m)); # Orthogonal transformation so far
-    R := copy(A);                                  # Transformed matrix so far
+  # Check if the matrix A valid
+  assert(
+    m >= n,
+    "LULEM::QR(...): invalid matrix A(m,n) detected, got (m >= n)."
+  );
 
-    # Compute the Householder QR decomposition with veiling
-    for k from 1 to n do
+  # Initialize some variables
+  Q := [];      # Orthogonal transformation as a list of Given rotations
+  R := copy(A); # Transformed matrix so far
 
-      # Find H = I-tau*w*w’ to put zeros below R[j,j]
-      norm_x := LinearAlgebra[Norm](R[k..-1,k], 2);
-      s      := -sign(R[k, k]);
-      u1     := R[k, k] - s*norm_x;
-      w      := R[k..-1,k]/u1;
-      w[1]   := 1;
-      tau    := -s*u1/norm_x;
+  # Compute the Householder QR decomposition with veiling
+  for k from 1 to m-1 do
+    if LULEM:-Verbose then
+      printf(
+        "LULEM::QR(...): processing %d-th colum. Length %d\n",
+        k, length(LEM:-VeilList(V))
+      );
+    end;
+    for j from k+1 to n do
+      a := R[k,k];
+      b := R[j,k];
+      if not b = 0 then
+        r := apply_veil(sqrt(a^2+b^2));
+        c := apply_veil(a/r);
+        s := apply_veil(-b/r);
 
-      # Update R = HR and Q = QH
-      R[k..-1, 1..-1] := R[k..-1, 1..-1] - tau.w.LinearAlgebra[Transpose](w).R[k..-1,1..-1];
-      Q[1..-1, k..-1] := Q[1..-1, k..-1] - tau.Q[1..-1, k..-1].w.LinearAlgebra[Transpose](w);
+        Q := [op(Q),[c,s]];
 
+        R[k,k] := r;
+        R[j,k] := 0;
+        for i from k+1 to m do
+          a      := c*R[k,i]-s*R[j,i];
+          b      := s*R[k,i]+c*R[j,i];
+          R[k,i] := apply_veil(Normalizer(a));
+          R[j,i] := apply_veil(Normalizer(b));
+        end do;
+      end if;
     end do;
+    if R[k,k] = 0 then
+      error "R[%a,%a] = 0", k, k;
+    end if;
+  end do;
 
-    # Return the QR decomposition
-    return table([
-      "method"   = "QR",
-      "Q"        = Q,
-      "R"        = R,
-      "V"        = V,
-      "Q_length" = length(convert(Q,list)),
-      "R_length" = length(convert(R,list)),
-      "V_length" = length(LEM:-VeilList(V))
-    ]);
-  end proc: # QR
+  # Return the QR decomposition
+  return table([
+    "method"   = "QR",
+    "Q"        = Q,
+    "R"        = R,
+    "V"        = V,
+    "Q_length" = length(convert(Q,list)),
+    "R_length" = length(convert(R,list)),
+    "V_length" = length(LEM:-VeilList(V))
+  ]);
+end proc: # QR
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   (*

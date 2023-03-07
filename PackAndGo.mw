@@ -287,7 +287,7 @@ module LULEM:
 
     FF2LU( T::{table}, $ )
 
-    # Compute the Householder QR decomposition of a square matrix &lt;A&gt; using the 
+    # Compute the Givens QR decomposition of a square matrix &lt;A&gt; using the 
     # veiling strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
     QR( A::{Matrix}, V::{symbol}, 
         VeilingStrategy::{procedure} := _VeilingStrategy_n, $ ) :: {table}

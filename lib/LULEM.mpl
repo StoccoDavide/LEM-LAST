@@ -167,6 +167,8 @@ LULEM := module()
       LUsolve( T, b, V, VeilingStrategy );
     elif T["method"] = "FFLU" then
       FFLUsolve( T, b, V, VeilingStrategy );
+    elif T["method"] = "QR" then
+      QRsolve( T, b, V, VeilingStrategy );
     end
   end proc: # SolveLinearSystem
 
@@ -182,7 +184,7 @@ LULEM := module()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   VeilingStrategy_n := proc( x::{algebraic}, $ )::{boolean};
-    description "Veiling strategy: number of indeterminates in expression <x> minus 4.";
+    description "Veiling strategy: ......";
     return evalb( (nops(indets(x))+1)*length(x) > 10 );
   end proc: # VeilingStrategy_n
 
