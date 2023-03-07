@@ -45,26 +45,23 @@ LULEM := module()
   export  SetVerbosity,
           PermutationMatrices,
           SolveLinearSystem,
+          VeilingStrategy,
           LU,
-          FFLU,
-          FF2LU,
           QR,
-          # TODO: SolveQR,
-          # TODO: FFQR,
-          # TODO: SolveFFQR,
-          VeilingStrategy_n,
-          VeilingStrategy_L,
-          VeilingStrategy_Ls,
-          VeilingStrategy_LB;
+          FFLU,
+          FF2LU;
 
   local   ModuleLoad,
           ModuleUnload,
           PivotCost,
           DoPivoting,
           LUsolve,
+          QRsolve,
           FFLUsolve,
           InitLULEM,
-          Verbose;
+          Verbose,
+          VeilingStrategy_par1,
+          VeilingStrategy_par2;
 
   option  package,
           load   = ModuleLoad,
@@ -120,7 +117,9 @@ LULEM := module()
 
   InitLULEM := proc()
     description "Initialize 'LULEM' module internal variables";
-    LULEM:-Verbose := false;
+    LULEM:-Verbose              := false;
+    LULEM:-VeilingStrategy_par1 := 10;
+    LULEM:-VeilingStrategy_par2 := 100;
     return NULL;
   end proc: # InitLULEM
 
@@ -156,19 +155,14 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SolveLinearSystem := proc(
-    T::{table},
-    b::{Vector},
-    V::{symbol, function},
-    VeilingStrategy::{procedure} := VeilingStrategy_n,
-    $)
+  SolveLinearSystem := proc( T::{table}, b::{Vector}, V::{symbol, function}, $)
 
     if T["method"] = "LU" then
-      LUsolve( T, b, V, VeilingStrategy );
+      return LULEM:-LUsolve( T, b, V );
     elif T["method"] = "FFLU" then
-      FFLUsolve( T, b, V, VeilingStrategy );
+      return LULEM:-FFLUsolve( T, b, V );
     elif T["method"] = "QR" then
-      QRsolve( T, b, V, VeilingStrategy );
+      return LULEM:-QRsolve( T, b, V );
     end
   end proc: # SolveLinearSystem
 
@@ -183,31 +177,11 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilingStrategy_n := proc( x::{algebraic}, $ )::{boolean};
+  VeilingStrategy := proc( x::{algebraic}, $ )::{boolean};
     description "Veiling strategy: ......";
-    return evalb( (nops(indets(x))+1)*length(x) > 10 );
-  end proc: # VeilingStrategy_n
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  VeilingStrategy_L := proc( x::{algebraic}, $ )::{boolean};
-    description "Veiling strategy: length of expression <x> minus 50.";
-    return evalb(length(x) > 50);
-  end proc: # VeilingStrategy_L
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  VeilingStrategy_Ls := proc( x::{algebraic}, $ )::{boolean};
-    description "Veiling strategy: length of expression <x> minus 120.";
-    return evalb(length(x) > 120);
-  end proc: # VeilingStrategy_Ls
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  VeilingStrategy_LB := proc( x::{algebraic}, $ )::{boolean};
-    description "Veiling strategy: length of expression <x> minus 260.";
-    return evalb(length(x) > 260);
-  end proc: # VeilingStrategy_LB
+    return evalb( (nops(indets(x))+1)*length(x) > LULEM:-VeilingStrategy_par1
+                  or length(x) > LULEM:-VeilingStrategy_par2 );
+  end proc: # VeilingStrategy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -6,11 +6,7 @@
 #  |_____\___/
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-LU := proc(
-  A::{Matrix},
-  V::{symbol},
-  VeilingStrategy::{procedure}  := VeilingStrategy_n,
-  $)::{table};
+LU := proc( A::{Matrix}, V::{symbol}, $ )::{table};
 
   description "Compute the LU decomposition of a square matrix <A> using the "
               "veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
@@ -27,7 +23,7 @@ LU := proc(
   c := Vector(n, k -> k);
 
   # Check if to veil or not
-  apply_veil := (z) -> `if`(VeilingStrategy(z), LEM:-Veil[V](z), z);
+  apply_veil := (z) -> `if`( LULEM:-VeilingStrategy(z), LEM:-Veil[V](z), z );
 
   # Perform Gaussian elimination
   M   := copy(A);
@@ -83,12 +79,7 @@ end proc: # LU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-LUsolve := proc(
-  T::{table},
-  b::{Vector},
-  V::{symbol, function},
-  VeilingStrategy::{procedure} := VeilingStrategy_n,
-  $)
+LUsolve := proc( T::{table}, b::{Vector}, V::{symbol, function}, $)
 
   description "Solve the linear system Ax=b using LU decomposition <T>, "
               "provided the vector <b>, the veiling symbol <V> and the "
@@ -122,7 +113,7 @@ LUsolve := proc(
   );
 
   # Create a normalizer function
-  apply_veil := (y) -> `if`(VeilingStrategy(y), LEM:-Veil[V](y), y);
+  apply_veil := (y) -> `if`( LULEM:-VeilingStrategy(y), LEM:-Veil[V](y), y );
 
   # apply permutation P
   x := b[convert(r,list)];
