@@ -29,8 +29,10 @@ DoPivoting := proc(
   m, n := LinearAlgebra[Dimensions](M):
 
   # Check if to veil or not to veil
-  LV           := LEM:-VeilList(V,true);
-  apply_unveil := (z) -> subs[eval](op( LV ), x );
+  #LV           := LEM:-VeilList(V,true);
+  #apply_unveil := (z) -> subs[eval](op( LV ), x );
+  #apply_unveil := proc (z) while has(z,V) do z := subs(LV,z); end do; return z; end proc;
+  apply_unveil := (z) -> LEM:-UnVeil[V](z);
 
   pivot_is_zero := true;
   pivot_cost    := 0;
@@ -50,9 +52,12 @@ DoPivoting := proc(
           uMij                := apply_unveil(Mij);
           Mij_cost, Mij_value := LULEM:-PivotCost(uMij); # recalculate
           # timelimit required because sometime Normalizer stuck
-          uMij        := timelimit( 0.5, eval(Normalizer(uMij)) );
+          uMij        := timelimit( 1, eval(Normalizer(uMij)) );
           Mij_is_zero := evalb( uMij = 0 );
         end;
+      catch "time expired":
+        print("Mij: simplify failed, assumed <> 0.\n");
+        Mij_is_zero := false;
       catch:
         print("Mij: Division by 0 or another exception.\n");
         if LULEM:-Verbose then

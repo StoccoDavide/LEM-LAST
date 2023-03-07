@@ -183,7 +183,7 @@ LULEM := module()
 
   VeilingStrategy_n := proc( x::{algebraic}, $ )::{boolean};
     description "Veiling strategy: number of indeterminates in expression <x> minus 4.";
-    return evalb( nops(indets(x)) > 4 or length(x) > 50);
+    return evalb( (nops(indets(x))+1)*length(x) > 10 );
   end proc: # VeilingStrategy_n
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
