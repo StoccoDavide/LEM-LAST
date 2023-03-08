@@ -48,6 +48,7 @@ LULEM := module()
           VeilingStrategy,
           LU,
           QR,
+          QR2,
           FFLU,
           FF2LU;
 
@@ -57,6 +58,7 @@ LULEM := module()
           DoPivoting,
           LUsolve,
           QRsolve,
+          QR2solve,
           FFLUsolve,
           InitLULEM,
           Verbose,
@@ -118,8 +120,8 @@ LULEM := module()
   InitLULEM := proc()
     description "Initialize 'LULEM' module internal variables";
     LULEM:-Verbose              := false;
-    LULEM:-VeilingStrategy_par1 := 10;
-    LULEM:-VeilingStrategy_par2 := 100;
+    LULEM:-VeilingStrategy_par1 := 20;
+    LULEM:-VeilingStrategy_par2 := 250;
     return NULL;
   end proc: # InitLULEM
 
@@ -163,6 +165,8 @@ LULEM := module()
       return LULEM:-FFLUsolve( T, b, V );
     elif T["method"] = "QR" then
       return LULEM:-QRsolve( T, b, V );
+    elif T["method"] = "QR2" then
+      return LULEM:-QR2solve( T, b, V );
     end
   end proc: # SolveLinearSystem
 
@@ -189,6 +193,7 @@ $include "./lib/LULEM_Pivoting.mpl"
 $include "./lib/LULEM_LU.mpl"
 $include "./lib/LULEM_FFLU.mpl"
 $include "./lib/LULEM_QR.mpl"
+$include "./lib/LULEM_QR2.mpl"
 
 end module:
 
