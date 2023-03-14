@@ -24,43 +24,70 @@ If you want a full description of the `LEM` package type:
 ```
 This command will generate a brief description of the module and all the procedures and other objects present in the `LEM.mpl` file, which will be (very) similar to the following code.
 ```
-# Large Expressions Management module module LEM:
+# Large Expressions Management module.
+module LEM:
 
 # Veil an expression <x> and return a label to it.
 Veil(
   x::{anything},
   $)::{anything}
 
-# UnVeil the expression <x> up to <n> levels.
+# Unveil the expression <x>.
 UnVeil(
   x::{anything},
-  n::{infinity, nonnegint},
   $)::{anything}
 
-# Return a list of the veiling labels.
-VeilLabels(
-  $)::{list(symbol)}
+# Unveil the expression <x> with internal permutation map.
+UnVeilImap(
+  x::{anything},
+  $)::{anything}
+
+# Return a list of the veiling variables labelled as <label>.
+VeilUnorderedList(
+  label::{symbol},
+  $)::{anything}
 
 # Return a list of the veiling variables labelled as <label>.
 # If <label> is not given, return a list of all veiling variables.
-ListVeil(
-  label::{symbol, list(symbol)} := VeilLabels(),
+VeilList(
+  label::{symbol, list(symbol)} := _VeilLabels(),
+  reverse_order::{boolean}      := false,
   $)::{list(anything)}
 
-# Substitute the reversed veiling variables of the veiling label <label> in the expression <x>.
-# If <label> is not given, substitute the reversed veiling variables of all veiling labels.
-SubsVeil(
+# Return the size of the table for symbol <label>.
+VeilTableSize(
+  label::{symbol},
+  $)::{nonnegint}
+
+# Return the table for symbol <label> and the permutation that sorts it.
+VeilTableImap(
+  label::{symbol},
+  reverse_order::{boolean},
+  $)::{table, list[nonnegint]}
+
+# Append the veiled expression <x> to the veiling table with symbol
+# <label>.
+VeilTableAppend(
+  label::{symbol},
   x::{anything},
-  label::{symbol, list(symbol)} := VeilLabels(),
   $)::{anything}
 
-# Clear all the veiling variables of the veiling label <label>.
-# If <label> is not given, clear all the veiling variables.
-ForgetVeil(
-  label::{symbol, list(symbol)} := VeilLabels(),
-  $)::{nothing}
+# Return a list of the veiling labels.
+VeilLabels($)
 
-package LastUsed:
+# Substitute the reversed veiling variables of the veiling label <label> in
+# the expression <x>. If <label> is not given, substitute the reversed veiling
+# variables of all veiling labels.
+VeilSubs(
+  x::{anything},
+  label::{symbol, list(symbol)} := _VeilLabels(),
+  $)::{anything}
+
+# Clear all the veiling variables of the veiling label <label>. If <label>
+# is not given, clear all the veiling variables.
+VeilForget(
+  label::{symbol, list(symbol)} := _VeilLabels(),
+  $)::{nothing}
 ```
 
 ## Worked example
@@ -73,63 +100,82 @@ In case you have no time to read the description and realize how it should or sh
 
 Write some random polynomial
 > p := randpoly([x,y,z], degree = 5, dense);
+> LEM:-VeilList();
 
 Veil the long expressions with veiling variable 'X'
-> p_X := collect(p, x, Veil[X]);
+> p_X := collect(p, x, LEM:-Veil[X]);
 
 Veil the long expressions with veiling variable 'Y'
-> p_Y := collect(p, y, Veil[Y]);
+> p_Y := collect(p, y, LEM:-Veil[Y]);
 
 Veil the long expressions with veiling variable 'Z'
-> p_Z := collect(p, z, Veil[Z]);
+> p_Z := collect(p, z, LEM:-Veil[Z]);
 
 Get the list of veiling variables
-> VeilLabels();
+> LEM:-VeilLabels();
 
 Get the list of veiling variables 'X'
-> ListVeil(X);
+> LEM:-VeilList(X);
 
 Get the list of veiling variables 'Y'
-> ListVeil(Y);
+> LEM:-VeilList(Y);
 
 Get the list of veiling variables 'Z'
-> ListVeil(Z);
+> LEM:-VeilList(Z);
 
 List all veiling variables
-> ListVeil();
+> LEM:-VeilList();
 
 Substitute the veiling variables 'X' in the polynomial 'p_X'
-> SubsVeil(p_X, X);
+> simplify(LEM:-VeilSubs(p_X, X) - p);
 
 Substitute the veiling variables 'Y' in the polynomial 'p_Y'
-> SubsVeil(p_Y, Y);
+> simplify(LEM:-VeilSubs(p_Y,Y) - p);
 
 Substitute the veiling variables 'I' and 'J' in the polynomial 'p_X+p_Y'
-> SubsVeil(p_X + p_Y, [X,Y]);
+> simplify(LEM:-VeilSubs(p_X + p_Y, [X,Y]) - 2*p);
 
 Substitute all the veiling variables in the polynomial 'p_X+p_Y+p_Z'
-> SubsVeil(p_X + p_Y + p_Z);
+> simplify(LEM:-VeilSubs(p_X + p_Y + p_Z) - 3*p);
 
-Get the number of 'X' veiling variables
-> LastUsed[X];
+Substitute all the veiling variables in the polynomials 'p_X' and 'p_Y'
+> simplify(LEM:-VeilSubs(p_X, X) - LEM:-VeilSubs(p_Y, Y));
 
-Get the number of 'Y' veiling variables
-> LastUsed[Y];
+Get the 'X' veiling lists and number of veiling variables
+> LEM:-VeilTableSize(X);
+> LEM:-VeilList(X);
+> LEM:-VeilUnorderedList(X);
+> LEM:-VeilTableImap(X, reverse = true); # or reverse = false
 
-Get the number of 'Z' veiling variables
-> LastUsed[Z];
+Get the 'Y' veiling lists and number of veiling variables
+> LEM:-VeilTableSize(Y);
+> LEM:-VeilList(Y);
+> LEM:-VeilUnorderedList(Y);
+> LEM:-VeilTableImap(Y, reverse = true); # or reverse = false
+
+Get the 'Z' veiling number of veiling variables, lists and table
+> LEM:-VeilTableSize(Z);
+> LEM:-VeilList(Z);
+> LEM:-VeilUnorderedList(Z);
+> LEM:-VeilTableImap(Z, reverse = true); # or reverse = false
 
 Forget the veiling variables 'X'
-> ForgetVeil(X);
+> LEM:-VeilForget(X);
+> LEM:-VeilList();
 
 Forget the veiling variables 'Y'
-> ForgetVeil(Y);
+> LEM:-VeilForget(Y);
+> LEM:-VeilList();
 
 Forget all the remaining veiling variables
-> ForgetVeil();
+> LEM:-VeilForget();
 
 List all veiling variables
-> ListVeil();
+> LEM:-VeilList();
+
+Applend a new veiling variable
+> LEM:-VeilTableAppend(Q, 2*a*b*c);
+> LEM:-VeilList();
 ```
 
 ## Authors

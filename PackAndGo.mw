@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Worksheet>
-<Version major="2021" minor="2"/>
+<Version major="2022" minor="2"/>
 <Label-Scheme value="2" prefix=""/>
 <View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1120" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="960" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -167,13 +167,9 @@ end proc:
 <Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);
 </Text-field>
 </Input>
-<Output><Text-field style="HyperlinkWarning" layout="HyperlinkWarning"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Warning,%20(in%20LEM%3A-UnVeil)%20%60perm%60%20is%20implicitly%20declared%20local%20%7C%2FUsers%2Fenrico%2FRicerca%2FSoftware%2FREPOS%2FmyReposGit%2FLEM%2Flib%2FLEM.mpl%3A169%7C" hyperlink="true"><Font style="HyperlinkWarning">Warning, (in LEM:-UnVeil) `perm` is implicitly declared local |/Users/enrico/Ricerca/Software/REPOS/myReposGit/LEM/lib/LEM.mpl:169|</Font></Hyperlink></Text-field>
-</Output>
-<Output><Text-field style="HyperlinkWarning" layout="HyperlinkWarning"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Warning,%20(in%20LEM%3A-UnVeil)%20%60i%60%20is%20implicitly%20declared%20local%20%7C%2FUsers%2Fenrico%2FRicerca%2FSoftware%2FREPOS%2FmyReposGit%2FLEM%2Flib%2FLEM.mpl%3A180%7C" hyperlink="true"><Font style="HyperlinkWarning">Warning, (in LEM:-UnVeil) `i` is implicitly declared local |/Users/enrico/Ricerca/Software/REPOS/myReposGit/LEM/lib/LEM.mpl:180|</Font></Hyperlink></Text-field>
-</Output>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023
-D. Stocco, M. Larcher, E. Bertolazzi,
-W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023
+Current version: D. Stocco, M. Larcher, E. Bertolazzi,
+Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
 </Group>
@@ -244,43 +240,48 @@ end do:</Text-field>
 <Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LEM);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023
-D. Stocco, M. Larcher, E. Bertolazzi,
-W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023
+Current version: D. Stocco, M. Larcher, E. Bertolazzi.
+Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDY6LUkjbWlHRiQ2JVEnVW5WZWlsRicvJSdpdGFsaWNHUSV0cnVlRicvJSxtYXRodmFyaWFudEdRJ2l0YWxpY0YnLUkjbW9HRiQ2LVEiLEYnL0Y2USdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGNC8lKXN0cmV0Y2h5R0ZALyUqc3ltbWV0cmljR0ZALyUobGFyZ2VvcEdGQC8lLm1vdmFibGVsaW1pdHNHRkAvJSdhY2NlbnRHRkAvJSdsc3BhY2VHUSYwLjBlbUYnLyUncnNwYWNlR1EsMC4zMzMzMzMzZW1GJy1GLzYlUSVWZWlsRidGMkY1RjgtRi82JVErVmVpbEZvcmdldEYnRjJGNUY4LUYvNiVRK1ZlaWxMYWJlbHNGJ0YyRjVGOC1GLzYlUSlWZWlsTGlzdEYnRjJGNUY4LUYvNiVRKVZlaWxTdWJzRidGMkY1RjgtRi82JVEqVmVpbFN1YnMyRidGMkY1RjgtRi82JVEwVmVpbFRhYmxlQXBwZW5kRidGMkY1RjgtRi82JVEuVmVpbFRhYmxlSW1hcEYnRjJGNUY4LUYvNiVRLlZlaWxUYWJsZVNpemVGJ0YyRjVGOC1GLzYlUTJWZWlsVW5vcmRlcmVkTGlzdEYnRjJGNS8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdGQEY8RjwvJSVvcGVuR1EnJmxzcWI7RicvJSZjbG9zZUdRJyZyc3FiO0Yn">Ny1JJ1VuVmVpbEc2IkklVmVpbEdGJEkrVmVpbEZvcmdldEdGJEkrVmVpbExhYmVsc0dGJEkpVmVpbExpc3RHRiRJKVZlaWxTdWJzR0YkSSpWZWlsU3ViczJHRiRJMFZlaWxUYWJsZUFwcGVuZEdGJEkuVmVpbFRhYmxlSW1hcEdGJEkuVmVpbFRhYmxlU2l6ZUdGJEkyVmVpbFVub3JkZXJlZExpc3RHRiQ=</Equation></Text-field>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDY6LUkjbWlHRiQ2JVEnVW5WZWlsRicvJSdpdGFsaWNHUSV0cnVlRicvJSxtYXRodmFyaWFudEdRJ2l0YWxpY0YnLUkjbW9HRiQ2LVEiLEYnL0Y2USdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGNC8lKXN0cmV0Y2h5R0ZALyUqc3ltbWV0cmljR0ZALyUobGFyZ2VvcEdGQC8lLm1vdmFibGVsaW1pdHNHRkAvJSdhY2NlbnRHRkAvJSdsc3BhY2VHUSYwLjBlbUYnLyUncnNwYWNlR1EsMC4zMzMzMzMzZW1GJy1GLzYlUStVblZlaWxJbWFwRidGMkY1RjgtRi82JVElVmVpbEYnRjJGNUY4LUYvNiVRK1ZlaWxGb3JnZXRGJ0YyRjVGOC1GLzYlUStWZWlsTGFiZWxzRidGMkY1RjgtRi82JVEpVmVpbExpc3RGJ0YyRjVGOC1GLzYlUSlWZWlsU3Vic0YnRjJGNUY4LUYvNiVRMFZlaWxUYWJsZUFwcGVuZEYnRjJGNUY4LUYvNiVRLlZlaWxUYWJsZUltYXBGJ0YyRjVGOC1GLzYlUS5WZWlsVGFibGVTaXplRidGMkY1RjgtRi82JVEyVmVpbFVub3JkZXJlZExpc3RGJ0YyRjUvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRkBGPEY8LyUlb3BlbkdRJyZsc3FiO0YnLyUmY2xvc2VHUScmcnNxYjtGJw==">Ny1JJ1VuVmVpbEc2IkkrVW5WZWlsSW1hcEdGJEklVmVpbEdGJEkrVmVpbEZvcmdldEdGJEkrVmVpbExhYmVsc0dGJEkpVmVpbExpc3RHRiRJKVZlaWxTdWJzR0YkSTBWZWlsVGFibGVBcHBlbmRHRiRJLlZlaWxUYWJsZUltYXBHRiRJLlZlaWxUYWJsZVNpemVHRiRJMlZlaWxVbm9yZGVyZWRMaXN0R0Yk</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LEM):</Text-field>
 </Input>
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">
-# Large Expressions Management module
+# Large Expressions Management module.
 module LEM:
 
     # Veil an expression &lt;x&gt; and return a label to it.
     Veil( x::{anything}, $ ) :: {anything}
 
-    # UnVeil the expression &lt;x&gt; up to &lt;n&gt; levels.
+    # Unveil the expression &lt;x&gt;.
     UnVeil( x::{anything}, $ ) :: {anything}
 
-    # 
+    # Unveil the expression &lt;x&gt; with internal permutation map.
+    UnVeilImap( x::{anything}, $ ) :: {anything}
+
+    # Return a list of the veiling variables labelled as &lt;label&gt;.
     VeilUnorderedList( label::{symbol}, $ ) :: {anything}
 
     # Return a list of the veiling variables labelled as &lt;label&gt;. If &lt;label&gt; is 
     # not given, return a list of all veiling variables.
     VeilList( label::{symbol, list(symbol)} := _VeilLabels(), 
-              reverse_order::{boolean} := false, $ ) :: {list(anything)}
+              { reverse::{boolean} := false }, $ ) :: {list(anything)}
 
-    # 
+    # Return the size of the table for symbol &lt;label&gt;.
     VeilTableSize( label::{symbol}, $ ) :: {nonnegint}
 
-    # 
-    VeilTableImap( label::{symbol}, reverse_order::{boolean}, $ )
+    # Return the table for symbol &lt;label&gt; and the permutation that sorts it.
+    VeilTableImap( label::{symbol}, 
+                   { reverse::{boolean} := false }, $ )
                  :: {table, list[nonnegint]}
 
-    # 
+    # Append the veiled expression &lt;x&gt; to the veiling table with symbol 
+    # &lt;label&gt;.
     VeilTableAppend( label::{symbol}, x::{anything}, $ ) :: {anything}
 
     # Return a list of the veiling labels.
@@ -292,12 +293,6 @@ module LEM:
     VeilSubs( x::{anything}, label::{symbol, list(symbol)} := _VeilLabels(), 
               $ ) :: {anything}
 
-    # Substitute the reversed veiling variables of the veiling label &lt;label&gt; in 
-    # the expression &lt;x&gt;. If &lt;label&gt; is not given, substitute the reversed 
-    # veiling variables of all veiling labels.
-    VeilSubs2( x::{anything}, label::{symbol, list(symbol)} := _VeilLabels(), 
-               $ ) :: {anything}
-
     # Clear all the veiling variables of the veiling label &lt;label&gt;. If &lt;label&gt; 
     # is not given, clear all the veiling variables.
     VeilForget( label::{symbol, list(symbol)} := _VeilLabels(), $ )
@@ -308,7 +303,7 @@ module LEM:
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>

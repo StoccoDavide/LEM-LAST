@@ -26,7 +26,7 @@
 # expression swell.
 #
 # The module is very similar to the 'LargeExpression' module provided by Maple.
-# The main difference is that the 'LEM' module can handle more than one vailing
+# The main difference is that the 'LEM' module can handle more than one veiling
 # label at a time. Moreover, it has some built-in functions to display, list and
 # substitute the veiled expressions.
 #
@@ -44,20 +44,19 @@ LEM := module()
 
   export Veil,
          UnVeil,
+         UnVeilImap,
          VeilUnorderedList,
          VeilList,
          VeilTableSize,
          VeilTableImap,
          VeilTableAppend,
-
          VeilLabels,
          VeilSubs,
-         VeilSubs2,
          VeilForget;
 
   local  ModuleLoad,
          ModuleUnload,
-         UnVeilTables,  # table of table
+         UnVeilTables,
          UnVeilLabels,
          Auxiliary,
          InitLEM;
@@ -66,19 +65,20 @@ LEM := module()
          load   = ModuleLoad,
          unload = ModuleUnload;
 
-  description "Large Expressions Management module";
+  description "Large Expressions Management module.";
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   ModuleLoad := proc()
-    description "'LEM' module load procedure";
+
+    description "'LEM' module load procedure.";
 
     local i, lib_base_path;
 
     printf(
-      "'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023\n"
-      "D. Stocco, M. Larcher, E. Bertolazzi,\n"
-      "W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
+      "'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023\n"
+      "Current version: D. Stocco, M. Larcher, E. Bertolazzi.\n"
+      "Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
     );
 
     lib_base_path := null;
@@ -99,36 +99,30 @@ LEM := module()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   ModuleUnload := proc()
-    description "Module 'LEM' module unload procedure";
+
+    description "Module 'LEM' module unload procedure.";
+
     LEM:-UnVeilTables := NULL;
+
     return NULL;
   end proc: # ModuleUnload
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   InitLEM := proc()
-    description "Initialize 'LEM' module internal variables";
+
+    description "Initialize 'LEM' module internal variables.";
+
     LEM:-UnVeilTables := table([]);
+
     return NULL;
   end proc: # InitLEM
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilUnorderedList := proc( label::{symbol}, $ )::{anything};
-
-    description "";
-
-    if type( LEM:-UnVeilTables[label], 'table' ) then
-      return op(eval(LEM:-UnVeilTables[label]));
-    else
-      return [];
-    end if;
-
-  end proc: # VeilUnorderedList;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  Veil := proc( x::{anything}, $ )::{anything};
+  Veil := proc(
+    x::{anything},
+    $)::{anything};
 
     description "Veil an expression <x> and return a label to it.";
 
@@ -161,103 +155,146 @@ LEM := module()
     end try;
     # Only if there is something complicated to hide we do actually hide it and
     # return a label.
-    return s * i * LEM:-VeilTableAppend(label,s*c/i);
+    return s * i * LEM:-VeilTableAppend(label, s*c/i);
   end proc; # Veil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UnVeil := proc( x::{anything}, $ )::{anything};
+  UnVeil := proc(
+    x::{anything},
+    $)::{anything};
 
-    description "UnVeil the expression <x> up to <n> levels.";
+    description "Unveil the expression <x>.";
 
-    local label, level, a, b, T;
+    local label, T, a, b;
 
 	  label := `if`(procname::{indexed}, op(procname), '_V');
-
-    if false then
-      T, perm := LEM:-VeilTableImap(label,true);
-      b := copy(x);
-      for i from 1 to nops(perm) do
-        a := b;
-        b := subs[eval](T[perm[i]],a);
-      end do;
-      return b;
-    else
-      T := LEM:-VeilUnorderedList(label); # get the table for symbol 'label'
-      # Always do at least 1 unveiling
-      b := copy(x);
-      while has(b,label) do
-        a := b;
-        b := eval(a,T);
-      end do;
-      return b;
-    end if;
+    T := LEM:-VeilUnorderedList(label);
+    b := copy(x);
+    while has(b, label) do
+      a := b;
+      b := eval(a, T);
+    end do;
+    return b;
   end proc;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilTableSize := proc( label::{symbol}, $ )::{nonnegint};
-    description "";
+  UnVeilImap := proc(
+    x::{anything},
+    $)::{anything};
+
+    description "Unveil the expression <x> with internal permutation map.";
+
+    local label, T, perm, a, b, k;
+
+	  label := `if`(procname::{indexed}, op(procname), '_V');
+    T, perm := LEM:-VeilTableImap(label, true);
+    b := copy(x);
+    for k from 1 to nops(perm) do
+      a := b;
+      b := subs[eval](T[perm[k]], a);
+    end do;
+    return b;
+  end proc;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  VeilList := proc(
+    label::{symbol, list(symbol)} := VeilLabels(),
+    {reverse::{boolean} := false},
+    $)::{list(anything)};
+
+    description "Return a list of the veiling variables labelled as <label>. "
+      "If <label> is not given, return a list of all veiling variables.";
+
+    local T, perm;
+
+    if type(label, list) then
+      return map(x -> op(LEM:-VeilList(x, reverse)), label);
+    else
+      T, perm := LEM:-VeilTableImap(label, reverse);
+      return T[perm]:
+    end if;
+  end proc: # VeilList
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  VeilUnorderedList := proc(
+    label::{symbol},
+    $)::{anything};
+
+    description "Return a list of the veiling variables labelled as <label>.";
+
+    if type(LEM:-UnVeilTables[label], 'table') then
+      return op(eval(LEM:-UnVeilTables[label]));
+    else
+      return [];
+    end if;
+  end proc: # VeilUnorderedList;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  VeilTableSize := proc(
+    label::{symbol},
+    $)::{nonnegint};
+
+    description "Return the size of the table for symbol <label>.";
+
     return numelems(LEM:-VeilUnorderedList(label));
   end proc;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilTableImap := proc( label::{symbol}, reverse_order::{boolean}, $ )::{table,list[nonnegint]};
-    description "";
+  VeilTableImap := proc(
+    label::{symbol},
+    {reverse::{boolean} := false},
+    $)::{table, list[nonnegint]};
+
+    description "Return the table for symbol <label> and the permutation that "
+      "sorts it.";
+
     local T, a, b, comparator;
-    T := LEM:-VeilUnorderedList(label); # get the table for symbol 'label'
-    if reverse_order then
-      comparator := (a,b)->evalb( op(1,lhs(a)) > op(1,lhs(b)) );
+
+    T := LEM:-VeilUnorderedList(label);
+    if reverse then
+      comparator := (a, b) -> evalb(op(1, lhs(a)) > op(1, lhs(b)));
     else
-      comparator := (a,b)->evalb( op(1,lhs(a)) < op(1,lhs(b)) );
+      comparator := (a, b) -> evalb(op(1, lhs(a)) < op(1, lhs(b)));
     end if;
-    return T, sort( T, output='permutation', comparator );
+    return T, sort(T, output = 'permutation', comparator);
   end proc;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilTableAppend := proc( label::{symbol}, x::{anything}, $ )::{anything};
+  VeilTableAppend := proc(
+    label::{symbol},
+    x::{anything},
+    $)::{anything};
 
-    description "";
+    description "Append the veiled expression <x> to the veiling table with "
+      "symbol <label>.";
 
-    local k := 1;
-    if type( LEM:-UnVeilTables[label], 'table' ) then
-      k := numelems(op(eval(LEM:-UnVeilTables[label])))+1;
+    local k;
+
+    k := 1;
+    if type(LEM:-UnVeilTables[label], 'table') then
+      k := numelems(op(eval(LEM:-UnVeilTables[label]))) + 1;
       LEM:-UnVeilTables[label][label[k]] := x;
     else
-      LEM:-UnVeilTables[label] := table([label[1]=x]);
+      LEM:-UnVeilTables[label] := table([label[1] = x]);
     end if;
-
     return label[k];
   end proc: # Auxiliary;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   VeilLabels := proc( $ )::{list(symbol)};
+
     description "Return a list of the veiling labels.";
-    return [indices(LEM:-UnVeilTables,'nolist')];
+
+    return [indices(LEM:-UnVeilTables, 'nolist')];
   end proc: # VeilLabels
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  VeilList := proc(
-    label::{symbol, list(symbol)} := VeilLabels(),
-    reverse_order::{boolean}      := false,
-    $
-  )::{list(anything)};
-
-    description "Return a list of the veiling variables labelled as <label>. "
-                "If <label> is not given, return a list of all veiling variables.";
-
-    local T, perm;
-    if type(label,list) then
-      return map(x -> op(LEM:-VeilList(x,reverse_order)), label);
-    else
-      T, perm := LEM:-VeilTableImap(label,reverse_order);
-      return T[perm]:
-    end if;
-  end proc: # VeilList
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -267,38 +304,20 @@ LEM := module()
     $)::{anything};
 
     description "Substitute the reversed veiling variables of the veiling label "
-                "<label> in the expression <x>. "
-                "If <label> is not given, substitute the reversed veiling "
-                "variables of all veiling labels.";
+      "<label> in the expression <x>. If <label> is not given, substitute the "
+      "reversed veiling variables of all veiling labels.";
 
-    return subs[eval](op( LEM:-VeilList(label,true) ), x );
+    return subs[eval](op(LEM:-VeilList(label, true)), x);
   end proc: # VeilSubs
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilSubs2 := proc(
-    x::{anything},
+  VeilForget := proc(
     label::{symbol, list(symbol)} := VeilLabels(),
-    $)::{anything};
-
-    description "Substitute the reversed veiling variables of the veiling label "
-                "<label> in the expression <x>. "
-                "If <label> is not given, substitute the reversed veiling "
-                "variables of all veiling labels.";
-    local w, S;
-    w := copy(x);
-    for S in LEM:-VeilList(label,true) do
-      w := Normalizer(subs(S,w));
-    end do;
-    return eval(w);
-  end proc: # VeilSubs2
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  VeilForget := proc( label::{symbol,list(symbol)} := VeilLabels(), $ )::{nothing};
+    $)::{nothing};
 
     description "Clear all the veiling variables of the veiling label <label>. "
-                "If <label> is not given, clear all the veiling variables.";
+      "If <label> is not given, clear all the veiling variables.";
 
     if type(label, list) then
       map(x -> LEM:-VeilForget(x), label);
@@ -306,7 +325,6 @@ LEM := module()
       LEM:-UnVeilLabels[label] := evaln(LEM:-UnVeilLabels[label]);
       LEM:-UnVeilTables[label] := evaln(LEM:-UnVeilTables[label]);
     end if;
-
     return NULL;
   end proc: # VeilForget
 
