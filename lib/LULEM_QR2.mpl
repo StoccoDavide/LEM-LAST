@@ -36,11 +36,11 @@ QR2 := proc( A::{Matrix}, V::{symbol}, $)::{table};
           "LULEM::QR2(...): processing %d-th colum. Length %d\n",
           k, length(LEM:-VeilList(V))
         );
-      end;
+      end if;
       if l > k then
         if LULEM:-Verbose then
           printf( "LULEM::QR2(...): swap with colum %d\n", l+1 );
-        end;
+        end if;
         C          := R[1..-1,k]; a    := c[k];
         R[1..-1,k] := R[1..-1,l]; c[k] := c[l];
         R[1..-1,l] := C;          c[l] := a;

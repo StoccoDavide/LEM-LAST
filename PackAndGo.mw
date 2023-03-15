@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Worksheet>
-<Version major="2021" minor="2"/>
+<Version major="2022" minor="2"/>
 <Label-Scheme value="2" prefix=""/>
 <View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1600" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="960" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -167,31 +167,21 @@ end proc:
 <Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);
 </Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023
-D. Stocco, M. Larcher, E. Bertolazzi,
-W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023
+Current version: D. Stocco, M. Larcher, E. Bertolazzi.
+Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
 </Group>
 <Group hide-input="false" labelreference="L256774" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create sources path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">file := cat(interface(worksheetdir), ds, &quot;installer&quot;, ds, &quot;bin&quot;);
+<Input><Text-field style="Text" layout="Normal">Create sources path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">file := cat(interface(worksheetdir), ds, &quot;installer&quot;, ds, &quot;bin&quot;):
 </Text-field>
 </Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVElZmlsZUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RKSZBc3NpZ247RicvRjNRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y9LyUpc3RyZXRjaHlHRj0vJSpzeW1tZXRyaWNHRj0vJShsYXJnZW9wR0Y9LyUubW92YWJsZWxpbWl0c0dGPS8lJ2FjY2VudEdGPS8lJ2xzcGFjZUdRLDAuMjc3Nzc3OGVtRicvJSdyc3BhY2VHRkwtSSNtc0dGJDYjUV5vL1VzZXJzL2Vucmljby9SaWNlcmNhL1NvZnR3YXJlL1JFUE9TL215UmVwb3NHaXQvTFVMRU0vaW5zdGFsbGVyL2JpbkYnRjk=">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSVmaWxlR0YoUV5vL1VzZXJzL2Vucmljby9SaWNlcmNhL1NvZnR3YXJlL1JFUE9TL215UmVwb3NHaXQvTFVMRU0vaW5zdGFsbGVyL2JpbkYoNyNGLg==</Equation></Text-field>
-</Output>
 </Group>
 <Group hide-input="false" labelreference="L256788" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">dest := cat(kernelopts(mapledir), ds, &quot;toolbox&quot;, ds, MODULE_NAME, ds, &quot;lib&quot;, ds);
+<Input><Text-field style="Text" layout="Normal">Create destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">dest := cat(kernelopts(mapledir), ds, &quot;toolbox&quot;, ds, MODULE_NAME, ds, &quot;lib&quot;, ds):
 </Text-field>
 </Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVElZGVzdEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RKSZBc3NpZ247RicvRjNRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y9LyUpc3RyZXRjaHlHRj0vJSpzeW1tZXRyaWNHRj0vJShsYXJnZW9wR0Y9LyUubW92YWJsZWxpbWl0c0dGPS8lJ2FjY2VudEdGPS8lJ2xzcGFjZUdRLDAuMjc3Nzc3OGVtRicvJSdyc3BhY2VHRkwtSSNtc0dGJDYjUV9vL0xpYnJhcnkvRnJhbWV3b3Jrcy9NYXBsZS5mcmFtZXdvcmsvVmVyc2lvbnMvMjAyMS90b29sYm94L0xVTEVNL2xpYi9GJ0Y5">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSVkZXN0R0YoUV9vL0xpYnJhcnkvRnJhbWV3b3Jrcy9NYXBsZS5mcmFtZXdvcmsvVmVyc2lvbnMvMjAyMS90b29sYm94L0xVTEVNL2xpYi9GKDcjRi4=</Equation></Text-field>
-</Output>
-</Group>
-<Group hide-input="false" labelreference="L256797" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create destination file path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">destfile := cat(dest, MODULE_NAME, &quot;.mla&quot;);</Text-field>
-</Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVEpZGVzdGZpbGVGJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRictSSNtb0dGJDYtUSkmQXNzaWduO0YnL0YzUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGPS8lKXN0cmV0Y2h5R0Y9LyUqc3ltbWV0cmljR0Y9LyUobGFyZ2VvcEdGPS8lLm1vdmFibGVsaW1pdHNHRj0vJSdhY2NlbnRHRj0vJSdsc3BhY2VHUSwwLjI3Nzc3NzhlbUYnLyUncnNwYWNlR0ZMLUkjbXNHRiQ2I1Foby9MaWJyYXJ5L0ZyYW1ld29ya3MvTWFwbGUuZnJhbWV3b3JrL1ZlcnNpb25zLzIwMjEvdG9vbGJveC9MVUxFTS9saWIvTFVMRU0ubWxhRidGOQ==">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSlkZXN0ZmlsZUdGKFFoby9MaWJyYXJ5L0ZyYW1ld29ya3MvTWFwbGUuZnJhbWV3b3JrL1ZlcnNpb25zLzIwMjEvdG9vbGJveC9MVUxFTS9saWIvTFVMRU0ubWxhRig3I0Yu</Equation></Text-field>
-</Output>
 </Group>
 <Group labelreference="L256799" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Procedure for deep directory removal</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir := proc( dirpath::{string}, $ )
@@ -250,12 +240,12 @@ end do:</Text-field>
 <Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LULEM);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023
-D. Stocco, M. Larcher, E. Bertolazzi,
-W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023
+Current version: D. Stocco, M. Larcher, E. Bertolazzi.
+Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDY2LUkjbWlHRiQ2JVEmRkYyTFVGJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRictSSNtb0dGJDYtUSIsRicvRjZRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y0LyUpc3RyZXRjaHlHRkAvJSpzeW1tZXRyaWNHRkAvJShsYXJnZW9wR0ZALyUubW92YWJsZWxpbWl0c0dGQC8lJ2FjY2VudEdGQC8lJ2xzcGFjZUdRJjAuMGVtRicvJSdyc3BhY2VHUSwwLjMzMzMzMzNlbUYnLUYvNiVRJUZGTFVGJ0YyRjVGOC1GLzYlUSNMVUYnRjJGNUY4LUYvNiVRNFBlcm11dGF0aW9uTWF0cmljZXNGJ0YyRjVGOC1GLzYlUSNRUkYnRjJGNUY4LUYvNiVRJFFSMkYnRjJGNUY4LUYvNiVRLVNldFZlcmJvc2l0eUYnRjJGNUY4LUYvNiVRMlNvbHZlTGluZWFyU3lzdGVtRidGMkY1RjgtRi82JVEwVmVpbGluZ1N0cmF0ZWd5RidGMkY1LyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0ZARjxGPC8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7Ric=">NytJJkZGMkxVRzYiSSVGRkxVR0YkSSNMVUdGJEk0UGVybXV0YXRpb25NYXRyaWNlc0dGJEkjUVJHRiRJJFFSMkdGJEktU2V0VmVyYm9zaXR5R0YkSTJTb2x2ZUxpbmVhclN5c3RlbUdGJEkwVmVpbGluZ1N0cmF0ZWd5R0Yk</Equation></Text-field>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZALUkjbWlHRiQ2JVExRGlzYWJsZVZlcmJvc2l0eUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEwRW5hYmxlVmVyYm9zaXR5RidGMkY1RjgtRi82JVEmRkYyTFVGJ0YyRjVGOC1GLzYlUSVGRkxVRidGMkY1RjgtRi82JVEqR2V0RGVncmVlRidGMkY1RjgtRi82JVEjTFVGJ0YyRjVGOC1GLzYlUTRQZXJtdXRhdGlvbk1hdHJpY2VzRidGMkY1RjgtRi82JVEjUVJGJ0YyRjVGOC1GLzYlUSRRUjJGJ0YyRjVGOC1GLzYlUS1TZXRUaW1lTGltaXRGJ0YyRjVGOC1GLzYlUS1TZXRWZXJib3NpdHlGJ0YyRjVGOC1GLzYlUTJTb2x2ZUxpbmVhclN5c3RlbUYnRjJGNUY4LUYvNiVRJFNweUYnRjJGNUY4LUYvNiVRMFZlaWxpbmdTdHJhdGVneUYnRjJGNS8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdGQEY8RjwvJSVvcGVuR1EnJmxzcWI7RicvJSZjbG9zZUdRJyZyc3FiO0Yn">NzBJMURpc2FibGVWZXJib3NpdHlHNiJJMEVuYWJsZVZlcmJvc2l0eUdGJEkmRkYyTFVHRiRJJUZGTFVHRiRJKkdldERlZ3JlZUdGJEkjTFVHRiRJNFBlcm11dGF0aW9uTWF0cmljZXNHRiRJI1FSR0YkSSRRUjJHRiRJLVNldFRpbWVMaW1pdEdGJEktU2V0VmVyYm9zaXR5R0YkSTJTb2x2ZUxpbmVhclN5c3RlbUdGJEkkU3B5R0YkSTBWZWlsaW5nU3RyYXRlZ3lHRiQ=</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -268,10 +258,27 @@ module LULEM:
     # Set the verbosity of the package to &lt;x&gt;.
     SetVerbosity( x::{boolean}, $ ) :: {nothing}
 
-    # Compute the LU decomposition premutation matrix provided the rows the 
-    # pivot vector &lt;r&gt; and the columns the pivot vector &lt;c&gt;.
-    PermutationMatrices( r::{Vector}, c::{Vector}, $ )
+    # Enable the verbosity of the package.
+    EnableVerbosity( $ )
 
+    # Disable the verbosity of the package.
+    DisableVerbosity( $ )
+
+    # Set the time limit of the package to &lt;x&gt;.
+    SetTimeLimit( x::{numeric}, $ ) :: {nothing}
+
+    # Compute the LU decomposition premutation matrices provided the rows pivot 
+    # vector &lt;r&gt; and the columns pivot vector &lt;c&gt;.
+    PermutationMatrices( r::{Vector(nonnegint)}, c::{Vector(nonnegint)}, $ )
+
+    # Get the degree of the matrix &lt;A&gt;.
+    GetDegree( A::{Matrix}, $ ) :: {Matrix(nonnegint)}
+
+    # Plot of non-zero values of the matrix &lt;A&gt;.
+    Spy( A::{Matrix}, $ ) :: {anything}
+
+    # Solve the factorized linear system &lt;T&gt; * x = b using the method specified 
+    # in &lt;T&gt;['method'] field. The input &lt;V&gt; is the veiling strategy to be used.
     SolveLinearSystem( T::{table}, b::{Vector}, V::{symbol, function}, $ )
 
     # Veiling strategy: ......
@@ -293,6 +300,8 @@ module LULEM:
     # the veiling strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
     FFLU( A::{Matrix}, V::{symbol}, $ ) :: {table}
 
+    # Compute the LU decomposition of a square matrix from its Fracton-Free LU 
+    # decomposition &lt;T&gt;.
     FF2LU( T::{table}, $ )
 
 </Text-field>

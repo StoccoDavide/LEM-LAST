@@ -37,7 +37,7 @@
 # We would like to thank Jacques Carette for providing the original code that we
 # have used to develop this module.
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 unprotect(LULEM);
 LULEM := module()
@@ -45,7 +45,10 @@ LULEM := module()
   export  SetVerbosity,
           EnableVerbosity,
           DisableVerbosity,
+          SetTimeLimit,
           PermutationMatrices,
+          GetDegree,
+          Spy,
           SolveLinearSystem,
           VeilingStrategy,
           LU,
@@ -57,13 +60,14 @@ LULEM := module()
   local   ModuleLoad,
           ModuleUnload,
           PivotCost,
-          DoPivoting,
+          Pivoting,
           LUsolve,
           QRsolve,
           QR2solve,
           FFLUsolve,
           InitLULEM,
           Verbose,
+          TimeLimit,
           VeilingStrategy_par1,
           VeilingStrategy_par2;
 
@@ -124,16 +128,77 @@ LULEM := module()
     description "Initialize 'LULEM' module internal variables.";
 
     LULEM:-Verbose              := false;
+    LULEM:-TimeLimit            := 1;
     LULEM:-VeilingStrategy_par1 := 20;
     LULEM:-VeilingStrategy_par2 := 250;
     return NULL;
   end proc: # InitLULEM
 
+    GetDegree :=  proc( A::Matrix, $ )
+    local i, j, k, m, n, r, c, ro, co;
+    m, n := LinearAlgebra[Dimensions](A);
+    r  := Vector[column](m);
+    c  := Vector[row](n);
+    ro := Vector[column](m,k->1);
+    co := Vector[row](n,k->1);
+    for i from 1 to m do
+      for j from 1 to n do
+        if A[i,j] <> 0 then
+          r[i] := r[i]+1;
+          c[j] := c[j]+1;
+        end if;
+      end do;
+    end do;
+    return r.co+ro.c;
+  end proc;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  GetDegree :=  proc(
+    A::{Matrix},
+    $)::{Matrix(nonnegint)};
+
+    description "Get the degree of the matrix <A>.";
+
+    local i, j, k, m, n, r, c, ro, co;
+
+    m, n := LinearAlgebra[Dimensions](A);
+    r  := Vector[column](m);
+    c  := Vector[row](n);
+    ro := Vector[column](m, k -> 1);
+    co := Vector[row](n, k -> 1);
+    for i from 1 to m do
+      for j from 1 to n do
+        if (A[i,j] <> 0) then
+          r[i] := r[i]+1;
+          c[j] := c[j]+1;
+        end if;
+      end do;
+    end do;
+
+    if _nresults = 3 then
+      return r.co+ro.c, r, c;
+    else
+      return r.co+ro.c;
+    end if;
+  end proc:
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  Spy := proc(
+    A::{Matrix},
+    $)::{anything};
+
+    description "Plot of non-zero values of the matrix <A>.";
+
+    return plots:-sparsematrixplot(A, 'matrixview');
+  end proc;
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   PermutationMatrices := proc(
-    r::{Vector},
-    c::{Vector},
+    r::{Vector(nonnegint)},
+    c::{Vector(nonnegint)},
     $)
 
     description "Compute the LU decomposition premutation matrices provided "
@@ -190,6 +255,22 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  SetTimeLimit := proc(
+    x::{numeric},
+    $)::{nothing};
+
+    description "Set the time limit of the package to <x>.";
+
+    if (x < 0) then
+      error "LULEM::SetTimeLimit(...): time limit must be a non-negative number.";
+    end if;
+
+    LULEM:-TimeLimit := x;
+    return NULL;
+  end proc:
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   SolveLinearSystem := proc(
     T::{table},
     b::{Vector},
@@ -237,11 +318,11 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  $include "./lib/LULEM_Pivoting.mpl"
-  $include "./lib/LULEM_LU.mpl"
-  $include "./lib/LULEM_FFLU.mpl"
-  $include "./lib/LULEM_QR.mpl"
-  $include "./lib/LULEM_QR2.mpl"
+$include "./lib/LULEM_Pivoting.mpl"
+$include "./lib/LULEM_LU.mpl"
+$include "./lib/LULEM_FFLU.mpl"
+$include "./lib/LULEM_QR.mpl"
+$include "./lib/LULEM_QR2.mpl"
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
