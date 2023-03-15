@@ -43,6 +43,8 @@ unprotect(LULEM);
 LULEM := module()
 
   export  SetVerbosity,
+          EnableVerbosity,
+          DisableVerbosity,
           PermutationMatrices,
           SolveLinearSystem,
           VeilingStrategy,
@@ -84,14 +86,14 @@ LULEM := module()
 
   ModuleLoad := proc()
 
-    description "'LULEM' module load procedure";
+    description "'LULEM' module load procedure.";
 
     local i, lib_base_path;
 
     printf(
-      "'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023\n"
-      "D. Stocco, M. Larcher, E. Bertolazzi,\n"
-      "W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
+      "'LULEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023\n"
+      "Current version: D. Stocco, M. Larcher, E. Bertolazzi.\n"
+      "Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
     );
 
     lib_base_path := null;
@@ -112,13 +114,15 @@ LULEM := module()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   ModuleUnload := proc()
-    description "Module 'LULEM' module unload procedure";
+    description "'LULEM' module unload procedure.";
   end proc: # ModuleUnload
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   InitLULEM := proc()
-    description "Initialize 'LULEM' module internal variables";
+
+    description "Initialize 'LULEM' module internal variables.";
+
     LULEM:-Verbose              := false;
     LULEM:-VeilingStrategy_par1 := 20;
     LULEM:-VeilingStrategy_par2 := 250;
@@ -127,10 +131,13 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  PermutationMatrices := proc( r::{Vector}, c::{Vector}, $ )
+  PermutationMatrices := proc(
+    r::{Vector},
+    c::{Vector},
+    $)
 
-    description "Compute the LU decomposition premutation matrix provided the "
-                "rows the pivot vector <r> and the columns the pivot vector <c>.";
+    description "Compute the LU decomposition premutation matrices provided "
+      "the rows pivot vector <r> and the columns pivot vector <c>.";
 
     local m, n, i, P, Q;
 
@@ -149,24 +156,58 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SetVerbosity := proc( x::{boolean}, $ )::{nothing};
+  SetVerbosity := proc(
+    x::{boolean},
+    $)::{nothing};
+
     description "Set the verbosity of the package to <x>.";
+
     LULEM:-Verbose := x;
     return NULL;
   end proc:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SolveLinearSystem := proc( T::{table}, b::{Vector}, V::{symbol, function}, $)
+  EnableVerbosity := proc(
+    $)::{nothing};
 
-    if T["method"] = "LU" then
-      return LULEM:-LUsolve( T, b, V );
-    elif T["method"] = "FFLU" then
-      return LULEM:-FFLUsolve( T, b, V );
-    elif T["method"] = "QR" then
-      return LULEM:-QRsolve( T, b, V );
-    elif T["method"] = "QR2" then
-      return LULEM:-QR2solve( T, b, V );
+    description "Enable the verbosity of the package.";
+
+    LULEM:-Verbose := true;
+    return NULL;
+  end proc:
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  DisableVerbosity := proc(
+    $)::{nothing};
+
+    description "Disable the verbosity of the package.";
+
+    LULEM:-Verbose := false;
+    return NULL;
+  end proc:
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  SolveLinearSystem := proc(
+    T::{table},
+    b::{Vector},
+    V::{symbol, function},
+    $)
+
+    description "Solve the factorized linear system <T> * x = b using the "
+      "method specified in <T>['method'] field. The input <V> is the veiling "
+      "strategy to be used.";
+
+    if (T["method"] = "LU") then
+      return LULEM:-LUsolve(T, b, V);
+    elif (T["method"] = "FFLU") then
+      return LULEM:-FFLUsolve(T, b, V);
+    elif (T["method"] = "QR") then
+      return LULEM:-QRsolve(T, b, V);
+    elif (T["method"] = "QR2") then
+      return LULEM:-QR2solve(T, b, V);
     end
   end proc: # SolveLinearSystem
 
@@ -181,19 +222,28 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilingStrategy := proc( x::{algebraic}, $ )::{boolean};
+  VeilingStrategy := proc(
+    x::{algebraic},
+    $)::{boolean};
+
     description "Veiling strategy: ......";
-    return evalb( (nops(indets(x))+1)*length(x) > LULEM:-VeilingStrategy_par1
-                  or length(x) > LULEM:-VeilingStrategy_par2 );
+
+    return evalb(
+      (nops(indets(x)) + 1) * length(x) > LULEM:-VeilingStrategy_par1
+      or
+      length(x) > LULEM:-VeilingStrategy_par2
+    );
   end proc: # VeilingStrategy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-$include "./lib/LULEM_Pivoting.mpl"
-$include "./lib/LULEM_LU.mpl"
-$include "./lib/LULEM_FFLU.mpl"
-$include "./lib/LULEM_QR.mpl"
-$include "./lib/LULEM_QR2.mpl"
+  $include "./lib/LULEM_Pivoting.mpl"
+  $include "./lib/LULEM_LU.mpl"
+  $include "./lib/LULEM_FFLU.mpl"
+  $include "./lib/LULEM_QR.mpl"
+  $include "./lib/LULEM_QR2.mpl"
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 end module:
 
