@@ -46,6 +46,7 @@ LULEM := module()
           PermutationMatrices,
           SolveLinearSystem,
           VeilingStrategy,
+          GetDegree,
           LU,
           QR,
           QR2,
@@ -124,6 +125,26 @@ LULEM := module()
     LULEM:-VeilingStrategy_par2 := 250;
     return NULL;
   end proc: # InitLULEM
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  GetDegree :=  proc( A::Matrix, $ )
+    local i, j, k, m, n, r, c, ro, co;
+    m, n := LinearAlgebra[Dimensions](A);
+    r  := Vector[column](m);
+    c  := Vector[row](n);
+    ro := Vector[column](m,k->1);
+    co := Vector[row](n,k->1);
+    for i from 1 to m do
+      for j from 1 to n do
+        if A[i,j] <> 0 then
+          r[i] := r[i]+1;
+          c[j] := c[j]+1;
+        end;
+      end:
+    end:
+    return r.co+ro.c;
+  end proc;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

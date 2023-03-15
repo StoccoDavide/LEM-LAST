@@ -2,9 +2,9 @@
 <Worksheet>
 <Version major="2021" minor="2"/>
 <Label-Scheme value="2" prefix=""/>
-<View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
+<View-Properties presentation="false" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1600" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1600" rtablesize="200" useclientjvm="true" format="worksheet" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -97,218 +97,44 @@
     <Task-category name="&lt;default&gt;"/>
 </Task-table>
 <Task/>
-<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Build the Library</Text-field></Title>
-<Group hide-input="false" labelreference="L256747" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
+<Group hide-input="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:
+interface(rtablesize = 200);</Text-field>
 </Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDYoLUkjbW5HRiQ2JFEjMTBGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRictSSNtb0dGJDYtUSIsRidGMi8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdRJXRydWVGJy8lKXN0cmV0Y2h5R0Y7LyUqc3ltbWV0cmljR0Y7LyUobGFyZ2VvcEdGOy8lLm1vdmFibGVsaW1pdHNHRjsvJSdhY2NlbnRHRjsvJSdsc3BhY2VHUSYwLjBlbUYnLyUncnNwYWNlR1EsMC4zMzMzMzMzZW1GJ0YuLyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0Y7RjJGMi8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7Ric=">NyQiIzVGIw==</Equation></Text-field>
+</Output>
 </Group>
-<Group labelreference="L256765" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">ds := kernelopts('dirsep'):</Text-field>
-</Input>
-</Group><Presentation-Block>
-<Group view="code" hide-input="false" labelreference="L256770" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">MODULE_NAME := &quot;LULEM&quot;:</Text-field>
-</Input>
-</Group>
-<Group view="code" labelreference="L256772" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">SOURCE_DIR  := cat(currentdir(), ds, &quot;lib&quot;):</Text-field>
-</Input>
-</Group>
-<Group view="code" hide-input="false" labelreference="L256771" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">BINARY_DIR  := cat(currentdir(), ds, &quot;installer&quot;, ds, &quot;bin&quot;):</Text-field>
-</Input>
-</Group>
-<Group view="code" hide-input="false" labelreference="L256769" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LIBRARY_MLA := cat(BINARY_DIR, ds, MODULE_NAME, &quot;.mla&quot;):
-</Text-field>
-</Input>
-</Group></Presentation-Block>
-<Group labelreference="L256768" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check bin directory</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if not FileTools[Exists](BINARY_DIR) then
-  FileTools[MakeDirectory](BINARY_DIR);
-end if;
-</Text-field>
-</Input>
-</Group>
-<Group labelreference="L256773" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check MLA file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](LIBRARY_MLA) then
-  FileTools[Remove](LIBRARY_MLA);
-end if;
-</Text-field>
-</Input>
-</Group>
-<Group labelreference="L256777" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Library generation procedure</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN := proc( MODULE_NAME::{string} )
-
-  local bin_path, src_path;
-
-  bin_path := cat(BINARY_DIR, ds, MODULE_NAME, &quot;.mla&quot;);
-  src_path := cat(SOURCE_DIR, ds, MODULE_NAME, &quot;.mpl&quot;);
-
-  if FileTools[Exists](src_path) then
-    if not FileTools[Exists](BINARY_DIR) then
-      FileTools[MakeDirectory](BINARY_DIR);
-    end if;
-    if FileTools[Exists](bin_path) then
-      FileTools[Remove](bin_path):
-    end if;
-    read(src_path);
-    march('create', bin_path );
-    savelib(convert(MODULE_NAME, symbol), bin_path);
-  else
-<Font encoding="UTF-8">    error &quot;Missing file %1.\134n&quot;, </Font>src_path;
-  end if;
-
-end proc:
-</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256760" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);
-</Text-field>
+<Group hide-input="false" labelreference="L202" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LULEM:-SetVerbosity(false);</Text-field>
 </Input>
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023
 D. Stocco, M. Larcher, E. Bertolazzi,
 W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="HyperlinkWarning" layout="HyperlinkWarning"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Warning,%20(in%20LULEM%3A-GetDegree)%20%60B%60%20is%20implicitly%20declared%20local%20%7C%2FUsers%2Fenrico%2FRicerca%2FSoftware%2FREPOS%2FmyReposGit%2FLULEM%2Flib%2FLULEM.mpl%3A147%7C" hyperlink="true"><Font style="HyperlinkWarning">Warning, (in LULEM:-GetDegree) `B` is implicitly declared local |/Users/enrico/Ricerca/Software/REPOS/myReposGit/LULEM/lib/LULEM.mpl:147|</Font></Hyperlink></Text-field>
-</Output>
 </Group>
-<Group hide-input="false" labelreference="L256774" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create sources path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">file := cat(interface(worksheetdir), ds, &quot;installer&quot;, ds, &quot;bin&quot;);
-</Text-field>
-</Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVElZmlsZUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RKSZBc3NpZ247RicvRjNRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y9LyUpc3RyZXRjaHlHRj0vJSpzeW1tZXRyaWNHRj0vJShsYXJnZW9wR0Y9LyUubW92YWJsZWxpbWl0c0dGPS8lJ2FjY2VudEdGPS8lJ2xzcGFjZUdRLDAuMjc3Nzc3OGVtRicvJSdyc3BhY2VHRkwtSSNtc0dGJDYjUV5vL1VzZXJzL2Vucmljby9SaWNlcmNhL1NvZnR3YXJlL1JFUE9TL215UmVwb3NHaXQvTFVMRU0vaW5zdGFsbGVyL2JpbkYnRjk=">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSVmaWxlR0YoUV5vL1VzZXJzL2Vucmljby9SaWNlcmNhL1NvZnR3YXJlL1JFUE9TL215UmVwb3NHaXQvTFVMRU0vaW5zdGFsbGVyL2JpbkYoNyNGLg==</Equation></Text-field>
-</Output>
-</Group>
-<Group hide-input="false" labelreference="L256788" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">dest := cat(kernelopts(mapledir), ds, &quot;toolbox&quot;, ds, MODULE_NAME, ds, &quot;lib&quot;, ds);
-</Text-field>
-</Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVElZGVzdEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RKSZBc3NpZ247RicvRjNRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y9LyUpc3RyZXRjaHlHRj0vJSpzeW1tZXRyaWNHRj0vJShsYXJnZW9wR0Y9LyUubW92YWJsZWxpbWl0c0dGPS8lJ2FjY2VudEdGPS8lJ2xzcGFjZUdRLDAuMjc3Nzc3OGVtRicvJSdyc3BhY2VHRkwtSSNtc0dGJDYjUV9vL0xpYnJhcnkvRnJhbWV3b3Jrcy9NYXBsZS5mcmFtZXdvcmsvVmVyc2lvbnMvMjAyMS90b29sYm94L0xVTEVNL2xpYi9GJ0Y5">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSVkZXN0R0YoUV9vL0xpYnJhcnkvRnJhbWV3b3Jrcy9NYXBsZS5mcmFtZXdvcmsvVmVyc2lvbnMvMjAyMS90b29sYm94L0xVTEVNL2xpYi9GKDcjRi4=</Equation></Text-field>
-</Output>
-</Group>
-<Group hide-input="false" labelreference="L256797" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create destination file path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">destfile := cat(dest, MODULE_NAME, &quot;.mla&quot;);</Text-field>
-</Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVEpZGVzdGZpbGVGJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRictSSNtb0dGJDYtUSkmQXNzaWduO0YnL0YzUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGPS8lKXN0cmV0Y2h5R0Y9LyUqc3ltbWV0cmljR0Y9LyUobGFyZ2VvcEdGPS8lLm1vdmFibGVsaW1pdHNHRj0vJSdhY2NlbnRHRj0vJSdsc3BhY2VHUSwwLjI3Nzc3NzhlbUYnLyUncnNwYWNlR0ZMLUkjbXNHRiQ2I1Foby9MaWJyYXJ5L0ZyYW1ld29ya3MvTWFwbGUuZnJhbWV3b3JrL1ZlcnNpb25zLzIwMjEvdG9vbGJveC9MVUxFTS9saWIvTFVMRU0ubWxhRidGOQ==">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSlkZXN0ZmlsZUdGKFFoby9MaWJyYXJ5L0ZyYW1ld29ya3MvTWFwbGUuZnJhbWV3b3JrL1ZlcnNpb25zLzIwMjEvdG9vbGJveC9MVUxFTS9saWIvTFVMRU0ubWxhRig3I0Yu</Equation></Text-field>
-</Output>
-</Group>
-<Group labelreference="L256799" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Procedure for deep directory removal</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir := proc( dirpath::{string}, $ )
-
-  local d, dd, ds;
-
-  ds := kernelopts('dirsep');
-  if FileTools[Exists](dirpath) and FileTools[IsDirectory](dirpath) then
-    for d in FileTools[ListDirectory](dirpath, 'all') do
-      if evalb((d &lt;&gt; &quot;.&quot;) and (d &lt;&gt; &quot;..&quot;)) then
-        dd := cat(dirpath, ds, d);
-        if FileTools[Exists](dd) then
-          if FileTools[IsDirectory](dd) then
-            RmDir(dd);
-            # FileTools[RemoveDirectory](dd, forceremove = true);
-          else
-           FileTools[Remove](dd);
-          end if;
-        end if;
-      end if;
-    end do;
-    FileTools[RemoveDirectory](dirpath, forceremove = true);
-  end if;
-  return;
-
-end proc:
-</Text-field>
+<Group hide-input="false" labelreference="L196" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">read(&quot;LinearSystems.mpl&quot;):</Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L256787" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir(dest);
-FileTools[MakeDirectory](dest, recurse = true);
-</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256785" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Copy the binaries in the toolbox folder</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">n := 1 + length(file):</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256784" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">for r in FileTools[Walk](file, 'topdown', 'followlinks') do
-  limb := cat(dest, ds, r[dir][n..], ds);
-  for d in r[subdirs] do
-    ((d) -&gt; `if`(FileTools[Exists](d), 0, FileTools[MakeDirectory](d)))(cat(limb, d));
-  end do;
-  seq(FileTools[Copy](cat(r[dir], ds, f), cat(limb, f)), f = r[files]);
-end do:</Text-field>
-</Input>
-</Group>
-</Section>
-<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Test the Library</Text-field></Title>
-<Group hide-input="false" labelreference="L256750" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LULEM);</Text-field>
-</Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023
-D. Stocco, M. Larcher, E. Bertolazzi,
-W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
-</Text-field>
-</Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDY4LUkjbWlHRiQ2JVEmRkYyTFVGJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRictSSNtb0dGJDYtUSIsRicvRjZRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y0LyUpc3RyZXRjaHlHRkAvJSpzeW1tZXRyaWNHRkAvJShsYXJnZW9wR0ZALyUubW92YWJsZWxpbWl0c0dGQC8lJ2FjY2VudEdGQC8lJ2xzcGFjZUdRJjAuMGVtRicvJSdyc3BhY2VHUSwwLjMzMzMzMzNlbUYnLUYvNiVRJUZGTFVGJ0YyRjVGOC1GLzYlUSpHZXREZWdyZWVGJ0YyRjVGOC1GLzYlUSNMVUYnRjJGNUY4LUYvNiVRNFBlcm11dGF0aW9uTWF0cmljZXNGJ0YyRjVGOC1GLzYlUSNRUkYnRjJGNUY4LUYvNiVRJFFSMkYnRjJGNUY4LUYvNiVRLVNldFZlcmJvc2l0eUYnRjJGNUY4LUYvNiVRMlNvbHZlTGluZWFyU3lzdGVtRidGMkY1RjgtRi82JVEwVmVpbGluZ1N0cmF0ZWd5RidGMkY1LyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0ZARjxGPC8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7Ric=">NyxJJkZGMkxVRzYiSSVGRkxVR0YkSSpHZXREZWdyZWVHRiRJI0xVR0YkSTRQZXJtdXRhdGlvbk1hdHJpY2VzR0YkSSNRUkdGJEkkUVIyR0YkSS1TZXRWZXJib3NpdHlHRiRJMlNvbHZlTGluZWFyU3lzdGVtR0YkSTBWZWlsaW5nU3RyYXRlZ3lHRiQ=</Equation></Text-field>
-</Output>
-</Group>
-<Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LULEM):</Text-field>
-</Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">
-# LU decomposition with LEM (Large Expressions Management).
-module LULEM:
-
-    # Set the verbosity of the package to &lt;x&gt;.
-    SetVerbosity( x::{boolean}, $ ) :: {nothing}
-
-    # Compute the LU decomposition premutation matrix provided the rows the 
-    # pivot vector &lt;r&gt; and the columns the pivot vector &lt;c&gt;.
-    PermutationMatrices( r::{Vector}, c::{Vector}, $ )
-
-    SolveLinearSystem( T::{table}, b::{Vector}, V::{symbol, function}, $ )
-
-    # Veiling strategy: ......
-    VeilingStrategy( x::{algebraic}, $ ) :: {boolean}
-
-    GetDegree( A::Matrix, $ )
-
-    # Compute the LU decomposition of a square matrix &lt;A&gt; using the veiling 
-    # strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
-    LU( A::{Matrix}, V::{symbol}, $ ) :: {table}
-
-    # Compute the Givens QR decomposition of a square matrix &lt;A&gt; using the 
-    # veiling strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
-    QR( A::{Matrix}, V::{symbol}, $ ) :: {table}
-
-    # Compute the Givens QR decomposition of a square matrix &lt;A&gt; using the 
-    # veiling strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
-    QR2( A::{Matrix}, V::{symbol}, $ ) :: {table}
-
-    # Compute the Fracton-Free LU decomposition of a square matrix &lt;A&gt; using 
-    # the veiling strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
-    FFLU( A::{Matrix}, V::{symbol}, $ ) :: {table}
-
-    FF2LU( T::{table}, $ )
-
-</Text-field>
-</Output>
-</Group>
-<Group labelreference="L256752" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Group labelreference="L288" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
 </Input>
 </Group>
-</Section><Presentation-Block>
-<Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Group hide-input="false" labelreference="L289" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LULEM:-GetDegree(A24);</Text-field>
 </Input>
-</Group></Presentation-Block>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkqbWNvbXBsZXRlRzYjL0krbW9kdWxlbmFtZUc2IkksVHlwZXNldHRpbmdHSShfc3lzbGliR0YnNiQtSShtZmVuY2VkR0YkNigtSSVtcm93R0YkNiYtSSdtdGFibGVHRiQ2Ti1JJG10ckdGJDY/LUkkbXRkR0YkNiotSSNtbkdGJDYkUSIzRicvJSxtYXRodmFyaWFudEdRJ25vcm1hbEYnLyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R1EmZmFsc2VGJy8lKXJvd2FsaWduR1EhRicvJSxjb2x1bW5hbGlnbkdGSS8lK2dyb3VwYWxpZ25HRkkvJShyb3dzcGFuR1EiMUYnLyUrY29sdW1uc3BhbkdGUC1GODYqLUY7NiRRIjRGJ0Y+RkFGREZHRkpGTEZORlFGU0Y3RjdGN0Y3RlNGU0Y3RjdGNy1GODYqLUY7NiRRIjJGJ0Y+RkFGREZHRkpGTEZORlFGWEZYRjdGN0Y3RlhGWEZYRjdGN0Y3RkFGREZHRkpGTEY0RjRGNEY0RjQtRjU2Py1GODYqLUY7NiRRIjVGJ0Y+RkFGREZHRkpGTEZORlEtRjg2Ki1GOzYkUSI2RidGPkZBRkRGR0ZKRkxGTkZRRl5vRmluRmluRmluRmluRl5vRl5vRmluRmluRmluRlNGU0ZTRmluRmluRmluRlNGU0ZTRmluRmluRmluRkFGREZHRkpGTEZnbkZnbkZnbi1GNTY/LUY4NiotRjs2JFEiN0YnRj5GQUZERkdGSkZMRk5GUS1GODYqLUY7NiRRIjhGJ0Y+RkFGREZHRkpGTEZORlFGam9GZW9GZW9GZW9GZW9Gam9Gam9GZW9GZW9GZW9GXm9GXm9GXm9GZW9GZW9GZW9GXm9GXm9GXm9GZW9GZW9GZW9GQUZERkdGSkZMRmNvLUY1Nj9GU0ZpbkZpbkZTRlNGU0ZTRmluRmluRlNGU0ZTRjdGN0Y3RlNGU0ZTRjdGN0Y3RlNGU0ZTRkFGREZHRkpGTEZfcEZfcEZfcEZfcEZfcEY0RjRGNEY0RjRGNEZBRkQvJSZhbGlnbkdRJWF4aXNGJy9GSFEpYmFzZWxpbmVGJy9GS1EnY2VudGVyRicvRk1RJ3xmcmxlZnR8aHJGJy8lL2FsaWdubWVudHNjb3BlR1EldHJ1ZUYnLyUsY29sdW1ud2lkdGhHUSVhdXRvRicvJSZ3aWR0aEdGX3EvJStyb3dzcGFjaW5nR1EmMS4wZXhGJy8lLmNvbHVtbnNwYWNpbmdHUSYwLjhlbUYnLyUpcm93bGluZXNHUSVub25lRicvJSxjb2x1bW5saW5lc0dGanEvJSZmcmFtZUdGanEvJS1mcmFtZXNwYWNpbmdHUSwwLjRlbX4wLjVleEYnLyUqZXF1YWxyb3dzR0ZGLyUtZXF1YWxjb2x1bW5zR0ZGLyUtZGlzcGxheXN0eWxlR0ZGLyUlc2lkZUdRJnJpZ2h0RicvJTBtaW5sYWJlbHNwYWNpbmdHRmdxRkFGREY+Rj4vSSttc2VtYW50aWNzR0YkUSdNYXRyaXhGJy8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7RidGXXMtRiw2KC1GLzYmLUYyNk4tRjU2Py1GODYqLUY7NiZGPUZBRkRGPkZBRkRGR0ZKRkxGTkZRLUY4NiotRjs2JkZXRkFGREY+RkFGREZHRkpGTEZORlFGYnRGXnRGXnRGXnRGXnRGYnRGYnRGXnRGXnRGXnQtRjg2Ki1GOzYmRmZuRkFGREY+RkFGREZHRkpGTEZORlFGZnRGZnRGXnRGXnRGXnRGZnRGZnRGZnRGXnRGXnRGXnRGQUZERkdGSkZMRlx0Rlx0Rlx0Rlx0Rlx0LUY1Nj8tRjg2Ki1GOzYmRl1vRkFGREY+RkFGREZHRkpGTEZORlEtRjg2Ki1GOzYmRmJvRkFGREY+RkFGREZHRkpGTEZORlFGYHVGXHVGXHVGXHVGXHVGYHVGYHVGXHVGXHVGXHVGYnRGYnRGYnRGXHVGXHVGXHVGYnRGYnRGYnRGXHVGXHVGXHVGQUZERkdGSkZMRmp0Rmp0Rmp0LUY1Nj8tRjg2Ki1GOzYmRmlvRkFGREY+RkFGREZHRkpGTEZORlEtRjg2Ki1GOzYmRl5wRkFGREY+RkFGREZHRkpGTEZORlFGanVGZnVGZnVGZnVGZnVGanVGanVGZnVGZnVGZnVGYHVGYHVGYHVGZnVGZnVGZnVGYHVGYHVGYHVGZnVGZnVGZnVGQUZERkdGSkZMRmR1LUY1Nj9GYnRGXHVGXHVGYnRGYnRGYnRGYnRGXHVGXHVGYnRGYnRGYnRGXnRGXnRGXnRGYnRGYnRGYnRGXnRGXnRGXnRGYnRGYnRGYnRGQUZERkdGSkZMRl52Rl52Rl52Rl52Rl52Rlx0Rlx0Rlx0Rlx0Rlx0Rlx0RkFGREZhcEZkcC9GS0ZqckZocEZqcEZdcUZgcUZicUZlcUZocUZbckZdckZfckZickZkckZmckZockZbc0ZBRkRGPkZBRkRGPi9GYXNRIltGJy9GZHNRIl1GJw==">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyMtSSdSVEFCTEVHRig2JSI1dz1KSj46KVskKm8kLUknTUFUUklYR0YoNiM3Ojc6LUkjbW5HNiRGJi9JK21vZHVsZW5hbWVHRihGJDYjUSIzRigtRjY2I1EiNEYoRjxGNUY1RjVGNUY8RjxGNUY1RjUtRjY2I1EiMkYoRj9GP0Y1RjVGNUY/Rj9GP0Y1RjVGNUY0RjRGNEY0RjQ3Oi1GNjYjUSI1RigtRjY2I1EiNkYoRkZGQ0ZDRkNGQ0ZGRkZGQ0ZDRkNGPEY8RjxGQ0ZDRkNGPEY8RjxGQ0ZDRkNGQkZCRkI3Oi1GNjYjUSI3RigtRjY2I1EiOEYoRk1GSkZKRkpGSkZNRk1GSkZKRkpGRkZGRkZGSkZKRkpGRkZGRkZGSkZKRkpGSTc6RjxGQ0ZDRjxGPEY8RjxGQ0ZDRjxGPEY8RjVGNUY1RjxGPEY8RjVGNUY1RjxGPEY8RlBGUEZQRlBGUEY0RjRGNEY0RjRGNEknTWF0cml4R0YlNyMtRlE2Iy9JJCVpZEdGKEYv</Equation></Text-field>
+</Output>
+</Group>
+<Group hide-input="false" labelreference="L291" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">A24;</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkqbWNvbXBsZXRlRzYjL0krbW9kdWxlbmFtZUc2IkksVHlwZXNldHRpbmdHSShfc3lzbGliR0YnNiQtSShtZmVuY2VkR0YkNigtSSVtcm93R0YkNiYtSSdtdGFibGVHRiQ2Ti1JJG10ckdGJDY/LUkkbXRkR0YkNiotSSNtbkdGJDYkUSsmdW1pbnVzMDsxRicvJSxtYXRodmFyaWFudEdRJ25vcm1hbEYnLyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R1EmZmFsc2VGJy8lKXJvd2FsaWduR1EhRicvJSxjb2x1bW5hbGlnbkdGSS8lK2dyb3VwYWxpZ25HRkkvJShyb3dzcGFuR1EiMUYnLyUrY29sdW1uc3BhbkdGUC1GODYqLUY7NiRRIjBGJ0Y+RkFGREZHRkpGTEZORlFGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZBRkRGR0ZKRkwtRjU2P0ZTRjdGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZBRkRGR0ZKRkwtRjU2P0ZTRlNGN0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZBRkRGR0ZKRkwtRjU2P0ZTRlNGU0Y3RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZBRkRGR0ZKRkwtRjU2P0ZTRlNGU0ZTRjdGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZBRkRGR0ZKRkwtRjU2P0ZTRlNGU0ZTRlNGN0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZBRkRGR0ZKRkwtRjU2Py1GODYqLUY7NiRGUEY+RkFGREZHRkpGTEZORlFGU0ZTRlNGU0ZTRl5vRlNGU0ZTRlNGU0ZTRlNGU0Zeb0ZTRlNGU0ZTRlNGU0ZTRlNGQUZERkdGSkZMLUY1Nj9GU0Zeb0ZTRlNGU0ZTRlNGXm9GU0ZTRlNGU0ZTRlNGU0ZTRl5vRlNGU0ZTRlNGU0ZTRlNGQUZERkdGSkZMLUY1Nj9GU0ZTRl5vRlNGU0ZTRlNGU0Zeb0ZTRlNGU0ZTRlNGU0ZTRlNGXm9GU0ZTRlNGU0ZTRlNGQUZERkdGSkZMLUY1Nj9GU0ZTRlNGXm9GU0ZTRlNGU0ZTRl5vRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0Zeb0ZTRlNGQUZERkdGSkZMLUY1Nj9GU0ZTLUY4NiotRi82JS1JI21vR0YkNi1RKiZ1bWludXMwO0YnRj4vJSZmZW5jZUdGRi8lKnNlcGFyYXRvckdGRi8lKXN0cmV0Y2h5R0ZGLyUqc3ltbWV0cmljR0ZGLyUobGFyZ2VvcEdGRi8lLm1vdmFibGVsaW1pdHNHRkYvJSdhY2NlbnRHRkYvJSdsc3BhY2VHUSwwLjIyMjIyMjJlbUYnLyUncnNwYWNlR0ZicS1GLzYmLUY7NiRRLTEuMDAwMDAwMDAwMEYnRj4tRl9wNi1RMSZJbnZpc2libGVUaW1lcztGJ0Y+RmJwRmRwRmZwRmhwRmpwRlxxRl5xL0ZhcVEmMC4wZW1GJy9GZHFGXnItSSNtaUdGJDYlUSdMX2JlYW1GJy8lJ2l0YWxpY0dRJXRydWVGJy9GP1EnaXRhbGljRidGPkY+RkFGREZHRkpGTEZORlFGU0Zeb0ZTRlNGUy1GODYqLUYvNiVGXnAtRi82Ji1GOzYkUS0wLjcwMDAwMDAwMDBGJ0Y+RmpxRmByRj5GPkZBRkRGR0ZKRkxGTkZRRlNGXm9GU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRl5vRlNGQUZERkdGSkZMLUY1Nj9GUy1GODYqRmByRkFGREZHRkpGTEZORlFGU0ZTRlNGXm9GUy1GODYqRl1zRkFGREZHRkpGTEZORlFGU0ZTRlNGXm9GU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRl5vRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRjdGU0ZTRjdGU0ZTRlNGU0ZTRlNGU0ZTRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGN0ZTRlNGN0ZTRlNGU0ZTRlNGU0ZTRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0Y3RlNGU0Y3RlNGU0ZTRlNGU0ZTRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRjdGU0ZTRjdGU0ZTRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGN0ZTRlNGN0ZTRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0Y3RlNGU0Y3RkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRjdGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGN0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGU0Y3RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGU0ZTRjdGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGN0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRkFGREZHRkpGTC1GNTY/RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0Y3RlNGU0ZTRlNGU0ZTRlNGU0ZTRlNGU0ZTRkFGREZHRkpGTEZBRkQvJSZhbGlnbkdRJWF4aXNGJy9GSFEpYmFzZWxpbmVGJy9GS1EnY2VudGVyRicvRk1RJ3xmcmxlZnR8aHJGJy8lL2FsaWdubWVudHNjb3BlR0Zmci8lLGNvbHVtbndpZHRoR1ElYXV0b0YnLyUmd2lkdGhHRl12LyUrcm93c3BhY2luZ0dRJjEuMGV4RicvJS5jb2x1bW5zcGFjaW5nR1EmMC44ZW1GJy8lKXJvd2xpbmVzR1Elbm9uZUYnLyUsY29sdW1ubGluZXNHRmh2LyUmZnJhbWVHRmh2LyUtZnJhbWVzcGFjaW5nR1EsMC40ZW1+MC41ZXhGJy8lKmVxdWFscm93c0dGRi8lLWVxdWFsY29sdW1uc0dGRi8lLWRpc3BsYXlzdHlsZUdGRi8lJXNpZGVHUSZyaWdodEYnLyUwbWlubGFiZWxzcGFjaW5nR0ZldkZBRkRGPkY+L0krbXNlbWFudGljc0dGJFEnTWF0cml4RicvJSVvcGVuR1EnJmxzcWI7RicvJSZjbG9zZUdRJyZyc3FiO0YnRlt4LUYsNigtRi82Ji1GMjZOLUY1Nj8tRjg2Ki1GLzYnLUZfcDYvRmFwRkFGREY+RmJwRmRwRmZwRmhwRmpwRlxxRl5xRmBxRmNxLUY7NiZGUEZBRkRGPkZBRkRGPkZBRkRGR0ZKRkxGTkZRLUY4NiotRjs2JkZXRkFGREY+RkFGREZHRkpGTEZORlFGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj8tRjg2KkZieUZBRkRGR0ZKRkxGTkZRRmR5RmR5RmR5RmR5RmR5RmR6RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR6RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR5RkFGREZHRkpGTC1GNTY/RmR5RmR6RmR5RmR5RmR5RmR5RmR5RmR6RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR6RmR5RmR5RmR5RmR5RmR5RmR5RmR5RkFGREZHRkpGTC1GNTY/RmR5RmR5RmR6RmR5RmR5RmR5RmR5RmR5RmR6RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR6RmR5RmR5RmR5RmR5RmR5RmR5RkFGREZHRkpGTC1GNTY/RmR5RmR5RmR5RmR6RmR5RmR5RmR5RmR5RmR5RmR6RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR5RmR6RmR5RmR5RkFGREZHRkpGTC1GNTY/RmR5RmR5LUY4NiotRi82J0ZgeS1GLzYoLUY7NiZGaXFGQUZERj5GanEtRmFyNidGY3JGZHJGQUZERmdyRkFGREY+RkFGREY+RkFGREZHRkpGTEZORlFGZHlGZHpGZHlGZHlGZHktRjg2Ki1GLzYnRmB5LUYvNigtRjs2JkZhc0ZBRkRGPkZqcUZmW2xGQUZERj5GQUZERj5GQUZERkdGSkZMRk5GUUZkeUZkekZkeUZkeUZkeUZkeUZkeUZkeUZkeUZkeUZkeUZkeUZkeUZkekZkeUZBRkRGR0ZKRkwtRjU2P0ZkeS1GODYqRmZbbEZBRkRGR0ZKRkxGTkZRRmR5RmR5RmR5RmR6RmR5LUY4NipGXFxsRkFGREZHRkpGTEZORlFGZHlGZHlGZHlGZHpGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHpGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGXHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGXHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGXHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMLUY1Nj9GZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGXHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGZHlGQUZERkdGSkZMRkFGREZgdUZjdUZldUZndUZpdUZbdkZedkZgdkZjdkZmdkZpdkZbd0Zdd0Zgd0Zid0Zkd0Zmd0Zpd0ZBRkRGPkZBRkRGPi9GX3hRIltGJy9GYnhRIl1GJw==">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyNYLCUhR0YoRihbZ2whIiUhISEjW19tIjkiOS1JI21uRzYkRiYvSSttb2R1bGVuYW1lR0YoRiQ2I1ErJnVtaW51czA7MUYoLUYvNiNRIjBGKEY1RjVGNUY1LUYvNiNRIjFGKEY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUYuRjVGNUY1RjVGNUY4RjVGNUY1LUkjbWlHRjA2I1EnTF9iZWFtRihGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1Ri5GNUY1RjVGNUY1RjhGNS1JJW1yb3dHRjA2JC1JI21vR0YwNiNRKiZ1bWludXMwO0YoLUZANiUtRi82I1EtMS4wMDAwMDAwMDAwRigtRkM2I1ExJkludmlzaWJsZVRpbWVzO0YoRjtGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUYuRjVGNUY1RjVGNUY4RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1Ri5GNUY1RjVGNUY1RjhGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGLkY1RjVGNUY1RjVGOEY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY4RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUYuRjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjhGNUY1RjUtRkA2JS1GLzYjUS0wLjcwMDAwMDAwMDBGKEZLRjtGNUY1RjVGNUY1RjVGNUYuRjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjhGNS1GQDYkRkJGTkY1RjVGNUY1RjVGNUY1RjVGNUYuRjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjhGNUY1RjVGNUY1RjVGNUY1RjVGNUY1Ri5GNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGOEY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGLkY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY4RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUYuRjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1Ri5GNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGLkY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUYuRjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjhGNUY1RjVGNUY1Ri5GNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGOEY1RjVGNUY1RjVGLkY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY4RjVGNUY1RjVGNUYuRjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1Ri5GNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGLkY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUYuRjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjhGNUY1RjVGNUY1Ri5GNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGOEY1RjVGNUY1RjVGLkY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY1RjVGNUY4RjVGNUY1RjVGNUYuRjVGNUY1RjVGNUY1NyMtSSdNYXRyaXhHRiU2Iy9JJCVpZEdGKCI1c3JKSj46KVskKm8k</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L290" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
 </Worksheet>
