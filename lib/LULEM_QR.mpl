@@ -83,15 +83,15 @@ QR := proc(
 
   # Return the QR decomposition
   return table([
-    "method"   = "QR",
-    "D"        = DG,
-    "Q"        = Q,
-    "R"        = R,
-    "V"        = V,
-    "Q_length" = length(convert(Q, list)),
-    "D_length" = length(convert(DG, list)),
-    "R_length" = length(convert(R, list)),
-    "V_length" = length(LEM:-VeilList(V))
+    "method" = "QR",
+    "D"      = DG,
+    "Q"      = Q,
+    "R"      = R,
+    "V"      = V,
+    "Q_cost" = LULEM:-Cost(Q),
+    "D_cost" = LULEM:-Cost(DG),
+    "R_cost" = LULEM:-Cost(R),
+    "V_cost" = LULEM:-Cost(LEM:-VeilList(V))
   ]);
 end proc: # QR
 

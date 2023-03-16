@@ -47,10 +47,12 @@ LULEM := module()
           DisableVerbosity,
           SetTimeLimit,
           PermutationMatrices,
-          GetDegree,
+          GetDegrees,
           Spy,
           SolveLinearSystem,
           VeilingStrategy,
+          SetVeilingStrategyCost,
+          SetPivotStrategy,
           LU,
           QR,
           QR2,
@@ -59,6 +61,7 @@ LULEM := module()
 
   local   ModuleLoad,
           ModuleUnload,
+          Cost,
           PivotCost,
           Pivoting,
           LUsolve,
@@ -68,8 +71,14 @@ LULEM := module()
           InitLULEM,
           Verbose,
           TimeLimit,
-          VeilingStrategy_par1,
-          VeilingStrategy_par2;
+          VeilingStrategy_par,
+          PivotStrategy_type,
+          PivotingStrategy_1r,
+          PivotingStrategy_1c,
+          PivotingStrategy_1rc,
+          PivotingStrategy_2,
+          PivotingStrategy_3,
+          PivotingStrategy_4;
 
   option  package,
           load   = ModuleLoad,
@@ -127,36 +136,16 @@ LULEM := module()
 
     description "Initialize 'LULEM' module internal variables.";
 
-    LULEM:-Verbose              := false;
-    LULEM:-TimeLimit            := 1;
-    LULEM:-VeilingStrategy_par1 := 20;
-    LULEM:-VeilingStrategy_par2 := 250;
+    LULEM:-Verbose             := false;
+    LULEM:-TimeLimit           := 1;
+    LULEM:-VeilingStrategy_par := 15;
+    LULEM:-PivotStrategy_type  := LULEM:-PivotingStrategy_1r;
     return NULL;
   end proc: # InitLULEM
 
-    GetDegree :=  proc( A::Matrix, $ )
-    local i, j, k, m, n, r, c, ro, co;
-    m, n := LinearAlgebra[Dimensions](A);
-    r  := Vector[column](m);
-    c  := Vector[row](n);
-    ro := Vector[column](m,k->1);
-    co := Vector[row](n,k->1);
-    for i from 1 to m do
-      for j from 1 to n do
-        if A[i,j] <> 0 then
-          r[i] := r[i]+1;
-          c[j] := c[j]+1;
-        end if;
-      end do;
-    end do;
-    return r.co+ro.c;
-  end proc;
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  GetDegree :=  proc(
-    A::{Matrix},
-    $)::{Matrix(nonnegint)};
+  GetDegrees :=  proc( A::{Matrix}, $)::{Matrix(nonnegint)};
 
     description "Get the degree of the matrix <A>.";
 
@@ -175,12 +164,7 @@ LULEM := module()
         end if;
       end do;
     end do;
-
-    if _nresults = 3 then
-      return r.co+ro.c, r, c;
-    else
-      return r.co+ro.c;
-    end if;
+    return r.co, ro.c;
   end proc:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -309,14 +293,41 @@ LULEM := module()
 
     description "Veiling strategy: ......";
 
-    return evalb(
-      (nops(indets(x)) + 1) * length(x) > LULEM:-VeilingStrategy_par1
-      or
-      length(x) > LULEM:-VeilingStrategy_par2
-    );
+    return evalb(LULEM:-Cost(x) > LULEM:-VeilingStrategy_par );
   end proc: # VeilingStrategy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  SetVeilingStrategyCost := proc(
+    c::{nonnegint},
+    $)::{nothing};
+    LULEM:-VeilingStrategy_par := c;
+    return NULL;
+  end proc: # SetVeilingStrategyCost
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  SetPivotStrategy := proc(
+    who::{string},
+    $)::{nothing};
+    if who = "1r" then
+      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_1r;
+    elif who = "1c" then
+      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_1c;
+    elif who = "1rc" then
+      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_1rc;
+    elif who = "2" then
+      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_2;
+    elif who = "3" then
+      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_3;
+    elif who = "4" then
+      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_4;
+    else
+      error "SetPivotStrategy, unknown strategy %s\n", who;
+    end if;
+    return NULL;
+  end proc: # SetVeilingStrategyCost
+
 
 $include "./lib/LULEM_Pivoting.mpl"
 $include "./lib/LULEM_LU.mpl"

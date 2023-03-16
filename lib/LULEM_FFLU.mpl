@@ -16,8 +16,8 @@ FFLU := proc(
     "<A> using the veiling strategy <VeilingStrategy> and the veiling symbol "
     "<V>.";
 
-  local SS, M, Mkk, pivot_list, m, n, mn, i, j, k, ri, rk, rnk, r, c, apply_veil,
-        pivot_is_zero, pivot_cost, pivot_degree, Mij_is_zero, z, tmp, bot, top;
+  local SS, M, pivot, pivot_list, m, n, mn, i, j, k, ri, rk, rnk, r, c, apply_veil,
+        z, tmp, bot, top;
 
   # Forget the veilings
   LEM:-VeilForget(V);
@@ -46,10 +46,10 @@ FFLU := proc(
       );
     end;
 
-    pivot_is_zero, Mkk, pivot_cost, pivot_degree := Pivoting(k, M, V, r, c);
-    pivot_list := [op(pivot_list), Mkk];
+    pivot      := LULEM:-Pivoting( k, M, V, r, c );
+    pivot_list := [op(pivot_list), pivot["value"]];
 
-    if pivot_is_zero then
+    if pivot["is_zero"] then
       rnk := k;
       if LULEM:-Verbose then
         WARNING("LULEM::LU(...): the matrix appears to be not full rank.");
@@ -59,13 +59,13 @@ FFLU := proc(
 
     if LULEM:-Verbose then
       printf(
-        "LULEM::LU(...): M[%d,%d] = %a, cost = %d, degree = %d.\n",
-        k, k, Mkk, pivot_cost, pivot_degree
+        "LULEM::FFLU(...): M[%d,%d] = %a, cost = %d, degree_r = %d, degree_c = %d.\n",
+        k, k, pivot["value"], pivot["cost"], pivot["degree_r"], pivot["degree_c"]
       );
     end if;
 
-    top   := apply_veil(Normalizer(numer(Mkk)));
-    bot   := apply_veil(Normalizer(denom(Mkk)));
+    top   := apply_veil(Normalizer(numer(pivot["value"])));
+    bot   := apply_veil(Normalizer(denom(pivot["value"])));
     SS[k] := top;
 
     # Scaled Shur complement
@@ -76,17 +76,19 @@ FFLU := proc(
 
   # Return the FFLU decomposition
   return table([
-    "method"   = "FFLU",
-    "M"        = M,
-    "V"        = V,
-    "S"        = SS,
-    "r"        = r,
-    "c"        = c,
-    "rank"     = rnk,
-    "pivots"   = pivot_list,
-    "M_length" = length(convert(M,list)),
-    "S_length" = length(convert(SS,list)),
-    "V_length" = length(LEM:-VeilList(V))
+    "method" = "FFLU",
+    "M"      = M,
+    "V"      = V,
+    "S"      = SS,
+    "r"      = r,
+    "c"      = c,
+    "rank"   = rnk,
+    "pivots" = pivot_list,
+    "M_cost" =  LULEM:-Cost(M),
+    "S_cost" =  LULEM:-Cost(SS),
+    "V_cost" =  LULEM:-Cost(LEM:-VeilList(V)),
+    "M_nnz"  = nops(op(2,M)),
+    "A_nnz"    = nops(op(2,A))
   ]);
 end proc: # FFLU
 

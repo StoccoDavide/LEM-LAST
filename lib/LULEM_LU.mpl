@@ -15,8 +15,7 @@ LU := proc(
   description "Compute the LU decomposition of a square matrix <A> using the "
     "veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
 
-  local M, L, U, Mkk, pivot_list, m, n, mn, k, rnk, r, c,
-        apply_veil, pivot_is_zero, pivot_cost, pivot_degree, tmp;
+  local M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, apply_veil, tmp;
 
   # Forget the veilings
   LEM:-VeilForget(V);
@@ -44,10 +43,10 @@ LU := proc(
       );
     end if;
 
-    pivot_is_zero, Mkk, pivot_cost, pivot_degree := Pivoting(k, M, V, r, c);
-    pivot_list := [op(pivot_list), Mkk];
+    pivot      := LULEM:-Pivoting( k, M, V, r, c );
+    pivot_list := [op(pivot_list), pivot["value"]];
 
-    if pivot_is_zero then
+    if pivot["is_zero"] then
       rnk := k;
       if LULEM:-Verbose then
         WARNING("LULEM::LU(...): the matrix appears to be not full rank.");
@@ -57,15 +56,15 @@ LU := proc(
 
     if LULEM:-Verbose then
       printf(
-        "LULEM::LU(...): M[%d,%d] = %a, cost = %d, degree = %d.\n",
-        k, k, Mkk, pivot_cost, pivot_degree
+        "LULEM::LU(...): M[%d,%d] = %a, cost = %d, degree_r = %d, degree_c = %d.\n",
+        k, k, pivot["value"], pivot["cost"], pivot["degree_r"], pivot["degree_c"]
       );
     end if;
 
     # Shur complement
     tmp         := [k+1..-1];
-    M[k, k]     := apply_veil(Mkk);
-    M[tmp, k]   := apply_veil~(Normalizer~(M[tmp, k])) / Mkk;
+    M[k, k]     := apply_veil(pivot["value"]);
+    M[tmp, k]   := apply_veil~(Normalizer~(M[tmp, k])) / pivot["value"];
     M[k, tmp]   := apply_veil~(Normalizer~(M[k, tmp]));
     M[tmp, tmp] := apply_veil~(Normalizer~(M[tmp, tmp] - M[tmp, k].M[k, tmp]));
   end do;
@@ -83,9 +82,12 @@ LU := proc(
     "c"        = c,
     "rank"     = rnk,
     "pivots"   = pivot_list,
-    "L_length" = length(convert(L, list)),
-    "U_length" = length(convert(U, list)),
-    "V_length" = length(LEM:-VeilList(V))
+    "L_cost"   = LULEM:-Cost(L),
+    "U_cost"   = LULEM:-Cost(U),
+    "V_cost"   = LULEM:-Cost(LEM:-VeilList(V)),
+    "L_nnz"    = nops(op(2,L)),
+    "U_nnz"    = nops(op(2,U)),
+    "A_nnz"    = nops(op(2,A))
   ]);
 end proc: # LU
 

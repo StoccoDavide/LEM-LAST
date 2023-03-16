@@ -13,15 +13,13 @@ Pivoting := proc(
   V::{symbol},
   r::{Vector(nonnegint)},
   c::{Vector(nonnegint)},
-  $)
+  $)::table;
 
   description "Compute the LU decomposition pivots vectors provided the step "
     "<k>, the temporary LU (NAG) matrix <M>, the veiling symbol <V>, the rows "
     "the pivot vector <r>, the columns the pivot vector <c>.";
 
-  local Mij, uMij, Mij_is_zero, M_degree, m, n, i, j, ii, jj, apply_unveil, z,
-        pivot_is_zero, Mij_cost, Mij_value, Mij_degree, Mij_degree_r, Mij_degree_c,
-        pivot_cost, pivot_value, pivot_degree, pivot_degree_r, pivot_degree_c;
+  local uMij, M_degree_R, M_degree_C, m, n, i, j, apply_unveil, z, Mij, pivot;
 
   # Extract matrix dimensions
   m, n := LinearAlgebra:-Dimensions(M):
@@ -30,75 +28,64 @@ Pivoting := proc(
   apply_unveil := (z) -> LEM:-UnVeil[V](z);
 
   # Calculate the degree
-  M_degree             := Matrix(m, n);
-  M_degree[k..m, k..n] := LULEM:-GetDegree(M[k..m, k..n]);
+  M_degree_R := Matrix(m,n);
+  M_degree_C := Matrix(m,n);
+  M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] := LULEM:-GetDegrees(M[k..m, k..n]);
+
+  pivot := table([]);
+  Mij   := table([]);
 
   # Iterate over the columns and rows
-  pivot_is_zero := true;
-  pivot_cost    := 0;
-  pivot_value   := 0;
-  for jj from k to n do
-    for ii from k to m do
+  pivot["is_zero"] := true;
+  for j from k to n do
+    for i from k to m do
       # Look for a non-zero pivot
-      Mij                 := M[ii, jj];
-      Mij_degree          := M_degree[ii, jj];
-      Mij_degree_r        := convert(M_degree[ii, 1..-1], `+`);
-      Mij_degree_c        := convert(M_degree[1..-1, jj], `+`);
-      Mij_cost, Mij_value := LULEM:-PivotCost(Mij);
+      Mij["value"]    := M[i, j];
+      Mij["i"]        := i;
+      Mij["j"]        := j;
+      Mij["degree_r"] := M_degree_R[i,j];
+      Mij["degree_c"] := M_degree_C[i,j];
+      Mij["cost"], Mij["numeric_value"] := LULEM:-PivotCost(Mij);
       try
-        Mij         := Normalizer(Mij);
-        Mij_is_zero := evalb(Mij = 0);
-        if not Mij_is_zero then
-          uMij := apply_unveil(Mij);
+        Mij["value"]   := Normalizer(Mij["value"]);
+        Mij["is_zero"] := evalb(Mij["value"] = 0);
+        if not Mij["is_zero"] then
+          uMij := apply_unveil(Mij["value"]);
           # Recalculate cost and value of the pivot
-          Mij_cost, Mij_value := LULEM:-PivotCost(uMij);
+          Mij["cost"], Mij["numeric_value"] := LULEM:-PivotCost(uMij);
           # Time limit required because sometimes Normalizer get stuck
-          uMij        := timelimit(TimeLimit, eval(Normalizer(uMij)));
-          Mij_is_zero := evalb(uMij = 0);
+          uMij := timelimit(TimeLimit, eval(Normalizer(uMij)));
+          Mij["is_zero"] := evalb(uMij = 0);
         end if;
       catch "time expired":
         printf("LULEM::Pivoting(...): simplify(Mij) failed, assumed <> 0.\n");
-        Mij_is_zero := false;
+        Mij["is_zero"] := false;
       catch:
         printf("LULEM::Pivoting(...): Mij division by 0 or other exception.\n");
         if LULEM:-Verbose then
-          print(Mij);
+          print(eval(Mij));
         end if;
-        Mij_is_zero := true;
+        Mij["is_zero"] := true;
       end try;
 
-      if Mij_is_zero then
-        M[ii, jj] := 0;
+      if Mij["is_zero"] then
+        M[i,j] := 0;
       else
         # Found a non-zero pivot, check if it is better
-        if pivot_is_zero then
+        if pivot["is_zero"] then
           # First non-zero pivot found
-          pivot_is_zero  := false;
-          pivot_cost     := Mij_cost;
-          pivot_value    := Mij_value;
-          pivot_degree   := Mij_degree;
-          pivot_degree_r := Mij_degree_r;
-          pivot_degree_c := Mij_degree_c;
-          i              := ii;
-          j              := jj;
-        elif PivotingStrategy_1r(
-            pivot_value, pivot_degree, pivot_degree_r, pivot_degree_c, pivot_cost,
-            Mij_value,   Mij_degree,   Mij_degree_r,   Mij_degree_c,   Mij_cost
-          ) then
+          pivot := copy(Mij);
+        elif LULEM:-PivotStrategy_type( pivot, Mij ) then
           # A better pivot is found
-          pivot_cost     := Mij_cost;
-          pivot_value    := Mij_value;
-          pivot_degree   := Mij_degree;
-          pivot_degree_r := Mij_degree_r;
-          pivot_degree_c := Mij_degree_c;
-          i              := ii;
-          j              := jj;
+          pivot := copy( Mij );
         end if;
       end if;
     end do;
   end do;
 
-  if not pivot_is_zero then
+  if not pivot["is_zero"] then
+    i := pivot["i"];
+    j := pivot["j"];
     if (i <> k) then
       (r[i], r[k])    := (r[k], r[i]);
       M[[i,k], 1..-1] := M[[k,i], 1..-1];
@@ -109,8 +96,30 @@ Pivoting := proc(
     end if;
   end if;
 
-  return pivot_is_zero, M[k, k], pivot_cost, pivot_degree;
+  return pivot;
 end proc: # Pivoting
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Cost := proc(
+  x::{anything},
+  $)::{integer};
+  local xx;
+  if not( type(x,'algebraic') or type(x,'list') ) then
+    xx := convert(x,'list');
+  else
+    xx := x;
+  end if;
+  return subs(
+    subscripts=0,
+    assignments=0,
+    additions=1,
+    multiplications=2,
+    divisions=3,
+    functions=2,
+    codegen[cost](xx)
+  );
+end proc: # PivotCost
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -126,167 +135,185 @@ PivotCost := proc(
     else
       return 1, abs(x);
     end if;
-  elif type(x, 'symbol') then
-    return 2, infinity;
-  #elif type(x, 'algebraic') then
-  #  return infinity, 1;
   end if;
-  return 2 + length(x), infinity;
+  return LULEM:-Cost(x), infinity;
 end proc: # PivotCost
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_1r := proc(
-  cur_value::{algebraic, numeric},
-  cur_degree::{nonnegint},
-  cur_degree_r::{nonnegint},
-  cur_degree_c::{nonnegint},
-  cur_cost::{nonnegint},
-  new_value::{algebraic, numeric},
-  new_degree::{nonnegint},
-  new_degree_r::{nonnegint},
-  new_degree_c::{nonnegint},
-  new_cost::{nonnegint},
+  cur::table,
+  val::table,
   $)::{boolean};
 
   description "Compute the pivoting strategy 1: given the current pivot <cur> "
-    "and the next pivot <new>, decide if to the new pivot is better than the "
-    "current  pivot or not.";
-
-  return
-    (new_degree < cur_degree) or
-    (new_degree = cur_degree and new_degree_r < cur_degree_r) or
-    (new_degree = cur_degree and new_cost < cur_cost) or
-    (new_degree = cur_degree and new_cost = cur_cost and new_value > cur_value);
-
+              "and the next pivot <new>, decide if to the new pivot is better than the "
+              "current  pivot or not.";
+  if val["degree_r"] < cur["degree_r"] then
+    return true;
+  elif val["degree_r"] > cur["degree_r"] then
+    return false
+  elif val["numeric_value"] < cur["numeric_value"] then
+    return true;
+  elif val["numeric_value"] > cur["numeric_value"] then
+    return false;
+  elif val["numeric_value"] = infinity then
+    # all equals and symbolic
+    return val["cost"] < cur["cost"];
+  end if;
+  # all equals and finite
+  return val["numeric_value"] > cur["numeric_value"];
 end proc: # PivotingStrategy_1r
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_1c := proc(
-  cur_value::{algebraic, numeric},
-  cur_degree::{nonnegint},
-  cur_degree_r::{nonnegint},
-  cur_degree_c::{nonnegint},
-  cur_cost::{nonnegint},
-  new_value::{algebraic, numeric},
-  new_degree::{nonnegint},
-  new_degree_r::{nonnegint},
-  new_degree_c::{nonnegint},
-  new_cost::{nonnegint},
+  cur::table,
+  val::table,
   $)::{boolean};
 
   description "Compute the pivoting strategy 1: given the current pivot <cur> "
     "and the next pivot <new>, decide if to the new pivot is better than the "
     "current  pivot or not.";
 
-  return
-    (new_degree < cur_degree) or
-    (new_degree = cur_degree and new_degree_c < cur_degree_c) or
-    (new_degree = cur_degree and new_cost < cur_cost) or
-    (new_degree = cur_degree and new_cost = cur_cost and new_value > cur_value);
+  if val["degree_c"] < cur["degree_c"] then
+    return true;
+  elif val["degree_c"] > cur["degree_c"] then
+    return false
+  elif val["numeric_value"] < cur["numeric_value"] then
+    return true;
+  elif val["numeric_value"] > cur["numeric_value"] then
+    return false;
+  elif val["numeric_value"] = infinity then
+    # all equals and symbolic
+    return val["cost"] < cur["cost"];
+  end if;
+  # all equals and finite
+  return val["numeric_value"] > cur["numeric_value"];
 
 end proc: # PivotingStrategy_1c
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_1rc := proc(
-  cur_value::{algebraic, numeric},
-  cur_degree::{nonnegint},
-  cur_degree_r::{nonnegint},
-  cur_degree_c::{nonnegint},
-  cur_cost::{nonnegint},
-  new_value::{algebraic, numeric},
-  new_degree::{nonnegint},
-  new_degree_r::{nonnegint},
-  new_degree_c::{nonnegint},
-  new_cost::{nonnegint},
+  cur::table,
+  val::table,
   $)::{boolean};
 
   description "Compute the pivoting strategy 1: given the current pivot <cur> "
     "and the next pivot <new>, decide if to the new pivot is better than the "
     "current  pivot or not.";
 
-  return
-    (new_degree < cur_degree) or
-    (new_degree = cur_degree and new_degree_r + new_degree_c < cur_degree_r + cur_degree_c) or
-    (new_degree = cur_degree and new_cost < cur_cost) or
-    (new_degree = cur_degree and new_cost = cur_cost and new_value > cur_value);
+  local dc, dv;
+
+  dc := cur["degree_c"]+cur["degree_r"];
+  dv := val["degree_c"]+val["degree_r"];
+
+  if dv < dc then
+    return true;
+  elif dc > dv then
+    return false
+  elif val["numeric_value"] < cur["numeric_value"] then
+    return true;
+  elif val["numeric_value"] > cur["numeric_value"] then
+    return false;
+  elif val["numeric_value"] = infinity then
+    # all equals and symbolic
+    return val["cost"] < cur["cost"];
+  end if;
+  # all equals and finite
+  return val["numeric_value"] > cur["numeric_value"];
 
 end proc: # PivotingStrategy_1rc
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_2 := proc(
-  cur_value::{algebraic, numeric},
-  cur_degree::{nonnegint},
-  cur_degree_r::{nonnegint},
-  cur_degree_c::{nonnegint},
-  cur_cost::{nonnegint},
-  new_value::{algebraic, numeric},
-  new_degree::{nonnegint},
-  new_degree_r::{nonnegint},
-  new_degree_c::{nonnegint},
-  new_cost::{nonnegint},
+  cur::table,
+  val::table,
   $)::{boolean};
 
   description "Compute the pivoting strategy 2: given the current pivot <cur> "
     "and the next pivot <new>, decide if to the new pivot is better than the "
     "current  pivot or not.";
 
-  return
-    (new_degree < cur_degree) or
-    (new_degree = cur_degree and new_cost < cur_cost) or
-    (new_degree = cur_degree and new_cost = cur_cost and new_value > cur_value);
+  local dc, dv;
+
+  dc := cur["degree_c"]*cur["degree_r"];
+  dv := val["degree_c"]*val["degree_r"];
+
+  if dv < dc then
+    return true;
+  elif dc > dv then
+    return false
+  elif val["numeric_value"] < cur["numeric_value"] then
+    return true;
+  elif val["numeric_value"] > cur["numeric_value"] then
+    return false;
+  elif val["numeric_value"] = infinity then
+    # all equals and symbolic
+    return val["cost"] < cur["cost"];
+  end if;
+  # all equals and finite
+  return val["numeric_value"] > cur["numeric_value"];
 
 end proc: # PivotingStrategy_2
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_3 := proc(
-  cur_value::{algebraic, numeric},
-  cur_degree::{nonnegint},
-  cur_degree_r::{nonnegint},
-  cur_degree_c::{nonnegint},
-  cur_cost::{nonnegint},
-  new_value::{algebraic, numeric},
-  new_degree::{nonnegint},
-  new_degree_r::{nonnegint},
-  new_degree_c::{nonnegint},
-  new_cost::{nonnegint},
+  cur::table,
+  val::table,
   $)::{boolean};
 
   description "Compute the pivoting strategy 3: given the current pivot <cur> "
     "and the next pivot <new>, decide if to the new pivot is better than the "
     "current  pivot or not.";
 
-  return
-    (new_cost < cur_cost) or
-    (new_cost = cur_cost and new_value > cur_value);
+  local dc, dv;
+
+  dc := min(cur["degree_c"],cur["degree_r"]);
+  dv := min(val["degree_c"],val["degree_r"]);
+
+  if dv < dc then
+    return true;
+  elif dc > dv then
+    return false
+  elif val["numeric_value"] < cur["numeric_value"] then
+    return true;
+  elif val["numeric_value"] > cur["numeric_value"] then
+    return false;
+  elif val["numeric_value"] = infinity then
+    # all equals and symbolic
+    return val["cost"] < cur["cost"];
+  end if;
+  # all equals and finite
+  return val["numeric_value"] > cur["numeric_value"];
+
 
 end proc: # PivotingStrategy_3
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_4 := proc(
-  cur_value::{algebraic, numeric},
-  cur_degree::{nonnegint},
-  cur_degree_r::{nonnegint},
-  cur_degree_c::{nonnegint},
-  cur_cost::{nonnegint},
-  new_value::{algebraic, numeric},
-  new_degree::{nonnegint},
-  new_degree_r::{nonnegint},
-  new_degree_c::{nonnegint},
-  new_cost::{nonnegint},
+  cur::table,
+  val::table,
   $)::{boolean};
 
   description "Compute the pivoting strategy 4: given the current pivot <cur> "
     "and the next pivot <new>, decide if to the new pivot is better than the "
     "current  pivot or not.";
 
-  return
-    evalb(new_value > cur_value);
+  if val["numeric_value"] < cur["numeric_value"] then
+    return true;
+  elif val["numeric_value"] > cur["numeric_value"] then
+    return false;
+  elif val["numeric_value"] = infinity then
+    # all equals and symbolic
+    return val["cost"] < cur["cost"];
+  end if;
+  # all equals and finite
+  return val["numeric_value"] > cur["numeric_value"];
 
 end proc: # PivotingStrategy_4
 
