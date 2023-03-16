@@ -19,9 +19,9 @@ Pivoting := proc(
     "<k>, the temporary LU (NAG) matrix <M>, the veiling symbol <V>, the rows "
     "the pivot vector <r>, the columns the pivot vector <c>.";
 
-  local Mij, uMij, Mij_is_zero, Mij_cost, Mij_value, Mij_degree, M_degree,
-        pivot_is_zero, pivot_cost, pivot_value, pivot_degree,
-        m, n, i, j, ii, jj, apply_unveil, z;
+  local Mij, uMij, Mij_is_zero, M_degree, m, n, i, j, ii, jj, apply_unveil, z,
+        pivot_is_zero, Mij_cost, Mij_value, Mij_degree, Mij_degree_r, Mij_degree_c,
+        pivot_cost, pivot_value, pivot_degree, pivot_degree_r, pivot_degree_c;
 
   # Extract matrix dimensions
   m, n := LinearAlgebra:-Dimensions(M):
@@ -42,6 +42,8 @@ Pivoting := proc(
       # Look for a non-zero pivot
       Mij                 := M[ii, jj];
       Mij_degree          := M_degree[ii, jj];
+      Mij_degree_r        := convert(M_degree[ii, 1..-1], `+`);
+      Mij_degree_c        := convert(M_degree[1..-1, jj], `+`);
       Mij_cost, Mij_value := LULEM:-PivotCost(Mij);
       try
         Mij         := Normalizer(Mij);
@@ -71,21 +73,26 @@ Pivoting := proc(
         # Found a non-zero pivot, check if it is better
         if pivot_is_zero then
           # First non-zero pivot found
-          pivot_is_zero := false;
-          pivot_cost    := Mij_cost;
-          pivot_value   := Mij_value;
-          pivot_degree  := Mij_degree;
-          i             := ii;
-          j             := jj;
-        elif (Mij_degree < pivot_degree) or
-             (Mij_degree = pivot_degree and Mij_cost < pivot_cost) or
-             (Mij_degree = pivot_degree and Mij_cost = pivot_cost and Mij_value > pivot_value) then
+          pivot_is_zero  := false;
+          pivot_cost     := Mij_cost;
+          pivot_value    := Mij_value;
+          pivot_degree   := Mij_degree;
+          pivot_degree_r := Mij_degree_r;
+          pivot_degree_c := Mij_degree_c;
+          i              := ii;
+          j              := jj;
+        elif PivotingStrategy_1r(
+            pivot_value, pivot_degree, pivot_degree_r, pivot_degree_c, pivot_cost,
+            Mij_value,   Mij_degree,   Mij_degree_r,   Mij_degree_c,   Mij_cost
+          ) then
           # A better pivot is found
-          pivot_cost   := Mij_cost;
-          pivot_value  := Mij_value;
-          pivot_degree := Mij_degree;
-          i            := ii;
-          j            := jj;
+          pivot_cost     := Mij_cost;
+          pivot_value    := Mij_value;
+          pivot_degree   := Mij_degree;
+          pivot_degree_r := Mij_degree_r;
+          pivot_degree_c := Mij_degree_c;
+          i              := ii;
+          j              := jj;
         end if;
       end if;
     end do;
@@ -126,5 +133,161 @@ PivotCost := proc(
   end if;
   return 2 + length(x), infinity;
 end proc: # PivotCost
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_1r := proc(
+  cur_value::{algebraic, numeric},
+  cur_degree::{nonnegint},
+  cur_degree_r::{nonnegint},
+  cur_degree_c::{nonnegint},
+  cur_cost::{nonnegint},
+  new_value::{algebraic, numeric},
+  new_degree::{nonnegint},
+  new_degree_r::{nonnegint},
+  new_degree_c::{nonnegint},
+  new_cost::{nonnegint},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy 1: given the current pivot <cur> "
+    "and the next pivot <new>, decide if to the new pivot is better than the "
+    "current  pivot or not.";
+
+  return
+    (new_degree < cur_degree) or
+    (new_degree = cur_degree and new_degree_r < cur_degree_r) or
+    (new_degree = cur_degree and new_cost < cur_cost) or
+    (new_degree = cur_degree and new_cost = cur_cost and new_value > cur_value);
+
+end proc: # PivotingStrategy_1r
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_1c := proc(
+  cur_value::{algebraic, numeric},
+  cur_degree::{nonnegint},
+  cur_degree_r::{nonnegint},
+  cur_degree_c::{nonnegint},
+  cur_cost::{nonnegint},
+  new_value::{algebraic, numeric},
+  new_degree::{nonnegint},
+  new_degree_r::{nonnegint},
+  new_degree_c::{nonnegint},
+  new_cost::{nonnegint},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy 1: given the current pivot <cur> "
+    "and the next pivot <new>, decide if to the new pivot is better than the "
+    "current  pivot or not.";
+
+  return
+    (new_degree < cur_degree) or
+    (new_degree = cur_degree and new_degree_c < cur_degree_c) or
+    (new_degree = cur_degree and new_cost < cur_cost) or
+    (new_degree = cur_degree and new_cost = cur_cost and new_value > cur_value);
+
+end proc: # PivotingStrategy_1c
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_1rc := proc(
+  cur_value::{algebraic, numeric},
+  cur_degree::{nonnegint},
+  cur_degree_r::{nonnegint},
+  cur_degree_c::{nonnegint},
+  cur_cost::{nonnegint},
+  new_value::{algebraic, numeric},
+  new_degree::{nonnegint},
+  new_degree_r::{nonnegint},
+  new_degree_c::{nonnegint},
+  new_cost::{nonnegint},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy 1: given the current pivot <cur> "
+    "and the next pivot <new>, decide if to the new pivot is better than the "
+    "current  pivot or not.";
+
+  return
+    (new_degree < cur_degree) or
+    (new_degree = cur_degree and new_degree_r + new_degree_c < cur_degree_r + cur_degree_c) or
+    (new_degree = cur_degree and new_cost < cur_cost) or
+    (new_degree = cur_degree and new_cost = cur_cost and new_value > cur_value);
+
+end proc: # PivotingStrategy_1rc
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_2 := proc(
+  cur_value::{algebraic, numeric},
+  cur_degree::{nonnegint},
+  cur_degree_r::{nonnegint},
+  cur_degree_c::{nonnegint},
+  cur_cost::{nonnegint},
+  new_value::{algebraic, numeric},
+  new_degree::{nonnegint},
+  new_degree_r::{nonnegint},
+  new_degree_c::{nonnegint},
+  new_cost::{nonnegint},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy 2: given the current pivot <cur> "
+    "and the next pivot <new>, decide if to the new pivot is better than the "
+    "current  pivot or not.";
+
+  return
+    (new_degree < cur_degree) or
+    (new_degree = cur_degree and new_cost < cur_cost) or
+    (new_degree = cur_degree and new_cost = cur_cost and new_value > cur_value);
+
+end proc: # PivotingStrategy_2
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_3 := proc(
+  cur_value::{algebraic, numeric},
+  cur_degree::{nonnegint},
+  cur_degree_r::{nonnegint},
+  cur_degree_c::{nonnegint},
+  cur_cost::{nonnegint},
+  new_value::{algebraic, numeric},
+  new_degree::{nonnegint},
+  new_degree_r::{nonnegint},
+  new_degree_c::{nonnegint},
+  new_cost::{nonnegint},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy 3: given the current pivot <cur> "
+    "and the next pivot <new>, decide if to the new pivot is better than the "
+    "current  pivot or not.";
+
+  return
+    (new_cost < cur_cost) or
+    (new_cost = cur_cost and new_value > cur_value);
+
+end proc: # PivotingStrategy_3
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_4 := proc(
+  cur_value::{algebraic, numeric},
+  cur_degree::{nonnegint},
+  cur_degree_r::{nonnegint},
+  cur_degree_c::{nonnegint},
+  cur_cost::{nonnegint},
+  new_value::{algebraic, numeric},
+  new_degree::{nonnegint},
+  new_degree_r::{nonnegint},
+  new_degree_c::{nonnegint},
+  new_cost::{nonnegint},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy 4: given the current pivot <cur> "
+    "and the next pivot <new>, decide if to the new pivot is better than the "
+    "current  pivot or not.";
+
+  return
+    evalb(new_value > cur_value);
+
+end proc: # PivotingStrategy_4
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
