@@ -73,12 +73,12 @@ LULEM := module()
           TimeLimit,
           VeilingStrategy_par,
           PivotStrategy_type,
-          PivotingStrategy_1r,
-          PivotingStrategy_1c,
-          PivotingStrategy_1rc,
-          PivotingStrategy_2,
-          PivotingStrategy_3,
-          PivotingStrategy_4;
+          PivotingStrategy_Row,
+          PivotingStrategy_Col,
+          PivotingStrategy_Sum,
+          PivotingStrategy_Prod,
+          PivotingStrategy_Min,
+          PivotingStrategy_Val;
 
   option  package,
           load   = ModuleLoad,
@@ -139,13 +139,15 @@ LULEM := module()
     LULEM:-Verbose             := false;
     LULEM:-TimeLimit           := 1;
     LULEM:-VeilingStrategy_par := 15;
-    LULEM:-PivotStrategy_type  := LULEM:-PivotingStrategy_1r;
+    LULEM:-PivotStrategy_type  := LULEM:-PivotingStrategy_Sum;
     return NULL;
   end proc: # InitLULEM
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  GetDegrees :=  proc( A::{Matrix}, $)::{Matrix(nonnegint)};
+  GetDegrees :=  proc(
+    A::{Matrix},
+    $)::{Matrix(nonnegint)};
 
     description "Get the degree of the matrix <A>.";
 
@@ -255,6 +257,33 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  Cost := proc(
+    x::{anything},
+    $)::{integer};
+
+    description "Compute the cost of the expression <x>.";
+
+    local tmp;
+
+    if not( type(x,'algebraic') or type(x,'list') ) then
+      tmp := convert(x,'list');
+    else
+      tmp := x;
+    end if;
+
+    return subs(
+      subscripts      = 0,
+      assignments     = 0,
+      additions       = 1,
+      multiplications = 2,
+      divisions       = 3,
+      functions       = 2,
+      codegen[cost](tmp)
+    );
+  end proc: # PivotCost
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   SolveLinearSystem := proc(
     T::{table},
     b::{Vector},
@@ -291,9 +320,9 @@ LULEM := module()
     x::{algebraic},
     $)::{boolean};
 
-    description "Veiling strategy: ......";
+    description "Comupte the veiling strategy value for the value <x>.";
 
-    return evalb(LULEM:-Cost(x) > LULEM:-VeilingStrategy_par );
+    return evalb(LULEM:-Cost(x) > LULEM:-VeilingStrategy_par);
   end proc: # VeilingStrategy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -301,33 +330,14 @@ LULEM := module()
   SetVeilingStrategyCost := proc(
     c::{nonnegint},
     $)::{nothing};
+
+    description "Set the veiling strategy parameter to <c>.";
+
     LULEM:-VeilingStrategy_par := c;
     return NULL;
   end proc: # SetVeilingStrategyCost
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  SetPivotStrategy := proc(
-    who::{string},
-    $)::{nothing};
-    if who = "1r" then
-      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_1r;
-    elif who = "1c" then
-      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_1c;
-    elif who = "1rc" then
-      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_1rc;
-    elif who = "2" then
-      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_2;
-    elif who = "3" then
-      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_3;
-    elif who = "4" then
-      LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_4;
-    else
-      error "SetPivotStrategy, unknown strategy %s\n", who;
-    end if;
-    return NULL;
-  end proc: # SetVeilingStrategyCost
-
 
 $include "./lib/LULEM_Pivoting.mpl"
 $include "./lib/LULEM_LU.mpl"

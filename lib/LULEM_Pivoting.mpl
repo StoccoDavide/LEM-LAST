@@ -43,8 +43,8 @@ Pivoting := proc(
       Mij["value"]    := M[i, j];
       Mij["i"]        := i;
       Mij["j"]        := j;
-      Mij["degree_r"] := M_degree_R[i,j];
-      Mij["degree_c"] := M_degree_C[i,j];
+      Mij["degree_r"] := M_degree_R[i, j];
+      Mij["degree_c"] := M_degree_C[i, j];
       Mij["cost"], Mij["numeric_value"] := LULEM:-PivotCost(Mij);
       try
         Mij["value"]   := Normalizer(Mij["value"]);
@@ -75,9 +75,9 @@ Pivoting := proc(
         if pivot["is_zero"] then
           # First non-zero pivot found
           pivot := copy(Mij);
-        elif LULEM:-PivotStrategy_type( pivot, Mij ) then
+        elif LULEM:-PivotStrategy_type(pivot, Mij) then
           # A better pivot is found
-          pivot := copy( Mij );
+          pivot := copy(Mij);
         end if;
       end if;
     end do;
@@ -101,28 +101,6 @@ end proc: # Pivoting
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Cost := proc(
-  x::{anything},
-  $)::{integer};
-  local xx;
-  if not( type(x,'algebraic') or type(x,'list') ) then
-    xx := convert(x,'list');
-  else
-    xx := x;
-  end if;
-  return subs(
-    subscripts=0,
-    assignments=0,
-    additions=1,
-    multiplications=2,
-    divisions=3,
-    functions=2,
-    codegen[cost](xx)
-  );
-end proc: # PivotCost
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 PivotCost := proc(
   x::{algebraic},
   $)::{integer};
@@ -141,33 +119,57 @@ end proc: # PivotCost
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotingStrategy_1r := proc(
+SetPivotStrategy := proc(
+  str::{string},
+  $)::{nothing};
+  if (str = "Row") then
+    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Row;
+  elif (str = "Col") then
+    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Col;
+  elif (str = "Sum") then
+    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Sum;
+  elif (str = "Prod") then
+    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Prod;
+  elif (str = "Min") then
+    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Min;
+  elif (str = "Val") then
+    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Val;
+  else
+    error "unknown pivoting strategy %s.\n", str;
+  end if;
+  return NULL;
+end proc: # SetVeilingStrategy
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_Row := proc(
   cur::table,
   val::table,
   $)::{boolean};
 
   description "Compute the pivoting strategy 1: given the current pivot <cur> "
-              "and the next pivot <new>, decide if to the new pivot is better than the "
-              "current  pivot or not.";
-  if val["degree_r"] < cur["degree_r"] then
+    "and the next pivot <new>, decide if to the new pivot is better than the "
+    "current  pivot or not.";
+
+  if (val["degree_r"] < cur["degree_r"]) then
     return true;
-  elif val["degree_r"] > cur["degree_r"] then
-    return false
-  elif val["numeric_value"] < cur["numeric_value"] then
-    return true;
-  elif val["numeric_value"] > cur["numeric_value"] then
+  elif (val["degree_r"] > cur["degree_r"]) then
     return false;
-  elif val["numeric_value"] = infinity then
-    # all equals and symbolic
-    return val["cost"] < cur["cost"];
+  elif (val["numeric_value"] < cur["numeric_value"]) then
+    return true;
+  elif (val["numeric_value"] > cur["numeric_value"]) then
+    return false;
+  elif (val["numeric_value"] = infinity) then
+    # All equal and symbolic
+    return evalb(val["cost"] < cur["cost"]);
   end if;
-  # all equals and finite
-  return val["numeric_value"] > cur["numeric_value"];
-end proc: # PivotingStrategy_1r
+  # All equal and finite
+  return evalb(val["numeric_value"] > cur["numeric_value"]);
+end proc: # PivotingStrategy_Row
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotingStrategy_1c := proc(
+PivotingStrategy_Col := proc(
   cur::table,
   val::table,
   $)::{boolean};
@@ -185,17 +187,17 @@ PivotingStrategy_1c := proc(
   elif val["numeric_value"] > cur["numeric_value"] then
     return false;
   elif val["numeric_value"] = infinity then
-    # all equals and symbolic
+    # All equal and symbolic
     return val["cost"] < cur["cost"];
   end if;
-  # all equals and finite
+  # All equal and finite
   return val["numeric_value"] > cur["numeric_value"];
 
-end proc: # PivotingStrategy_1c
+end proc: # PivotingStrategy_Col
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotingStrategy_1rc := proc(
+PivotingStrategy_Sum := proc(
   cur::table,
   val::table,
   $)::{boolean};
@@ -206,29 +208,28 @@ PivotingStrategy_1rc := proc(
 
   local dc, dv;
 
-  dc := cur["degree_c"]+cur["degree_r"];
-  dv := val["degree_c"]+val["degree_r"];
+  dc := cur["degree_c"] + cur["degree_r"];
+  dv := val["degree_c"] + val["degree_r"];
 
-  if dv < dc then
+  if (dv < dc) then
     return true;
-  elif dc > dv then
+  elif (dc > dv) then
     return false
-  elif val["numeric_value"] < cur["numeric_value"] then
+  elif (val["numeric_value"] < cur["numeric_value"]) then
     return true;
-  elif val["numeric_value"] > cur["numeric_value"] then
+  elif (val["numeric_value"] > cur["numeric_value"]) then
     return false;
-  elif val["numeric_value"] = infinity then
+  elif (val["numeric_value"] = infinity) then
     # all equals and symbolic
-    return val["cost"] < cur["cost"];
+    return evalb(val["cost"] < cur["cost"]);
   end if;
   # all equals and finite
-  return val["numeric_value"] > cur["numeric_value"];
-
-end proc: # PivotingStrategy_1rc
+  return evalb(val["numeric_value"] > cur["numeric_value"]);
+end proc: # PivotingStrategy_Sum
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotingStrategy_2 := proc(
+PivotingStrategy_Prod := proc(
   cur::table,
   val::table,
   $)::{boolean};
@@ -239,29 +240,28 @@ PivotingStrategy_2 := proc(
 
   local dc, dv;
 
-  dc := cur["degree_c"]*cur["degree_r"];
-  dv := val["degree_c"]*val["degree_r"];
+  dc := cur["degree_c"] * cur["degree_r"];
+  dv := val["degree_c"] * val["degree_r"];
 
-  if dv < dc then
+  if (dv < dc) then
     return true;
-  elif dc > dv then
+  elif (dc > dv) then
     return false
-  elif val["numeric_value"] < cur["numeric_value"] then
+  elif (val["numeric_value"] < cur["numeric_value"]) then
     return true;
-  elif val["numeric_value"] > cur["numeric_value"] then
+  elif (val["numeric_value"] > cur["numeric_value"]) then
     return false;
-  elif val["numeric_value"] = infinity then
-    # all equals and symbolic
-    return val["cost"] < cur["cost"];
+  elif (val["numeric_value"] = infinity) then
+    # All equal and symbolic
+    return evalb(val["cost"] < cur["cost"]);
   end if;
-  # all equals and finite
-  return val["numeric_value"] > cur["numeric_value"];
-
-end proc: # PivotingStrategy_2
+  # All equal and finite
+  return evalb(val["numeric_value"] > cur["numeric_value"]);
+end proc: # PivotingStrategy_Prod
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotingStrategy_3 := proc(
+PivotingStrategy_Min := proc(
   cur::table,
   val::table,
   $)::{boolean};
@@ -272,30 +272,28 @@ PivotingStrategy_3 := proc(
 
   local dc, dv;
 
-  dc := min(cur["degree_c"],cur["degree_r"]);
-  dv := min(val["degree_c"],val["degree_r"]);
+  dc := min(cur["degree_c"], cur["degree_r"]);
+  dv := min(val["degree_c"], val["degree_r"]);
 
-  if dv < dc then
+  if (dv < dc) then
     return true;
-  elif dc > dv then
+  elif (dc > dv) then
     return false
-  elif val["numeric_value"] < cur["numeric_value"] then
+  elif (val["numeric_value"] < cur["numeric_value"]) then
     return true;
-  elif val["numeric_value"] > cur["numeric_value"] then
+  elif (val["numeric_value"] > cur["numeric_value"]) then
     return false;
-  elif val["numeric_value"] = infinity then
+  elif (val["numeric_value"] = infinity) then
     # all equals and symbolic
-    return val["cost"] < cur["cost"];
+    return evalb(val["cost"] < cur["cost"]);
   end if;
   # all equals and finite
-  return val["numeric_value"] > cur["numeric_value"];
-
-
-end proc: # PivotingStrategy_3
+  return evalb(val["numeric_value"] > cur["numeric_value"]);
+end proc: # PivotingStrategy_Min
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotingStrategy_4 := proc(
+PivotingStrategy_Val := proc(
   cur::table,
   val::table,
   $)::{boolean};
@@ -304,17 +302,16 @@ PivotingStrategy_4 := proc(
     "and the next pivot <new>, decide if to the new pivot is better than the "
     "current  pivot or not.";
 
-  if val["numeric_value"] < cur["numeric_value"] then
+  if (val["numeric_value"] < cur["numeric_value"]) then
     return true;
-  elif val["numeric_value"] > cur["numeric_value"] then
+  elif (val["numeric_value"] > cur["numeric_value"]) then
     return false;
-  elif val["numeric_value"] = infinity then
-    # all equals and symbolic
-    return val["cost"] < cur["cost"];
+  elif (val["numeric_value"] = infinity) then
+    # All equal and symbolic
+    return evalb(val["cost"] < cur["cost"]);
   end if;
-  # all equals and finite
-  return val["numeric_value"] > cur["numeric_value"];
-
-end proc: # PivotingStrategy_4
+  # All equal and finite
+  return evalb(val["numeric_value"] > cur["numeric_value"]);
+end proc: # PivotingStrategy_Val
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

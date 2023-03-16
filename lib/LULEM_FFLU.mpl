@@ -41,12 +41,12 @@ FFLU := proc(
   for k from 1 to mn-1 do
     if LULEM:-Verbose then
       printf(
-        "LULEM::FFLU(...): processing %d-th row. Length %d: %d.\n",
-        k, length(convert(M,list)), length(LEM:-VeilList(V))
+        "LULEM::FFLU(...): processing %d-th row, cost = %d, veilings = %d.\n",
+        k, LULEM:-Cost(M), nops(LEM:-VeilList(V))
       );
     end;
 
-    pivot      := LULEM:-Pivoting( k, M, V, r, c );
+    pivot      := LULEM:-Pivoting(k, M, V, r, c);
     pivot_list := [op(pivot_list), pivot["value"]];
 
     if pivot["is_zero"] then
@@ -71,7 +71,7 @@ FFLU := proc(
     # Scaled Shur complement
     tmp        := [k+1..-1];
     M[tmp, k]  := apply_veil~(Normalizer~(M[tmp, k]*bot));
-    M[tmp,tmp] := apply_veil~(Normalizer~( top*M[tmp,tmp] - M[tmp,k].M[k,tmp]) );
+    M[tmp,tmp] := apply_veil~(Normalizer~( top*M[tmp,tmp] - M[tmp,k].M[k,tmp]));
   end do;
 
   # Return the FFLU decomposition

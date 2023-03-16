@@ -38,12 +38,12 @@ LU := proc(
   for k from 1 to mn do
     if LULEM:-Verbose then
       printf(
-        "LULEM::LU(...): processing %d-th row. Length %d: %d.\n",
-        k, length(convert(M,list)), length(LEM:-VeilList(V))
+        "LULEM::LU(...): processing %d-th row, cost = %d, veilings = %d.\n",
+        k, LULEM:-Cost(M), nops(LEM:-VeilList(V))
       );
     end if;
 
-    pivot      := LULEM:-Pivoting( k, M, V, r, c );
+    pivot      := LULEM:-Pivoting(k, M, V, r, c);
     pivot_list := [op(pivot_list), pivot["value"]];
 
     if pivot["is_zero"] then
