@@ -17,6 +17,7 @@ QR := proc(
 
   local m, n, Q, R, DG, k, j, a, b, z1, z2, r, Rk, Rj, apply_veil;
 
+  # Clear the veiling list
   LEM:-VeilForget(V);
 
   # Check if to veil or not
@@ -40,8 +41,8 @@ QR := proc(
   for k from 1 to m-1 do
     if LULEM:-Verbose then
       printf(
-        "LULEM::QR(...): processing %d-th column, length = %d.\n",
-        k, length(LEM:-VeilList(V))
+        "LULEM::QR(...): processing %d-th row, cost = %d, veilings = %d.\n",
+        k, LULEM:-Cost(R), length(LEM:-VeilList(V))
       );
     end if;
     for j from k+1 to n do
@@ -50,8 +51,8 @@ QR := proc(
       if not b = 0 then
         z1 := DG[k];
         z2 := DG[j];
-        if a = 0 then
-          # simple case do a swap
+        if (a = 0) then
+          # Simple case: swap
           Q          := [op(Q), [k, j, 0, 0, 0, 0, 0]];
           Rk         := R[k, k..-1];
           Rj         := R[j, k..-1];
@@ -76,7 +77,7 @@ QR := proc(
         end if;
       end if;
     end do;
-    if R[k,k] = 0 then
+    if (R[k,k] = 0) then
       error "R[%a,%a] = 0 detected", k, k;
     end if;
   end do;
@@ -91,7 +92,10 @@ QR := proc(
     "Q_cost" = LULEM:-Cost(Q),
     "D_cost" = LULEM:-Cost(DG),
     "R_cost" = LULEM:-Cost(R),
-    "V_cost" = LULEM:-Cost(LEM:-VeilList(V))
+    "V_cost" = LULEM:-Cost(LEM:-VeilList(V)),
+    "Q_nnz"  = nops(op(2, Q)),
+    "D_nnz"  = nops(op(2, DG)),
+    "A_nnz"  = nops(op(2, A))
   ]);
 end proc: # QR
 
@@ -144,7 +148,7 @@ QRsolve := proc(
   x[n] := apply_veil(x[n] / R[n, n]);
   for i from n-1 to 1 by -1 do
     if LULEM:-Verbose then
-      printf("LULEM:-QRsolve(...): backward substitution of %d-th row.\n", i);
+      printf("LULEM::QRsolve(...): backward substitution of %d-th row.\n", i);
     end if;
     s    := apply_veil(x[i] - add(R[i, i+1..n] *~ x[i+1..n]));
     x[i] := apply_veil(s / R[i, i]);

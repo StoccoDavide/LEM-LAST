@@ -13,7 +13,7 @@ Pivoting := proc(
   V::{symbol},
   r::{Vector(nonnegint)},
   c::{Vector(nonnegint)},
-  $)::table;
+  $)::{table};
 
   description "Compute the LU decomposition pivots vectors provided the step "
     "<k>, the temporary LU (NAG) matrix <M>, the veiling symbol <V>, the rows "
@@ -63,7 +63,7 @@ Pivoting := proc(
       catch:
         printf("LULEM::Pivoting(...): Mij division by 0 or other exception.\n");
         if LULEM:-Verbose then
-          print(eval(Mij));
+          print(Mij["value"]);
         end if;
         Mij["is_zero"] := true;
       end try;
@@ -143,8 +143,8 @@ end proc: # SetVeilingStrategy
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_Row := proc(
-  cur::table,
-  val::table,
+  cur::{table},
+  val::{table},
   $)::{boolean};
 
   description "Compute the pivoting strategy 1: given the current pivot <cur> "
@@ -170,8 +170,8 @@ end proc: # PivotingStrategy_Row
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_Col := proc(
-  cur::table,
-  val::table,
+  cur::{table},
+  val::{table},
   $)::{boolean};
 
   description "Compute the pivoting strategy 1: given the current pivot <cur> "
@@ -198,8 +198,8 @@ end proc: # PivotingStrategy_Col
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_Sum := proc(
-  cur::table,
-  val::table,
+  cur::{table},
+  val::{table},
   $)::{boolean};
 
   description "Compute the pivoting strategy 1: given the current pivot <cur> "
@@ -230,8 +230,8 @@ end proc: # PivotingStrategy_Sum
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_Prod := proc(
-  cur::table,
-  val::table,
+  cur::{table},
+  val::{table},
   $)::{boolean};
 
   description "Compute the pivoting strategy 2: given the current pivot <cur> "
@@ -262,8 +262,8 @@ end proc: # PivotingStrategy_Prod
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_Min := proc(
-  cur::table,
-  val::table,
+  cur::{table},
+  val::{table},
   $)::{boolean};
 
   description "Compute the pivoting strategy 3: given the current pivot <cur> "
@@ -294,8 +294,8 @@ end proc: # PivotingStrategy_Min
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotingStrategy_Val := proc(
-  cur::table,
-  val::table,
+  cur::{table},
+  val::{table},
   $)::{boolean};
 
   description "Compute the pivoting strategy 4: given the current pivot <cur> "

@@ -56,8 +56,8 @@ LU := proc(
 
     if LULEM:-Verbose then
       printf(
-        "LULEM::LU(...): M[%d,%d] = %a, cost = %d, degree_r = %d, degree_c = %d.\n",
-        k, k, pivot["value"], pivot["cost"], pivot["degree_r"], pivot["degree_c"]
+        "LULEM::LU(...): M[%d,%d], cost = %d, degree_r = %d, degree_c = %d.\n",
+        k, k, pivot["cost"], pivot["degree_r"], pivot["degree_c"]
       );
     end if;
 
@@ -85,9 +85,9 @@ LU := proc(
     "L_cost"   = LULEM:-Cost(L),
     "U_cost"   = LULEM:-Cost(U),
     "V_cost"   = LULEM:-Cost(LEM:-VeilList(V)),
-    "L_nnz"    = nops(op(2,L)),
-    "U_nnz"    = nops(op(2,U)),
-    "A_nnz"    = nops(op(2,A))
+    "L_nnz"    = nops(op(2, L)),
+    "U_nnz"    = nops(op(2, U)),
+    "A_nnz"    = nops(op(2, A))
   ]);
 end proc: # LU
 

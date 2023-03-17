@@ -59,8 +59,8 @@ FFLU := proc(
 
     if LULEM:-Verbose then
       printf(
-        "LULEM::FFLU(...): M[%d,%d] = %a, cost = %d, degree_r = %d, degree_c = %d.\n",
-        k, k, pivot["value"], pivot["cost"], pivot["degree_r"], pivot["degree_c"]
+        "LULEM::FFLU(...): M[%d,%d], cost = %d, degree_r = %d, degree_c = %d.\n",
+        k, k, pivot["cost"], pivot["degree_r"], pivot["degree_c"]
       );
     end if;
 
@@ -87,8 +87,8 @@ FFLU := proc(
     "M_cost" =  LULEM:-Cost(M),
     "S_cost" =  LULEM:-Cost(SS),
     "V_cost" =  LULEM:-Cost(LEM:-VeilList(V)),
-    "M_nnz"  = nops(op(2,M)),
-    "A_nnz"    = nops(op(2,A))
+    "M_nnz"  = nops(op(2, M)),
+    "A_nnz"  = nops(op(2, A))
   ]);
 end proc: # FFLU
 
@@ -112,12 +112,12 @@ FF2LU := proc(
   L_list := [];
   D_list := [];
 
-  #   +             + +         +      +            +      +             + +            +
-  #   |  1          | | 1       |      | 1          |      | 1           | | 1          |
-  #   | -x  1       | |   q     |  =>  | -x q       |  =>  |   1/q       | | x  1       |
-  #   | -x     1    | |     q   |      | -x    q    |      |      1/q    | | x     1    |
-  #   | -x        1 | |       q |      | -x       q |      |         1/q | | x        1 |
-  #   +             + +         +      +            +      +             + +            +
+  # +             + +         +      +            +      +             + +            +
+  # |  1          | | 1       |      | 1          |      | 1           | | 1          |
+  # | -x  1       | |   q     |  =>  | -x q       |  =>  |   1/q       | | x  1       |
+  # | -x     1    | |     q   |      | -x    q    |      |      1/q    | | x     1    |
+  # | -x        1 | |       q |      | -x       q |      |         1/q | | x        1 |
+  # +             + +         +      +            +      +             + +            +
 
   for k from 1 to rk do
     L            := Matrix(m, m, shape = triangular[lower, unit]);

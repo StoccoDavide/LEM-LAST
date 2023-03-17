@@ -2,9 +2,9 @@
 <Worksheet>
 <Version major="2022" minor="2"/>
 <Label-Scheme value="2" prefix=""/>
-<View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
+<View-Properties presentation="false" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="960" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="960" rtablesize="200" useclientjvm="true" format="worksheet" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -97,224 +97,303 @@
     <Task-category name="&lt;default&gt;"/>
 </Task-table>
 <Task/>
-<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Build the Library</Text-field></Title>
-<Group hide-input="false" labelreference="L256747" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
+<Group hide-input="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:
+interface(rtablesize = 200);</Text-field>
 </Input>
 </Group>
-<Group labelreference="L256765" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">ds := kernelopts('dirsep'):</Text-field>
-</Input>
-</Group><Presentation-Block>
-<Group view="code" hide-input="false" labelreference="L256770" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">MODULE_NAME := &quot;LULEM&quot;:</Text-field>
+<Group hide-input="false" labelreference="L202" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LULEM:-SetVerbosity(false);</Text-field>
 </Input>
 </Group>
-<Group view="code" labelreference="L256772" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">SOURCE_DIR  := cat(currentdir(), ds, &quot;lib&quot;):</Text-field>
+<Group hide-input="false" labelreference="L196" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">read(&quot;LinearSystems.mpl&quot;):</Text-field>
 </Input>
 </Group>
-<Group view="code" hide-input="false" labelreference="L256771" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">BINARY_DIR  := cat(currentdir(), ds, &quot;installer&quot;, ds, &quot;bin&quot;):</Text-field>
+<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Settings</Text-field></Title>
+<Group labelreference="L1019" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LULEM:-SetVerbosity(false);</Text-field>
 </Input>
 </Group>
-<Group view="code" hide-input="false" labelreference="L256769" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LIBRARY_MLA := cat(BINARY_DIR, ds, MODULE_NAME, &quot;.mla&quot;):
-</Text-field>
-</Input>
-</Group></Presentation-Block>
-<Group labelreference="L256768" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check bin directory</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if not FileTools[Exists](BINARY_DIR) then
-  FileTools[MakeDirectory](BINARY_DIR);
-end if;
-</Text-field>
+<Group labelreference="L1020" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LULEM:-SetTimeLimit(2.0);</Text-field>
 </Input>
 </Group>
-<Group labelreference="L256773" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check MLA file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](LIBRARY_MLA) then
-  FileTools[Remove](LIBRARY_MLA);
-end if;
-</Text-field>
+<Group labelreference="L1021" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#LULEM:-SetVeilingStrategyCost(15);</Text-field>
 </Input>
 </Group>
-<Group labelreference="L256777" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Library generation procedure</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN := proc( MODULE_NAME::{string} )
-
-  local bin_path, src_path;
-
-  bin_path := cat(BINARY_DIR, ds, MODULE_NAME, &quot;.mla&quot;);
-  src_path := cat(SOURCE_DIR, ds, MODULE_NAME, &quot;.mpl&quot;);
-
-  if FileTools[Exists](src_path) then
-    if not FileTools[Exists](BINARY_DIR) then
-      FileTools[MakeDirectory](BINARY_DIR);
-    end if;
-    if FileTools[Exists](bin_path) then
-      FileTools[Remove](bin_path):
-    end if;
-    read(src_path);
-    march('create', bin_path );
-    savelib(convert(MODULE_NAME, symbol), bin_path);
-  else
-<Font encoding="UTF-8">    error &quot;Missing file %1.\134n&quot;, </Font>src_path;
-  end if;
-
-end proc:
-</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256760" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);
-</Text-field>
-</Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023
-Current version: D. Stocco, M. Larcher, E. Bertolazzi.
-Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
-</Text-field>
-</Output>
-</Group>
-<Group hide-input="false" labelreference="L256774" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create sources path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">file := cat(interface(worksheetdir), ds, &quot;installer&quot;, ds, &quot;bin&quot;):
-</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256788" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">dest := cat(kernelopts(mapledir), ds, &quot;toolbox&quot;, ds, MODULE_NAME, ds, &quot;lib&quot;, ds):
-</Text-field>
-</Input>
-</Group>
-<Group labelreference="L256799" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Procedure for deep directory removal</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir := proc( dirpath::{string}, $ )
-
-  local d, dd, ds;
-
-  ds := kernelopts('dirsep');
-  if FileTools[Exists](dirpath) and FileTools[IsDirectory](dirpath) then
-    for d in FileTools[ListDirectory](dirpath, 'all') do
-      if evalb((d &lt;&gt; &quot;.&quot;) and (d &lt;&gt; &quot;..&quot;)) then
-        dd := cat(dirpath, ds, d);
-        if FileTools[Exists](dd) then
-          if FileTools[IsDirectory](dd) then
-            RmDir(dd);
-            # FileTools[RemoveDirectory](dd, forceremove = true);
-          else
-           FileTools[Remove](dd);
-          end if;
-        end if;
-      end if;
-    end do;
-    FileTools[RemoveDirectory](dirpath, forceremove = true);
-  end if;
-  return;
-
-end proc:
-</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256787" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir(dest);
-FileTools[MakeDirectory](dest, recurse = true);
-</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256785" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Copy the binaries in the toolbox folder</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">n := 1 + length(file):</Text-field>
-</Input>
-</Group>
-<Group hide-input="false" labelreference="L256784" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">for r in FileTools[Walk](file, 'topdown', 'followlinks') do
-  limb := cat(dest, ds, r[dir][n..], ds);
-  for d in r[subdirs] do
-    ((d) -&gt; `if`(FileTools[Exists](d), 0, FileTools[MakeDirectory](d)))(cat(limb, d));
-  end do;
-  seq(FileTools[Copy](cat(r[dir], ds, f), cat(limb, f)), f = r[files]);
-end do:</Text-field>
+<Group labelreference="L1045" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LULEM:-SetPivotStrategy(&quot;Sum&quot;);</Text-field>
 </Input>
 </Group>
 </Section>
-<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Test the Library</Text-field></Title>
-<Group hide-input="false" labelreference="L256750" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
+<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Test 24</Text-field></Title>
+<Group hide-input="false" labelreference="L220" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">st := time():
+res := LULEM:-FFLU(A24, VQ):
+time() - st;</Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L256745" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LULEM);</Text-field>
+<Group hide-input="false" labelreference="L219" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;rank&quot;];</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LULEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023
-Current version: D. Stocco, M. Larcher, E. Bertolazzi.
-Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
-</Text-field>
-</Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZELUkjbWlHRiQ2JVExRGlzYWJsZVZlcmJvc2l0eUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEwRW5hYmxlVmVyYm9zaXR5RidGMkY1RjgtRi82JVEmRkYyTFVGJ0YyRjVGOC1GLzYlUSVGRkxVRidGMkY1RjgtRi82JVErR2V0RGVncmVlc0YnRjJGNUY4LUYvNiVRI0xVRidGMkY1RjgtRi82JVE0UGVybXV0YXRpb25NYXRyaWNlc0YnRjJGNUY4LUYvNiVRI1FSRidGMkY1RjgtRi82JVEkUVIyRidGMkY1RjgtRi82JVExU2V0UGl2b3RTdHJhdGVneUYnRjJGNUY4LUYvNiVRLVNldFRpbWVMaW1pdEYnRjJGNUY4LUYvNiVRN1NldFZlaWxpbmdTdHJhdGVneUNvc3RGJ0YyRjVGOC1GLzYlUS1TZXRWZXJib3NpdHlGJ0YyRjVGOC1GLzYlUTJTb2x2ZUxpbmVhclN5c3RlbUYnRjJGNUY4LUYvNiVRJFNweUYnRjJGNUY4LUYvNiVRMFZlaWxpbmdTdHJhdGVneUYnRjJGNS8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdGQEY8RjwvJSVvcGVuR1EnJmxzcWI7RicvJSZjbG9zZUdRJyZyc3FiO0Yn">NzJJMURpc2FibGVWZXJib3NpdHlHNiJJMEVuYWJsZVZlcmJvc2l0eUdGJEkmRkYyTFVHRiRJJUZGTFVHRiRJK0dldERlZ3JlZXNHRiRJI0xVR0YkSTRQZXJtdXRhdGlvbk1hdHJpY2VzR0YkSSNRUkdGJEkkUVIyR0YkSTFTZXRQaXZvdFN0cmF0ZWd5R0YkSS1TZXRUaW1lTGltaXRHRiRJN1NldFZlaWxpbmdTdHJhdGVneUNvc3RHRiRJLVNldFZlcmJvc2l0eUdGJEkyU29sdmVMaW5lYXJTeXN0ZW1HRiRJJFNweUdGJEkwVmVpbGluZ1N0cmF0ZWd5R0Yk</Equation></Text-field>
-</Output>
 </Group>
-<Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LULEM):</Text-field>
+<Group hide-input="false" labelreference="L244" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-VeilList(VQ)</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">
-# LU decomposition with LEM (Large Expressions Management).
-module LULEM:
-
-    # Set the verbosity of the package to &lt;x&gt;.
-    SetVerbosity( x::{boolean}, $ ) :: {nothing}
-
-    # Enable the verbosity of the package.
-    EnableVerbosity( $ )
-
-    # Disable the verbosity of the package.
-    DisableVerbosity( $ )
-
-    # Set the time limit of the package to &lt;x&gt;.
-    SetTimeLimit( x::{numeric}, $ ) :: {nothing}
-
-    # Compute the LU decomposition premutation matrices provided the rows pivot 
-    # vector &lt;r&gt; and the columns pivot vector &lt;c&gt;.
-    PermutationMatrices( r::{Vector(nonnegint)}, c::{Vector(nonnegint)}, $ )
-
-    # Get the degree of the matrix &lt;A&gt;.
-    GetDegrees( A::{Matrix}, $ ) :: {Matrix(nonnegint)}
-
-    # Plot of non-zero values of the matrix &lt;A&gt;.
-    Spy( A::{Matrix}, $ ) :: {anything}
-
-    # Solve the factorized linear system &lt;T&gt; * x = b using the method specified 
-    # in &lt;T&gt;['method'] field. The input &lt;V&gt; is the veiling strategy to be used.
-    SolveLinearSystem( T::{table}, b::{Vector}, V::{symbol, function}, $ )
-
-    # Comupte the veiling strategy value for the value &lt;x&gt;.
-    VeilingStrategy( x::{algebraic}, $ ) :: {boolean}
-
-    # Set the veiling strategy parameter to &lt;c&gt;.
-    SetVeilingStrategyCost( c::{nonnegint}, $ ) :: {nothing}
-
-    SetPivotStrategy( str::{string}, $ ) :: {nothing}
-
-    # Compute the LU decomposition of a square matrix &lt;A&gt; using the veiling 
-    # strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
-    LU( A::{Matrix}, V::{symbol}, $ ) :: {table}
-
-    # Compute the Givens QR decomposition of a square matrix &lt;A&gt; using the 
-    # veiling strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
-    QR( A::{Matrix}, V::{symbol}, $ ) :: {table}
-
-    # Compute the Givens QR decomposition of a square matrix &lt;A&gt; using the 
-    # veiling strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
-    QR2( A::{Matrix}, V::{symbol}, $ ) :: {table}
-
-    # Compute the Fracton-Free LU decomposition of a square matrix &lt;A&gt; using 
-    # the veiling strategy &lt;VeilingStrategy&gt; and the veiling symbol &lt;V&gt;.
-    FFLU( A::{Matrix}, V::{symbol}, $ ) :: {table}
-
-    # Compute the LU decomposition of a square matrix from its Fracton-Free LU 
-    # decomposition &lt;T&gt;.
-    FF2LU( T::{table}, $ )
-
-</Text-field>
-</Output>
 </Group>
-</Section><Presentation-Block>
-<Group view="presentation" inline-output="false" labelreference="L256800" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbW9HRiQ2LVEifkYnLyUsbWF0aHZhcmlhbnRHUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGNC8lKXN0cmV0Y2h5R0Y0LyUqc3ltbWV0cmljR0Y0LyUobGFyZ2VvcEdGNC8lLm1vdmFibGVsaW1pdHNHRjQvJSdhY2NlbnRHRjQvJSdsc3BhY2VHUSYwLjBlbUYnLyUncnNwYWNlR0ZDLyUrZXhlY3V0YWJsZUdGNEYv">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbW9HRiQ2LVEifkYnLyUsbWF0aHZhcmlhbnRHUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGNC8lKXN0cmV0Y2h5R0Y0LyUqc3ltbWV0cmljR0Y0LyUobGFyZ2VvcEdGNC8lLm1vdmFibGVsaW1pdHNHRjQvJSdhY2NlbnRHRjQvJSdsc3BhY2VHUSYwLjBlbUYnLyUncnNwYWNlR0ZDLyUrZXhlY3V0YWJsZUdGNEYv</Equation></Text-field>
+<Group hide-input="false" labelreference="L221" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;M_cost&quot;];
+res[&quot;S_cost&quot;];
+res[&quot;V_cost&quot;];
+res[&quot;M_cost&quot;]+res[&quot;S_cost&quot;]+res[&quot;V_cost&quot;];</Text-field>
 </Input>
-</Group></Presentation-Block>
+</Group>
+<Group hide-input="false" labelreference="L926" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;M_nnz&quot;];
+res[&quot;A_nnz&quot;];</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L256" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LinearAlgebra[Transpose](res[&quot;r&quot;]);
+LinearAlgebra[Transpose](res[&quot;c&quot;]);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L222" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">P, Q := LULEM:-PermutationMatrices(res[&quot;r&quot;], res[&quot;c&quot;]):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L279" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#st := time():
+#simplify(LEM:-UnVeil[VQ](res[&quot;L&quot;].res[&quot;U&quot;])-P.A24.Q);
+#time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L223" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#st := time():
+#simplify(LEM:-VeilSubs(res[&quot;L&quot;].res[&quot;U&quot;])-P.A24.Q);
+#time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L226" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">X := Vector(24,k-&gt;k):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L225" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">B := A24.X:</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L224" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">sol := LULEM:-SolveLinearSystem(res, B, VQ);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L218" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM:-VeilSubs(A24.sol - B));</Text-field>
+</Input>
+</Group>
+<Group labelreference="L383" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">plots:-display(&lt;LULEM:-Spy(A24)|LULEM:-Spy(res[&quot;M&quot;])&gt;, scaling = constrained);</Text-field>
+</Input>
+</Group>
+</Section>
+<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Test 44</Text-field></Title>
+<Group hide-input="false" labelreference="L251" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">st := time():
+res := LULEM:-FFLU(A44, VQ):
+time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L238" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;rank&quot;];</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L232" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;L_cost&quot;];
+res[&quot;M_cost&quot;];
+res[&quot;V_cost&quot;];
+res[&quot;M_cost&quot;]+res[&quot;S_cost&quot;]+res[&quot;V_cost&quot;];</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L846" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;M_nnz&quot;];
+res[&quot;A_nnz&quot;];</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L257" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LinearAlgebra[Transpose](res[&quot;r&quot;]);
+LinearAlgebra[Transpose](res[&quot;c&quot;]);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L231" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">P, Q  := LULEM:-PermutationMatrices(res[&quot;r&quot;], res[&quot;c&quot;]):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L280" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#st := time():
+#simplify(LEM:-VeilSubs(res[&quot;L&quot;].res[&quot;U&quot;])-P.A44.Q);
+#time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L281" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#st := time():
+#simplify(LEM:-UnVeil[VQ](res[&quot;L&quot;].res[&quot;U&quot;])-P.A44.Q);
+#time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L235" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">X := Vector(44,k-&gt;k):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L236" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">B := A44.X:</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L237" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">sol := LULEM:-SolveLinearSystem(res, B, VQ):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L255" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LinearAlgebra[Transpose](sol);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L382" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">plots:-display(&lt;LULEM:-Spy(A44)|LULEM:-Spy(res[&quot;M&quot;])&gt;, scaling = constrained);</Text-field>
+</Input>
+</Group>
+</Section>
+<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Test 66</Text-field></Title>
+<Group hide-input="false" labelreference="L927" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">st := time():
+res := LULEM:-FFLU(A66, VQ):
+time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L935" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;rank&quot;];</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L932" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;L_cost&quot;];
+res[&quot;M_cost&quot;];
+res[&quot;V_cost&quot;];
+res[&quot;M_cost&quot;]+res[&quot;S_cost&quot;]+res[&quot;V_cost&quot;];</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L941" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;M_nnz&quot;];
+res[&quot;A_nnz&quot;];</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L938" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#LinearAlgebra[Transpose](res[&quot;r&quot;]);
+#LinearAlgebra[Transpose](res[&quot;c&quot;]);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L934" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#P, Q  := LULEM:-PermutationMatrices(res[&quot;r&quot;], res[&quot;c&quot;]):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L943" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#st := time():
+#simplify(LEM:-VeilSubs(res[&quot;L&quot;].res[&quot;U&quot;])-P.A66.Q);
+#time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L942" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#st := time():
+#simplify(LEM:-UnVeil[VQ](res[&quot;L&quot;].res[&quot;U&quot;])-P.A66.Q);
+#time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L939" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#X := Vector(66,k-&gt;k):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L937" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#B := A66.X:</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L936" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#sol := LULEM:-SolveLinearSystem(res, B, VQ):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L931" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#LinearAlgebra[Transpose](sol);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L929" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">plots:-display(&lt;LULEM:-Spy(A66)|LULEM:-Spy(res[&quot;M&quot;])&gt;, scaling = constrained);</Text-field>
+</Input>
+</Group>
+</Section>
+<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Test 116</Text-field></Title>
+<Group hide-input="false" labelreference="L958" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">st := time():
+res := LULEM:-FFLU(A116, VQ):
+time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L951" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;rank&quot;];</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L954" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;L_cost&quot;];
+res[&quot;M_cost&quot;];
+res[&quot;V_cost&quot;];
+res[&quot;M_cost&quot;]+res[&quot;S_cost&quot;]+res[&quot;V_cost&quot;];</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L949" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">res[&quot;M_nnz&quot;];
+res[&quot;A_nnz&quot;];</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L959" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#LinearAlgebra[Transpose](res[&quot;r&quot;]);
+#LinearAlgebra[Transpose](res[&quot;c&quot;]);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L952" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#P, Q  := LULEM:-PermutationMatrices(res[&quot;r&quot;], res[&quot;c&quot;]):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L955" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#st := time():
+#simplify(LEM:-VeilSubs(res[&quot;L&quot;].res[&quot;U&quot;])-P.A116.Q);
+#time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L946" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#st := time():
+#simplify(LEM:-UnVeil[VQ](res[&quot;L&quot;].res[&quot;U&quot;])-P.A116.Q);
+#time() - st;</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L957" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#X := Vector(116,k-&gt;k):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L960" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#B := A116.X:</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L961" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#sol := LULEM:-SolveLinearSystem(res, B, VQ):</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L947" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#LinearAlgebra[Transpose](sol);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L962" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">plots:-display(&lt;LULEM:-Spy(A116)|LULEM:-Spy(res[&quot;M&quot;])&gt;, scaling = constrained);</Text-field>
+</Input>
+</Group>
+</Section>
+<Group labelreference="L944" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
 </Worksheet>
