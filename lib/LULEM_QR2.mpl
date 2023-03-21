@@ -17,7 +17,7 @@ QR2 := proc(
   apply_veil := (z) -> `if`(LULEM:-VeilingStrategy(z), LEM:-Veil[V](z), z);
 
   # Extract the dimensions of the matrix A
-  m, n := LinearAlgebra[Dimensions](A):
+  m, n := LinearAlgebra:-Dimensions(A):
 
   # Check if the matrix A valid
   assert(
@@ -128,7 +128,7 @@ QR2solve := proc(
   R  := T["R"];
 
   # Extract the dimensions of the matrix R
-  m, n := LinearAlgebra[Dimensions](R):
+  m, n := LinearAlgebra:-Dimensions(R):
   x    := xb;
 
   for i from 1 to nops(Q) do

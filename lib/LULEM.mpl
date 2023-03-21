@@ -52,7 +52,8 @@ LULEM := module()
           SolveLinearSystem,
           VeilingStrategy,
           SetVeilingStrategyCost,
-          SetPivotStrategy,
+          SetPivotingStrategy,
+          SetMinDegreeStrategy,
           LU,
           QR,
           QR2,
@@ -72,13 +73,20 @@ LULEM := module()
           Verbose,
           TimeLimit,
           VeilingStrategy_par,
-          PivotStrategy_type,
-          PivotingStrategy_Row,
-          PivotingStrategy_Col,
-          PivotingStrategy_Sum,
-          PivotingStrategy_Prod,
-          PivotingStrategy_Min,
-          PivotingStrategy_Val;
+          MinDegreeStrategy_fun,
+          MinDegreeStrategy_none,
+          MinDegreeStrategy_row,
+          MinDegreeStrategy_col,
+          MinDegreeStrategy_sum,
+          MinDegreeStrategy_prod,
+          MinDegreeStrategy_min,
+          PivotingStrategy_fun,
+          PivotingStrategy_val,
+          PivotingStrategy_row,
+          PivotingStrategy_col,
+          PivotingStrategy_sum,
+          PivotingStrategy_prod,
+          PivotingStrategy_min;
 
   option  package,
           load   = ModuleLoad,
@@ -111,7 +119,7 @@ LULEM := module()
 
     lib_base_path := null;
     for i in [libname] do
-      if (StringTools[Search]("LULEM", i) <> 0) then
+      if (StringTools:-Search("LULEM", i) <> 0) then
         lib_base_path := i;
       end if;
     end do;
@@ -136,10 +144,11 @@ LULEM := module()
 
     description "Initialize 'LULEM' module internal variables.";
 
-    LULEM:-Verbose             := false;
-    LULEM:-TimeLimit           := 1;
-    LULEM:-VeilingStrategy_par := 15;
-    LULEM:-PivotStrategy_type  := LULEM:-PivotingStrategy_Sum;
+    LULEM:-Verbose               := false;
+    LULEM:-TimeLimit             := 1;
+    LULEM:-VeilingStrategy_par   := 15;
+    LULEM:-MinDegreeStrategy_fun := LULEM:-MinDegreeStrategy_sum;
+    LULEM:-PivotingStrategy_fun  := LULEM:-PivotingStrategy_val;
     return NULL;
   end proc: # InitLULEM
 
@@ -149,11 +158,11 @@ LULEM := module()
     A::{Matrix},
     $)::{Matrix(nonnegint)};
 
-    description "Get the degree of the matrix <A>.";
+    description "Get the degree matrices of the matrix <A>.";
 
     local i, j, k, m, n, r, c, ro, co;
 
-    m, n := LinearAlgebra[Dimensions](A);
+    m, n := LinearAlgebra:-Dimensions(A);
     r  := Vector[column](m);
     c  := Vector[row](n);
     ro := Vector[column](m, k -> 1);
@@ -192,8 +201,8 @@ LULEM := module()
 
     local m, n, i, P, Q;
 
-    m := LinearAlgebra[RowDimension](r):
-    n := LinearAlgebra[RowDimension](c):
+    m := LinearAlgebra:-RowDimension(r):
+    n := LinearAlgebra:-RowDimension(c):
     P := Matrix(m, m);
     Q := Matrix(n, n);
     for i from 1 to m by 1 do
@@ -265,8 +274,8 @@ LULEM := module()
 
     local tmp;
 
-    if not( type(x,'algebraic') or type(x,'list') ) then
-      tmp := convert(x,'list');
+    if not(type(x, algebraic) or type(x, list)) then
+      tmp := convert(x, list);
     else
       tmp := x;
     end if;
@@ -278,7 +287,7 @@ LULEM := module()
       multiplications = 2,
       divisions       = 3,
       functions       = 2,
-      codegen[cost](tmp)
+      codegen:-cost(tmp)
     );
   end proc: # PivotCost
 

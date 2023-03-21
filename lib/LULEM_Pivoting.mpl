@@ -15,11 +15,13 @@ Pivoting := proc(
   c::{Vector(nonnegint)},
   $)::{table};
 
-  description "Compute the LU decomposition pivots vectors provided the step "
-    "<k>, the temporary LU (NAG) matrix <M>, the veiling symbol <V>, the rows "
-    "the pivot vector <r>, the columns the pivot vector <c>.";
+  description "Compute the LU decomposition pivots vectors with minum degree "
+    "provided the step <k>, the temporary LU (NAG) matrix <M>, the veiling "
+    "symbol <V>, the rows the pivot vector <r>, the columns the pivot vector "
+    "<c>.";
 
-  local uMij, M_degree_R, M_degree_C, m, n, i, j, apply_unveil, z, Mij, pivot;
+  local uMij, M_degree_R, M_degree_C, perm_R, perm_C, m, n, i, j, apply_unveil,
+    z, Mij, pivot;
 
   # Extract matrix dimensions
   m, n := LinearAlgebra:-Dimensions(M):
@@ -28,17 +30,20 @@ Pivoting := proc(
   apply_unveil := (z) -> LEM:-UnVeil[V](z);
 
   # Calculate the degree
-  M_degree_R := Matrix(m,n);
-  M_degree_C := Matrix(m,n);
+  M_degree_R := Matrix(m, n);
+  M_degree_C := Matrix(m, n);
   M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] := LULEM:-GetDegrees(M[k..m, k..n]);
+  perm_R := (k-1) +~ sort(M_degree_R[k..m, k], `<`, output = 'permutation');
+  perm_C := (k-1) +~ sort(M_degree_C[k, k..n], `<`, output = 'permutation');
 
   pivot := table([]);
   Mij   := table([]);
 
   # Iterate over the columns and rows
   pivot["is_zero"] := true;
-  for j from k to n do
-    for i from k to m do
+  for j in perm_C do
+    for i in perm_R do
+
       # Look for a non-zero pivot
       Mij["value"]    := M[i, j];
       Mij["i"]        := i;
@@ -46,6 +51,13 @@ Pivoting := proc(
       Mij["degree_r"] := M_degree_R[i, j];
       Mij["degree_c"] := M_degree_C[i, j];
       Mij["cost"], Mij["numeric_value"] := LULEM:-PivotCost(Mij);
+
+      # Pre-check if the pivot is better than the previous one
+      if not pivot["is_zero"] and not LULEM:-MinDegreeStrategy_fun(pivot, Mij) then
+        break;
+      end if;
+
+      # Try to simplify the pivot expression
       try
         Mij["value"]   := Normalizer(Mij["value"]);
         Mij["is_zero"] := evalb(Mij["value"] = 0);
@@ -69,13 +81,13 @@ Pivoting := proc(
       end try;
 
       if Mij["is_zero"] then
-        M[i,j] := 0;
+        M[i, j] := 0;
       else
         # Found a non-zero pivot, check if it is better
         if pivot["is_zero"] then
           # First non-zero pivot found
           pivot := copy(Mij);
-        elif LULEM:-PivotStrategy_type(pivot, Mij) then
+        elif LULEM:-PivotingStrategy_fun(pivot, Mij) then
           # A better pivot is found
           pivot := copy(Mij);
         end if;
@@ -83,23 +95,24 @@ Pivoting := proc(
     end do;
   end do;
 
+  # Swap rows and columns
   if not pivot["is_zero"] then
     i := pivot["i"];
     j := pivot["j"];
     if (i <> k) then
-      (r[i], r[k])    := (r[k], r[i]);
-      M[[i,k], 1..-1] := M[[k,i], 1..-1];
+      (r[i], r[k])     := (r[k], r[i]);
+      M[[i, k], 1..-1] := M[[k, i], 1..-1];
     end if;
     if (j <> k) then
-      (c[j], c[k])    := (c[k], c[j]);
-      M[1..-1, [j,k]] := M[1..-1 ,[k,j]];
+      (c[j], c[k])     := (c[k], c[j]);
+      M[1..-1, [j, k]] := M[1..-1, [k, j]];
     end if;
   end if;
 
   return pivot;
 end proc: # Pivoting
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PivotCost := proc(
   x::{algebraic},
@@ -118,188 +131,193 @@ PivotCost := proc(
 end proc: # PivotCost
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#   __  __ _       ____
+#  |  \/  (_)_ __ |  _ \  ___  __ _ _ __ ___  ___
+#  | |\/| | | '_ \| | | |/ _ \/ _` | '__/ _ \/ _ \
+#  | |  | | | | | | |_| |  __/ (_| | | |  __/  __/
+#  |_|  |_|_|_| |_|____/ \___|\__, |_|  \___|\___|
+#                             |___/
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-SetPivotStrategy := proc(
+SetMinDegreeStrategy := proc(
   str::{string},
   $)::{nothing};
-  if (str = "Row") then
-    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Row;
-  elif (str = "Col") then
-    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Col;
-  elif (str = "Sum") then
-    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Sum;
-  elif (str = "Prod") then
-    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Prod;
-  elif (str = "Min") then
-    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Min;
-  elif (str = "Val") then
-    LULEM:-PivotStrategy_type := LULEM:-PivotingStrategy_Val;
+  if (str = "none") then
+    LULEM:-MinDegreeStrategy_fun := LULEM:-MinDegreeStrategy_none;
+  elif (str = "row") then
+    LULEM:-MinDegreeStrategy_fun := LULEM:-MinDegreeStrategy_row;
+  elif (str = "col") then
+    LULEM:-MinDegreeStrategy_fun := LULEM:-MinDegreeStrategy_col;
+  elif (str = "sum") then
+    LULEM:-MinDegreeStrategy_fun := LULEM:-MinDegreeStrategy_sum;
+  elif (str = "prod") then
+    LULEM:-MinDegreeStrategy_fun := LULEM:-MinDegreeStrategy_prod;
+  elif (str = "min") then
+    LULEM:-MinDegreeStrategy_fun := LULEM:-MinDegreeStrategy_min;
+  else
+    error "unknown minimum degree strategy %s.\n", str;
+  end if;
+  return NULL;
+end proc: # SetMinDegreeStrategy
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+MinDegreeStrategy_none := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting precheck: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  return true;
+end proc: # MinDegreeStrategy_row
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+MinDegreeStrategy_row := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting precheck: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  if (val["degree_r"] > cur["degree_r"]) then
+    return false;
+  else
+    return true;
+  end if;
+end proc: # MinDegreeStrategy_row
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+MinDegreeStrategy_col := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting precheck: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  if (val["degree_c"] > cur["degree_c"]) then
+    return false;
+  else
+    return true;
+  end if;
+end proc: # MinDegreeStrategy_col
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+MinDegreeStrategy_sum := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting precheck: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  local degree_cur, degree_val;
+
+  degree_cur := cur["degree_c"] + cur["degree_r"];
+  degree_val := val["degree_c"] + val["degree_r"];
+
+  if (degree_val > degree_cur) then
+    return false;
+  else
+    return true;
+  end if;
+end proc: # MinDegreeStrategy_sum
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+MinDegreeStrategy_prod := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting precheck: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  local degree_cur, degree_val;
+
+  degree_cur := cur["degree_c"] * cur["degree_r"];
+  degree_val := val["degree_c"] * val["degree_r"];
+
+  if (degree_val > degree_cur) then
+    return false;
+  else
+    return true;
+  end if;
+end proc: # MinDegreeStrategy_prod
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+MinDegreeStrategy_min := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting precheck: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  local degree_cur, degree_val;
+
+  degree_cur := min(cur["degree_c"], cur["degree_r"]);
+  degree_val := min(val["degree_c"], val["degree_r"]);
+
+  if (degree_val > degree_cur) then
+    return false;
+  else
+    return true;
+  end if;
+end proc: # MinDegreeStrategy_min
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#   ____  _            _   _
+#  |  _ \(_)_   _____ | |_(_)_ __   __ _
+#  | |_) | \ \ / / _ \| __| | '_ \ / _` |
+#  |  __/| |\ V / (_) | |_| | | | | (_| |
+#  |_|   |_| \_/ \___/ \__|_|_| |_|\__, |
+#                                  |___/
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+SetPivotingStrategy := proc(
+  str::{string},
+  $)::{nothing};
+  if (str = "val") then
+    LULEM:-PivotingStrategy_fun := LULEM:-PivotingStrategy_val;
+  elif (str = "row") then
+    LULEM:-PivotingStrategy_fun := LULEM:-PivotingStrategy_row;
+  elif (str = "col") then
+    LULEM:-PivotingStrategy_fun := LULEM:-PivotingStrategy_col;
+  elif (str = "sum") then
+    LULEM:-PivotingStrategy_fun := LULEM:-PivotingStrategy_sum;
+  elif (str = "prod") then
+    LULEM:-PivotingStrategy_fun := LULEM:-PivotingStrategy_prod;
+  elif (str = "min") then
+    LULEM:-PivotingStrategy_fun := LULEM:-PivotingStrategy_min;
   else
     error "unknown pivoting strategy %s.\n", str;
   end if;
   return NULL;
-end proc: # SetVeilingStrategy
+end proc: # SetPivotingStrategy
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotingStrategy_Row := proc(
+PivotingStrategy_val := proc(
   cur::{table},
   val::{table},
   $)::{boolean};
 
-  description "Compute the pivoting strategy 1: given the current pivot <cur> "
-    "and the next pivot <new>, decide if to the new pivot is better than the "
-    "current  pivot or not.";
-
-  if (val["degree_r"] < cur["degree_r"]) then
-    return true;
-  elif (val["degree_r"] > cur["degree_r"]) then
-    return false;
-  elif (val["numeric_value"] < cur["numeric_value"]) then
-    return true;
-  elif (val["numeric_value"] > cur["numeric_value"]) then
-    return false;
-  elif (val["numeric_value"] = infinity) then
-    # All equal and symbolic
-    return evalb(val["cost"] < cur["cost"]);
-  end if;
-  # All equal and finite
-  return evalb(val["numeric_value"] > cur["numeric_value"]);
-end proc: # PivotingStrategy_Row
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-PivotingStrategy_Col := proc(
-  cur::{table},
-  val::{table},
-  $)::{boolean};
-
-  description "Compute the pivoting strategy 1: given the current pivot <cur> "
-    "and the next pivot <new>, decide if to the new pivot is better than the "
-    "current  pivot or not.";
-
-  if val["degree_c"] < cur["degree_c"] then
-    return true;
-  elif val["degree_c"] > cur["degree_c"] then
-    return false
-  elif val["numeric_value"] < cur["numeric_value"] then
-    return true;
-  elif val["numeric_value"] > cur["numeric_value"] then
-    return false;
-  elif val["numeric_value"] = infinity then
-    # All equal and symbolic
-    return val["cost"] < cur["cost"];
-  end if;
-  # All equal and finite
-  return val["numeric_value"] > cur["numeric_value"];
-
-end proc: # PivotingStrategy_Col
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-PivotingStrategy_Sum := proc(
-  cur::{table},
-  val::{table},
-  $)::{boolean};
-
-  description "Compute the pivoting strategy 1: given the current pivot <cur> "
-    "and the next pivot <new>, decide if to the new pivot is better than the "
-    "current  pivot or not.";
-
-  local dc, dv;
-
-  dc := cur["degree_c"] + cur["degree_r"];
-  dv := val["degree_c"] + val["degree_r"];
-
-  if (dv < dc) then
-    return true;
-  elif (dc > dv) then
-    return false
-  elif (val["numeric_value"] < cur["numeric_value"]) then
-    return true;
-  elif (val["numeric_value"] > cur["numeric_value"]) then
-    return false;
-  elif (val["numeric_value"] = infinity) then
-    # all equals and symbolic
-    return evalb(val["cost"] < cur["cost"]);
-  end if;
-  # all equals and finite
-  return evalb(val["numeric_value"] > cur["numeric_value"]);
-end proc: # PivotingStrategy_Sum
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-PivotingStrategy_Prod := proc(
-  cur::{table},
-  val::{table},
-  $)::{boolean};
-
-  description "Compute the pivoting strategy 2: given the current pivot <cur> "
-    "and the next pivot <new>, decide if to the new pivot is better than the "
-    "current  pivot or not.";
-
-  local dc, dv;
-
-  dc := cur["degree_c"] * cur["degree_r"];
-  dv := val["degree_c"] * val["degree_r"];
-
-  if (dv < dc) then
-    return true;
-  elif (dc > dv) then
-    return false
-  elif (val["numeric_value"] < cur["numeric_value"]) then
-    return true;
-  elif (val["numeric_value"] > cur["numeric_value"]) then
-    return false;
-  elif (val["numeric_value"] = infinity) then
-    # All equal and symbolic
-    return evalb(val["cost"] < cur["cost"]);
-  end if;
-  # All equal and finite
-  return evalb(val["numeric_value"] > cur["numeric_value"]);
-end proc: # PivotingStrategy_Prod
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-PivotingStrategy_Min := proc(
-  cur::{table},
-  val::{table},
-  $)::{boolean};
-
-  description "Compute the pivoting strategy 3: given the current pivot <cur> "
-    "and the next pivot <new>, decide if to the new pivot is better than the "
-    "current  pivot or not.";
-
-  local dc, dv;
-
-  dc := min(cur["degree_c"], cur["degree_r"]);
-  dv := min(val["degree_c"], val["degree_r"]);
-
-  if (dv < dc) then
-    return true;
-  elif (dc > dv) then
-    return false
-  elif (val["numeric_value"] < cur["numeric_value"]) then
-    return true;
-  elif (val["numeric_value"] > cur["numeric_value"]) then
-    return false;
-  elif (val["numeric_value"] = infinity) then
-    # all equals and symbolic
-    return evalb(val["cost"] < cur["cost"]);
-  end if;
-  # all equals and finite
-  return evalb(val["numeric_value"] > cur["numeric_value"]);
-end proc: # PivotingStrategy_Min
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-PivotingStrategy_Val := proc(
-  cur::{table},
-  val::{table},
-  $)::{boolean};
-
-  description "Compute the pivoting strategy 4: given the current pivot <cur> "
-    "and the next pivot <new>, decide if to the new pivot is better than the "
+  description "Compute the pivoting strategy: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
     "current  pivot or not.";
 
   if (val["numeric_value"] < cur["numeric_value"]) then
@@ -307,11 +325,125 @@ PivotingStrategy_Val := proc(
   elif (val["numeric_value"] > cur["numeric_value"]) then
     return false;
   elif (val["numeric_value"] = infinity) then
-    # All equal and symbolic
     return evalb(val["cost"] < cur["cost"]);
+  else
+    return evalb(val["numeric_value"] > cur["numeric_value"]);
   end if;
-  # All equal and finite
-  return evalb(val["numeric_value"] > cur["numeric_value"]);
-end proc: # PivotingStrategy_Val
+end proc: # PivotingStrategy_val
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_row := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  if (val["degree_r"] < cur["degree_r"]) then
+    return true;
+  elif (val["degree_r"] > cur["degree_r"]) then
+    return false;
+  else
+    return LULEM:-PivotingStrategy_val(cur, val);
+  end if;
+end proc: # PivotingStrategy_row
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_col := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  if val["degree_c"] < cur["degree_c"] then
+    return true;
+  elif val["degree_c"] > cur["degree_c"] then
+    return false;
+  else
+    return LULEM:-PivotingStrategy_val(cur, val);
+  end if;
+end proc: # PivotingStrategy_col
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_sum := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  local degree_cur, degree_val;
+
+  degree_cur := cur["degree_c"] + cur["degree_r"];
+  degree_val := val["degree_c"] + val["degree_r"];
+
+  if (degree_val < degree_cur) then
+    return true;
+  elif (degree_cur > degree_val) then
+    return false;
+  else
+    return LULEM:-PivotingStrategy_val(cur, val);
+  end if;
+end proc: # PivotingStrategy_sum
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_prod := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  local degree_cur, degree_val;
+
+  degree_cur := cur["degree_c"] * cur["degree_r"];
+  degree_val := val["degree_c"] * val["degree_r"];
+
+  if (degree_val < degree_cur) then
+    return true;
+  elif (degree_cur > degree_val) then
+    return false;
+  else
+    return LULEM:-PivotingStrategy_val(cur, val);
+  end if;
+end proc: # PivotingStrategy_prod
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PivotingStrategy_min := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
+
+  description "Compute the pivoting strategy: given the current pivot <cur> "
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current  pivot or not.";
+
+  local degree_cur, degree_val;
+
+  degree_cur := min(cur["degree_c"], cur["degree_r"]);
+  degree_val := min(val["degree_c"], val["degree_r"]);
+
+  if (degree_val < degree_cur) then
+    return true;
+  elif (degree_cur > degree_val) then
+    return false;
+  else
+    return LULEM:-PivotingStrategy_val(cur, val);
+  end if;
+end proc: # PivotingStrategy_min
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

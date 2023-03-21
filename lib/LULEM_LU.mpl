@@ -21,7 +21,7 @@ LU := proc(
   LEM:-VeilForget(V);
 
   # Get matrix dimensions
-  m, n := LinearAlgebra[Dimensions](A):
+  m, n := LinearAlgebra:-Dimensions(A):
 
   # Create pivot vector
   r := Vector(m, k -> k);
@@ -56,8 +56,8 @@ LU := proc(
 
     if LULEM:-Verbose then
       printf(
-        "LULEM::LU(...): M[%d,%d], cost = %d, degree_r = %d, degree_c = %d.\n",
-        k, k, pivot["cost"], pivot["degree_r"], pivot["degree_c"]
+        "LULEM::LU(...): M[%d,%d] = %a, cost = %d, degree_r = %d, degree_c = %d.\n",
+        k, k, pivot["value"], pivot["cost"], pivot["degree_r"], pivot["degree_c"]
       );
     end if;
 
@@ -113,8 +113,8 @@ LUsolve := proc(
   rnk := T["rank"];
 
   # Get linear system dimension
-  m, n := LinearAlgebra[Dimensions](L);
-  p, q := LinearAlgebra[Dimensions](U);
+  m, n := LinearAlgebra:-Dimensions(L);
+  p, q := LinearAlgebra:-Dimensions(U);
 
   # Check if the linear system is consistent
   assert(

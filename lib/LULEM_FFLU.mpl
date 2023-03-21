@@ -23,7 +23,7 @@ FFLU := proc(
   LEM:-VeilForget(V);
 
   # Get matrix dimensions
-  m, n := LinearAlgebra[Dimensions](A):
+  m, n := LinearAlgebra:-Dimensions(A):
 
   # Create pivot vector
   r := Vector(m, k -> k);
@@ -59,8 +59,8 @@ FFLU := proc(
 
     if LULEM:-Verbose then
       printf(
-        "LULEM::FFLU(...): M[%d,%d], cost = %d, degree_r = %d, degree_c = %d.\n",
-        k, k, pivot["cost"], pivot["degree_r"], pivot["degree_c"]
+        "LULEM::FFLU(...): M[%d,%d] = %a, cost = %d, degree_r = %d, degree_c = %d.\n",
+        k, k, pivot["value"], pivot["cost"], pivot["degree_r"], pivot["degree_c"]
       );
     end if;
 
@@ -71,7 +71,7 @@ FFLU := proc(
     # Scaled Shur complement
     tmp        := [k+1..-1];
     M[tmp, k]  := apply_veil~(Normalizer~(M[tmp, k]*bot));
-    M[tmp,tmp] := apply_veil~(Normalizer~( top*M[tmp,tmp] - M[tmp,k].M[k,tmp]));
+    M[tmp,tmp] := apply_veil~(Normalizer~(top*M[tmp,tmp] - M[tmp,k].M[k,tmp]));
   end do;
 
   # Return the FFLU decomposition
@@ -84,9 +84,9 @@ FFLU := proc(
     "c"      = c,
     "rank"   = rnk,
     "pivots" = pivot_list,
-    "M_cost" =  LULEM:-Cost(M),
-    "S_cost" =  LULEM:-Cost(SS),
-    "V_cost" =  LULEM:-Cost(LEM:-VeilList(V)),
+    "M_cost" = LULEM:-Cost(M),
+    "S_cost" = LULEM:-Cost(SS),
+    "V_cost" = LULEM:-Cost(LEM:-VeilList(V)),
     "M_nnz"  = nops(op(2, M)),
     "A_nnz"  = nops(op(2, A))
   ]);
@@ -108,7 +108,7 @@ FF2LU := proc(
   r      := T["r"];
   c      := T["c"];
   rk     := T["rank"];
-  m, n   := LinearAlgebra[Dimensions](M):
+  m, n   := LinearAlgebra:-Dimensions(M):
   L_list := [];
   D_list := [];
 
@@ -123,7 +123,7 @@ FF2LU := proc(
     L            := Matrix(m, m, shape = triangular[lower, unit]);
     L[k+1..-1,k] := M[k+1..-1, k];
     L_list       := [op(L_list), L];
-    DG           := Matrix( LinearAlgebra[IdentityMatrix](m), shape = diagonal);
+    DG           := Matrix(LinearAlgebra:-IdentityMatrix(m), shape = diagonal);
     for j from k+1 to m do
       DG[j,j] := SS[k];
     end;
@@ -153,7 +153,7 @@ FFLUsolve := proc(
   rnk := T["rank"];
 
   # Get linear system dimension
-  m, n := LinearAlgebra[Dimensions](M);
+  m, n := LinearAlgebra:-Dimensions(M);
 
   # Check if the linear system is consistent
   assert(
