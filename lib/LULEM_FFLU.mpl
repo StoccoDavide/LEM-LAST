@@ -46,11 +46,13 @@ FFLU := proc(
       );
     end;
 
-    pivot      := LULEM:-Pivoting(k, M, V, r, c);
-    pivot_list := [op(pivot_list), pivot["value"]];
+    pivot := LULEM:-Pivoting(k, M, V, r, c);
+    if not pivot["is_zero"] then
+      pivot_list := [op(pivot_list), pivot["value"]];
+    end if;
 
     if pivot["is_zero"] then
-      rnk := k;
+      rnk := rnk - 1;
       if LULEM:-Verbose then
         WARNING("LULEM::LU(...): the matrix appears to be not full rank.");
       end;
