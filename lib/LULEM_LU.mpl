@@ -13,9 +13,17 @@ LU := proc(
   $)::{table};
 
   description "Compute the LU decomposition of a square matrix <A> using the "
-    "veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
+              "veiling symbol <V>.";
 
   local M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, apply_veil, tmp;
+
+  # sanity check
+  assert(
+    not has( A, V ),
+    "LULEM::LU( M, V=%a ): veiling symbol %a is present in matrix coefficient.\n"
+    "change with a different one not present in M\n",
+    V
+  );
 
   # Forget the veilings
   LEM:-VeilForget(V);
@@ -76,20 +84,20 @@ LU := proc(
 
   # Return the LU decomposition
   return table([
-    "method"   = "LU",
-    "L"        = L,
-    "U"        = U,
-    "V"        = V,
-    "r"        = r,
-    "c"        = c,
-    "rank"     = rnk,
-    "pivots"   = pivot_list,
-    "L_cost"   = LULEM:-Cost(L),
-    "U_cost"   = LULEM:-Cost(U),
-    "V_cost"   = LULEM:-Cost(LEM:-VeilList(V)),
-    "L_nnz"    = nops(op(2, L)),
-    "U_nnz"    = nops(op(2, U)),
-    "A_nnz"    = nops(op(2, A))
+    "method" = "LU",
+    "L"      = L,
+    "U"      = U,
+    "V"      = V,
+    "r"      = r,
+    "c"      = c,
+    "rank"   = rnk,
+    "pivots" = pivot_list,
+    "L_cost" = LULEM:-Cost(L),
+    "U_cost" = LULEM:-Cost(U),
+    "V_cost" = LULEM:-Cost(LEM:-VeilList(V)),
+    "L_nnz"  = nops(op(2, L)),
+    "U_nnz"  = nops(op(2, U)),
+    "A_nnz"  = nops(op(2, A))
   ]);
 end proc: # LU
 
@@ -102,8 +110,7 @@ LUsolve := proc(
   $)
 
   description "Solve the linear system Ax=b using LU decomposition <T>, "
-    "provided the vector <b>, the veiling symbol <V> and the veiling strategy "
-    "<VeilingStrategy>.";
+              "provided the vector <b> and the veiling symbol <V>.";
 
   local L, U, r, c, m, n, p, q, apply_veil, x, y, i, j, s, rnk:
 

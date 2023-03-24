@@ -13,9 +13,17 @@ QR := proc(
   $)::{table};
 
   description "Compute the Givens QR decomposition of a square matrix <A> using "
-    "the veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
+              "the veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
 
   local m, n, Q, R, DG, k, j, a, b, z1, z2, r, Rk, Rj, apply_veil;
+
+  # sanity check
+  assert(
+    not has( A, V ),
+    "LULEM::QR( M, V=%a ): veiling symbol %a is present in matrix coefficient.\n"
+    "change with a different one not present in M\n",
+    V
+  );
 
   # Clear the veiling list
   LEM:-VeilForget(V);
@@ -108,8 +116,7 @@ QRsolve := proc(
   $)
 
   description "Solve the linear system Ax=b using QR decomposition <T>, "
-    "provided the vector <b>, the veiling symbol <V> and the veiling strategy "
-    "<VeilingStrategy>.";
+              "provided the vector <b> and the veiling symbol <V>.";
 
   local Q, R, DG, m, n, i, j, k, z, c, s, a, b, x, z1, z2, apply_veil;
 

@@ -13,11 +13,19 @@ FFLU := proc(
   $)::{table};
 
   description "Compute the Fracton-Free LU decomposition of a square matrix "
-    "<A> using the veiling strategy <VeilingStrategy> and the veiling symbol "
-    "<V>.";
+              "<A> using the veiling strategy <VeilingStrategy> and the "
+              "veiling symbol <V>.";
 
   local SS, M, pivot, pivot_list, m, n, mn, i, j, k, ri, rk, rnk, r, c, apply_veil,
         z, tmp, bot, top;
+
+  # sanity check
+  assert(
+    not has( A, V ),
+    "LULEM::FFLU( M, V=%a ): veiling symbol %a is present in matrix coefficient.\n"
+    "change with a different one not present in M\n",
+    V
+  );
 
   # Forget the veilings
   LEM:-VeilForget(V);
@@ -101,7 +109,7 @@ FF2LU := proc(
   $)
 
   description "Compute the LU decomposition of a square matrix from its "
-    "Fracton-Free LU decomposition <T>.";
+              "Fracton-Free LU decomposition <T>.";
 
   local M, SS, r, c, rk, n, m, L, DG, L_list, D_list, i, j, k;
 
@@ -143,8 +151,7 @@ FFLUsolve := proc(
   $)
 
   description "Solve the linear system Ax=b using FFLU decomposition <T>, "
-    "provided the vector <b>, the veiling symbol <V> and the veiling strategy "
-    "<VeilingStrategy>.";
+              "provided the vector <b> and the veiling symbol <V>.";
 
   local m, n, M, S, r, c, rnk, x, y, i, s,  apply_veil;
 
@@ -168,7 +175,7 @@ FFLUsolve := proc(
   assert(
     n = rnk,
     "LULEM::FFLUsolve(...): only full rank linear system can be solved.\n"
-    "Rank is %d expected %d.\n", rnk, n
+    "Rank is %d but expected to be %d.\n", rnk, n
   );
 
   # Create a normalizer function

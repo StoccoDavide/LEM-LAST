@@ -52,7 +52,6 @@ LULEM := module()
           SolveLinearSystem,
           VeilingStrategy,
           SetVeilingStrategyCost,
-          SetPivotingStrategy,
           SetMinDegreeStrategy,
           LU,
           QR,
@@ -73,20 +72,16 @@ LULEM := module()
           Verbose,
           TimeLimit,
           VeilingStrategy_par,
-          MinDegreeStrategy_fun,
-          MinDegreeStrategy_none,
-          MinDegreeStrategy_row,
-          MinDegreeStrategy_col,
-          MinDegreeStrategy_sum,
-          MinDegreeStrategy_prod,
-          MinDegreeStrategy_min,
-          PivotingStrategy_fun,
-          PivotingStrategy_val,
-          PivotingStrategy_row,
-          PivotingStrategy_col,
-          PivotingStrategy_sum,
-          PivotingStrategy_prod,
-          PivotingStrategy_min;
+          DegreeCost_fun,
+          DegreeCost_none,
+          DegreeCost_row,
+          DegreeCost_col,
+          DegreeCost_sum,
+          DegreeCost_prod,
+          DegreeCost_prod2,
+          DegreeCost_min,
+          DegreeCost_max,
+          PivotingCompare;
 
   option  package,
           load   = ModuleLoad,
@@ -114,7 +109,7 @@ LULEM := module()
     printf(
       "'LULEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023\n"
       "Current version: D. Stocco, M. Larcher, E. Bertolazzi.\n"
-      "Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
+      "Inspired by the code of: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
     );
 
     lib_base_path := null;
@@ -144,11 +139,10 @@ LULEM := module()
 
     description "Initialize 'LULEM' module internal variables.";
 
-    LULEM:-Verbose               := false;
-    LULEM:-TimeLimit             := 1;
-    LULEM:-VeilingStrategy_par   := 15;
-    LULEM:-MinDegreeStrategy_fun := LULEM:-MinDegreeStrategy_sum;
-    LULEM:-PivotingStrategy_fun  := LULEM:-PivotingStrategy_val;
+    LULEM:-Verbose             := false;
+    LULEM:-TimeLimit           := 1;
+    LULEM:-VeilingStrategy_par := 15;
+    LULEM:-DegreeCost_fun      := LULEM:-DegreeCost_prod;
     return NULL;
   end proc: # InitLULEM
 
@@ -160,21 +154,30 @@ LULEM := module()
 
     description "Get the degree matrices of the matrix <A>.";
 
+    #
+    # code inspired by
+    # https://www.mapleprimes.com/questions/235996-Is-There-Any-Command-Or-Function-For
+    #
+
+    #local i, j, m, n, r, c, ro, co;
     local i, j, k, m, n, r, c, ro, co;
 
     m, n := LinearAlgebra:-Dimensions(A);
-    r  := Vector[column](m);
-    c  := Vector[row](n);
     ro := Vector[column](m, k -> 1);
     co := Vector[row](n, k -> 1);
-    for i from 1 to m do
-      for j from 1 to n do
-        if (A[i,j] <> 0) then
-          r[i] := r[i]+1;
-          c[j] := c[j]+1;
-        end if;
-      end do;
-    end do;
+    r  := Vector[column]([seq(rtable_scanblock( A, [i,..], ':-NonZeros'), i=1..m)]):
+    c  := Vector[row]([seq(rtable_scanblock(A, [..,j], ':-NonZeros'), j=1..n)]):
+    # OLD CODE
+    #r  := Vector[column](m);
+    #c  := Vector[row](n);
+    #for i from 1 to m do
+    #  for j from 1 to n do
+    #    if (A[i,j] <> 0) then
+    #      r[i] := r[i]+1;
+    #      c[j] := c[j]+1;
+    #    end if;
+    #  end do;
+    #end do;
     return r.co, ro.c;
   end proc:
 
@@ -197,7 +200,7 @@ LULEM := module()
     $)
 
     description "Compute the LU decomposition premutation matrices provided "
-      "the rows pivot vector <r> and the columns pivot vector <c>.";
+                "the rows pivot vector <r> and the columns pivot vector <c>.";
 
     local m, n, i, P, Q;
 
@@ -300,8 +303,8 @@ LULEM := module()
     $)
 
     description "Solve the factorized linear system <T> * x = b using the "
-      "method specified in <T>['method'] field. The input <V> is the veiling "
-      "strategy to be used.";
+                "method specified in <T>['method'] field. The input <V> is "
+                "the veiling strategy to be used.";
 
     if (T["method"] = "LU") then
       return LULEM:-LUsolve(T, b, V);
