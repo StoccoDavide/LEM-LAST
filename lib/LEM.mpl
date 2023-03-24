@@ -42,28 +42,28 @@
 
 LEM := module()
 
-  export Veil,
-         UnVeil,
-         UnVeilImap,
-         VeilUnorderedList,
-         VeilList,
-         VeilTableSize,
-         VeilTableImap,
-         VeilTableAppend,
-         VeilLabels,
-         VeilSubs,
-         VeilForget;
+  export  Veil,
+          UnVeil,
+          UnVeilImap,
+          VeilUnorderedList,
+          VeilList,
+          VeilTableSize,
+          VeilTableImap,
+          VeilTableAppend,
+          VeilLabels,
+          VeilSubs,
+          VeilForget;
 
-  local  ModuleLoad,
-         ModuleUnload,
-         UnVeilTables,
-         UnVeilLabels,
-         Auxiliary,
-         InitLEM;
+  local   ModuleLoad,
+          ModuleUnload,
+          UnVeilTables,
+          UnVeilLabels,
+          Auxiliary,
+          InitLEM;
 
-  option package,
-         load   = ModuleLoad,
-         unload = ModuleUnload;
+  option  package,
+          load   = ModuleLoad,
+          unload = ModuleUnload;
 
   description "Large Expressions Management module.";
 
@@ -100,7 +100,7 @@ LEM := module()
 
   ModuleUnload := proc()
 
-    description "Module 'LEM' module unload procedure.";
+    description "'LEM' module unload procedure.";
 
     LEM:-UnVeilTables := NULL;
 
@@ -189,7 +189,7 @@ LEM := module()
     local label, T, perm, a, b, k;
 
 	  label := `if`(procname::{indexed}, op(procname), '_V');
-    T, perm := LEM:-VeilTableImap(label, true);
+    T, perm := LEM:-VeilTableImap(label, parse("reverse") = true);
     b := copy(x);
     for k from 1 to nops(perm) do
       a := b;
@@ -211,9 +211,9 @@ LEM := module()
     local T, perm;
 
     if type(label, list) then
-      return map(x -> op(LEM:-VeilList(x, reverse)), label);
+      return map(x -> op(LEM:-VeilList(x, parse("reverse") = reverse)), label);
     else
-      T, perm := LEM:-VeilTableImap(label, reverse);
+      T, perm := LEM:-VeilTableImap(label, parse("reverse") = reverse);
       return T[perm]:
     end if;
   end proc: # VeilList
@@ -262,7 +262,7 @@ LEM := module()
     else
       comparator := (a, b) -> evalb(op(1, lhs(a)) < op(1, lhs(b)));
     end if;
-    return T, sort(T, output = 'permutation', comparator);
+    return T, sort(T, comparator, output = 'permutation');
   end proc;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -307,7 +307,7 @@ LEM := module()
       "<label> in the expression <x>. If <label> is not given, substitute the "
       "reversed veiling variables of all veiling labels.";
 
-    return subs[eval](op(LEM:-VeilList(label, true)), x);
+    return subs[eval](op(LEM:-VeilList(label, parse("reverse") = true)), x);
   end proc: # VeilSubs
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
