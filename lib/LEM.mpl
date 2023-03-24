@@ -147,7 +147,7 @@ LEM := module()
       s := sign(c); # sign is weak
       # Don't do anything if we can tell that the coefficient is just a number
       # or a simple multiple of a name (simple or indexed)
-      if (s*i = c) or type(s*c/i, 'name') then
+      if (s*i = c) or type( s*c/i, 'indexed(integer)' ) or type(s*c/i, 'name') then
         return c;
       end if;
     catch:
@@ -155,7 +155,7 @@ LEM := module()
     end try;
     # Only if there is something complicated to hide we do actually hide it and
     # return a label.
-    return s * i * LEM:-VeilTableAppend(label, s*c/i);
+    return s * i * LEM:-VeilTableAppend(label,s*c/i );
   end proc; # Veil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -163,19 +163,9 @@ LEM := module()
   UnVeil := proc(
     x::{anything},
     $)::{anything};
-
     description "Unveil the expression <x>.";
-
-    local label, T, a, b;
-
-	  label := `if`(procname::{indexed}, op(procname), '_V');
-    T := LEM:-VeilUnorderedList(label);
-    b := copy(x);
-    while has(b, label) do
-      a := b;
-      b := eval(a, T);
-    end do;
-    return b;
+    local label := `if`(procname::{indexed}, op(procname), '_V');
+    return eval['recurse'](x,LEM:-VeilUnorderedList(label));
   end proc;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
