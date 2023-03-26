@@ -7,10 +7,7 @@
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-QR := proc(
-  A::{Matrix},
-  V::{symbol},
-  $)::{table};
+QR := proc( A::Matrix, V::symbol, $ )::table;
 
   description "Compute the Givens QR decomposition of a square matrix <A> using "
               "the veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
@@ -18,12 +15,14 @@ QR := proc(
   local m, n, Q, R, DG, k, j, a, b, z1, z2, r, Rk, Rj, apply_veil;
 
   # sanity check
-  assert(
-    not has( A, V ),
-    "LULEM::QR( M, V=%a ): veiling symbol %a is present in matrix coefficient.\n"
-    "change with a different one not present in M\n",
-    V
-  );
+  if has( A, V ) then
+    error(
+      "LULEM::QR( M, V=%a ) error!\n"
+      "veiling symbol %a is present in matrix coefficient.\n"
+      "Change it with a different one not present in M\n",
+      V, V
+    );
+  end if;
 
   # Clear the veiling list
   LEM:-VeilForget(V);
@@ -35,10 +34,11 @@ QR := proc(
   m, n := LinearAlgebra:-Dimensions(A):
 
   # Check if the matrix A valid
-  assert(
-    m >= n,
-    "LULEM::QR(...): invalid matrix A(m,n) detected, got (m >= n)."
-  );
+  if m < n then
+    error(
+      "LULEM::QR(...): invalid matrix A(m=%d,n=%d) detected, got (m >= n).", m, n
+    );
+  end if;
 
   # Initialize some variables
   Q  := [];      # Orthogonal transformation as a list of Given rotations
@@ -109,11 +109,7 @@ end proc: # QR
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-QRsolve := proc(
-  T::{table},
-  xb::{Vector},
-  V::{symbol, function},
-  $)
+QRsolve := proc( T::table, xb::Vector, V::symbol, $ )
 
   description "Solve the linear system Ax=b using QR decomposition <T>, "
               "provided the vector <b> and the veiling symbol <V>.";

@@ -7,10 +7,7 @@
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FFLU := proc(
-  A::{Matrix},
-  V::{symbol},
-  $)::{table};
+FFLU := proc( A::Matrix, V::symbol, $ )::table;
 
   description "Compute the Fracton-Free LU decomposition of a square matrix "
               "<A> using the veiling strategy <VeilingStrategy> and the "
@@ -20,12 +17,15 @@ FFLU := proc(
         z, tmp, bot, top;
 
   # sanity check
-  assert(
-    not has( A, V ),
-    "LULEM::FFLU( M, V=%a ): veiling symbol %a is present in matrix coefficient.\n"
-    "change with a different one not present in M\n",
-    V
-  );
+  if has( A, V ) then
+    error(
+      "LULEM::FFLU( M, V=%a ) error!\n"
+      "veiling symbol %a is present in matrix coefficient.\n"
+      "Change it with a different one not present in M\n",
+      V, V
+    );
+    return table([]);
+  end if;
 
   # Forget the veilings
   LEM:-VeilForget(V);
@@ -104,9 +104,7 @@ end proc: # FFLU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FF2LU := proc(
-  T::{table},
-  $)
+FF2LU := proc( T::table, $ )::list,list,Matrix;
 
   description "Compute the LU decomposition of a square matrix from its "
               "Fracton-Free LU decomposition <T>.";
@@ -144,11 +142,7 @@ end proc: # FF2LU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FFLUsolve := proc(
-  T::{table},
-  b::{Vector},
-  V::{symbol, function},
-  $)
+FFLUsolve := proc( T::table, b::Vector, V::symbol, $ )::Vector;
 
   description "Solve the linear system Ax=b using FFLU decomposition <T>, "
               "provided the vector <b> and the veiling symbol <V>.";
@@ -165,18 +159,22 @@ FFLUsolve := proc(
   m, n := LinearAlgebra:-Dimensions(M);
 
   # Check if the linear system is consistent
-  assert(
-    m = n,
-    "LULEM::FFLUsolve(...): only square system can be solved.\n"
-    "M is %d x %d.\n", m, n
-  );
+  if not m = n then
+    error(
+      "LULEM::FFLUsolve(...): only square system can be solved.\n"
+      "M is %d x %d.\n", m, n
+    );
+    return table([]);
+  end if;
 
   # Check if the linear system is consistent
-  assert(
-    n = rnk,
-    "LULEM::FFLUsolve(...): only full rank linear system can be solved.\n"
-    "Rank is %d but expected to be %d.\n", rnk, n
-  );
+  if not n = rnk then
+    error(
+      "LULEM::FFLUsolve(...): only full rank linear system can be solved.\n"
+      "Rank is %d but expected to be %d.\n", rnk, n
+    );
+    return table([]);
+  end if;
 
   # Create a normalizer function
   apply_veil := (y) -> `if`(LULEM:-VeilingStrategy(y), LEM:-Veil[V](y), y);

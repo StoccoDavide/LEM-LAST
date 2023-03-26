@@ -7,10 +7,7 @@
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-LU := proc(
-  A::{Matrix},
-  V::{symbol},
-  $)::{table};
+LU := proc( A::Matrix, V::symbol, $ )::table;
 
   description "Compute the LU decomposition of a square matrix <A> using the "
               "veiling symbol <V>.";
@@ -18,12 +15,15 @@ LU := proc(
   local M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, apply_veil, tmp;
 
   # sanity check
-  assert(
-    not has( A, V ),
-    "LULEM::LU( M, V=%a ): veiling symbol %a is present in matrix coefficient.\n"
-    "change with a different one not present in M\n",
-    V
-  );
+  if has( A, V ) then
+    error(
+      "LULEM::LU( M, V=%a ) error!\n"
+      "veiling symbol %a is present in matrix coefficient.\n"
+      "Change it with a different one not present in M\n",
+      V, V
+    );
+    return table([]);
+  end if;
 
   # Forget the veilings
   LEM:-VeilForget(V);
@@ -103,11 +103,7 @@ end proc: # LU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-LUsolve := proc(
-  T::{table},
-  b::{Vector},
-  V::{symbol, function},
-  $)
+LUsolve := proc( T::table, b::Vector, V::symbol, $ )::Vector;
 
   description "Solve the linear system Ax=b using LU decomposition <T>, "
               "provided the vector <b> and the veiling symbol <V>.";
@@ -126,18 +122,23 @@ LUsolve := proc(
   p, q := LinearAlgebra:-Dimensions(U);
 
   # Check if the linear system is consistent
-  assert(
-    (m = n) and (p = q),
-    "LULEM::LUsolve(...): only square system can be solved.\n"
-    "L is %d x %d, U is %d x %d\n", m, n, p, q
-  );
+  # sanity check
+  if not ( (m = n) and (p = q) ) then
+    error(
+      "LULEM::LUsolve(...): only square system can be solved.\n"
+      "L is %d x %d, U is %d x %d\n", m, n, p, q
+    );
+    return table([]);
+  end if;
 
   # Check if the linear system is consistent
-  assert(
-    n = rnk,
-    "LULEM::LUsolve(...): only full rank linear system can be solved.\n"
-    "Rank is %d expected %d.\n", rnk, n
-  );
+  if not n = rnk then
+    error(
+      "LULEM::LUsolve(...): only full rank linear system can be solved.\n"
+      "Rank is %d expected %d.\n", rnk, n
+    );
+    return table([]);
+  end if;
 
   # Create a normalizer function
   apply_veil := (y) -> `if`(LULEM:-VeilingStrategy(y), LEM:-Veil[V](y), y);

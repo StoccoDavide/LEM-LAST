@@ -8,12 +8,12 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Pivoting := proc(
-  k::{integer},
-  M::{Matrix},
-  V::{symbol},
-  r::{Vector(nonnegint)},
-  c::{Vector(nonnegint)},
-  $)::{table};
+  k::integer,
+  M::Matrix,
+  V::symbol,
+  r::Vector(nonnegint),
+  c::Vector(nonnegint),
+  $)::table;
 
   description "Compute the LU decomposition pivots vectors with minum degree "
               "provided the step <k>, the temporary LU (NAG) matrix <M>, "
@@ -129,9 +129,7 @@ end proc: # Pivoting
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotCost := proc(
-  x::{algebraic},
-  $)::{integer};
+PivotCost := proc( x::algebraic, $ )::integer, algebraic;
 
   description "Compute the cost of the pivot <x>.";
 
@@ -154,9 +152,7 @@ end proc: # PivotCost
 #                             |___/
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-SetMinDegreeStrategy := proc(
-  str::{string},
-  $)::{nothing};
+SetMinDegreeStrategy := proc( str::string, $ )
   if (str = "none") then
     LULEM:-DegreeCost_fun := LULEM:-DegreeCost_none;
   elif (str = "row") then
@@ -181,35 +177,35 @@ end proc: # SetMinDegreeStrategy
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_none := proc( val::{table}, $)::{boolean};
+DegreeCost_none := proc( val::table, $)::integer;
   description "Compute the pivoting degree cost.";
   return 0;
 end proc: # DegreeCost_none
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_row := proc( val::{table}, $)::{boolean};
+DegreeCost_row := proc( val::table, $)::integer;
   description "Compute the pivoting degree cost.";
   return val["degree_r"];
 end proc: # DegreeCost_row
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_col := proc( val::{table}, $)::{boolean};
+DegreeCost_col := proc( val::table, $)::integer;
   description "Compute the pivoting degree cost.";
   return val["degree_c"];
 end proc: # DegreeCost_col
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_sum := proc( val::{table}, $)::{boolean};
+DegreeCost_sum := proc( val::table, $)::integer;
   description "Compute the pivoting degree cost.";
   return val["degree_c"] + val["degree_r"];
 end proc: # DegreeCost_sum
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_prod := proc( val::{table}, $)::{boolean};
+DegreeCost_prod := proc( val::table, $)::integer;
   description "Compute the pivoting degree cost.";
   #return (val["degree_c"]+1) * (val["degree_r"]+1);
   return val["degree_c"] * val["degree_r"];
@@ -217,21 +213,21 @@ end proc: # DegreeCost_prod
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_prod2 := proc( val::{table}, $)::{boolean};
+DegreeCost_prod2 := proc( val::table, $)::integer;
   description "Compute the pivoting degree cost.";
   return max(val["degree_c"]-1,0) * max(val["degree_r"]-1,0);
 end proc: # DegreeCost_prod2
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_min := proc( val::{table}, $)::{boolean};
+DegreeCost_min := proc( val::table, $)::integer;
   description "Compute the pivoting degree cost.";
   return min(val["degree_c"], val["degree_r"]);
 end proc: # DegreeCost_min
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_max := proc( val::{table}, $)::{boolean};
+DegreeCost_max := proc( val::table, $)::integer;
   description "Compute the pivoting degree cost.";
   return max(val["degree_c"], val["degree_r"]);
 end proc: # DegreeCost_max
@@ -245,10 +241,7 @@ end proc: # DegreeCost_max
 #                                  |___/
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotingCompare := proc(
-  cur::{table},
-  val::{table},
-  $)::{boolean};
+PivotingCompare := proc( cur::table, val::table, $ )::boolean;
 
   description "Compute the pivoting strategy: given the current pivot <cur> "
               "and the next pivot <val>, decide if to the next pivot is "

@@ -49,6 +49,7 @@ LULEM := module()
           PermutationMatrices,
           GetDegrees,
           Spy,
+          SpyLUfillIn,
           SolveLinearSystem,
           VeilingStrategy,
           SetVeilingStrategyCost,
@@ -148,9 +149,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  GetDegrees :=  proc(
-    A::{Matrix},
-    $)::{Matrix(nonnegint)};
+  GetDegrees := proc( A::Matrix, $)::Matrix(nonnegint),Matrix(nonnegint);
 
     description "Get the degree matrices of the matrix <A>.";
 
@@ -158,8 +157,6 @@ LULEM := module()
     # code inspired by
     # https://www.mapleprimes.com/questions/235996-Is-There-Any-Command-Or-Function-For
     #
-
-    #local i, j, m, n, r, c, ro, co;
     local i, j, k, m, n, r, c, ro, co;
 
     m, n := LinearAlgebra:-Dimensions(A);
@@ -183,9 +180,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  Spy := proc(
-    A::{Matrix},
-    $)::{anything};
+  Spy := proc( A::Matrix, $)::anything;
 
     description "Plot of non-zero values of the matrix <A>.";
 
@@ -194,10 +189,25 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  SpyLUfillIn := proc( A::Matrix, L::Matrix, U::Matrix, $ )::anything;
+
+    description "Plot of non-zero values of the matrix <A> with fill in.";
+
+    local A0, A1, A2;
+    A0 := map(x->`if`(x=0,0,1),A);
+    A1 := map(x->`if`(x=0,0,1),L+U);
+    A2 := map(x->`if`(x=1,1,0),A0+A1);
+
+    return [plots:-sparsematrixplot(A0, 'matrixview',color="Blue"),
+            plots:-sparsematrixplot(A2, 'matrixview',color="Red")];
+  end proc;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   PermutationMatrices := proc(
-    r::{Vector(nonnegint)},
-    c::{Vector(nonnegint)},
-    $)
+    r::Vector(nonnegint),
+    c::Vector(nonnegint),
+    $)::Matrix(nonnegint),Matrix(nonnegint);
 
     description "Compute the LU decomposition premutation matrices provided "
                 "the rows pivot vector <r> and the columns pivot vector <c>.";
@@ -219,9 +229,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SetVerbosity := proc(
-    x::{boolean},
-    $)::{nothing};
+  SetVerbosity := proc( x::{boolean}, $ )
 
     description "Set the verbosity of the package to <x>.";
 
@@ -231,8 +239,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  EnableVerbosity := proc(
-    $)::{nothing};
+  EnableVerbosity := proc( $ )
 
     description "Enable the verbosity of the package.";
 
@@ -242,8 +249,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  DisableVerbosity := proc(
-    $)::{nothing};
+  DisableVerbosity := proc( $ )
 
     description "Disable the verbosity of the package.";
 
@@ -253,9 +259,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SetTimeLimit := proc(
-    x::{numeric},
-    $)::{nothing};
+  SetTimeLimit := proc( x::numeric, $ )
 
     description "Set the time limit of the package to <x>.";
 
@@ -269,9 +273,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  Cost := proc(
-    x::{anything},
-    $)::{integer};
+  Cost := proc( x::anything, $ )::integer;
 
     description "Compute the cost of the expression <x>.";
 
@@ -296,11 +298,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SolveLinearSystem := proc(
-    T::{table},
-    b::{Vector},
-    V::{symbol, function},
-    $)
+  SolveLinearSystem := proc( T::table, b::Vector, V::symbol, $ )
 
     description "Solve the factorized linear system <T> * x = b using the "
                 "method specified in <T>['method'] field. The input <V> is "
@@ -328,9 +326,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilingStrategy := proc(
-    x::{algebraic},
-    $)::{boolean};
+  VeilingStrategy := proc( x::algebraic, $ )::boolean;
 
     description "Comupte the veiling strategy value for the value <x>.";
 
@@ -339,9 +335,7 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SetVeilingStrategyCost := proc(
-    c::{nonnegint},
-    $)::{nothing};
+  SetVeilingStrategyCost := proc( c::nonnegint, $ )
 
     description "Set the veiling strategy parameter to <c>.";
 
