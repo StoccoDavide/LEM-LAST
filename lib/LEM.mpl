@@ -120,9 +120,7 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  Veil := proc(
-    x::{anything},
-    $)::{anything};
+  Veil := proc( x::anything, $ )::anything;
 
     description "Veil an expression <x> and return a label to it.";
 
@@ -160,9 +158,7 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UnVeil := proc(
-    x::{anything},
-    $)::{anything};
+  UnVeil := proc( x::anything, $ )::anything;
     description "Unveil the expression <x>.";
     local label := `if`(procname::{indexed}, op(procname), '_V');
     return eval['recurse'](x,LEM:-VeilUnorderedList(label));
@@ -170,17 +166,15 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UnVeilImap := proc(
-    x::{anything},
-    $)::{anything};
+  UnVeilImap := proc( x::anything, $ )::anything;
 
     description "Unveil the expression <x> with internal permutation map.";
 
     local label, T, perm, a, b, k;
 
-	  label := `if`(procname::{indexed}, op(procname), '_V');
+	  label   := `if`(procname::{indexed}, op(procname), '_V');
     T, perm := LEM:-VeilTableImap(label, parse("reverse") = true);
-    b := copy(x);
+    b       := copy(x);
     for k from 1 to nops(perm) do
       a := b;
       b := subs[eval](T[perm[k]], a);
@@ -192,8 +186,8 @@ LEM := module()
 
   VeilList := proc(
     label::{symbol, list(symbol)} := VeilLabels(),
-    {reverse::{boolean} := false},
-    $)::{list(anything)};
+    {reverse::boolean := false},
+    $)::list(anything);
 
     description "Return a list of the veiling variables labelled as <label>. "
       "If <label> is not given, return a list of all veiling variables.";
@@ -210,9 +204,7 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilUnorderedList := proc(
-    label::{symbol},
-    $)::{anything};
+  VeilUnorderedList := proc( label::symbol, $ )::anything;
 
     description "Return a list of the veiling variables labelled as <label>.";
 
@@ -225,9 +217,7 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilTableSize := proc(
-    label::{symbol},
-    $)::{nonnegint};
+  VeilTableSize := proc( label::symbol, $ )::nonnegint;
 
     description "Return the size of the table for symbol <label>.";
 
@@ -237,9 +227,9 @@ LEM := module()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   VeilTableImap := proc(
-    label::{symbol},
-    {reverse::{boolean} := false},
-    $)::{table, list[nonnegint]};
+    label::symbol,
+    {reverse::boolean := false},
+    $)::anything, list[nonnegint];
 
     description "Return the table for symbol <label> and the permutation that "
       "sorts it.";
@@ -257,10 +247,7 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilTableAppend := proc(
-    label::{symbol},
-    x::{anything},
-    $)::{anything};
+  VeilTableAppend := proc( label::symbol, x::anything, $ )::anything;
 
     description "Append the veiled expression <x> to the veiling table with "
       "symbol <label>.";
@@ -279,7 +266,7 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilLabels := proc( $ )::{list(symbol)};
+  VeilLabels := proc( $ )::list(symbol);
 
     description "Return a list of the veiling labels.";
 
@@ -289,9 +276,9 @@ LEM := module()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   VeilSubs := proc(
-    x::{anything},
+    x::anything,
     label::{symbol, list(symbol)} := VeilLabels(),
-    $)::{anything};
+    $)::anything;
 
     description "Substitute the reversed veiling variables of the veiling label "
       "<label> in the expression <x>. If <label> is not given, substitute the "
@@ -302,9 +289,7 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilForget := proc(
-    label::{symbol, list(symbol)} := VeilLabels(),
-    $)::{nothing};
+  VeilForget := proc( label::{symbol, list(symbol)} := VeilLabels(), $)
 
     description "Clear all the veiling variables of the veiling label <label>. "
       "If <label> is not given, clear all the veiling variables.";
