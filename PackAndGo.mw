@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Worksheet>
-<Version major="2022" minor="2"/>
+<Version major="2021" minor="2"/>
 <Label-Scheme value="2" prefix=""/>
 <View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="960" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1120" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -166,11 +166,6 @@ end proc:
 <Group hide-input="false" labelreference="L256760" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023
-Current version: D. Stocco, M. Larcher, E. Bertolazzi.
-Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
-</Text-field>
-</Output>
 </Group>
 <Group hide-input="false" labelreference="L256774" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Create sources path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">file := cat(interface(worksheetdir), ds, &quot;installer&quot;, ds, &quot;bin&quot;):
@@ -255,33 +250,33 @@ Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 module LEM:
 
     # Veil an expression &lt;x&gt; and return a label to it.
-    Veil( x::{anything}, $ ) :: {anything}
+    Veil( x::anything, $ ) :: anything
 
     # Unveil the expression &lt;x&gt;.
-    UnVeil( x::{anything}, $ ) :: {anything}
+    UnVeil( x::anything, $ ) :: anything
 
     # Unveil the expression &lt;x&gt; with internal permutation map.
-    UnVeilImap( x::{anything}, $ ) :: {anything}
+    UnVeilImap( x::anything, $ ) :: anything
 
     # Return a list of the veiling variables labelled as &lt;label&gt;.
-    VeilUnorderedList( label::{symbol}, $ ) :: {anything}
+    VeilUnorderedList( label::symbol, $ ) :: anything
 
     # Return a list of the veiling variables labelled as &lt;label&gt;. If &lt;label&gt; is 
     # not given, return a list of all veiling variables.
     VeilList( label::{symbol, list(symbol)} := _VeilLabels(), 
-              { reverse::{boolean} := false }, $ ) :: {list(anything)}
+              { reverse::boolean := false }, $ ) :: list(anything)
 
     # Return the size of the table for symbol &lt;label&gt;.
-    VeilTableSize( label::{symbol}, $ ) :: {nonnegint}
+    VeilTableSize( label::symbol, $ ) :: nonnegint
 
     # Return the table for symbol &lt;label&gt; and the permutation that sorts it.
-    VeilTableImap( label::{symbol}, 
-                   { reverse::{boolean} := false }, $ )
-                 :: {table, list[nonnegint]}
+    VeilTableImap( label::symbol, 
+                   { reverse::boolean := false }, $ )
+                 :: {list(anything = anything), []}
 
     # Append the veiled expression &lt;x&gt; to the veiling table with symbol 
     # &lt;label&gt;.
-    VeilTableAppend( label::{symbol}, x::{anything}, $ ) :: {anything}
+    VeilTableAppend( label::symbol, x::anything, $ ) :: anything
 
     # Return a list of the veiling labels.
     VeilLabels( $ )
@@ -289,20 +284,19 @@ module LEM:
     # Substitute the reversed veiling variables of the veiling label &lt;label&gt; in 
     # the expression &lt;x&gt;. If &lt;label&gt; is not given, substitute the reversed 
     # veiling variables of all veiling labels.
-    VeilSubs( x::{anything}, label::{symbol, list(symbol)} := _VeilLabels(), 
-              $ ) :: {anything}
+    VeilSubs( x::anything, label::{symbol, list(symbol)} := _VeilLabels(), $ )
+            :: anything
 
     # Clear all the veiling variables of the veiling label &lt;label&gt;. If &lt;label&gt; 
     # is not given, clear all the veiling variables.
     VeilForget( label::{symbol, list(symbol)} := _VeilLabels(), $ )
-              :: {nothing}
 
 </Text-field>
 </Output>
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>

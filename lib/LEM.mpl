@@ -229,7 +229,7 @@ LEM := module()
   VeilTableImap := proc(
     label::symbol,
     {reverse::boolean := false},
-    $)::anything, list[nonnegint];
+    $)::{[],list(anything=anything)}, {[],list(nonnegint)};
 
     description "Return the table for symbol <label> and the permutation that "
       "sorts it.";
