@@ -52,14 +52,23 @@ LEM := module()
           VeilTableAppend,
           VeilLabels,
           VeilSubs,
-          VeilForget;
+          VeilForget,
+          ExpressionCost,
+          VeilingStrategy,
+          SetVeilingStrategyPars;
 
   local   ModuleLoad,
           ModuleUnload,
           UnVeilTables,
           UnVeilLabels,
           Auxiliary,
-          InitLEM;
+          VeilingStrategy_maxcost,
+          VeilingStrategy_subscripts,
+          VeilingStrategy_assignments,
+          VeilingStrategy_additions,
+          VeilingStrategy_multiplications,
+          VeilingStrategy_divisions,
+          VeilingStrategy_functions;
 
   option  package,
           load   = ModuleLoad,
@@ -91,7 +100,9 @@ LEM := module()
       error "Cannot find 'LEM' module";
     end if;
 
-    LEM:-InitLEM();
+    # Initialize internal variables
+    LEM:-UnVeilTables := table([]);
+    LEM:-SetVeilingStrategyPars();
 
     return NULL;
   end proc: # ModuleLoad
@@ -109,32 +120,31 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  InitLEM := proc()
+  Veil := proc(
+    x::{anything},
+    {force::{boolean} := false},
+    $)::{anything};
 
-    description "Initialize 'LEM' module internal variables.";
-
-    LEM:-UnVeilTables := table([]);
-
-    return NULL;
-  end proc: # InitLEM
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  Veil := proc( x::anything, $ )::anything;
-
-    description "Veil an expression <x> and return a label to it.";
+    description "Check if the veiling strategy is verified and veil an expression <x> and return a label to it.";
 
     local label, i, s, c;
 
+    # Retreive the label variable
 	  label := `if`(procname::{indexed}, op(procname), '_V');
 
+    # Check if label is already assigned
 	  if (label <> eval(label, 2)) then
-	    error "LEM::Veil(...): label %a is assigned a value already, please save"
-            " its contents and unassign it.", label;
+	    error "LEM::Veil(...): label %a is already assigned, please save its "
+        "contents and unassign it.", label;
 	  end if;
 
     # Recognize zero if we can, so that we don't hide zeros.
     c := Normalizer(x);
+
+    # Check the veiling strategy
+    if not(force) and not(LEM:-VeilingStrategy(c)) then
+      return c;
+    end if;
 
     # Remove the integer content and sign so that we don't hide them either.
     i := icontent(c);
@@ -145,7 +155,7 @@ LEM := module()
       s := sign(c); # sign is weak
       # Don't do anything if we can tell that the coefficient is just a number
       # or a simple multiple of a name (simple or indexed)
-      if (s*i = c) or type( s*c/i, 'indexed(integer)' ) or type(s*c/i, 'name') then
+      if (s*i = c) or type(s*c/i, indexed(integer)) or type(s*c/i, name) then
         return c;
       end if;
     catch:
@@ -153,20 +163,95 @@ LEM := module()
     end try;
     # Only if there is something complicated to hide we do actually hide it and
     # return a label.
-    return s * i * LEM:-VeilTableAppend(label,s*c/i );
+    return s * i * LEM:-VeilTableAppend(label, s*c/i);
   end proc; # Veil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UnVeil := proc( x::anything, $ )::anything;
-    description "Unveil the expression <x>.";
-    local label := `if`(procname::{indexed}, op(procname), '_V');
-    return eval['recurse'](x,LEM:-VeilUnorderedList(label));
-  end proc;
+  ExpressionCost := proc(
+    x::{anything},
+    $)::{integer};
+
+    description "Compute the cost of the expression <x>.";
+
+    local tmp;
+
+    if not(type(x, algebraic) or type(x, list)) then
+      tmp := convert(x, list);
+    else
+      tmp := x;
+    end if;
+
+    return subs(
+      'subscripts'      = 0,
+      'assignments'     = 0,
+      'additions'       = 1,
+      'multiplications' = 2,
+      'divisions'       = 3,
+      'functions'       = 2,
+      codegen:-cost(tmp)
+    );
+  end proc: # ExpressionCost
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UnVeilImap := proc( x::anything, $ )::anything;
+  VeilingStrategy := proc(
+    x::{algebraic},
+    $)::{boolean};
+
+    description "Comupte the veiling strategy value for the value <x>.";
+
+    return evalb(LEM:-ExpressionCost(x) > LEM:-VeilingStrategy_maxcost);
+  end proc: # VeilingStrategy
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  SetVeilingStrategyPars := proc({
+    maxcost::{nonnegint}         := 15,
+    subscripts::{nonnegint}      := 0,
+    assignments::{nonnegint}     := 0,
+    additions::{nonnegint}       := 1,
+    multiplications::{nonnegint} := 2,
+    divisions::{nonnegint}       := 3,
+    functions::{nonnegint}       := 2
+    }, $)::{nothing};
+
+    description "Set the veiling strategy parameters: maximum veiling cost "
+      "<maxcost>, subscripts cost weight parameter <subscripts>, assignments "
+      "cost weight parameter <assignments>, additions cost weight parameter "
+      "<additions>, multiplications cost weight parameter <multiplications>, "
+      "divisions cost weight parameter <divisions>, and functions cost weight "
+      "parameter <functions>.";
+
+    LEM:-VeilingStrategy_maxcost         := maxcost;
+    LEM:-VeilingStrategy_subscripts      := subscripts;
+    LEM:-VeilingStrategy_assignments     := assignments;
+    LEM:-VeilingStrategy_additions       := additions;
+    LEM:-VeilingStrategy_multiplications := multiplications;
+    LEM:-VeilingStrategy_divisions       := divisions;
+    LEM:-VeilingStrategy_functions       := functions;
+    return NULL;
+  end proc: # SetVeilingStrategyPars
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  UnVeil := proc(
+    x::{anything},
+    $)::{anything};
+
+    description "Unveil the expression <x>.";
+
+    local label;
+
+    label := `if`(procname::{indexed}, op(procname), '_V');
+    return eval['recurse'](x,LEM:-VeilUnorderedList(label));
+  end proc: # UnVeil
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  UnVeilImap := proc(
+    x::{anything},
+    $)::{anything};
 
     description "Unveil the expression <x> with internal permutation map.";
 
@@ -180,7 +265,7 @@ LEM := module()
       b := subs[eval](T[perm[k]], a);
     end do;
     return b;
-  end proc;
+  end proc: # UnVeilImap
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -204,32 +289,36 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilUnorderedList := proc( label::symbol, $ )::anything;
+  VeilUnorderedList := proc(
+    label::{symbol},
+    $)::{anything};
 
     description "Return a list of the veiling variables labelled as <label>.";
 
-    if type(LEM:-UnVeilTables[label], 'table') then
+    if type(LEM:-UnVeilTables[label], table) then
       return op(eval(LEM:-UnVeilTables[label]));
     else
       return [];
     end if;
-  end proc: # VeilUnorderedList;
+  end proc: # VeilUnorderedList
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilTableSize := proc( label::symbol, $ )::nonnegint;
+  VeilTableSize := proc(
+    label::{symbol},
+    $)::{nonnegint};
 
     description "Return the size of the table for symbol <label>.";
 
     return numelems(LEM:-VeilUnorderedList(label));
-  end proc;
+  end proc: # VeilTableSize
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   VeilTableImap := proc(
-    label::symbol,
-    {reverse::boolean := false},
-    $)::{[],list(anything=anything)}, {[],list(nonnegint)};
+    label::{symbol},
+    {reverse::{boolean} := false},
+    $)::{[], list(anything=anything)}, {[], list(nonnegint)};
 
     description "Return the table for symbol <label> and the permutation that "
       "sorts it.";
@@ -243,11 +332,14 @@ LEM := module()
       comparator := (a, b) -> evalb(op(1, lhs(a)) < op(1, lhs(b)));
     end if;
     return T, sort(T, comparator, output = 'permutation');
-  end proc;
+  end proc: # VeilTableImap
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilTableAppend := proc( label::symbol, x::anything, $ )::anything;
+  VeilTableAppend := proc(
+    label::{symbol},
+    x::{anything},
+    $)::{anything};
 
     description "Append the veiled expression <x> to the veiling table with "
       "symbol <label>.";
@@ -255,18 +347,18 @@ LEM := module()
     local k;
 
     k := 1;
-    if type(LEM:-UnVeilTables[label], 'table') then
+    if type(LEM:-UnVeilTables[label], table) then
       k := numelems(op(eval(LEM:-UnVeilTables[label]))) + 1;
       LEM:-UnVeilTables[label][label[k]] := x;
     else
       LEM:-UnVeilTables[label] := table([label[1] = x]);
     end if;
     return label[k];
-  end proc: # Auxiliary;
+  end proc: # VeilTableAppend
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilLabels := proc( $ )::list(symbol);
+  VeilLabels := proc( $ )::{list(symbol)};
 
     description "Return a list of the veiling labels.";
 
@@ -276,9 +368,9 @@ LEM := module()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   VeilSubs := proc(
-    x::anything,
+    x::{anything},
     label::{symbol, list(symbol)} := VeilLabels(),
-    $)::anything;
+    $)::{anything};
 
     description "Substitute the reversed veiling variables of the veiling label "
       "<label> in the expression <x>. If <label> is not given, substitute the "
@@ -289,7 +381,9 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilForget := proc( label::{symbol, list(symbol)} := VeilLabels(), $)
+  VeilForget := proc(
+    label::{symbol, list(symbol)} := VeilLabels(),
+    $)::{nothing};
 
     description "Clear all the veiling variables of the veiling label <label>. "
       "If <label> is not given, clear all the veiling variables.";
