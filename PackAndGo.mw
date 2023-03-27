@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Worksheet>
-<Version major="2021" minor="2"/>
+<Version major="2020" minor="2"/>
 <Label-Scheme value="2" prefix=""/>
 <View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1120" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="960" rtablesize="[10, 10]" useclientjvm="true" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -245,7 +245,7 @@ Current version: D. Stocco, M. Larcher, E. Bertolazzi.
 Inspired by the code of: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 </Text-field>
 </Output>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZELUkjbWlHRiQ2JVExRGlzYWJsZVZlcmJvc2l0eUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEwRW5hYmxlVmVyYm9zaXR5RidGMkY1RjgtRi82JVEmRkYyTFVGJ0YyRjVGOC1GLzYlUSVGRkxVRidGMkY1RjgtRi82JVErR2V0RGVncmVlc0YnRjJGNUY4LUYvNiVRI0xVRidGMkY1RjgtRi82JVE0UGVybXV0YXRpb25NYXRyaWNlc0YnRjJGNUY4LUYvNiVRI1FSRidGMkY1RjgtRi82JVEkUVIyRidGMkY1RjgtRi82JVE1U2V0TWluRGVncmVlU3RyYXRlZ3lGJ0YyRjVGOC1GLzYlUS1TZXRUaW1lTGltaXRGJ0YyRjVGOC1GLzYlUTdTZXRWZWlsaW5nU3RyYXRlZ3lDb3N0RidGMkY1RjgtRi82JVEtU2V0VmVyYm9zaXR5RidGMkY1RjgtRi82JVEyU29sdmVMaW5lYXJTeXN0ZW1GJ0YyRjVGOC1GLzYlUSRTcHlGJ0YyRjVGOC1GLzYlUTBWZWlsaW5nU3RyYXRlZ3lGJ0YyRjUvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRkBGPEY8LyUlb3BlbkdRJyZsc3FiO0YnLyUmY2xvc2VHUScmcnNxYjtGJw==">NzJJMURpc2FibGVWZXJib3NpdHlHNiJJMEVuYWJsZVZlcmJvc2l0eUdGJEkmRkYyTFVHRiRJJUZGTFVHRiRJK0dldERlZ3JlZXNHRiRJI0xVR0YkSTRQZXJtdXRhdGlvbk1hdHJpY2VzR0YkSSNRUkdGJEkkUVIyR0YkSTVTZXRNaW5EZWdyZWVTdHJhdGVneUdGJEktU2V0VGltZUxpbWl0R0YkSTdTZXRWZWlsaW5nU3RyYXRlZ3lDb3N0R0YkSS1TZXRWZXJib3NpdHlHRiRJMlNvbHZlTGluZWFyU3lzdGVtR0YkSSRTcHlHRiRJMFZlaWxpbmdTdHJhdGVneUdGJA==</Equation></Text-field>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkobWZlbmNlZEc2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUklbXJvd0dGJDZCLUkjbWlHRiQ2JVExRGlzYWJsZVZlcmJvc2l0eUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIixGJy9GNlEnbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRjQvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdRLDAuMzMzMzMzM2VtRictRi82JVEwRW5hYmxlVmVyYm9zaXR5RidGMkY1RjgtRi82JVEmRkYyTFVGJ0YyRjVGOC1GLzYlUSVGRkxVRidGMkY1RjgtRi82JVErR2V0RGVncmVlc0YnRjJGNUY4LUYvNiVRI0xVRidGMkY1RjgtRi82JVE0UGVybXV0YXRpb25NYXRyaWNlc0YnRjJGNUY4LUYvNiVRI1FSRidGMkY1RjgtRi82JVEkUVIyRidGMkY1RjgtRi82JVE1U2V0TWluRGVncmVlU3RyYXRlZ3lGJ0YyRjVGOC1GLzYlUS1TZXRUaW1lTGltaXRGJ0YyRjVGOC1GLzYlUS1TZXRWZXJib3NpdHlGJ0YyRjVGOC1GLzYlUTJTb2x2ZUxpbmVhclN5c3RlbUYnRjJGNUY4LUYvNiVRJFNweUYnRjJGNUY4LUYvNiVRJlNweUxVRidGMkY1LyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0ZARjxGPC8lJW9wZW5HUScmbHNxYjtGJy8lJmNsb3NlR1EnJnJzcWI7Ric=">NzFJMURpc2FibGVWZXJib3NpdHlHNiJJMEVuYWJsZVZlcmJvc2l0eUdGJEkmRkYyTFVHRiRJJUZGTFVHRiRJK0dldERlZ3JlZXNHRiRJI0xVR0YkSTRQZXJtdXRhdGlvbk1hdHJpY2VzR0YkSSNRUkdGJEkkUVIyR0YkSTVTZXRNaW5EZWdyZWVTdHJhdGVneUdGJEktU2V0VGltZUxpbWl0R0YkSS1TZXRWZXJib3NpdHlHRiRJMlNvbHZlTGluZWFyU3lzdGVtR0YkSSRTcHlHRiRJJlNweUxVR0Yk</Equation></Text-field>
 </Output>
 </Group>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -256,7 +256,7 @@ Inspired by the code of: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
 module LULEM:
 
     # Set the verbosity of the package to &lt;x&gt;.
-    SetVerbosity( x::{boolean}, $ ) :: {nothing}
+    SetVerbosity( x::{boolean}, $ )
 
     # Enable the verbosity of the package.
     EnableVerbosity( $ )
@@ -265,11 +265,12 @@ module LULEM:
     DisableVerbosity( $ )
 
     # Set the time limit of the package to &lt;x&gt;.
-    SetTimeLimit( x::{numeric}, $ ) :: {nothing}
+    SetTimeLimit( x::{numeric}, $ )
 
     # Compute the LU decomposition premutation matrices provided the rows pivot 
     # vector &lt;r&gt; and the columns pivot vector &lt;c&gt;.
     PermutationMatrices( r::{Vector(nonnegint)}, c::{Vector(nonnegint)}, $ )
+                       :: {Matrix(nonnegint)}
 
     # Get the degree matrices of the matrix &lt;A&gt;.
     GetDegrees( A::{Matrix}, $ ) :: {Matrix(nonnegint)}
@@ -277,17 +278,16 @@ module LULEM:
     # Plot of non-zero values of the matrix &lt;A&gt;.
     Spy( A::{Matrix}, $ ) :: {anything}
 
+    # Plot of non-zero values of the matrices &lt;A&gt;, &lt;L&gt; and &lt;U&gt; with fill-in 
+    # values.
+    SpyLU( A::{Matrix}, L::{Matrix}, U::{Matrix}, $ ) :: {anything}
+
     # Solve the factorized linear system &lt;T&gt; * x = b using the method specified 
-    # in &lt;T&gt;['method'] field. The input &lt;V&gt; is the veiling strategy to be used.
-    SolveLinearSystem( T::{table}, b::{Vector}, V::{symbol, function}, $ )
+    # in &lt;T&gt;['method'] field and veiling label &lt;V&gt;.
+    SolveLinearSystem( T::{table}, b::{Vector}, V::{symbol}, $ )
 
-    # Comupte the veiling strategy value for the value &lt;x&gt;.
-    VeilingStrategy( x::{algebraic}, $ ) :: {boolean}
-
-    # Set the veiling strategy parameter to &lt;c&gt;.
-    SetVeilingStrategyCost( c::{nonnegint}, $ ) :: {nothing}
-
-    SetMinDegreeStrategy( str::{string}, $ ) :: {nothing}
+    # Set the strategy &lt;str&gt; for the minimum degree ordering.
+    SetMinDegreeStrategy( str::{string}, $ )
 
     # Compute the LU decomposition of a square matrix &lt;A&gt; using the veiling 
     # symbol &lt;V&gt;.
@@ -307,7 +307,7 @@ module LULEM:
 
     # Compute the LU decomposition of a square matrix from its Fracton-Free LU 
     # decomposition &lt;T&gt;.
-    FF2LU( T::{table}, $ )
+    FF2LU( T::{table}, $ ) :: {list}
 
 </Text-field>
 </Output>

@@ -7,23 +7,21 @@
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FFLU := proc( A::Matrix, V::symbol, $ )::table;
+FFLU := proc(
+  A::{Matrix},
+  V::{symbol},
+  $)::{table};
 
   description "Compute the Fracton-Free LU decomposition of a square matrix "
-              "<A> using the veiling strategy <VeilingStrategy> and the "
-              "veiling symbol <V>.";
+    "<A> using the veiling strategy <VeilingStrategy> and the veiling symbol "
+    "<V>.";
 
   local SS, M, pivot, pivot_list, m, n, mn, i, j, k, ri, rk, rnk, r, c, apply_veil,
         z, tmp, bot, top;
 
   # sanity check
-  if has( A, V ) then
-    error(
-      "LULEM::FFLU( M, V=%a ) error!\n"
-      "veiling symbol %a is present in matrix coefficient.\n"
-      "Change it with a different one not present in M\n",
-      V, V
-    );
+  if has(A, V) then
+    error "veiling symbol %1 is already present in matrix coefficient.", V;
     return table([]);
   end if;
 
@@ -38,7 +36,7 @@ FFLU := proc( A::Matrix, V::symbol, $ )::table;
   c := Vector(n, k -> k);
 
   # Check if to veil or not
-  apply_veil := z -> `if`(LULEM:-VeilingStrategy(z), LEM:-Veil[V](z), z);
+  apply_veil := (z) -> LEM:-Veil[V](z);
 
   # Perform Gaussian elimination
   M          := copy(A);
@@ -50,7 +48,7 @@ FFLU := proc( A::Matrix, V::symbol, $ )::table;
     if LULEM:-Verbose then
       printf(
         "LULEM::FFLU(...): processing %d-th row, cost = %d, veilings = %d.\n",
-        k, LULEM:-Cost(M), nops(LEM:-VeilList(V))
+        k, LEM:-ExpressionCost(M), nops(LEM:-VeilList(V))
       );
     end;
 
@@ -94,9 +92,9 @@ FFLU := proc( A::Matrix, V::symbol, $ )::table;
     "c"      = c,
     "rank"   = rnk,
     "pivots" = pivot_list,
-    "M_cost" = LULEM:-Cost(M),
-    "S_cost" = LULEM:-Cost(SS),
-    "V_cost" = LULEM:-Cost(LEM:-VeilList(V)),
+    "M_cost" = LEM:-ExpressionCost(M),
+    "S_cost" = LEM:-ExpressionCost(SS),
+    "V_cost" = LEM:-ExpressionCost(LEM:-VeilList(V)),
     "M_nnz"  = nops(op(2, M)),
     "A_nnz"  = nops(op(2, A))
   ]);
@@ -104,10 +102,12 @@ end proc: # FFLU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FF2LU := proc( T::table, $ )::list,list,Matrix;
+FF2LU := proc(
+  T::{table},
+  $)::{list}, {list}, {Matrix};
 
   description "Compute the LU decomposition of a square matrix from its "
-              "Fracton-Free LU decomposition <T>.";
+    "Fracton-Free LU decomposition <T>.";
 
   local M, SS, r, c, rk, n, m, L, DG, L_list, D_list, i, j, k;
 
@@ -142,12 +142,16 @@ end proc: # FF2LU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FFLUsolve := proc( T::table, b::Vector, V::symbol, $ )::Vector;
+FFLUsolve := proc(
+  T::{table},
+  b::{Vector},
+  V::{symbol},
+  $)::{Vector};
 
   description "Solve the linear system Ax=b using FFLU decomposition <T>, "
-              "provided the vector <b> and the veiling symbol <V>.";
+    "provided the vector <b> and the veiling symbol <V>.";
 
-  local m, n, M, S, r, c, rnk, x, y, i, s,  apply_veil;
+  local m, n, M, S, r, c, rnk, x, y, z, i, s, apply_veil;
 
   M   := T["M"];
   S   := T["S"];
@@ -160,24 +164,19 @@ FFLUsolve := proc( T::table, b::Vector, V::symbol, $ )::Vector;
 
   # Check if the linear system is consistent
   if not m = n then
-    error(
-      "LULEM::FFLUsolve(...): only square system can be solved.\n"
-      "M is %d x %d.\n", m, n
-    );
+    error "only square system can be solved (got M = %1 x %2).", m, n;
     return table([]);
   end if;
 
   # Check if the linear system is consistent
   if not n = rnk then
-    error(
-      "LULEM::FFLUsolve(...): only full rank linear system can be solved.\n"
-      "Rank is %d but expected to be %d.\n", rnk, n
-    );
+    error "only full rank linear system can be solved (got rank = %1, expected "
+      "rank = %2).", rnk, n;
     return table([]);
   end if;
 
   # Create a normalizer function
-  apply_veil := (y) -> `if`(LULEM:-VeilingStrategy(y), LEM:-Veil[V](y), y);
+  apply_veil := (z) -> LEM:-Veil[V](z);
 
   # apply permutation P
   x := b[convert(r, list)];

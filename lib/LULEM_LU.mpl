@@ -7,21 +7,19 @@
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-LU := proc( A::Matrix, V::symbol, $ )::table;
+LU := proc(
+  A::{Matrix},
+  V::{symbol},
+  $)::{table};
 
   description "Compute the LU decomposition of a square matrix <A> using the "
-              "veiling symbol <V>.";
+    "veiling symbol <V>.";
 
   local M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, apply_veil, tmp;
 
   # sanity check
-  if has( A, V ) then
-    error(
-      "LULEM::LU( M, V=%a ) error!\n"
-      "veiling symbol %a is present in matrix coefficient.\n"
-      "Change it with a different one not present in M\n",
-      V, V
-    );
+  if has(A, V) then
+    error "veiling symbol %1 is already present in matrix coefficient.", V;
     return table([]);
   end if;
 
@@ -36,7 +34,7 @@ LU := proc( A::Matrix, V::symbol, $ )::table;
   c := Vector(n, k -> k);
 
   # Check if to veil or not
-  apply_veil := (z) -> `if`(LULEM:-VeilingStrategy(z), LEM:-Veil[V](z), z);
+  apply_veil := (z) -> LEM:-Veil[V](z);
 
   # Perform Gaussian elimination
   M          := copy(A);
@@ -47,7 +45,7 @@ LU := proc( A::Matrix, V::symbol, $ )::table;
     if LULEM:-Verbose then
       printf(
         "LULEM::LU(...): processing %d-th row, cost = %d, veilings = %d.\n",
-        k, LULEM:-Cost(M), nops(LEM:-VeilList(V))
+        k, LEM:-ExpressionCost(M), nops(LEM:-VeilList(V))
       );
     end if;
 
@@ -92,9 +90,9 @@ LU := proc( A::Matrix, V::symbol, $ )::table;
     "c"      = c,
     "rank"   = rnk,
     "pivots" = pivot_list,
-    "L_cost" = LULEM:-Cost(L),
-    "U_cost" = LULEM:-Cost(U),
-    "V_cost" = LULEM:-Cost(LEM:-VeilList(V)),
+    "L_cost" = LEM:-ExpressionCost(L),
+    "U_cost" = LEM:-ExpressionCost(U),
+    "V_cost" = LEM:-ExpressionCost(LEM:-VeilList(V)),
     "L_nnz"  = nops(op(2, L)),
     "U_nnz"  = nops(op(2, U)),
     "A_nnz"  = nops(op(2, A))
@@ -103,12 +101,16 @@ end proc: # LU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-LUsolve := proc( T::table, b::Vector, V::symbol, $ )::Vector;
+LUsolve := proc(
+  T::{table},
+  b::{Vector},
+  V::{symbol},
+  $)::{Vector};
 
   description "Solve the linear system Ax=b using LU decomposition <T>, "
-              "provided the vector <b> and the veiling symbol <V>.";
+    "provided the vector <b> and the veiling symbol <V>.";
 
-  local L, U, r, c, m, n, p, q, apply_veil, x, y, i, j, s, rnk:
+  local L, U, r, c, m, n, p, q, apply_veil, x, y, z, i, j, s, rnk:
 
   # Extract the LU decomposition
   L   := T["L"];
@@ -123,25 +125,21 @@ LUsolve := proc( T::table, b::Vector, V::symbol, $ )::Vector;
 
   # Check if the linear system is consistent
   # sanity check
-  if not ( (m = n) and (p = q) ) then
-    error(
-      "LULEM::LUsolve(...): only square system can be solved.\n"
-      "L is %d x %d, U is %d x %d\n", m, n, p, q
-    );
+  if not ((m = n) and (p = q)) then
+    error "only square system can be solved, got L = %d x %d, and U = %d x %d.",
+      m, n, p, q;
     return table([]);
   end if;
 
   # Check if the linear system is consistent
   if not n = rnk then
-    error(
-      "LULEM::LUsolve(...): only full rank linear system can be solved.\n"
-      "Rank is %d expected %d.\n", rnk, n
-    );
+    error "only full rank linear system can be solved (got rank = %1, expected "
+      "rank = %2).", rnk, n;
     return table([]);
   end if;
 
   # Create a normalizer function
-  apply_veil := (y) -> `if`(LULEM:-VeilingStrategy(y), LEM:-Veil[V](y), y);
+  apply_veil := (z) -> LEM:-Veil[V](z);
 
   # apply permutation P
   x := b[convert(r, list)];

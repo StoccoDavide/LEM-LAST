@@ -8,20 +8,19 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Pivoting := proc(
-  k::integer,
-  M::Matrix,
-  V::symbol,
-  r::Vector(nonnegint),
-  c::Vector(nonnegint),
-  $)::table;
+  k::{integer},
+  M::{Matrix},
+  V::{symbol},
+  r::{Vector(nonnegint)},
+  c::{Vector(nonnegint)},
+  $)::{table};
 
   description "Compute the LU decomposition pivots vectors with minum degree "
-              "provided the step <k>, the temporary LU (NAG) matrix <M>, "
-              "the veiling symbol <V>, the rows permutation <r> and "
-              "the columns permutation <c>.";
+    "provided the step <k>, the temporary LU (NAG) matrix <M>, the veiling "
+    "symbol <V>, the rows permutation <r> and the columns permutation <c>.";
 
-  local uMij, M_degree_R, M_degree_C, perm, perm_R, perm_C, m, n, i, j, ipos, apply_unveil,
-        z, Mij, pivot, pivot_list, pivot_cost;
+  local uMij, M_degree_R, M_degree_C, perm, perm_R, perm_C, m, n, i, j, ipos,
+    apply_unveil, z, Mij, pivot, pivot_list, pivot_cost;
 
   # Check if to veil or not to veil
   apply_unveil := (z) -> LEM:-UnVeil[V](z);
@@ -129,18 +128,20 @@ end proc: # Pivoting
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotCost := proc( x::algebraic, $ )::integer, algebraic;
+PivotCost := proc(
+  x::{algebraic},
+  $)::{integer}, {algebraic};
 
   description "Compute the cost of the pivot <x>.";
 
-  if type(x, 'integer') or type(x, 'float') then
+  if type(x, integer) or type(x, float) then
     if evalb(x = 0) then
       return 0, 0;
     else
       return 1, abs(x);
     end if;
   end if;
-  return LULEM:-Cost(x), infinity;
+  return LEM:-ExpressionCost(x), infinity;
 end proc: # PivotCost
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -152,7 +153,12 @@ end proc: # PivotCost
 #                             |___/
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-SetMinDegreeStrategy := proc( str::string, $ )
+SetMinDegreeStrategy := proc(
+  str::{string},
+  $)
+
+  description "Set the strategy <str> for the minimum degree ordering.";
+
   if (str = "none") then
     LULEM:-DegreeCost_fun := LULEM:-DegreeCost_none;
   elif (str = "row") then
@@ -170,65 +176,96 @@ SetMinDegreeStrategy := proc( str::string, $ )
   elif (str = "max") then
     LULEM:-DegreeCost_fun := LULEM:-DegreeCost_max;
   else
-    error "unknown minimum degree strategy %s.\n", str;
+    error "unknown minimum degree strategy %1.", str;
   end if;
   return NULL;
 end proc: # SetMinDegreeStrategy
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_none := proc( val::table, $)::integer;
+DegreeCost_none := proc(
+  val::{table},
+  $)::{integer};
+
   description "Compute the pivoting degree cost.";
+
   return 0;
 end proc: # DegreeCost_none
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_row := proc( val::table, $)::integer;
+DegreeCost_row := proc(
+  val::{table},
+  $)::{integer};
+
   description "Compute the pivoting degree cost.";
+
   return val["degree_r"];
 end proc: # DegreeCost_row
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_col := proc( val::table, $)::integer;
+DegreeCost_col := proc(
+  val::{table},
+  $)::{integer};
+
   description "Compute the pivoting degree cost.";
+
   return val["degree_c"];
 end proc: # DegreeCost_col
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_sum := proc( val::table, $)::integer;
+DegreeCost_sum := proc(
+  val::{table},
+  $)::{integer};
+
   description "Compute the pivoting degree cost.";
+
   return val["degree_c"] + val["degree_r"];
 end proc: # DegreeCost_sum
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_prod := proc( val::table, $)::integer;
+DegreeCost_prod := proc(
+  val::{table},
+  $)::{integer};
+
   description "Compute the pivoting degree cost.";
-  #return (val["degree_c"]+1) * (val["degree_r"]+1);
+
   return val["degree_c"] * val["degree_r"];
 end proc: # DegreeCost_prod
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_prod2 := proc( val::table, $)::integer;
+DegreeCost_prod2 := proc(
+  val::{table},
+  $)::{integer};
+
   description "Compute the pivoting degree cost.";
-  return max(val["degree_c"]-1,0) * max(val["degree_r"]-1,0);
+
+  return max(val["degree_c"]-1, 0) * max(val["degree_r"]-1, 0);
 end proc: # DegreeCost_prod2
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_min := proc( val::table, $)::integer;
+DegreeCost_min := proc(
+  val::{table},
+  $)::{integer};
+
   description "Compute the pivoting degree cost.";
+
   return min(val["degree_c"], val["degree_r"]);
 end proc: # DegreeCost_min
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-DegreeCost_max := proc( val::table, $)::integer;
+DegreeCost_max := proc(
+  val::{table},
+  $)::{integer};
+
   description "Compute the pivoting degree cost.";
+
   return max(val["degree_c"], val["degree_r"]);
 end proc: # DegreeCost_max
 
@@ -241,11 +278,14 @@ end proc: # DegreeCost_max
 #                                  |___/
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-PivotingCompare := proc( cur::table, val::table, $ )::boolean;
+PivotingCompare := proc(
+  cur::{table},
+  val::{table},
+  $)::{boolean};
 
   description "Compute the pivoting strategy: given the current pivot <cur> "
-              "and the next pivot <val>, decide if to the next pivot is "
-              "better than the current  pivot or not.";
+    "and the next pivot <val>, decide if to the next pivot is better than the "
+    "current pivot or not.";
 
   if (val["numeric_value"] < cur["numeric_value"]) then
     return true;

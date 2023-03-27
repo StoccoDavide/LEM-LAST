@@ -23,7 +23,7 @@
 # This is a module for the 'LULEM' (LU and QR decomposition Large Expressions
 # Management) package. It contains the functions to solve linear systems of
 # equations with large symbolic expressions. The module uses a symbolic full
-# pivoting LU decomposition to solve linear systems. The `LEM` (Large Expressions
+# pivoting LU decomposition to solve linear systems. The 'LEM' (Large Expressions
 # Management) package is used to avoid expression swell. Moreover, it also
 # provides a full symbolic QR decomposition.
 #
@@ -49,10 +49,8 @@ LULEM := module()
           PermutationMatrices,
           GetDegrees,
           Spy,
-          SpyLUfillIn,
+          SpyLU,
           SolveLinearSystem,
-          VeilingStrategy,
-          SetVeilingStrategyCost,
           SetMinDegreeStrategy,
           LU,
           QR,
@@ -72,7 +70,6 @@ LULEM := module()
           InitLULEM,
           Verbose,
           TimeLimit,
-          VeilingStrategy_par,
           DegreeCost_fun,
           DegreeCost_none,
           DegreeCost_row,
@@ -140,31 +137,36 @@ LULEM := module()
 
     description "Initialize 'LULEM' module internal variables.";
 
-    LULEM:-Verbose             := false;
-    LULEM:-TimeLimit           := 1;
-    LULEM:-VeilingStrategy_par := 15;
-    LULEM:-DegreeCost_fun      := LULEM:-DegreeCost_prod;
+    LULEM:-Verbose        := false;
+    LULEM:-TimeLimit      := 1;
+    LULEM:-DegreeCost_fun := LULEM:-DegreeCost_prod;
     return NULL;
   end proc: # InitLULEM
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  GetDegrees := proc( A::Matrix, $)::Matrix(nonnegint),Matrix(nonnegint);
+  # Code inspired by:
+  # https://www.mapleprimes.com/questions/235996-Is-There-Any-Command-Or-Function-For
+
+  GetDegrees := proc(
+    A::{Matrix},
+    $)::{Matrix(nonnegint)}, {Matrix(nonnegint)};
 
     description "Get the degree matrices of the matrix <A>.";
 
-    #
-    # code inspired by
-    # https://www.mapleprimes.com/questions/235996-Is-There-Any-Command-Or-Function-For
-    #
     local i, j, k, m, n, r, c, ro, co;
 
     m, n := LinearAlgebra:-Dimensions(A);
     ro := Vector[column](m, k -> 1);
     co := Vector[row](n, k -> 1);
-    r  := Vector[column]([seq(rtable_scanblock( A, [i,..], ':-NonZeros'), i=1..m)]):
-    c  := Vector[row]([seq(rtable_scanblock(A, [..,j], ':-NonZeros'), j=1..n)]):
-    # OLD CODE
+    r  := Vector[column](
+      [seq(rtable_scanblock(A, [i,..], ':-NonZeros'), i = 1..m)]
+    ):
+    c  := Vector[row](
+      [seq(rtable_scanblock(A, [..,j], ':-NonZeros'), j = 1..n)]
+    ):
+
+    # Old code
     #r  := Vector[column](m);
     #c  := Vector[row](n);
     #for i from 1 to m do
@@ -175,42 +177,50 @@ LULEM := module()
     #    end if;
     #  end do;
     #end do;
+
     return r.co, ro.c;
-  end proc:
+  end proc: # GetDegrees
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  Spy := proc( A::Matrix, $)::anything;
+  Spy := proc(
+    A::{Matrix},
+    $)::{anything};
 
     description "Plot of non-zero values of the matrix <A>.";
 
     return plots:-sparsematrixplot(A, 'matrixview');
-  end proc;
+  end proc: # Spy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SpyLUfillIn := proc( A::Matrix, L::Matrix, U::Matrix, $ )::anything;
+  SpyLU := proc(
+    A::{Matrix},
+    L::{Matrix},
+    U::{Matrix},
+    $)::{anything};
 
-    description "Plot of non-zero values of the matrix <A> with fill in.";
+    description "Plot of non-zero values of the matrices <A>, <L> and <U> "
+      "with fill-in values.";
 
     local A0, A1, A2;
-    A0 := map(x->`if`(x=0,0,1),A);
-    A1 := map(x->`if`(x=0,0,1),L+U);
-    A2 := map(x->`if`(x=1,1,0),A0+A1);
+    A0 := map(x->`if`(x = 0, 0, 1), A);
+    A1 := map(x->`if`(x = 0, 0, 1), L+U);
+    A2 := map(x->`if`(x = 1, 1, 0), A0+A1);
 
-    return [plots:-sparsematrixplot(A0, 'matrixview',color="Blue"),
-            plots:-sparsematrixplot(A2, 'matrixview',color="Red")];
-  end proc;
+    return [plots:-sparsematrixplot(A0, 'matrixview', color="Blue"),
+            plots:-sparsematrixplot(A2, 'matrixview', color="Red")];
+  end proc: # SpyLU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   PermutationMatrices := proc(
-    r::Vector(nonnegint),
-    c::Vector(nonnegint),
-    $)::Matrix(nonnegint),Matrix(nonnegint);
+    r::{Vector(nonnegint)},
+    c::{Vector(nonnegint)},
+    $)::{Matrix(nonnegint)}, {Matrix(nonnegint)};
 
     description "Compute the LU decomposition premutation matrices provided "
-                "the rows pivot vector <r> and the columns pivot vector <c>.";
+      "the rows pivot vector <r> and the columns pivot vector <c>.";
 
     local m, n, i, P, Q;
 
@@ -229,13 +239,15 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SetVerbosity := proc( x::{boolean}, $ )
+  SetVerbosity := proc(
+    x::{boolean},
+    $)
 
     description "Set the verbosity of the package to <x>.";
 
     LULEM:-Verbose := x;
     return NULL;
-  end proc:
+  end proc: # SetVerbosity
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -245,7 +257,7 @@ LULEM := module()
 
     LULEM:-Verbose := true;
     return NULL;
-  end proc:
+  end proc: # EnableVerbosity
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -255,11 +267,13 @@ LULEM := module()
 
     LULEM:-Verbose := false;
     return NULL;
-  end proc:
+  end proc: # DisableVerbosity
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SetTimeLimit := proc( x::numeric, $ )
+  SetTimeLimit := proc(
+    x::{numeric},
+    $)
 
     description "Set the time limit of the package to <x>.";
 
@@ -269,40 +283,18 @@ LULEM := module()
 
     LULEM:-TimeLimit := x;
     return NULL;
-  end proc:
+  end proc: # SetTimeLimit
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  Cost := proc( x::anything, $ )::integer;
-
-    description "Compute the cost of the expression <x>.";
-
-    local tmp;
-
-    if not(type(x, algebraic) or type(x, list)) then
-      tmp := convert(x, list);
-    else
-      tmp := x;
-    end if;
-
-    return subs(
-      subscripts      = 0,
-      assignments     = 0,
-      additions       = 1,
-      multiplications = 2,
-      divisions       = 3,
-      functions       = 2,
-      codegen:-cost(tmp)
-    );
-  end proc: # PivotCost
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  SolveLinearSystem := proc( T::table, b::Vector, V::symbol, $ )
+  SolveLinearSystem := proc(
+    T::{table},
+    b::{Vector},
+    V::{symbol},
+    $)
 
     description "Solve the factorized linear system <T> * x = b using the "
-                "method specified in <T>['method'] field. The input <V> is "
-                "the veiling strategy to be used.";
+      "method specified in <T>['method'] field and veiling label <V>.";
 
     if (T["method"] = "LU") then
       return LULEM:-LUsolve(T, b, V);
@@ -317,34 +309,6 @@ LULEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  #  __     __   _ _ _
-  #  \ \   / /__(_) (_)_ __   __ _
-  #   \ \ / / _ \ | | | '_ \ / _` |
-  #    \ V /  __/ | | | | | | (_| |
-  #     \_/ \___|_|_|_|_| |_|\__, |
-  #                          |___/
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  VeilingStrategy := proc( x::algebraic, $ )::boolean;
-
-    description "Comupte the veiling strategy value for the value <x>.";
-
-    return evalb(LULEM:-Cost(x) > LULEM:-VeilingStrategy_par);
-  end proc: # VeilingStrategy
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  SetVeilingStrategyCost := proc( c::nonnegint, $ )
-
-    description "Set the veiling strategy parameter to <c>.";
-
-    LULEM:-VeilingStrategy_par := c;
-    return NULL;
-  end proc: # SetVeilingStrategyCost
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 $include "./lib/LULEM_Pivoting.mpl"
 $include "./lib/LULEM_LU.mpl"
 $include "./lib/LULEM_FFLU.mpl"
@@ -353,6 +317,6 @@ $include "./lib/LULEM_QR2.mpl"
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-end module:
+end module: # LULEM
 
 # That's all folks!

@@ -1,36 +1,39 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#    ___  ____  ____
+#   / _ \|  _ \|___ \
+#  | | | | |_) | __) |
+#  | |_| |  _ < / __/
+#   \__\_\_| \_\_____|
+#
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-QR2 := proc( A::Matrix, V::symbol, $ )::table;
+QR2 := proc(
+  A::{Matrix},
+  V::{symbol},
+  $)::{table};
 
   description "Compute the Givens QR decomposition of a square matrix <A> using "
-              "the veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
+    "the veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
 
   local m, n, Q, R, k, j, a, b, c, r, Rk, Rj, l, C, apply_veil;
 
   # sanity check
-  if has( A, V ) then
-    error(
-      "LULEM::QR2( M, V=%a ) error!\n"
-      "veiling symbol %a is present in matrix coefficient.\n"
-      "Change it with a different one not present in M\n",
-      V, V
-    );
+  if has(A, V) then
+    error "veiling symbol %1 is already present in matrix coefficient.", V;
   end if;
 
   # Clear the veiling list
   LEM:-VeilForget(V);
 
   # Check if to veil or not
-  apply_veil := (z) -> `if`(LULEM:-VeilingStrategy(z), LEM:-Veil[V](z), z);
+  apply_veil := (z) -> LEM:-Veil[V](z);
 
   # Extract the dimensions of the matrix A
   m, n := LinearAlgebra:-Dimensions(A):
 
   # Check if the matrix A valid
   if m < n then
-    error(
-      "LULEM::QR2(...): invalid matrix A(m=%d,n=%d) detected, got (m >= n).", m, n
-    );
+    error "invalid matrix size A(m = %1, n = %2) detected (m >= n).", m, n;
   end if;
 
   # Initialize some variables
@@ -46,7 +49,7 @@ QR2 := proc( A::Matrix, V::symbol, $ )::table;
       if LULEM:-Verbose then
         printf(
         "LULEM::QR2(...): processing %d-th row, cost = %d, veilings = %d.\n",
-        k, LULEM:-Cost(R), length(LEM:-VeilList(V))
+        k, LEM:-ExpressionCost(R), length(LEM:-VeilList(V))
         );
       end if;
       if (l > k) then
@@ -106,25 +109,29 @@ QR2 := proc( A::Matrix, V::symbol, $ )::table;
     "R"      = R,
     "V"      = V,
     "c"      = c,
-    "Q_cost" = LULEM:-Cost(Q),
-    "R_cost" = LULEM:-Cost(R),
-    "V_cost" = LULEM:-Cost(LEM:-VeilList(V)),
+    "Q_cost" = LEM:-ExpressionCost(Q),
+    "R_cost" = LEM:-ExpressionCost(R),
+    "V_cost" = LEM:-ExpressionCost(LEM:-VeilList(V)),
     "Q_nnz"  = nops(op(2, Q)),
     "A_nnz"  = nops(op(2, A))
   ]);
-end proc: # QR
+end proc: # QR2
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-QR2solve := proc( T::table, xb::Vector, V::symbol, $ )
+QR2solve := proc(
+  T::{table},
+  xb::{Vector},
+  V::{symbol},
+  $)::{Vector};
 
   description "Solve the linear system Ax=b using QR decomposition <T>, "
-              "provided the vector <b> and the veiling symbol <V>.";
+    "provided the vector <b> and the veiling symbol <V>.";
 
   local Q, R, m, n, i, j, k, z, c, s, a, b, x, z1, z2, r, apply_veil;
 
   # Check if to veil or not
-  apply_veil := (z) -> `if`(LULEM:-VeilingStrategy(z), LEM:-Veil[V](z), z);
+  apply_veil := (z) -> LEM:-Veil[V](z);
 
   # apply Q^T a rhs
   Q  := T["Q"];
