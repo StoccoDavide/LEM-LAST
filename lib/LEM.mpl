@@ -40,55 +40,38 @@
 # We would like to thank Jacques Carette for providing the original code that
 # have been used to develop this module.
 
-LEM := module()
+unprotect('LEM');
 
-  export  Veil,
-          UnVeil,
-          UnVeilImap,
-          VeilUnorderedList,
-          VeilList,
-          VeilTableSize,
-          VeilTableImap,
-          VeilTableAppend,
-          VeilLabels,
-          VeilSubs,
-          VeilForget,
-          ExpressionCost,
-          VeilingStrategy,
-          SetVeilingStrategyPars;
+module LEM()
 
-  local   ModuleLoad,
-          ModuleUnload,
-          UnVeilTables,
-          UnVeilLabels,
-          Auxiliary,
-          VeilingStrategy_maxcost,
-          VeilingStrategy_subscripts,
-          VeilingStrategy_assignments,
-          VeilingStrategy_additions,
-          VeilingStrategy_multiplications,
-          VeilingStrategy_divisions,
-          VeilingStrategy_functions;
-
-  option  package,
-          load   = ModuleLoad,
-          unload = ModuleUnload;
-
-  description "Large Expressions Management module.";
+  option object;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  ModuleLoad := proc()
+  local m_UnVeilTables                    := table([]);
+  local m_VeilingStrategy_maxcost         := 15;
+  local m_VeilingStrategy_subscripts      := 0;
+  local m_VeilingStrategy_assignments     := 0;
+  local m_VeilingStrategy_additions       := 1;
+  local m_VeilingStrategy_multiplications := 2;
+  local m_VeilingStrategy_divisions       := 3;
+  local m_VeilingStrategy_functions       := 2;
 
-    description "'LEM' module load procedure.";
-
-    local i, lib_base_path;
-
+  export info::static := proc()
     printf(
       "'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023\n"
       "Current version: D. Stocco, M. Larcher, E. Bertolazzi.\n"
       "Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
     );
+    return NULL;
+  end proc: # ModuleLoad
+
+  export ModuleLoad::static := proc()
+
+    description "'LEM' module load procedure.";
+
+    local i, lib_base_path;
+    LEM:-info();
 
     lib_base_path := null;
     for i in [libname] do
@@ -100,30 +83,37 @@ LEM := module()
       error "Cannot find 'LEM' module";
     end if;
 
-    # Initialize internal variables
-    LEM:-UnVeilTables := table([]);
-    LEM:-SetVeilingStrategyPars();
-
     return NULL;
   end proc: # ModuleLoad
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  ModuleUnload := proc()
+  export ModuleUnload::static := proc()
 
     description "'LEM' module unload procedure.";
-
-    LEM:-UnVeilTables := NULL;
-
     return NULL;
   end proc: # ModuleUnload
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  Veil := proc(
-    x::{anything},
-    {force::{boolean} := false},
-    $)::{anything};
+  export ModuleCopy::static := proc( self::LEM, proto::LEM, $ )
+    self:-m_UnVeilTables                    := copy(proto:-m_UnVeilTables);
+    self:-m_VeilingStrategy_maxcost         := proto:-m_VeilingStrategy_maxcost;
+    self:-m_VeilingStrategy_subscripts      := proto:-m_VeilingStrategy_subscripts;
+    self:-m_VeilingStrategy_assignments     := proto:-m_VeilingStrategy_assignments;
+    self:-m_VeilingStrategy_additions       := proto:-m_VeilingStrategy_additions;
+    self:-m_VeilingStrategy_multiplications := proto:-m_VeilingStrategy_multiplications;
+    self:-m_VeilingStrategy_divisions       := proto:-m_VeilingStrategy_divisions;
+    self:-m_VeilingStrategy_functions       := proto:-m_VeilingStrategy_functions;
+  end;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export Veil::static := proc(
+    _self::LEM,
+    x::anything,
+    {force::boolean := false},
+    $)::anything;
 
     description "Check if the veiling strategy is verified and veil an expression <x> and return a label to it.";
 
@@ -142,7 +132,7 @@ LEM := module()
     c := Normalizer(x);
 
     # Check the veiling strategy
-    if not(force) and not(LEM:-VeilingStrategy(c)) then
+    if not(force) and not(_self:-VeilingStrategy(c)) then
       return c;
     end if;
 
@@ -163,14 +153,15 @@ LEM := module()
     end try;
     # Only if there is something complicated to hide we do actually hide it and
     # return a label.
-    return s * i * LEM:-VeilTableAppend(label, s*c/i);
+    return s * i * _self:-VeilTableAppend(label, s*c/i);
   end proc; # Veil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  ExpressionCost := proc(
-    x::{anything},
-    $)::{integer};
+  export ExpressionCost::static := proc(
+    _self::LEM,
+    x::anything,
+    $)::integer;
 
     description "Compute the cost of the expression <x>.";
 
@@ -183,30 +174,33 @@ LEM := module()
     end if;
 
     return subs(
-      'subscripts'      = 0,
-      'assignments'     = 0,
-      'additions'       = 1,
-      'multiplications' = 2,
-      'divisions'       = 3,
-      'functions'       = 2,
+      'subscripts'      = _self:-m_VeilingStrategy_subscripts,
+      'assignments'     = _self:-m_VeilingStrategy_assignments,
+      'additions'       = _self:-m_VeilingStrategy_additions,
+      'multiplications' = _self:-m_VeilingStrategy_multiplications,
+      'divisions'       = _self:-m_VeilingStrategy_divisions,
+      'functions'       = _self:-m_VeilingStrategy_functions,
       codegen:-cost(tmp)
     );
   end proc: # ExpressionCost
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilingStrategy := proc(
+  export VeilingStrategy::static := proc(
+    _self::LEM,
     x::{algebraic},
     $)::{boolean};
 
     description "Comupte the veiling strategy value for the value <x>.";
 
-    return evalb(LEM:-ExpressionCost(x) > LEM:-VeilingStrategy_maxcost);
+    return evalb(_self:-ExpressionCost(x) > _self:-m_VeilingStrategy_maxcost);
   end proc: # VeilingStrategy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  SetVeilingStrategyPars := proc({
+  export SetVeilingStrategyPars::static := proc(
+    _self::LEM,
+    {
     maxcost::{nonnegint}         := 15,
     subscripts::{nonnegint}      := 0,
     assignments::{nonnegint}     := 0,
@@ -223,42 +217,42 @@ LEM := module()
       "divisions cost weight parameter <divisions>, and functions cost weight "
       "parameter <functions>.";
 
-    LEM:-VeilingStrategy_maxcost         := maxcost;
-    LEM:-VeilingStrategy_subscripts      := subscripts;
-    LEM:-VeilingStrategy_assignments     := assignments;
-    LEM:-VeilingStrategy_additions       := additions;
-    LEM:-VeilingStrategy_multiplications := multiplications;
-    LEM:-VeilingStrategy_divisions       := divisions;
-    LEM:-VeilingStrategy_functions       := functions;
+    _self:-m_VeilingStrategy_maxcost         := maxcost;
+    _self:-m_VeilingStrategy_subscripts      := subscripts;
+    _self:-m_VeilingStrategy_assignments     := assignments;
+    _self:-m_VeilingStrategy_additions       := additions;
+    _self:-m_VeilingStrategy_multiplications := multiplications;
+    _self:-m_VeilingStrategy_divisions       := divisions;
+    _self:-m_VeilingStrategy_functions       := functions;
     return NULL;
   end proc: # SetVeilingStrategyPars
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UnVeil := proc(
-    x::{anything},
-    $)::{anything};
+  export UnVeil::static := proc(
+    _self::LEM,
+    x::anything,
+    $)::anything;
 
     description "Unveil the expression <x>.";
 
-    local label;
-
-    label := `if`(procname::{indexed}, op(procname), '_V');
-    return eval['recurse'](x,LEM:-VeilUnorderedList(label));
+    local label := `if`(procname::{indexed}, op(procname), '_V');
+    return eval['recurse'](x,_self:-VeilUnorderedList(label));
   end proc: # UnVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UnVeilImap := proc(
-    x::{anything},
-    $)::{anything};
+  export UnVeilImap::static := proc(
+    _self::LEM,
+    x::anything,
+    $)::anything;
 
     description "Unveil the expression <x> with internal permutation map.";
 
     local label, T, perm, a, b, k;
 
 	  label   := `if`(procname::{indexed}, op(procname), '_V');
-    T, perm := LEM:-VeilTableImap(label, parse("reverse") = true);
+    T, perm := _self:-VeilTableImap(label, parse("reverse") = true);
     b       := copy(x);
     for k from 1 to nops(perm) do
       a := b;
@@ -269,34 +263,42 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilList := proc(
-    label::{symbol, list(symbol)} := VeilLabels(),
+  export VeilList::static := proc(
+    _self::LEM,
+    _label::{symbol, list(symbol)} := NULL,
     {reverse::boolean := false},
     $)::list(anything);
 
     description "Return a list of the veiling variables labelled as <label>. "
       "If <label> is not given, return a list of all veiling variables.";
 
-    local T, perm;
+    local T, perm, label;
+
+    if _label = NULL then
+     label := VeilLabels(_self);
+    else
+     label := _label;
+    end if;
 
     if type(label, list) then
-      return map(x -> op(LEM:-VeilList(x, parse("reverse") = reverse)), label);
+      return map(x -> op(_self:-VeilList(x, parse("reverse") = reverse)), label);
     else
-      T, perm := LEM:-VeilTableImap(label, parse("reverse") = reverse);
+      T, perm := _self:-VeilTableImap(label, parse("reverse") = reverse);
       return T[perm]:
     end if;
   end proc: # VeilList
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilUnorderedList := proc(
-    label::{symbol},
-    $)::{anything};
+  export VeilUnorderedList::static := proc(
+    _self::LEM,
+    label::symbol,
+    $)::list;
 
     description "Return a list of the veiling variables labelled as <label>.";
 
-    if type(LEM:-UnVeilTables[label], table) then
-      return op(eval(LEM:-UnVeilTables[label]));
+    if type(_self:-m_UnVeilTables[label], table) then
+      return op(eval(_self:-m_UnVeilTables[label]));
     else
       return [];
     end if;
@@ -304,20 +306,25 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilTableSize := proc(
-    label::{symbol},
-    $)::{nonnegint};
+  export VeilTableSize::static := proc(
+    _self::LEM,
+    label::symbol,
+    $)::nonnegint;
 
     description "Return the size of the table for symbol <label>.";
-
-    return numelems(LEM:-VeilUnorderedList(label));
+    if type(_self:-m_UnVeilTables[label], table) then
+      return numelems(op(eval(_self:-m_UnVeilTables[label])));
+    else
+      return 0;
+    end if;
   end proc: # VeilTableSize
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilTableImap := proc(
-    label::{symbol},
-    {reverse::{boolean} := false},
+  export VeilTableImap::static := proc(
+    _self::LEM,
+    label::symbol,
+    {reverse::boolean := false},
     $)::{[], list(anything=anything)}, {[], list(nonnegint)};
 
     description "Return the table for symbol <label> and the permutation that "
@@ -325,7 +332,7 @@ LEM := module()
 
     local T, a, b, comparator;
 
-    T := LEM:-VeilUnorderedList(label);
+    T := _self:-VeilUnorderedList(label);
     if reverse then
       comparator := (a, b) -> evalb(op(1, lhs(a)) > op(1, lhs(b)));
     else
@@ -336,10 +343,11 @@ LEM := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilTableAppend := proc(
-    label::{symbol},
-    x::{anything},
-    $)::{anything};
+  export VeilTableAppend::static := proc(
+    _self::LEM,
+    label::symbol,
+    x::anything,
+    $)::indexed;
 
     description "Append the veiled expression <x> to the veiling table with "
       "symbol <label>.";
@@ -347,52 +355,69 @@ LEM := module()
     local k;
 
     k := 1;
-    if type(LEM:-UnVeilTables[label], table) then
-      k := numelems(op(eval(LEM:-UnVeilTables[label]))) + 1;
-      LEM:-UnVeilTables[label][label[k]] := x;
+    if type(_self:-UnVeilTables[label], table) then
+      k := numelems(op(eval(_self:-UnVeilTables[label]))) + 1;
+      _self:-UnVeilTables[label][label[k]] := x;
     else
-      LEM:-UnVeilTables[label] := table([label[1] = x]);
+      _self:-UnVeilTables[label] := table([label[1] = x]);
     end if;
     return label[k];
   end proc: # VeilTableAppend
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilLabels := proc( $ )::{list(symbol)};
+  export VeilLabels::static := proc( _self::LEM, $ )::list(symbol);
 
     description "Return a list of the veiling labels.";
 
-    return [indices(LEM:-UnVeilTables, 'nolist')];
+    return [indices(_self:-m_UnVeilTables, 'nolist')];
   end proc: # VeilLabels
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilSubs := proc(
-    x::{anything},
-    label::{symbol, list(symbol)} := VeilLabels(),
-    $)::{anything};
+  export VeilSubs::static := proc(
+    _self::LEM,
+    x::anything,
+    _label::{symbol, list(symbol)} := NULL,
+    $)::anything;
 
     description "Substitute the reversed veiling variables of the veiling label "
       "<label> in the expression <x>. If <label> is not given, substitute the "
       "reversed veiling variables of all veiling labels.";
 
-    return subs[eval](op(LEM:-VeilList(label, parse("reverse") = true)), x);
+    local label;
+
+    if _label = NULL then
+     label := VeilLabels(_self);
+    else
+     label := _label;
+    end if;
+
+    return subs[eval](op(_self:-VeilList(label, parse("reverse") = true)), x);
   end proc: # VeilSubs
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  VeilForget := proc(
-    label::{symbol, list(symbol)} := VeilLabels(),
-    $)::{nothing};
+  export VeilForget::static := proc(
+    _self::LEM,
+    _label::{symbol, list(symbol)} := NULL,
+    $)
 
     description "Clear all the veiling variables of the veiling label <label>. "
       "If <label> is not given, clear all the veiling variables.";
 
-    if type(label, list) then
-      map(x -> LEM:-VeilForget(x), label);
+    local label;
+
+    if _label = NULL then
+     label := VeilLabels(_self);
     else
-      LEM:-UnVeilLabels[label] := evaln(LEM:-UnVeilLabels[label]);
-      LEM:-UnVeilTables[label] := evaln(LEM:-UnVeilTables[label]);
+     label := _label;
+    end if;
+
+    if type(label, list) then
+      map(x -> _self:-VeilForget(x), label);
+    else
+      _self:-m_UnVeilTables[label] := evaln(_self:-m_UnVeilTables[label]);
     end if;
     return NULL;
   end proc: # VeilForget
