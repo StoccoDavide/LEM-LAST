@@ -7,26 +7,27 @@
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FFLU := proc(
-  A::{Matrix},
-  V::{symbol},
-  $)::{table};
+export FFLU::static := proc(
+  _self::LULEM,
+  A::Matrix,
+  $)::table;
 
-  description "Compute the Fracton-Free LU decomposition of a square matrix "
-    "<A> using the veiling strategy <VeilingStrategy> and the veiling symbol "
-    "<V>.";
+  description "Compute the Fracton-Free LU decomposition of a square matrix <A>.";
 
-  local SS, M, pivot, pivot_list, m, n, mn, i, j, k, ri, rk, rnk, r, c, apply_veil,
-        z, tmp, bot, top;
+  local V, SS, M, pivot, pivot_list, m, n, mn, i, j, k, ri, rk, rnk, r, c,
+    apply_veil, z, tmp, bot, top;
 
-  # sanity check
+  # Get the veiling label
+  V := _self:-m_LEM:-GetVeilingLabel(_self:-m_LEM);
+
+  # Sanity check
   if has(A, V) then
     error "veiling symbol %1 is already present in matrix coefficient.", V;
     return table([]);
   end if;
 
   # Forget the veilings
-  LEM:-VeilForget(V);
+  _self:-m_LEM:-VeilForget(_self:-m_LEM);
 
   # Get matrix dimensions
   m, n := LinearAlgebra:-Dimensions(A):
@@ -36,7 +37,7 @@ FFLU := proc(
   c := Vector(n, k -> k);
 
   # Check if to veil or not
-  apply_veil := (z) -> LEM:-Veil[V](z);
+  apply_veil := (z) -> _self:-m_LEM:-Veil(_self:-m_LEM, z);
 
   # Perform Gaussian elimination
   M          := copy(A);
@@ -45,27 +46,28 @@ FFLU := proc(
   SS         := Vector(mn);
   pivot_list := [];
   for k from 1 to mn-1 do
-    if LULEM:-Verbose then
+    if _self:-m_Verbose then
       printf(
         "LULEM::FFLU(...): processing %d-th row, cost = %d, veilings = %d.\n",
-        k, LEM:-ExpressionCost(M), nops(LEM:-VeilList(V))
+        k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
+        nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
     end;
 
-    pivot := LULEM:-Pivoting(k, M, V, r, c);
+    pivot := _self:-Pivoting(_self, k, M, r, c);
     if not pivot["is_zero"] then
       pivot_list := [op(pivot_list), pivot["value"]];
     end if;
 
     if pivot["is_zero"] then
       rnk := rnk - 1;
-      if LULEM:-Verbose then
+      if _self:-m_Verbose then
         WARNING("LULEM::LU(...): the matrix appears to be not full rank.");
       end;
       break;
     end if;
 
-    if LULEM:-Verbose then
+    if _self:-m_Verbose then
       printf(
         "LULEM::FFLU(...): M[%d,%d] = %a, cost = %d, degree_r = %d, degree_c = %d.\n",
         k, k, pivot["value"], pivot["cost"], pivot["degree_r"], pivot["degree_c"]
@@ -92,9 +94,9 @@ FFLU := proc(
     "c"      = c,
     "rank"   = rnk,
     "pivots" = pivot_list,
-    "M_cost" = LEM:-ExpressionCost(M),
-    "S_cost" = LEM:-ExpressionCost(SS),
-    "V_cost" = LEM:-ExpressionCost(LEM:-VeilList(V)),
+    "M_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
+    "S_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, SS),
+    "V_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, _self:-m_LEM:-VeilList(_self:-m_LEM)),
     "M_nnz"  = nops(op(2, M)),
     "A_nnz"  = nops(op(2, A))
   ]);
@@ -102,9 +104,10 @@ end proc: # FFLU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FF2LU := proc(
-  T::{table},
-  $)::{list}, {list}, {Matrix};
+export FF2LU::static := proc(
+  _self::LULEM,
+  T::table,
+  $)::list, list, Matrix;
 
   description "Compute the LU decomposition of a square matrix from its "
     "Fracton-Free LU decomposition <T>.";
@@ -142,14 +145,14 @@ end proc: # FF2LU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-FFLUsolve := proc(
-  T::{table},
-  b::{Vector},
-  V::{symbol},
-  $)::{Vector};
+export FFLUsolve::static := proc(
+  _self::LULEM,
+  T::table,
+  b::Vector,
+  $)::Vector;
 
-  description "Solve the linear system Ax=b using FFLU decomposition <T>, "
-    "provided the vector <b> and the veiling symbol <V>.";
+  description "Solve the linear system Ax=b using FFLU decomposition <T> and "
+    "provided the vector <b>.";
 
   local m, n, M, S, r, c, rnk, x, y, z, i, s, apply_veil;
 
@@ -176,14 +179,14 @@ FFLUsolve := proc(
   end if;
 
   # Create a normalizer function
-  apply_veil := (z) -> LEM:-Veil[V](z);
+  apply_veil := (z) -> _self:-m_LEM:-Veil(_self:-m_LEM, z);
 
   # apply permutation P
   x := b[convert(r, list)];
 
   # Perform forward substitution to solve Ly=b[r]
   for i from 2 to n do
-    if LULEM:-Verbose then
+    if _self:-m_Verbose then
       printf("LULEM::FFLUsolve(...): forward substitution of %d-th row.\n", i);
     end if;
     x[i..-1] := S[i-1] * x[i..-1]; # Apply D
@@ -191,12 +194,12 @@ FFLUsolve := proc(
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
-  if LULEM:-Verbose then
+  if _self:-m_Verbose then
     printf("LULEM::FFLUsolve(...): dividision by M[%d,%d].\n", n, n);
   end if;
   x[n] := apply_veil(x[n] / M[n, n]);
   for i from n-1 to 1 by -1 do
-    if LULEM:-Verbose then
+    if _self:-m_Verbose then
       printf("LULEM::FFLUsolve(...): backward substitution of %d-th column.\n", i);
     end if;
     s    := x[i] - add(M[i, i+1..n] *~ x[i+1..n]);

@@ -7,26 +7,25 @@
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-QR := proc(
-  A::{Matrix},
-  V::{symbol},
-  $)::{table};
+export QR::static := proc(
+  _self::LULEM,
+  A::Matrix,
+  $)::table;
 
-  description "Compute the Givens QR decomposition of a square matrix <A> using "
-    "the veiling strategy <VeilingStrategy> and the veiling symbol <V>.";
+  description "Compute the Givens QR decomposition of a square matrix <A>.";
 
   local m, n, Q, R, DG, k, j, a, b, z1, z2, r, Rk, Rj, apply_veil;
 
-  # sanity check
-  if has( A, V ) then
+  # Sanity check
+  if has(A, V) then
     error "veiling symbol %1 is already present in matrix coefficient.", V;
   end if;
 
   # Clear the veiling list
-  LEM:-VeilForget(V);
+  _self:-m_LEM:-VeilForget(_self:-m_LEM);
 
   # Check if to veil or not
-  apply_veil := (z) -> LEM:-Veil[V](z);
+  apply_veil := (z) -> _self:-m_LEM:-Veil(_self:-m_LEM, z);
 
   # Extract the dimensions of the matrix A
   m, n := LinearAlgebra:-Dimensions(A):
@@ -43,10 +42,11 @@ QR := proc(
 
   # Compute the Householder QR decomposition with veiling
   for k from 1 to m-1 do
-    if LULEM:-Verbose then
+    if _self:-m_Verbose then
       printf(
         "LULEM::QR(...): processing %d-th row, cost = %d, veilings = %d.\n",
-        k, LEM:-ExpressionCost(R), length(LEM:-VeilList(V))
+        k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, R),
+        length(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
     end if;
     for j from k+1 to n do
@@ -93,10 +93,10 @@ QR := proc(
     "Q"      = Q,
     "R"      = R,
     "V"      = V,
-    "Q_cost" = LEM:-ExpressionCost(Q),
-    "D_cost" = LEM:-ExpressionCost(DG),
-    "R_cost" = LEM:-ExpressionCost(R),
-    "V_cost" = LEM:-ExpressionCost(LEM:-VeilList(V)),
+    "Q_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, Q),
+    "D_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, DG),
+    "R_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, R),
+    "V_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, LEM:-VeilList(_self:-m_LEM)),
     "Q_nnz"  = nops(op(2, Q)),
     "D_nnz"  = nops(op(2, DG)),
     "A_nnz"  = nops(op(2, A))
@@ -105,19 +105,19 @@ end proc: # QR
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-QRsolve := proc(
-  T::{table},
-  xb::{Vector},
-  V::{symbol},
-  $)::{Vector};
+export QRsolve::static := proc(
+  _self::LULEM,
+  T::table,
+  xb::Vector,
+  $)::Vector;
 
-  description "Solve the linear system Ax=b using QR decomposition <T>, "
-    "provided the vector <b> and the veiling symbol <V>.";
+  description "Solve the linear system Ax=b using QR decomposition <T> and "
+    "provided the vector <b>.";
 
   local Q, R, DG, m, n, i, j, k, z, c, s, a, b, x, z1, z2, apply_veil;
 
   # Check if to veil or not
-  apply_veil := (z) -> LEM:-Veil[V](z);
+  apply_veil := (z) -> _self:-m_LEM:-Veil(_self:-m_LEM, z);
 
   # apply Q^T a rhs
   Q  := T["Q"];
@@ -150,7 +150,7 @@ QRsolve := proc(
   # Solve R^(-1)
   x[n] := apply_veil(x[n] / R[n, n]);
   for i from n-1 to 1 by -1 do
-    if LULEM:-Verbose then
+    if _self:-m_Verbose then
       printf("LULEM::QRsolve(...): backward substitution of %d-th row.\n", i);
     end if;
     s    := apply_veil(x[i] - add(R[i, i+1..n] *~ x[i+1..n]));
