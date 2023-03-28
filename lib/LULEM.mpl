@@ -110,13 +110,13 @@ LULEM := module()
       "Inspired by the code of: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.\n"
     );
 
-    lib_base_path := null;
+    lib_base_path := NULL;
     for i in [libname] do
       if (StringTools:-Search("LULEM", i) <> 0) then
         lib_base_path := i;
       end if;
     end do;
-    if (lib_base_path = null) then
+    if (lib_base_path = NULL) then
       error "Cannot find 'LULEM' module";
     end if;
 
