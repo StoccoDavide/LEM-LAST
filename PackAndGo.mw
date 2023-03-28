@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Worksheet>
-<Version major="2021" minor="2"/>
+<Version major="2020" minor="2"/>
 <Label-Scheme value="2" prefix=""/>
 <View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
-<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" scientificx="true" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1120" rtablesize="[10, 10]" useclientjvm="true" format="document" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="960" rtablesize="[10, 10]" useclientjvm="true" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
 <Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Century Gothic" foreground="[195,69,11]" italic="false" opaque="false" readonly="false" size="20" subscript="false" superscript="false" underline="false" placeholder="false"/>
 <Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
@@ -166,6 +166,11 @@ end proc:
 <Group hide-input="false" labelreference="L256760" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);</Text-field>
 </Input>
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023
+Current version: D. Stocco, M. Larcher, E. Bertolazzi.
+Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+</Text-field>
+</Output>
 </Group>
 <Group hide-input="false" labelreference="L256774" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Create sources path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">file := cat(interface(worksheetdir), ds, &quot;installer&quot;, ds, &quot;bin&quot;):
@@ -234,29 +239,87 @@ end do:</Text-field>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LEM):</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023
-Current version: D. Stocco, M. Larcher, E. Bertolazzi.
-Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
-
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">
 object LEM :: LEM:
 
-    info( )
+    # Print 'LEM' module information.
+    Info( )
 
-</Text-field>
-</Output>
-</Group>
-<Group hide-input="false" labelreference="L256801" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">a := Object(LEM);</Text-field>
-</Input>
-<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYmLUkjbWlHRiQ2JVEiYUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RKSZBc3NpZ247RicvRjNRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y9LyUpc3RyZXRjaHlHRj0vJSpzeW1tZXRyaWNHRj0vJShsYXJnZW9wR0Y9LyUubW92YWJsZWxpbWl0c0dGPS8lJ2FjY2VudEdGPS8lJ2xzcGFjZUdRLDAuMjc3Nzc3OGVtRicvJSdyc3BhY2VHRkwtRiw2JVE5T2JqZWN0PDxMRU0sNDM4MTg3OTEzNj4+RidGL0YyRjk=">LV9JLFR5cGVzZXR0aW5nRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiSSxtcHJpbnRzbGFzaEdGKDYkNyM+SSJhR0YoSTlPYmplY3Q8PExFTSw0MzgxODc5MTM2Pj5HRig3I2A2MUkrTW9kdWxlTG9hZEc2Iy9JJ19sb2NhbEdGJkktX240MzgxOTMxODcyR0YoSS1Nb2R1bGVVbmxvYWRHNiMvRjVJLV9uNDM4MTkzMTk5MkdGKEklVmVpbEc2Iy9GNUktX240MzgxODgwMDMyR0YoSTBWZWlsaW5nU3RyYXRlZ3lHNiMvRjVJLV9uNDM4MTkzMjExMkdGKEk3U2V0VmVpbGluZ1N0cmF0ZWd5UGFyc0c2Iy9GNUktX240MzgyNjM1MTM2R0YoSSdVblZlaWxHNiMvRjVJLV9uNDM4MTg4MDMyMEdGKEkrVW5WZWlsSW1hcEc2Iy9GNUktX240MzgxOTMyMTUyR0YoSSlWZWlsTGlzdEc2Iy9GNUktX240MzgxOTMyMjcyR0YoSTJWZWlsVW5vcmRlcmVkTGlzdEc2Iy9GNUktX240MzgyNjM2NTI4R0YoSS5WZWlsVGFibGVTaXplRzYjL0Y1SS1fbjQzODE5MzIzOTJHRihJLlZlaWxUYWJsZUltYXBHNiMvRjVJLV9uNDM4MTkzMjU1MkdGKEkwVmVpbFRhYmxlQXBwZW5kRzYjL0Y1SS1fbjQzODE5MzI2NzJHRihJK1ZlaWxMYWJlbHNHNiMvRjVJLV9uNDM4MTkzMjcxMkdGKEkpVmVpbFN1YnNHNiMvRjVJLV9uNDM4MTkzMjgzMkdGKEkrVmVpbEZvcmdldEc2Iy9GNUktX240MzgxOTMyOTUyR0Yodi42I0krdGhpc21vZHVsZUdGKDYrSS9tX1VuVmVpbFRhYmxlc0dGKEk6bV9WZWlsaW5nU3RyYXRlZ3lfbWF4Y29zdEdGKEk9bV9WZWlsaW5nU3RyYXRlZ3lfc3Vic2NyaXB0c0dGKEk+bV9WZWlsaW5nU3RyYXRlZ3lfYXNzaWdubWVudHNHRihJPG1fVmVpbGluZ1N0cmF0ZWd5X2FkZGl0aW9uc0dGKElCbV9WZWlsaW5nU3RyYXRlZ3lfbXVsdGlwbGljYXRpb25zR0YoSTxtX1ZlaWxpbmdTdHJhdGVneV9kaXZpc2lvbnNHRihJPG1fVmVpbGluZ1N0cmF0ZWd5X2Z1bmN0aW9uc0dGKEkvRXhwcmVzc2lvbkNvc3RHRig2I0knb2JqZWN0R0YoRjFGKEYoRihGKEkkTEVNR0YmRig2I0klaW5mb0cvSSttb2R1bGVuYW1lR0YoRmhwNiNJJWluZm9HRihGXHA=</Equation></Text-field>
-</Output>
-</Group>
-<Group hide-input="false" labelreference="L256802" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-info();</Text-field>
-</Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023
-Current version: D. Stocco, M. Larcher, E. Bertolazzi.
-Original code: W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
+    # 'LEM' module load procedure.
+    ModuleLoad( )
+
+    # 'LEM' module unload procedure.
+    ModuleUnload( )
+
+    # Copy the objects &lt;proto&gt; into &lt;self&gt;.
+    ModuleCopy( _self::LEM, proto::LEM, $ )
+
+    # Set the veiling label to &lt;label&gt;.
+    SetVeilingLabel( _self::LEM, label::{string, symbol}, $ )
+
+    # Return the veiling label.
+    GetVeilingLabel( _self::LEM, $ ) :: symbol
+
+    # Clear the veiling table.
+    ClearVeilingTable( _self::LEM, $ )
+
+    # Check if the veiling strategy is verified and veil an expression &lt;x&gt; and 
+    # return a label to it.
+    Veil( _self::LEM, x::anything, 
+          { force::boolean := false }, $ ) :: anything
+
+    # Compute the cost of the expression &lt;x&gt;.
+    ExpressionCost( _self::LEM, x::anything, $ ) :: integer
+
+    # Comupte the veiling strategy value for the value &lt;x&gt;.
+    VeilingStrategy( _self::LEM, x::{algebraic}, $ ) :: {boolean}
+
+    # Set the veiling strategy parameters: maximum veiling cost &lt;maxcost&gt;, 
+    # subscripts cost weight parameter &lt;subscripts&gt;, assignments cost weight 
+    # parameter &lt;assignments&gt;, additions cost weight parameter &lt;additions&gt;, 
+    # multiplications cost weight parameter &lt;multiplications&gt;, divisions cost 
+    # weight parameter &lt;divisions&gt;, and functions cost weight parameter 
+    # &lt;functions&gt;.
+    SetVeilingStrategyPars( _self::LEM, 
+                            { additions::{nonnegint} := 1, 
+                              assignments::{nonnegint} := 0, 
+                              divisions::{nonnegint} := 3, 
+                              functions::{nonnegint} := 2, 
+                              maxcost::{nonnegint} := 15, 
+                              multiplications::{nonnegint} := 2, 
+                              subscripts::{nonnegint} := 0 }, $ ) :: {nothing}
+
+    # Unveil the expression &lt;x&gt;.
+    UnVeil( _self::LEM, x::anything, $ ) :: anything
+
+    # Unveil the expression &lt;x&gt; with internal permutation map.
+    UnVeilImap( _self::LEM, x::anything, $ ) :: anything
+
+    # Return a list of the veiling labels.
+    VeilList( _self::LEM, 
+              { reverse::boolean := false }, $ ) :: list(anything)
+
+    # Return the unordered veiling list.
+    VeilUnorderedList( _self::LEM, $ ) :: list
+
+    # Return the size of the internal veiling list.
+    VeilTableSize( _self::LEM, $ ) :: nonnegint
+
+    # Return the veiling list and the permutation that sorts it.
+    VeilTableImap( _self::LEM, 
+                   { reverse::boolean := false }, $ )
+                 :: {list(anything = anything), []}
+
+    # Append the veiled expression &lt;x&gt; to the veiling list.
+    VeilTableAppend( _self::LEM, x::anything, $ ) :: indexed
+
+    # Substitute the reversed veiling variables of the internal veiling label 
+    # in the expression &lt;x&gt;.
+    VeilSubs( _self::LEM, x::anything, $ ) :: anything
+
+    # Clear all the veiling variables of the internal veiling label.
+    VeilForget( _self::LEM, $ )
+
 </Text-field>
 </Output>
 </Group>
