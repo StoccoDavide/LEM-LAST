@@ -42,6 +42,8 @@
 unprotect('LEM');
 module LEM()
 
+  description "Large Expressions Management module.";
+
   option object;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -65,16 +67,16 @@ module LEM()
     description "Print 'LEM' module information.";
 
     printf(
-      "+----------------------------------------------------------------------+\n"
-      "| 'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023 |\n"
-      "| Current version authors:                                             |\n"
-      "|   D. Stocco, M. Larcher, E. Bertolazzi.                              |\n"
-      "| Inspired by the work of:                                             |\n"
-      "|   W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.              |\n"
-      "+----------------------------------------------------------------------+\n"
+      "+--------------------------------------------------------------------------+\n"
+      "| 'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023     |\n"
+      "| Current version authors:                                                 |\n"
+      "|   D. Stocco, M. Larcher, E. Bertolazzi.                                  |\n"
+      "| Inspired by the work of:                                                 |\n"
+      "|   W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.                  |\n"
+      "+--------------------------------------------------------------------------+\n"
     );
     return NULL;
-  end proc: # ModuleLoad
+  end proc: # Info
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -93,7 +95,6 @@ module LEM()
     if (lib_base_path = NULL) then
       error "Cannot find 'LEM' module";
     end if;
-
     return NULL;
   end proc: # ModuleLoad
 

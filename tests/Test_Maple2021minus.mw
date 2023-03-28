@@ -2,7 +2,7 @@
 <Worksheet>
 <Version major="2020" minor="2"/>
 <Label-Scheme value="2" prefix=""/>
-<View-Properties presentation="true" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
+<View-Properties presentation="false" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false" editable="true">
 </View-Properties>
 <MapleNet-Properties prettyprint="3" warnlevel="3" compactdisplay="false" preplot="" helpbrowser="standard" displayprecision="-1" echo="1" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" historytimestamp="false" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="960" rtablesize="[10, 10]" useclientjvm="true" labelwidth="20" postplot="" typesetting="extended" ansi="false" ansicolor="[]" elisiondigitsthreshold="10000" showassumed="1" ansilprint="false" trailingsemicolon="true" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
 <Styles>
@@ -97,231 +97,183 @@
     <Task-category name="&lt;default&gt;"/>
 </Task-table>
 <Task/>
-<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Build the Library</Text-field></Title>
-<Group hide-input="false" labelreference="L256747" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
+<Group hide-input="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart;</Text-field>
 </Input>
 </Group>
-<Group labelreference="L256765" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">ds := kernelopts('dirsep'):</Text-field>
-</Input>
-</Group><Presentation-Block>
-<Group view="code" hide-input="false" labelreference="L256770" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">MODULE_NAME := &quot;LEM&quot;:</Text-field>
+<Group hide-input="false" labelreference="L296" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">kernelopt(assertlevel = 2);</Text-field>
 </Input>
 </Group>
-<Group view="code" labelreference="L256772" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">SOURCE_DIR  := cat(currentdir(), ds, &quot;lib&quot;):</Text-field>
+<Group labelreference="L316" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Print 'LEM' module informations</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-Info(LEM);</Text-field>
 </Input>
 </Group>
-<Group view="code" hide-input="false" labelreference="L256771" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">BINARY_DIR  := cat(currentdir(), ds, &quot;installer&quot;, ds, &quot;bin&quot;):</Text-field>
+<Group hide-input="false" labelreference="L176" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Write some random polynomial</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">p := randpoly([x,y,z], degree = 5, dense);</Text-field>
 </Input>
 </Group>
-<Group view="code" hide-input="false" labelreference="L256769" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LIBRARY_MLA := cat(BINARY_DIR, ds, MODULE_NAME, &quot;.mla&quot;):
-</Text-field>
-</Input>
-</Group></Presentation-Block>
-<Group labelreference="L256768" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check bin directory</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if not FileTools:-Exists(BINARY_DIR) then
-  FileTools:-MakeDirectory(BINARY_DIR);
-end if;
-</Text-field>
+<Group hide-input="false" labelreference="L280" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Create some instaces of 'LEM'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-VeilList(LEM);</Text-field>
 </Input>
 </Group>
-<Group labelreference="L256773" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check MLA file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools:-Exists(LIBRARY_MLA) then
-  FileTools:-Remove(LIBRARY_MLA);
-end if;
-</Text-field>
+<Group hide-input="false" labelreference="L300" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X := Object(LEM);
+LEM_X:-SetVeilingLabel(LEM_X, 'X');
+LEM_X:-GetVeilingLabel(LEM_X);</Text-field>
 </Input>
 </Group>
-<Group labelreference="L256777" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Library generation procedure</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN := proc( MODULE_NAME::{string} )
-
-  local bin_path, src_path;
-
-  bin_path := cat(BINARY_DIR, ds, MODULE_NAME, &quot;.mla&quot;);
-  src_path := cat(SOURCE_DIR, ds, MODULE_NAME, &quot;.mpl&quot;);
-
-  if FileTools:-Exists(src_path) then
-    if not FileTools:-Exists(BINARY_DIR) then
-      FileTools:-MakeDirectory(BINARY_DIR);
-    end if;
-    if FileTools:-Exists(bin_path) then
-      FileTools:-Remove(bin_path):
-    end if;
-    read(src_path);
-    march('create', bin_path );
-    savelib(convert(MODULE_NAME, symbol), bin_path);
-  else
-<Font encoding="UTF-8">    error &quot;Missing file %1.\134n&quot;, </Font>src_path;
-  end if;
-
-end proc:
-</Text-field>
+<Group hide-input="false" labelreference="L301" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y := Object(LEM);
+LEM_Y:-SetVeilingLabel(LEM_Y, 'Y');
+LEM_Y:-GetVeilingLabel(LEM_Y);</Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L256760" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);</Text-field>
+<Group hide-input="false" labelreference="L302" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z := Object(LEM);
+LEM_Z:-SetVeilingLabel(LEM_Z, 'Z');
+LEM_Z:-GetVeilingLabel(LEM_Z);</Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L256774" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create sources path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">file := cat(interface(worksheetdir), ds, &quot;installer&quot;, ds, &quot;bin&quot;):
-</Text-field>
+<Group hide-input="false" labelreference="L166" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Veil the long expressions with veiling variable 'X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">p_X := collect(p, x, i -&gt; LEM_X:-Veil(LEM_X, i));</Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L256788" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">dest := cat(kernelopts(mapledir), ds, &quot;toolbox&quot;, ds, MODULE_NAME, ds, &quot;lib&quot;, ds):
-</Text-field>
+<Group hide-input="false" labelreference="L5" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Veil the long expressions with veiling variable 'Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">p_Y := collect(p, y, i -&gt; LEM_Y:-Veil(LEM_Y, i));</Text-field>
 </Input>
 </Group>
-<Group labelreference="L256799" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Procedure for deep directory removal</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir := proc( dirpath::{string}, $ )
-
-  local d, dd, ds;
-
-  ds := kernelopts('dirsep');
-  if FileTools:-Exists(dirpath) and FileTools:-IsDirectory(dirpath) then
-    for d in FileTools:-ListDirectory(dirpath, 'all') do
-      if evalb((d &lt;&gt; &quot;.&quot;) and (d &lt;&gt; &quot;..&quot;)) then
-        dd := cat(dirpath, ds, d);
-        if FileTools:-Exists(dd) then
-          if FileTools:-IsDirectory(dd) then
-            RmDir(dd);
-            # FileTools:-RemoveDirectory(dd, forceremove = true);
-          else
-           FileTools:-Remove(dd);
-          end if;
-        end if;
-      end if;
-    end do;
-    FileTools:-RemoveDirectory(dirpath, forceremove = true);
-  end if;
-  return;
-
-end proc:
-</Text-field>
+<Group hide-input="false" labelreference="L268" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Veil the long expressions with veiling variable 'Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">p_Z := collect(p, z, i -&gt; LEM_Z:-Veil(LEM_Z, i));</Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L256787" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check destination path</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir(dest);
-FileTools:-MakeDirectory(dest, recurse = true);
-</Text-field>
+<Group hide-input="false" labelreference="L269" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the list of veiling variables 'X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-VeilList(LEM_X);</Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L256785" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Copy the binaries in the toolbox folder</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">n := 1 + length(file):</Text-field>
+<Group hide-input="false" labelreference="L258" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the list of veiling variables 'Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-VeilList(LEM_Y);</Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L256784" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">for r in FileTools:-Walk(file, 'topdown', 'followlinks') do
-  limb := cat(dest, ds, r[dir][n..], ds);
-  for d in r[subdirs] do
-    ((d) -&gt; `if`(FileTools:-Exists(d), 0, FileTools:-MakeDirectory(d)))(cat(limb, d));
-  end do;
-  seq(FileTools:-Copy(cat(r[dir], ds, f), cat(limb, f)), f = r[files]);
-end do:</Text-field>
+<Group hide-input="false" labelreference="L257" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the list of veiling variables 'Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilList(LEM_Z);</Text-field>
 </Input>
 </Group>
-</Section>
-<Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Test the Library</Text-field></Title>
-<Group hide-input="false" labelreference="L256750" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
+<Group hide-input="false" labelreference="L239" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Substitute the veiling variables 'X' in the polynomial 'p_X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-VeilSubs(LEM_X, p_X) - p);</Text-field>
 </Input>
 </Group>
-<Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LEM):</Text-field>
+<Group hide-input="false" labelreference="L263" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Substitute the veiling variables 'Y' in the polynomial 'p_Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_Y:-VeilSubs(LEM_Y, p_Y) - p);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">
-# Large Expressions Management module.
-object LEM :: LEM:
-
-    # Print 'LEM' module information.
-    Info( )
-
-    # 'LEM' module load procedure.
-    ModuleLoad( )
-
-    # 'LEM' module unload procedure.
-    ModuleUnload( )
-
-    # Copy the objects &lt;proto&gt; into &lt;self&gt;.
-    ModuleCopy( _self::LEM, proto::LEM, $ )
-
-    # Set the veiling label to &lt;label&gt;.
-    SetVeilingLabel( _self::LEM, label::{string, symbol}, $ )
-
-    # Return the veiling label.
-    GetVeilingLabel( _self::LEM, $ ) :: symbol
-
-    # Clear the veiling table.
-    ClearVeilingTable( _self::LEM, $ )
-
-    # Check if the veiling strategy is verified and veil an expression &lt;x&gt; and 
-    # return a label to it.
-    Veil( _self::LEM, x::anything, 
-          { force::boolean := false }, $ ) :: anything
-
-    # Compute the cost of the expression &lt;x&gt;.
-    ExpressionCost( _self::LEM, x::anything, $ ) :: integer
-
-    # Comupte the veiling strategy value for the value &lt;x&gt;.
-    VeilingStrategy( _self::LEM, x::{algebraic}, $ ) :: {boolean}
-
-    # Set the veiling strategy parameters: maximum veiling cost &lt;maxcost&gt;, 
-    # subscripts cost weight parameter &lt;subscripts&gt;, assignments cost weight 
-    # parameter &lt;assignments&gt;, additions cost weight parameter &lt;additions&gt;, 
-    # multiplications cost weight parameter &lt;multiplications&gt;, divisions cost 
-    # weight parameter &lt;divisions&gt;, and functions cost weight parameter 
-    # &lt;functions&gt;.
-    SetVeilingStrategyPars( _self::LEM, 
-                            { additions::{nonnegint} := 1, 
-                              assignments::{nonnegint} := 0, 
-                              divisions::{nonnegint} := 3, 
-                              functions::{nonnegint} := 2, 
-                              maxcost::{nonnegint} := 15, 
-                              multiplications::{nonnegint} := 2, 
-                              subscripts::{nonnegint} := 0 }, $ ) :: {nothing}
-
-    # Unveil the expression &lt;x&gt;.
-    UnVeil( _self::LEM, x::anything, $ ) :: anything
-
-    # Unveil the expression &lt;x&gt; with internal permutation map.
-    UnVeilImap( _self::LEM, x::anything, $ ) :: anything
-
-    # Return a list of the veiling labels.
-    VeilList( _self::LEM, 
-              { reverse::boolean := false }, $ ) :: list(anything)
-
-    # Return the unordered veiling list.
-    VeilUnorderedList( _self::LEM, $ ) :: list
-
-    # Return the size of the internal veiling list.
-    VeilTableSize( _self::LEM, $ ) :: nonnegint
-
-    # Return the veiling list and the permutation that sorts it.
-    VeilTableImap( _self::LEM, 
-                   { reverse::boolean := false }, $ )
-                 :: {list(anything = anything), []}
-
-    # Append the veiled expression &lt;x&gt; to the veiling list.
-    VeilTableAppend( _self::LEM, x::anything, $ ) :: indexed
-
-    # Substitute the reversed veiling variables of the internal veiling label 
-    # in the expression &lt;x&gt;.
-    VeilSubs( _self::LEM, x::anything, $ ) :: anything
-
-    # Clear all the veiling variables of the internal veiling label.
-    VeilForget( _self::LEM, $ )
-
-</Text-field>
-</Output>
 </Group>
-</Section><Presentation-Block>
-<Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Group hide-input="false" labelreference="L267" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Substitute the veiling variables 'X' and 'Y' in the polynomial 'p_X+p_Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-VeilSubs(LEM_X, LEM_Y:-VeilSubs(LEM_Y, p_X + p_Y)) - 2*p);</Text-field>
 </Input>
-</Group></Presentation-Block>
+</Group>
+<Group hide-input="false" labelreference="L270" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Substitute all the veiling variables in the polynomial 'p_X+p_Y+p_Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-VeilSubs(LEM_X, LEM_Y:-VeilSubs(LEM_Y, LEM_Z:-VeilSubs(LEM_Z, p_X + p_Y + p_Z) - 3*p)));</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L259" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the 'X' veiling lists and number of veiling variables</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-VeilTableSize(LEM_X);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L291" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-VeilList(LEM_X);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L282" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-VeilUnorderedList(LEM_X);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L290" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-VeilTableImap(LEM_X, reverse = true);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L261" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the 'Y' veiling lists and number of veiling variables</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-VeilTableSize(LEM_Y);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L292" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-VeilList(LEM_Y);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L283" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-VeilUnorderedList(LEM_Y);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L287" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-VeilTableImap(LEM_Y, reverse = true);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L271" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the 'Z' veiling number of veiling variables, lists and table</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilTableSize(LEM_Z);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L293" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilList(LEM_Z);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L284" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilUnorderedList(LEM_Z);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L289" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilTableImap(LEM_Z, reverse = true);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L255" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Forget the veiling variables 'X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-VeilForget(LEM_X);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L285" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-VeilList(LEM_X);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L254" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Forget the veiling variables 'Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-VeilForget(LEM_Y);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L286" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-VeilList(LEM_Y);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L303" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Forget the veiling variables 'Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilForget(LEM_Z);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L304" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilList(LEM_Z);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L281" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Applend a new veiling variable with random veiling label generator</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-VeilTableAppend(LEM, 2*a*b*c);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L294" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-VeilList(LEM);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L307" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-GetVeilingLabel(LEM);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L310" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Try to change the defult (random) veiling label to 'A' (<Font bold="true">error</Font>)</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-SetVeilingLabel(LEM, 'A');</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L311" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">SaClear the veiling table</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">L := LEM:-VeilList(LEM);
+LEM:-ClearVeilingTable(LEM);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L312" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Try to change the defult (random) veiling label to 'A' (<Font bold="true">success</Font>)</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-SetVeilingLabel(LEM, 'A');</Text-field>
+</Input>
+</Group>
+<Group labelreference="L314" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
 </Worksheet>
