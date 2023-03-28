@@ -19,7 +19,7 @@ QR := proc(
 
   # sanity check
   if has( A, V ) then
-    error("veiling symbol %1 is already present in matrix coefficient.", V);
+    error "veiling symbol %1 is already present in matrix coefficient.", V;
   end if;
 
   # Clear the veiling list

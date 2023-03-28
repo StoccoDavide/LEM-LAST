@@ -117,7 +117,7 @@ LULEM := module()
       end if;
     end do;
     if (lib_base_path = null) then
-      error "Cannot find 'LULEM' module" ;
+      error "Cannot find 'LULEM' module";
     end if;
 
     LULEM:-InitLULEM();
@@ -278,7 +278,7 @@ LULEM := module()
     description "Set the time limit of the package to <x>.";
 
     if (x < 0) then
-      error "LULEM::SetTimeLimit(...): time limit must be a non-negative number.";
+      error "time limit must be a non-negative number.";
     end if;
 
     LULEM:-TimeLimit := x;
