@@ -107,7 +107,7 @@
 </Input>
 </Group><Presentation-Block>
 <Group view="code" hide-input="false" labelreference="L256809" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">MODULE_NAME := &quot;LULEM&quot;:</Text-field>
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">MODULE_NAME := &quot;LAST&quot;:</Text-field>
 </Input>
 </Group>
 <Group view="code" labelreference="L256812" drawlabel="true">
@@ -232,112 +232,16 @@ end do:</Text-field>
 </Input>
 </Group>
 <Group labelreference="L256816" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LULEM):</Text-field>
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LAST):</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">
-# LU decomposition with LEM (Large Expressions Management).
-object LULEM :: Class&lt;&lt;36893488151878571748&gt;&gt;:
-
-    # Print 'LEM' module information.
-    Info( )
-
-    # 'LULEM' module load procedure.
-    ModuleLoad( )
-
-    # 'LULEM' module unload procedure.
-    ModuleUnload( )
-
-    # Get the degree matrices of the matrix &lt;A&gt;.
-    GetDegrees( _self::LULEM, A::Matrix, $ ) :: Matrix(nonnegint)
-
-    # Set the 'LEM' object &lt;obj&gt;.
-    SetLEM( _self::LULEM, obj::LEM, $ )
-
-    # Get the 'LEM' object.
-    GetLEM( _self::LULEM, $ ) :: LEM
-
-    # Plot of non-zero values of the matrix &lt;A&gt;.
-    Spy( _self::LULEM, A::Matrix, $ ) :: anything
-
-    # Plot of non-zero values of the matrices &lt;A&gt;, &lt;L&gt; and &lt;U&gt; with fill-in 
-    # values.
-    SpyLU( _self::LULEM, A::Matrix, L::Matrix, U::Matrix, $ ) :: anything
-
-    # Compute the LU decomposition premutation matrices provided the rows pivot 
-    # vector &lt;r&gt; and the columns pivot vector &lt;c&gt;.
-    PermutationMatrices( _self::LULEM, r::Vector(nonnegint), 
-                         c::Vector(nonnegint), $ ) :: Matrix(nonnegint)
-
-    # Set the verbosity of the package to &lt;x&gt;.
-    SetVerbosity( _self::LULEM, x::boolean, $ )
-
-    # Enable the verbosity of the package.
-    EnableVerbosity( _self::LULEM, $ )
-
-    # Disable the verbosity of the package.
-    DisableVerbosity( _self::LULEM, $ )
-
-    # Set the time limit of the package to &lt;x&gt;.
-    SetTimeLimit( _self::LULEM, x::numeric, $ )
-
-    # Solve the factorized linear system &lt;T&gt; * x = b using the method specified 
-    # in &lt;T&gt;['method'] field.
-    SolveLinearSystem( _self::LULEM, T::table, b::Vector, $ )
-
-    # Compute the LU decomposition pivots vectors with minum degree provided 
-    # the step &lt;k&gt;, the temporary LU (NAG) matrix &lt;M&gt;, the rows permutation &lt;r&gt; 
-    # and the columns permutation &lt;c&gt;.
-    Pivoting( _self::LULEM, k::integer, M::Matrix, r::Vector(nonnegint), 
-              c::Vector(nonnegint), $ ) :: table
-
-    # Compute the cost of the pivot &lt;x&gt;.
-    PivotCost( _self::LULEM, x::algebraic, $ ) :: integer
-
-    # Set the strategy &lt;str&gt; for the minimum degree ordering.
-    SetMinDegreeStrategy( _self::LULEM, str::string := &quot;prod_1&quot;, $ )
-
-    # Compute the LU decomposition of a square matrix &lt;A&gt;.
-    LU( _self::LULEM, A::Matrix, $ ) :: table
-
-    # Solve the linear system Ax=b using LU decomposition &lt;T&gt; and provided the 
-    # vector &lt;b&gt;.
-    LUsolve( _self::LULEM, T::table, b::Vector, $ ) :: Vector
-
-    # Compute the Fracton-Free LU decomposition of a square matrix &lt;A&gt;.
-    FFLU( _self::LULEM, A::Matrix, $ ) :: table
-
-    # Compute the LU decomposition of a square matrix from its Fracton-Free LU 
-    # decomposition &lt;T&gt;.
-    FF2LU( _self::LULEM, T::table, $ ) :: list
-
-    # Solve the linear system Ax=b using FFLU decomposition &lt;T&gt; and provided 
-    # the vector &lt;b&gt;.
-    FFLUsolve( _self::LULEM, T::table, b::Vector, $ ) :: Vector
-
-    # Compute the Givens QR decomposition of a square matrix &lt;A&gt;.
-    QR( _self::LULEM, A::Matrix, $ ) :: table
-
-    # Solve the linear system Ax=b using QR decomposition &lt;T&gt; and provided the 
-    # vector &lt;b&gt;.
-    QRsolve( _self::LULEM, T::table, xb::Vector, $ ) :: Vector
-
-    # Compute the Givens QR decomposition of a square matrix &lt;A&gt;.
-    QR2( A::Matrix, $ ) :: table
-
-    # Solve the linear system Ax=b using QR decomposition &lt;T&gt; and provided the 
-    # vector &lt;b&gt;.
-    QR2solve( T::table, xb::Vector, $ ) :: Vector
-
-</Text-field>
-</Output>
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L256808" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L256801" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>

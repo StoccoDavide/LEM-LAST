@@ -1,6 +1,6 @@
-# LULEM (LU and QR decomposition with Large Expressions Management)
+# LULEM (Linear Algebra Symbolic Toolbox)
 
-This is a module for the `LULEM` (LU and QR decomposition with Large Expressions Management) package. It contains the functions to solve linear systems of equations with large symbolic expressions. The module uses a symbolic full pivoting LU decomposition to solve linear systems. The `LEM` (Large Expressions Management) package is used to avoid expression swell. Moreover, it also provides a full symbolic QR decomposition.
+This is a module for the `LAST` (Linear Algebra Symbolic Toolbox) package. It contains the functions to solve linear systems of equations with large symbolic expressions. The module uses symbolic full pivoting LU and QR decompositions to solve linear systems. The `LEM` (Large Expressions Management) package is used to avoid expression swell.
 
 The code in this repository is hopefully an improved version of the code provided in Wenqin Zhou's PhD thesis *Symbolic Computation Techniques for Solving Large Expressions*.
 
@@ -17,91 +17,172 @@ Firstly, install the dependency. The `LEM` package is freely available at this [
 To install the package you must have first installed Maple. Then open the `PackAndGo.mw` file and use the `!!!` button to *execute the entire worksheet*.
 
 Then test the library in a Maple worksheet or document by typing:
+
 ```
-> with(LEM);
+> LAST:-Info(LAST); # Maple < 2021
+> LAST:-Info();     # Maple >= 2021
 ```
+
 Alternatively, you can use one of the tests file provided in the `tests` folder. If the package is loaded without errors, it is done!
+
+## Package description
+
+If you want a full description of the `LAST` package type:
+
+```
+> Describe(LAST);
+```
+
+This command will generate a brief description of the module and all the procedures and other objects present in the `LAST.mpl` file, which will be (very) similar to the following code.
+
+```
+# Linear Algebra Symbolic Toolbox module.
+object LAST :: LAST:
+
+  # Print 'LASM' module information.
+  Info( )
+
+  # 'LAST' module load procedure.
+  ModuleLoad( )
+
+  # 'LAST' module unload procedure.
+  ModuleUnload( )
+
+  # Get the degree matrices of the matrix <A>.
+  GetDegrees( _self::LAST, A::Matrix, $ ) :: Matrix(nonnegint)
+
+  # Initialize the 'LEM' object with veiling label <label>.
+  InitLEM( _self::LAST, label::{string, symbol} := NULL, $ )
+
+  # Clear the 'LEM' object.
+  ClearLEM( _self::LAST, $ )
+
+  # Set the 'LEM' object <obj>.
+  SetLEM( _self::LAST, obj::LEM, $ )
+
+  # Get the 'LEM' object.
+  GetLEM( _self::LAST, $ ) :: LEM
+
+  # Plot of non-zero values of the matrix <A>.
+  Spy( _self::LAST, A::Matrix, $ ) :: anything
+
+  # Plot of non-zero values of the matrices <A>, <L> and <U> with fill-in
+  # values.
+  SpyLU( _self::LAST, A::Matrix, L::Matrix, U::Matrix, $ ) :: anything
+
+  # Compute the LU decomposition premutation matrices provided the rows pivot
+  # vector <r> and the columns pivot vector <c>.
+  PermutationMatrices( _self::LAST, r::Vector(nonnegint),
+                        c::Vector(nonnegint), $ ) :: Matrix(nonnegint)
+
+  # Set the verbosity of the package to <x>.
+  SetVerbosity( _self::LAST, x::boolean, $ )
+
+  # Enable the verbosity of the package.
+  EnableVerbosity( _self::LAST, $ )
+
+  # Disable the verbosity of the package.
+  DisableVerbosity( _self::LAST, $ )
+
+  # Set the time limit of the package to <x>.
+  SetTimeLimit( _self::LAST, x::numeric, $ )
+
+  # Solve the factorized linear system (LU)*x=b or (QR)*x=b.
+  SolveLinearSystem( _self::LAST, b::Vector, $ )
+
+  # Clear the results of the last factorization.
+  ClearResults( $ )
+
+  # Get the results of the last factorization. If <field> is specified, only
+  # the field Results['field'] is returned.
+  GetResults( _self::LAST, field::string := "all", $ )
+
+  # Compute the LU decomposition pivots vectors with minum degree provided
+  # the step <k>, the temporary LU (NAG) matrix <M>, the rows permutation <r>
+  # and the columns permutation <c>.
+  Pivoting( _self::LAST, k::integer, M::Matrix, r::Vector(nonnegint),
+            c::Vector(nonnegint), $ ) :: table
+
+  # Compute the cost of the pivot <x>.
+  PivotCost( _self::LAST, x::algebraic, $ ) :: integer
+
+  # Set the strategy <str> for the minimum degree ordering.
+  SetMinDegreeStrategy( _self::LAST, str::string := "product_1", $ )
+
+  # Set the strategy <str> for the minimum degree ordering.
+  DegreeCost( _self::LAST, val::table, $ ) :: integer
+
+  # Compute the pivoting degree cost.
+  DegreeCost_none( _self::LAST, val::table, $ ) :: integer
+
+  # Compute the pivoting degree cost.
+  DegreeCost_row( _self::LAST, val::table, $ ) :: integer
+
+  # Compute the pivoting degree cost.
+  DegreeCost_col( _self::LAST, val::table, $ ) :: integer
+
+  # Compute the pivoting degree cost.
+  DegreeCost_sum( _self::LAST, val::table, $ ) :: integer
+
+  # Compute the pivoting degree cost.
+  DegreeCost_prod( _self::LAST, val::table, $ ) :: integer
+
+  # Compute the pivoting degree cost.
+  DegreeCost_prod_1( _self::LAST, val::table, $ ) :: integer
+
+  # Compute the pivoting degree cost.
+  DegreeCost_min( _self::LAST, val::table, $ ) :: integer
+
+  # Compute the pivoting degree cost.
+  DegreeCost_max( _self::LAST, val::table, $ ) :: integer
+
+  # Compute the pivoting strategy: given the current pivot <cur> and the next
+  # pivot <val>, decide if to the next pivot is better than the current pivot
+  # or not.
+  PivotingCompare( _self::LAST, cur::table, val::table, $ ) :: boolean
+
+  # Compute the LU decomposition of a square matrix <A>.
+  LU( _self::LAST, A::Matrix, $ )
+
+  # Solve the linear system Ax=b using LU decomposition provided the vector
+  # <b>.
+  LUsolve( _self::LAST, b::Vector, $ ) :: Vector
+
+  # Compute the Givens QR decomposition of a square matrix <A>.
+  QR( _self::LAST, A::Matrix, $ )
+
+  # Solve the linear system Ax=b using QR decomposition provided the vector
+  # <b>.
+  QRsolve( _self::LAST, b::Vector, $ ) :: Vector
+
+```
 
 ## Usage
 
-If you want a full description of the `LULEM` package type:
-```
-> Describe(LULEM);
-```
-This command will generate a brief description of the module and all the procedures and other objects present in the `LULEM.mpl` file.
+In case you have no time to read the description and realize how it should or should not work, refer to the files `Test_00_LU.mw` and `Test_01_QR.mw` in the `tests` folder.
 
-In case you are lazy as I am here is a simple worked example.
+### 🚧 Attention! 🚧
 
-```
-> restart;
-> with(LULEM);
+Maple object-oriented programming features have slightly changed in 2021, which online documentation states:
 
-Generate a linear system of the type Ax=B
-> d := 3;
-> A := Matrix(d, d, symbol = a);
-> B := Vector(d, symbol = b);
+> As of Maple 2021, if the method has a formal parameter named `_self`, references to its object's local or exported variables may be written without prefixing them. That is, `_self:-variable` may be written as just `variable`. Maple will add the `self:-` prefix internally when the method is simplified.
 
-Set A[1,1] element equal to zero to force permutation (optional)
-> A[1,1] := 0;
+> As of Maple 2021, a message-passing form of method call can be used, which will automatically pass the object as an argument if the method has a formal parameter named `_self`.
 
-Perform the LU decomposition
-> P, L, U, r := LUD(A, Q, VeilingStrategy, PivotStrategy, ZeroStrategy);
+> Another way to invoke a method, similar to that used in other object-oriented languages, was introduced in Maple 2021. In this form, the object name is qualified by the method name, `object_name:-method_name( argument )` just as it can be in the function mechanism described above. However, the *object can be omitted from the argument sequence*.
 
-Check the LU decomposition
-> simplify(SubsVeil(Q, P.A -~ L.U));
-
-Let us see how many Q veiling variables we have
-> LastUsed[Q];
-
-Let us see the Q veiling variables
-> ShowVeil(Q);
-
-But now we want to forget about the Q veiling variables
-> ForgetVeil(Q);
-
-Now let us find the solution of the linear system
-> sol := Solve(A, B, K, VeilingStrategy, PivotStrategy, ZeroStrategy);
-
-Check the solution
-> simplify(SubsVeil(K, A.sol-B)):
-
-Let us see how many K veiling variables we have
-> LastUsed[K];
-
-Let us see the K veiling variables
-> ShowVeil(K);
-
-But now we want to forget about the K veiling variables
-> ForgetVeil(K);
-```
-
-Notice that the available veiling, pivoting and zero detection strategies should be chosen between:
-```
-VeilingStrategy -> VeilingStrategy_n
-                   VeilingStrategy_L
-                   VeilingStrategy_Ls
-                   VeilingStrategy_LB
-
-PivotStrategy   -> PivotStrategy_Llength
-                   PivotStrategy_Slength
-                   PivotStrategy_Lindets
-                   PivotStrategy_Sindets
-                   PivotStrategy_numeric
-
-ZeroStrategy    -> ZeroStrategy_length
-                   ZeroStrategy_normalizer
-```
+For further information please refer to this [link](https://fr.maplesoft.com/support/help/Maple/view.aspx?path=object/methods).
 
 ## Authors
 
-### Current version
+### Current version authors:
 
-- *Davide Stocco* (maintainer) \
+- *Davide Stocco* \
   Department of Industrial Engineering \
   University of Trento \
   email: davide.stocco@unitn.it
 
-- *Matteo Larcher* (maintainer) \
+- *Matteo Larcher* \
   Department of Industrial Engineering \
   University of Trento \
   email: matteo.larcher@unitn.it
@@ -111,7 +192,7 @@ ZeroStrategy    -> ZeroStrategy_length
   University of Trento
   email: enrico.bertolazzi@unitn.it
 
-### Original code
+### Inspired by the work of:
 
 - *Wenqin Zhou* (former affiliation) \
   Department of Applied Mathematics \
@@ -160,6 +241,18 @@ inproceedings{zhou2006hierarchical,
   booktitle = {Proceedings of Maple Conference},
   pages = {14--25},
   year = {2006}
+}
+```
+
+```
+@article{zhou2008fraction,
+  title = {Fraction-free matrix factors: new forms for LU and QR factors},
+  author = {Zhou, Wenqin and Jeffrey, David J.},
+  journal = {Frontiers of Computer Science in China},
+  volume = {2},
+  pages = {67--80},
+  year = {2008},
+  publisher = {Springer}
 }
 ```
 
