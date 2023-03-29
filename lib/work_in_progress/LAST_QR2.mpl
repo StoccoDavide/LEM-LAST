@@ -51,7 +51,7 @@ export QR2::static := proc(
   # Compute the Householder QR decomposition with veiling
   for k from 1 to m-1 do
     for l from k to n do
-      if _self:-m_Verbose then
+      if _self:-m_VerboseMode then
         printf(
         "LAST::QR2(...): processing %d-th row, cost = %d, veilings = %d.\n",
         k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, R),
@@ -59,7 +59,7 @@ export QR2::static := proc(
         );
       end if;
       if (l > k) then
-        if _self:-m_Verbose then
+        if _self:-m_VerboseMode then
           printf("LAST::QR2(...): swap with colum %d\n", l+1);
         end if;
         C          := R[1..-1,k]; a    := c[k];
@@ -176,7 +176,7 @@ export QR2solve::static := proc(
 
   x[n] := _self:-m_LEM:-Veil(_self:-m_LEM, x[n]/R[n, n]);
   for i from n-1 to 1 by -1 do
-    if _self:-m_Verbose then
+    if _self:-m_VerboseMode then
       printf("LAST::QR2solve, backward %d\n",i);
     end if;
     s    := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(R[i, i+1..n]*~x[i+1..n]));

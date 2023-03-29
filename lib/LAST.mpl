@@ -8,9 +8,9 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Current version authors:
-#  Davide Stocco     (University of Trento)
-#  Matteo Larcher    (University of Trento)
-#  Enrico Bertolazzi (University of Trento)
+#   Davide Stocco     (University of Trento)
+#   Matteo Larcher    (University of Trento)
+#   Enrico Bertolazzi (University of Trento)
 #
 # Inspired by the work of:
 #   Wenqin Zhou       (University of Western Ontario) - Former affiliation
@@ -20,11 +20,11 @@
 #
 # License: BSD 3-Clause License
 #
-# This is a module for the 'LAST' (Linear Algebra Symbolic Toolbox) package. It
+# This is a module for the 'LAST' (Linear Algebra Symbolic Toolbox) module. It
 # contains the functions to solve linear systems of equations with large
 # symbolic expressions. The module uses symbolic full pivoting LU and QR
 # decompositions to solve linear systems. The 'LEM' (Large Expressions
-# Management) package is used to avoid expression swell.
+# Management) module is used to avoid expression swell.
 #
 # The following code is hopefully an improved version of the original version
 # provided inthe following PhD thesis:
@@ -45,10 +45,10 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  local m_Verbose           := false;
+  local m_LEM               := NULL;
+  local m_VerboseMode       := false;
   local m_TimeLimit         := 1;
   local m_MinDegreeStrategy := "product_1";
-  local m_LEM               := NULL;
   local m_Results           := NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -84,7 +84,7 @@ module LAST()
       end if;
     end do;
     if (lib_base_path = NULL) then
-      error "Cannot find 'LAST' module";
+      error "cannot find 'LAST' module.";
     end if;
     return NULL;
   end proc: # ModuleLoad
@@ -97,29 +97,19 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  # Code inspired by:
-  # https://www.mapleprimes.com/questions/235996-Is-There-Any-Command-Or-Function-For
-
-  export GetDegrees::static := proc(
+  export ModuleCopy::static := proc(
     _self::LAST,
-    A::Matrix,
-    $)::Matrix(nonnegint), Matrix(nonnegint);
+    proto::LAST,
+    $)
 
-    description "Get the degree matrices of the matrix <A>.";
+    description "Copy the objects <proto> into <self>.";
 
-    local i, j, k, m, n, r, c, ro, co;
-
-    m, n := LinearAlgebra:-Dimensions(A);
-    ro := Vector[column](m, k -> 1);
-    co := Vector[row](n, k -> 1);
-    r  := Vector[column](
-      [seq(rtable_scanblock(A, [i,..], ':-NonZeros'), i = 1..m)]
-    );
-    c  := Vector[row](
-      [seq(rtable_scanblock(A, [..,j], ':-NonZeros'), j = 1..n)]
-    );
-    return r.co, ro.c;
-  end proc: # GetDegrees
+    _self:-m_LEM               := proto:-m_LEM;
+    _self:-m_VerboseMode           := proto:-m_VerboseMode;
+    _self:-m_TimeLimit         := proto:-m_TimeLimit;
+    _self:-m_MinDegreeStrategy := proto:-m_MinDegreeStrategy;
+    _self:-m_Results           := proto:-m_Results;
+  end proc: # ModuleCopy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -173,6 +163,110 @@ module LAST()
 
     return _self:-m_LEM;
   end proc: # GetLEM
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export EnableVerboseMode::static := proc(
+    _self::LAST,
+    $)
+
+    description "Enable the verbosity of the module.";
+
+    _self:-m_VerboseMode := true;
+    return NULL;
+  end proc: # EnableVerboseMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export DisableVerboseMode::static := proc(
+    _self::LAST,
+    $)
+
+    description "Disable the verbosity of the module.";
+
+    _self:-m_VerboseMode := false;
+    return NULL;
+  end proc: # DisableVerboseMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export SetTimeLimit::static := proc(
+    _self::LAST,
+    x::numeric,
+    $)
+
+    description "Set the time limit of the module to <x>.";
+
+    if (x < 0) then
+      error "time limit must be a non-negative number.";
+    end if;
+
+    _self:-m_TimeLimit := x;
+    return NULL;
+  end proc: # SetTimeLimit
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export GetTimeLimit::static := proc(
+    _self::LAST,
+    $)::numeric;
+
+    description "Get the time limit of the module.";
+
+    return _self:-m_TimeLimit;
+  end proc: # GetTimeLimit
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export ClearResults::static := proc( $ )
+
+    description "Clear the results of the last factorization.";
+
+    _self:-m_Results := table([]);
+    return NULL;
+  end proc: # ClearResults
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export GetResults::static := proc(
+    _self::LAST,
+    field::string := "all",
+    $)
+
+    description "Get the results of the last factorization. If <field> is "
+      "specified, only the field Results['field'] is returned.";
+
+    if (field = "all") then
+      return _self:-m_Results;
+    else
+      return _self:-m_Results[field];
+    end if;
+  end proc: # GetResults
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export SolveLinearSystem::static := proc(
+    _self::LAST,
+    b::Vector,
+    $)
+
+    description "Solve the factorized linear system (LU)*x=b or (QR)*x=b.";
+
+    if (_self:-m_Results["method"] = "LU") then
+      return _self:-LUsolve(_self, b);
+    elif (_self:-m_Results["method"] = "QR") then
+      return _self:-QRsolve(_self, b);
+    else
+      error "wrong or not available decomposition (use LAST::LU() or LAST::QR() "
+        "first).";
+    end if;
+
+    # Work in progress: FFLU and QR2 methods.
+    # elif (T["method"] = "FFLU") then
+    #   return _self:-FFLUsolve(_self, b);
+    # elif (T["method"] = "QR2") then
+    #   return _self:-QR2solve(_self, b);
+  end proc: # SolveLinearSystem
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -232,112 +326,6 @@ module LAST()
     end do;
     return P, Q;
   end proc: # Permutatiomnatrices
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export SetVerbosity::static := proc(
-    _self::LAST,
-    x::boolean,
-    $)
-
-    description "Set the verbosity of the package to <x>.";
-
-    _self:-m_Verbose := x;
-    return NULL;
-  end proc: # SetVerbosity
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export EnableVerbosity::static := proc(
-    _self::LAST,
-    $)
-
-    description "Enable the verbosity of the package.";
-
-    _self:-m_Verbose := true;
-    return NULL;
-  end proc: # EnableVerbosity
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export DisableVerbosity::static := proc(
-    _self::LAST,
-    $)
-
-    description "Disable the verbosity of the package.";
-
-    _self:-m_Verbose := false;
-    return NULL;
-  end proc: # DisableVerbosity
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export SetTimeLimit::static := proc(
-    _self::LAST,
-    x::numeric,
-    $)
-
-    description "Set the time limit of the package to <x>.";
-
-    if (x < 0) then
-      error "time limit must be a non-negative number.";
-    end if;
-
-    _self:-m_TimeLimit := x;
-    return NULL;
-  end proc: # SetTimeLimit
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export SolveLinearSystem::static := proc(
-    _self::LAST,
-    b::Vector,
-    $)
-
-    description "Solve the factorized linear system (LU)*x=b or (QR)*x=b.";
-
-    if (_self:-m_Results["method"] = "LU") then
-      return _self:-LUsolve(_self, b);
-    elif (_self:-m_Results["method"] = "QR") then
-      return _self:-QRsolve(_self, b);
-    else
-      error "wrong or not available decomposition (use LAST::LU() or LAST::QR() "
-        "first).";
-    end if;
-
-    # Work in progress: FFLU and QR2 methods.
-    # elif (T["method"] = "FFLU") then
-    #   return _self:-FFLUsolve(_self, b);
-    # elif (T["method"] = "QR2") then
-    #   return _self:-QR2solve(_self, b);
-  end proc: # SolveLinearSystem
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export ClearResults::static := proc( $ )
-
-    description "Clear the results of the last factorization.";
-
-    _self:-m_Results := table([]);
-    return NULL;
-  end proc: # ClearResults
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export GetResults::static := proc(
-    _self::LAST,
-    field::string := "all",
-    $)
-
-    description "Get the results of the last factorization. If <field> is "
-      "specified, only the field Results['field'] is returned.";
-
-    if (field = "all") then
-      return _self:-m_Results;
-    else
-      return _self:-m_Results[field];
-    end if;
-  end proc: # GetResults
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

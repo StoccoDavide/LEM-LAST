@@ -44,7 +44,7 @@ export QR::static := proc(
 
   # Compute the Householder QR decomposition with veiling
   for k from 1 to m-1 do
-    if _self:-m_Verbose then
+    if _self:-m_VerboseMode then
       printf(
         "LAST::QR(...): processing %d-th row, cost = %d, veilings = %d.\n",
         k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, R),
@@ -163,7 +163,7 @@ export QRsolve::static := proc(
   # Solve R^(-1)
   x[n] := _self:-m_LEM:-Veil(_self:-m_LEM, x[n]/R[n, n]);
   for i from n-1 to 1 by -1 do
-    if _self:-m_Verbose then
+    if _self:-m_VerboseMode then
       printf("LAST::QRsolve(...): backward substitution of %d-th row.\n", i);
     end if;
     s    := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(R[i, i+1..n] *~ x[i+1..n]));

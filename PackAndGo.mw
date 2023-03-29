@@ -138,7 +138,7 @@ end if;
 </Input>
 </Group>
 <Group labelreference="L256802" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Library generation procedure</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN := proc( MODULE_NAME::{string} )
+<Input><Text-field style="Text" layout="Normal">Library generation procedure</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN := proc( MODULE_NAME::string, $ )
 
   local bin_path, src_path;
 
@@ -178,7 +178,7 @@ end proc:
 </Input>
 </Group>
 <Group labelreference="L256804" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Procedure for deep directory removal</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir := proc( dirpath::{string}, $ )
+<Input><Text-field style="Text" layout="Normal">Procedure for deep directory removal</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">RmDir := proc( dirpath::string, $ )
 
   local d, dd, ds;
 
@@ -234,14 +234,139 @@ end do:</Text-field>
 <Group labelreference="L256816" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LAST):</Text-field>
 </Input>
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">
+# Linear Algebra Symbolic Toolbox module.
+object LAST :: LAST:
+
+    # Print 'LAST' module information.
+    Info( )
+
+    # 'LAST' module load procedure.
+    ModuleLoad( )
+
+    # 'LAST' module unload procedure.
+    ModuleUnload( )
+
+    # Copy the objects &lt;proto&gt; into &lt;self&gt;.
+    ModuleCopy( _self::LAST, proto::LAST, $ )
+
+    # Initialize the 'LEM' object with veiling label &lt;label&gt;.
+    InitLEM( _self::LAST, label::{string, symbol} := NULL, $ )
+
+    # Clear the 'LEM' object.
+    ClearLEM( _self::LAST, $ )
+
+    # Set the 'LEM' object &lt;obj&gt;.
+    SetLEM( _self::LAST, obj::LEM, $ )
+
+    # Get the 'LEM' object.
+    GetLEM( _self::LAST, $ ) :: LEM
+
+    # Enable the verbosity of the module.
+    EnableVerboseMode( _self::LAST, $ )
+
+    # Disable the verbosity of the module.
+    DisableVerboseMode( _self::LAST, $ )
+
+    # Set the time limit of the module to &lt;x&gt;.
+    SetTimeLimit( _self::LAST, x::numeric, $ )
+
+    # Get the time limit of the module.
+    GetTimeLimit( _self::LAST, $ ) :: numeric
+
+    # Clear the results of the last factorization.
+    ClearResults( $ )
+
+    # Get the results of the last factorization. If &lt;field&gt; is specified, only 
+    # the field Results['field'] is returned.
+    GetResults( _self::LAST, field::string := &quot;all&quot;, $ )
+
+    # Solve the factorized linear system (LU)*x=b or (QR)*x=b.
+    SolveLinearSystem( _self::LAST, b::Vector, $ )
+
+    # Plot of non-zero values of the matrix &lt;A&gt;.
+    Spy( _self::LAST, A::Matrix, $ ) :: anything
+
+    # Plot of non-zero values of the matrices &lt;A&gt;, &lt;L&gt; and &lt;U&gt; with fill-in 
+    # values.
+    SpyLU( _self::LAST, A::Matrix, L::Matrix, U::Matrix, $ ) :: anything
+
+    # Compute the LU decomposition premutation matrices provided the rows pivot 
+    # vector &lt;r&gt; and the columns pivot vector &lt;c&gt;.
+    PermutationMatrices( _self::LAST, r::Vector(nonnegint), 
+                         c::Vector(nonnegint), $ ) :: Matrix(nonnegint)
+
+    # Compute the LU decomposition pivots vectors with minum degree provided 
+    # the step &lt;k&gt;, the temporary LU (NAG) matrix &lt;M&gt;, the rows permutation &lt;r&gt; 
+    # and the columns permutation &lt;c&gt;.
+    Pivoting( _self::LAST, k::integer, M::Matrix, r::Vector(nonnegint), 
+              c::Vector(nonnegint), $ ) :: table
+
+    # Compute the cost of the pivot &lt;x&gt;.
+    PivotCost( _self::LAST, x::algebraic, $ ) :: integer
+
+    # Get the degree matrices of the matrix &lt;A&gt;.
+    GetDegrees( _self::LAST, A::Matrix, $ ) :: Matrix(nonnegint)
+
+    # Set the strategy &lt;str&gt; for the minimum degree ordering.
+    SetMinDegreeStrategy( _self::LAST, str::string := &quot;product_1&quot;, $ )
+
+    # Set the strategy &lt;str&gt; for the minimum degree ordering.
+    DegreeCost( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting degree cost.
+    DegreeCost_none( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting degree cost.
+    DegreeCost_row( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting degree cost.
+    DegreeCost_col( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting degree cost.
+    DegreeCost_sum( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting degree cost.
+    DegreeCost_prod( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting degree cost.
+    DegreeCost_prod_1( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting degree cost.
+    DegreeCost_min( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting degree cost.
+    DegreeCost_max( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting strategy: given the current pivot &lt;cur&gt; and the next 
+    # pivot &lt;val&gt;, decide if to the next pivot is better than the current pivot 
+    # or not.
+    PivotingCompare( _self::LAST, cur::table, val::table, $ ) :: boolean
+
+    # Compute the LU decomposition of a square matrix &lt;A&gt;.
+    LU( _self::LAST, A::Matrix, $ )
+
+    # Solve the linear system Ax=b using LU decomposition provided the vector 
+    # &lt;b&gt;.
+    LUsolve( _self::LAST, b::Vector, $ ) :: Vector
+
+    # Compute the Givens QR decomposition of a square matrix &lt;A&gt;.
+    QR( _self::LAST, A::Matrix, $ )
+
+    # Solve the linear system Ax=b using QR decomposition provided the vector 
+    # &lt;b&gt;.
+    QRsolve( _self::LAST, b::Vector, $ ) :: Vector
+
+</Text-field>
+</Output>
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L256808" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
 </Input>
 </Group></Presentation-Block><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L256801" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>

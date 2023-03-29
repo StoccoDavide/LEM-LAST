@@ -93,7 +93,7 @@ export Pivoting::static := proc(
       print("LAST::Pivoting(...): something went wrong %q.\n", lastexception);
       print("catch", Mij["value"], Mij["is_zero"]);
       printf("LAST::Pivoting(...): Mij division by 0 or other exception.\n");
-      if _self:-m_Verbose then
+      if _self:-m_VerboseMode then
         print(Mij["value"]);
       end if;
       Mij["is_zero"] := true;
@@ -157,6 +157,32 @@ end proc: # PivotCost
 #  | |  | | | | | | |_| |  __/ (_| | | |  __/  __/
 #  |_|  |_|_|_| |_|____/ \___|\__, |_|  \___|\___|
 #                             |___/
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Code inspired by:
+# https://www.mapleprimes.com/questions/235996-Is-There-Any-Command-Or-Function-For
+
+export GetDegrees::static := proc(
+  _self::LAST,
+  A::Matrix,
+  $)::Matrix(nonnegint), Matrix(nonnegint);
+
+  description "Get the degree matrices of the matrix <A>.";
+
+  local i, j, k, m, n, r, c, ro, co;
+
+  m, n := LinearAlgebra:-Dimensions(A);
+  ro := Vector[column](m, k -> 1);
+  co := Vector[row](n, k -> 1);
+  r  := Vector[column](
+    [seq(rtable_scanblock(A, [i,..], ':-NonZeros'), i = 1..m)]
+  );
+  c  := Vector[row](
+    [seq(rtable_scanblock(A, [..,j], ':-NonZeros'), j = 1..n)]
+  );
+  return r.co, ro.c;
+end proc: # GetDegrees
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 export SetMinDegreeStrategy::static := proc(

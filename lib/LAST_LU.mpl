@@ -46,7 +46,7 @@ export LU::static := proc(
   rnk        := mn;
   pivot_list := [];
   for k from 1 to mn do
-    if _self:-m_Verbose then
+    if _self:-m_VerboseMode then
       printf(
         "LAST::LU(...): processing %d-th row, cost = %d, veilings = %d.\n",
         k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
@@ -61,13 +61,13 @@ export LU::static := proc(
 
     if pivot["is_zero"] then
       rnk := rnk - 1;
-      if _self:-m_Verbose then
+      if _self:-m_VerboseMode then
         WARNING("LAST::LU(...): the matrix appears to be not full rank.");
       end if;
       break;
     end if;
 
-    if _self:-m_Verbose then
+    if _self:-m_VerboseMode then
       printf(
         "LAST::LU(...): M[%d,%d] = %a, cost = %d, degree_r = %d, degree_c = %d.\n",
         k, k, pivot["value"], pivot["cost"], pivot["degree_r"], pivot["degree_c"]
@@ -156,19 +156,19 @@ export LUsolve::static := proc(
 
   # Perform forward substitution to solve Ly=b[r]
   for i from 2 to m do
-    if _self:-m_Verbose then
+    if _self:-m_VerboseMode then
       printf("LAST::LUsolve(...): forward substitution of %d-th row.\n", i);
     end if;
     x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, 1..i-1]*~x[1..i-1]));
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
-  if _self:-m_Verbose then
+  if _self:-m_VerboseMode then
     printf("LAST::LUsolve(...): dividision by U[%d,%d].\n", n, n);
   end if;
   x[n] := _self:-m_LEM:-Veil(_self:-m_LEM, x[n]/U[n, n]);
   for i from n-1 to 1 by -1 do
-    if _self:-m_Verbose then
+    if _self:-m_VerboseMode then
       printf("LAST::LUsolve(...): backward substitution of %d-th column.\n", i);
     end if;
     s    := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(U[i, i+1..n]*~x[i+1..n]));
