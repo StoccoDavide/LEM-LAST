@@ -132,22 +132,22 @@
 </Input>
 </Group>
 <Group view="code" labelreference="L699" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check bin directory</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if not FileTools[Exists](BINARY_DIR) then
-  FileTools[MakeDirectory](BINARY_DIR);
+<Input><Text-field style="Text" layout="Normal">Check bin directory</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if not FileTools:-Exists(BINARY_DIR) then
+  FileTools:-MakeDirectory(BINARY_DIR);
 end if;
 </Text-field>
 </Input>
 </Group>
 <Group view="code" labelreference="L700" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check MLA file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](LIBRARY_MLA) then
-  FileTools[Remove](LIBRARY_MLA);
+<Input><Text-field style="Text" layout="Normal">Check MLA file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools:-Exists(LIBRARY_MLA) then
+  FileTools:-Remove(LIBRARY_MLA);
 end if;
 </Text-field>
 </Input>
 </Group>
 <Group view="code" labelreference="L709" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Check MLA installer file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools[Exists](INSTALL_MLA) then
-  FileTools[Remove](INSTALL_MLA);
+<Input><Text-field style="Text" layout="Normal">Check MLA installer file</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">if FileTools:-Exists(INSTALL_MLA) then
+  FileTools:-Remove(INSTALL_MLA);
 end if;
 </Text-field>
 </Input>
@@ -160,12 +160,12 @@ end if;
   bin_path := cat(BINARY_DIR, ds, MODULE_NAME, &quot;.mla&quot;);
   src_path := cat(SOURCE_DIR, ds, MODULE_NAME, &quot;.mpl&quot;);
 
-  if FileTools[Exists](src_path) then
-    if not FileTools[Exists](BINARY_DIR) then
-      FileTools[MakeDirectory](BINARY_DIR);
+  if FileTools:-Exists(src_path) then
+    if not FileTools:-Exists(BINARY_DIR) then
+      FileTools:-MakeDirectory(BINARY_DIR);
     end if;
-    if FileTools[Exists](bin_path) then
-      FileTools[Remove](bin_path):
+    if FileTools:-Exists(bin_path) then
+      FileTools:-Remove(bin_path):
     end if;
     read(src_path);
     march('create', bin_path );
@@ -181,14 +181,11 @@ end proc:
 <Group view="code" labelreference="L710" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Generate module</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN(MODULE_NAME);</Text-field>
 </Input>
-<Output><Text-field style="Line Printed Output" layout="Line Printed Output">'LEM' module version 1.0, BSD 3-Clause License - Copyright (C) 2023, D. Stocco, M. Larcher, E. Bertolazzi, W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.
-</Text-field>
-</Output>
 </Group></Presentation-Block>
 </Section>
 <Section collapsed="false" isCollapsible="true" drawButton="true" MultipleChoiceAnswerIndex="-1" MultipleChoiceRandomizeChoices="false" TrueFalseAnswerIndex="-1" EssayAnswerRows="5" EssayAnswerColumns="60"><Title><Text-field style="Heading 1" layout="Heading 1">Create the Installer</Text-field></Title><Presentation-Block>
 <Group view="code" hide-input="false" labelreference="L735" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LICENSE := FileTools[Text][ReadFile](&quot;LICENSE&quot;):</Text-field>
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LICENSE := FileTools:-Text:-ReadFile(&quot;LICENSE&quot;):</Text-field>
 </Input>
 </Group>
 <Group view="code" hide-input="false" labelreference="L734" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -196,7 +193,7 @@ end proc:
 </Input>
 </Group></Presentation-Block><Presentation-Block>
 <Group hide-input="false" labelreference="L728" drawlabel="true">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">InstallerBuilder[Build](
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">InstallerBuilder:-Build(
   MODULE_NAME,
   'uninstaller' = false,
   'version'     = &quot;1.0&quot;,
@@ -204,11 +201,11 @@ end proc:
   'width'       = 1000,
   'author'      = &quot;D. Stocco, M. Larcher and E. Bertolazzi&quot;,
   'welcome'     = [
-     'text'  = &quot;Welcome to the LEM (Large Expressions Management) toolbox installer.&quot;,
+     'text'  = &quot;Welcome to the LEM (Large Expressions Management) module installer.&quot;,
      'image' = LOGO
    ],
   'finish'      = [
-     'text'  = &quot;The LEM (Large Expressions Management) toolbox has been succesfully installed.&quot;, 
+     'text'  = &quot;The LEM (Large Expressions Management) module has been succesfully installed.&quot;, 
      'image' = LOGO
    ],
   'target'      = INSTALL_MLA,
@@ -231,35 +228,35 @@ end proc:
           local d, dd, ds;
 
           ds := kernelopts('dirsep');
-          if FileTools[Exists](dirpath) and FileTools[IsDirectory](dirpath) then
-            for d in FileTools[ListDirectory](dirpath, 'all') do
+          if FileTools:-Exists(dirpath) and FileTools:-IsDirectory(dirpath) then
+            for d in FileTools:-ListDirectory(dirpath, 'all') do
               if evalb((d &lt;&gt; &quot;.&quot;) and (d &lt;&gt; &quot;..&quot;)) then
                 dd := cat(dirpath, ds, d);
-                if FileTools[Exists](dd) then
-                  if FileTools[IsDirectory](dd) then
+                if FileTools:-Exists(dd) then
+                  if FileTools:-IsDirectory(dd) then
                     RmDir(dd);
-                    # FileTools[RemoveDirectory](dd, forceremove = true);
+                    # FileTools:-RemoveDirectory(dd, forceremove = true);
                   else
-                   FileTools[Remove](dd);
+                   FileTools:-Remove(dd);
                   end if;
                 end if;
               end if;
             end do;
-            FileTools[RemoveDirectory](dirpath, forceremove = true);
+            FileTools:-RemoveDirectory(dirpath, forceremove = true);
           end if;
           return;
         
         end proc:
         ###
         RmDir(dest);        
-        FileTools[MakeDirectory](dest, recurse = true);
+        FileTools:-MakeDirectory(dest, recurse = true);
         n  := 1 + length(file);
-        for r in FileTools[Walk](file, 'topdown', 'followlinks') do
+        for r in FileTools:-Walk(file, 'topdown', 'followlinks') do
           limb := cat(dest, ds, r[dir][n..], ds);
           for d in r[subdirs] do
-            ((d) -&gt; `if`(FileTools[Exists](d), 0, FileTools[MakeDirectory](d)))(cat(limb, d));
+            ((d) -&gt; `if`(FileTools:-Exists(d), 0, FileTools:-MakeDirectory(d)))(cat(limb, d));
           end do;
-          seq(FileTools[Copy](cat(r[dir], ds, f), cat(limb, f)), f = r[files]) 
+          seq(FileTools:-Copy(cat(r[dir], ds, f), cat(limb, f)), f = r[files]) 
         end do;
         return true;
       end proc, 

@@ -7,12 +7,12 @@
 #                         Large Expressions Management                        #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Authors of the current version:
+# Current version authors:
 #  Davide Stocco     (University of Trento)
 #  Matteo Larcher    (University of Trento)
 #  Enrico Bertolazzi (University of Trento)
 #
-# Authors of the original code:
+# Inspired by the work of:
 #   Wenqin Zhou       (University of Western Ontario) - Former affiliation
 #   David J. Jeffrey  (University of Western Ontario)
 #   Jacques Carette   (McMaster University)
