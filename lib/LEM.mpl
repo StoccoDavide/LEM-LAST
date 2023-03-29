@@ -8,9 +8,9 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Current version authors:
-#  Davide Stocco     (University of Trento)
-#  Matteo Larcher    (University of Trento)
-#  Enrico Bertolazzi (University of Trento)
+#   Davide Stocco     (University of Trento)
+#   Matteo Larcher    (University of Trento)
+#   Enrico Bertolazzi (University of Trento)
 #
 # Inspired by the work of:
 #   Wenqin Zhou       (University of Western Ontario) - Former affiliation
@@ -20,7 +20,7 @@
 #
 # License: BSD 3-Clause License
 #
-# This is a module for the 'LEM' (Large Expressions Management) package.
+# This is a module for the 'LEM' (Large Expressions Management) module.
 # It contains the functions to deal with large expressions management.
 # The module can be used to veil and unveil large expressions to avoid
 # expression swell.
@@ -91,7 +91,7 @@ module LEM()
       end if;
     end do;
     if (lib_base_path = NULL) then
-      error "cannot find 'LEM' module";
+      error "cannot find 'LEM' module.";
     end if;
     return NULL;
   end proc: # ModuleLoad

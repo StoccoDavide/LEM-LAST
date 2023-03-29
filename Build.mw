@@ -153,7 +153,7 @@ end if;
 </Input>
 </Group>
 <Group view="code" labelreference="L701" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Library generation procedure</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN := proc( MODULE_NAME::{string} )
+<Input><Text-field style="Text" layout="Normal">Library generation procedure</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">GEN := proc( MODULE_NAME::string, $ )
 
   local bin_path, src_path;
 
@@ -168,7 +168,7 @@ end if;
       FileTools:-Remove(bin_path):
     end if;
     read(src_path);
-    march('create', bin_path );
+    march('create', bin_path);
     savelib(convert(MODULE_NAME, symbol), bin_path);
   else
 <Font encoding="UTF-8">    error &quot;Missing file %1.\134n&quot;, </Font>src_path;
@@ -223,7 +223,7 @@ end proc:
         dest := cat(kernelopts(mapledir), ds, &quot;toolbox&quot;, ds, &quot;LEM&quot;, ds, &quot;lib&quot;, ds);
 
         ###
-        RmDir := proc( dirpath::{string}, $ )
+        RmDir := proc( dirpath::string, $ )
 
           local d, dd, ds;
 
@@ -274,7 +274,7 @@ end proc:
 </Group></Presentation-Block>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L681" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>

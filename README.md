@@ -1,6 +1,6 @@
 # LEM (Large Expressions Management)
 
-This is a module for the `LEM` (Large Expressions Management) package. It contains the functions to deal with large expressions management. The module can be used to veil and unveil large expressions to avoid expression swell.
+This is a module for the `LEM` (Large Expressions Management) module. It contains the functions to deal with large expressions management. The module can be used to veil and unveil large expressions to avoid expression swell.
 
 The code in this repository is hopefully an improved version of the code provided in Wenqin Zhou's PhD thesis *Symbolic Computation Techniques for Solving Large Expressions*.
 
@@ -8,20 +8,20 @@ We would like to thank *Jacques Carette* for providing the original code that we
 
 ## Installation
 
-To install the package you must have first installed Maple. Then open the `PackAndGo.mw` file and use the `!!!` button to *execute the entire worksheet*.
+To install the module you must have first installed Maple. Then open the `PackAndGo.mw` file and use the `!!!` button to *execute the entire worksheet*.
 
-Then test the library in a Maple worksheet or document by typing:
+Then test the module in a Maple worksheet or document by typing:
 
 ```
 > LEM:-Info(LEM); # Maple < 2021
 > LEM:-Info();    # Maple >= 2021
 ```
 
-Alternatively, you can use one of the tests file provided in the `tests` folder. If the package is loaded without errors, it is done!
+Alternatively, you can use one of the tests file provided in the `tests` folder. If the module is loaded without errors, it is done!
 
-## Package description
+## Module description
 
-If you want a full description of the `LEM` package type:
+If you want a full description of the `LEM` module type:
 
 ```
 > Describe(LEM);
@@ -33,83 +33,83 @@ This command will generate a brief description of the module and all the procedu
 # Large Expressions Management module.
 object LEM :: LEM:
 
-  # Print 'LEM' module information.
-  Info( )
+    # Print 'LEM' module information.
+    Info( )
 
-  # 'LEM' module load procedure.
-  ModuleLoad( )
+    # 'LEM' module load procedure.
+    ModuleLoad( )
 
-  # 'LEM' module unload procedure.
-  ModuleUnload( )
+    # 'LEM' module unload procedure.
+    ModuleUnload( )
 
-  # Copy the objects <proto> into <self>.
-  ModuleCopy( _self::LEM, proto::LEM, $ )
+    # Copy the objects <proto> into <self>.
+    ModuleCopy( _self::LEM, proto::LEM, $ )
 
-  # Set the veiling label to <label>.
-  SetVeilingLabel( _self::LEM, label::{string, symbol}, $ )
+    # Set the veiling label to <label>.
+    SetVeilingLabel( _self::LEM, label::{string, symbol}, $ )
 
-  # Return the veiling label.
-  GetVeilingLabel( _self::LEM, $ ) :: symbol
+    # Return the veiling label.
+    GetVeilingLabel( _self::LEM, $ ) :: symbol
 
-  # Clear the veiling table.
-  ClearVeilingTable( _self::LEM, $ )
+    # Clear the veiling table.
+    ClearVeilingTable( _self::LEM, $ )
 
-  # Check if the veiling strategy is verified, if true veil the expression
-  # <x> and return a label to it.
-  Veil( _self::LEM, x::anything,
-        { force::boolean := false }, $ ) :: anything
+    # Check if the veiling strategy is verified, if true veil the expression
+    # <x> and return a label to it.
+    Veil( _self::LEM, x::anything,
+          { force::boolean := false }, $ ) :: anything
 
-  # Compute the cost of the expression <x>.
-  ExpressionCost( _self::LEM, x::anything, $ ) :: integer
+    # Compute the cost of the expression <x>.
+    ExpressionCost( _self::LEM, x::anything, $ ) :: integer
 
-  # Evaluate the veiling strategy for the expression <x>.
-  VeilingStrategy( _self::LEM, x::algebraic, $ ) :: boolean
+    # Evaluate the veiling strategy for the expression <x>.
+    VeilingStrategy( _self::LEM, x::algebraic, $ ) :: boolean
 
-  # Set the veiling strategy parameters: maximum veiling cost <maxcost>,
-  # subscripts cost weight parameter <subscripts>, assignments cost weight
-  # parameter <assignments>, additions cost weight parameter <additions>,
-  # multiplications cost weight parameter <multiplications>, divisions cost
-  # weight parameter <divisions>, and functions cost weight parameter
-  # <functions>.
-  SetVeilingStrategyPars( _self::LEM,
-                          { additions::nonnegint := 1,
-                            assignments::nonnegint := 0,
-                            divisions::nonnegint := 3,
-                            functions::nonnegint := 2,
-                            maxcost::nonnegint := 15,
-                            multiplications::nonnegint := 2,
-                            subscripts::nonnegint := 0 }, $ ) :: nothing
+    # Set the veiling strategy parameters: maximum veiling cost <maxcost>,
+    # subscripts cost weight parameter <subscripts>, assignments cost weight
+    # parameter <assignments>, additions cost weight parameter <additions>,
+    # multiplications cost weight parameter <multiplications>, divisions cost
+    # weight parameter <divisions>, and functions cost weight parameter
+    # <functions>.
+    SetVeilingStrategyPars( _self::LEM,
+                            { additions::nonnegint := 1,
+                              assignments::nonnegint := 0,
+                              divisions::nonnegint := 3,
+                              functions::nonnegint := 2,
+                              maxcost::nonnegint := 15,
+                              multiplications::nonnegint := 2,
+                              subscripts::nonnegint := 0 }, $ ) :: nothing
 
-  # Unveil the expression <x>.
-  UnVeil( _self::LEM, x::anything, $ ) :: anything
+    # Unveil the expression <x>.
+    UnVeil( _self::LEM, x::anything, $ ) :: anything
 
-  # Unveil the expression <x> with internal permutation map.
-  UnVeilImap( _self::LEM, x::anything, $ ) :: anything
+    # Unveil the expression <x> with internal permutation map.
+    UnVeilImap( _self::LEM, x::anything, $ ) :: anything
 
-  # Return a list of the veiling labels.
-  VeilList( _self::LEM,
-            { reverse::boolean := false }, $ ) :: list(anything)
+    # Return a list of the veiling labels.
+    VeilList( _self::LEM,
+              { reverse::boolean := false }, $ ) :: list(anything)
 
-  # Return the unordered veiling list.
-  VeilUnorderedList( _self::LEM, $ ) :: list
+    # Return the unordered veiling list.
+    VeilUnorderedList( _self::LEM, $ ) :: list
 
-  # Return the size of the internal veiling table.
-  VeilTableSize( _self::LEM, $ ) :: nonnegint
+    # Return the size of the internal veiling table.
+    VeilTableSize( _self::LEM, $ ) :: nonnegint
 
-  # Return the veiling list and the permutation that sorts it.
-  VeilTableImap( _self::LEM,
-                  { reverse::boolean := false }, $ )
-                :: {list(anything = anything), []}
+    # Return the veiling list and the permutation that sorts it.
+    VeilTableImap( _self::LEM,
+                    { reverse::boolean := false }, $ )
+                  :: {list(anything = anything), []}
 
-  # Append the veiled expression <x> to the veiling table.
-  VeilTableAppend( _self::LEM, x::anything, $ ) :: indexed
+    # Append the veiled expression <x> to the veiling table.
+    VeilTableAppend( _self::LEM, x::anything, $ ) :: indexed
 
-  # Substitute the reversed veiling variables of the internal veiling table
-  # in the expression <x>.
-  VeilSubs( _self::LEM, x::anything, $ ) :: anything
+    # Substitute the reversed veiling variables of the internal veiling table
+    # in the expression <x>.
+    VeilSubs( _self::LEM, x::anything, $ ) :: anything
 
-  # Clear all the veiling variables of the internal veiling table.
-  VeilForget( _self::LEM, $ )
+    # Clear all the veiling variables of the internal veiling table.
+    VeilForget( _self::LEM, $ )
 ```
 
 ## Usage
@@ -232,7 +232,6 @@ Try to change the defult (random) veiling label to 'A' (success)
 For further information open the file `Test_Maple2021minus.mw` in the `tests` folder.
 
 ### Maple >= 2021
-
 
 Here is a worked example of how to use the `LEM` module for Maple 2021 and the versions **after** 2021.
 
