@@ -1,6 +1,6 @@
 # LEM (Large Expressions Management)
 
-This is a module for the `LEM` (Large Expressions Management) package. It contains the functions to deal with large expressions management. The module can be used to veil and unveil large expressions to avoid expression swell. The module is very similar to the `LargeExpressions` module provided by Maple. The main difference is that the `LEM` module has some additional built-in functions to display, list and substitute veiled expressions.
+This is a module for the `LEM` (Large Expressions Management) package. It contains the functions to deal with large expressions management. The module can be used to veil and unveil large expressions to avoid expression swell.
 
 The code in this repository is hopefully an improved version of the code provided in Wenqin Zhou's PhD thesis *Symbolic Computation Techniques for Solving Large Expressions*.
 
@@ -12,7 +12,8 @@ To install the package you must have first installed Maple. Then open the `PackA
 
 Then test the library in a Maple worksheet or document by typing:
 ```
-> LEM:-Info(LEM);
+> LEM:-Info(LEM); # Maple < 2021
+> LEM:-Info();    # Maple >= 2021
 ```
 Alternatively, you can use one of the tests file provided in the `tests` folder. If the package is loaded without errors, it is done!
 
