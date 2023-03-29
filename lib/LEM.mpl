@@ -48,9 +48,7 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  local m_VeilingLabel                    := parse(
-    cat("V_", StringTools:-Random(5, alnum))
-  );
+  local m_VeilingLabel := parse(cat("V_", StringTools:-Random(5, 'alnum')));
   local m_UnVeilTable                     := table([]);
   local m_VeilingStrategy_maxcost         := 15;
   local m_VeilingStrategy_subscripts      := 0;
@@ -70,7 +68,7 @@ module LEM()
       "+--------------------------------------------------------------------------+\n"
       "| 'LEM' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023     |\n"
       "| Current version authors:                                                 |\n"
-      "|   D. Stocco, M. Larcher, E. Bertolazzi.                                  |\n"
+      "|   D. Stocco, M. Larcher and E. Bertolazzi.                               |\n"
       "| Inspired by the work of:                                                 |\n"
       "|   W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.                  |\n"
       "+--------------------------------------------------------------------------+\n"
@@ -93,7 +91,7 @@ module LEM()
       end if;
     end do;
     if (lib_base_path = NULL) then
-      error "Cannot find 'LEM' module";
+      error "cannot find 'LEM' module";
     end if;
     return NULL;
   end proc: # ModuleLoad
@@ -135,8 +133,8 @@ module LEM()
     description "Set the veiling label to <label>.";
 
     if( _self:-VeilTableSize(_self) > 0) then
-      error "the veiling veiling table is not empty, save the list if necessary "
-        "and clear it before changing veiling label.";
+      error "the veiling table is not empty, save the list if necessary and "
+        "clear it before changing veiling label.";
       return NULL;
     end if;
 
@@ -179,14 +177,14 @@ module LEM()
     {force::boolean := false},
     $)::anything;
 
-    description "Check if the veiling strategy is verified and veil an "
+    description "Check if the veiling strategy is verified, if true veil the "
       "expression <x> and return a label to it.";
 
     local i, s, c;
 
     # Check if label is already assigned
 	  if (_self:-m_VeilingLabel <> eval(_self:-m_VeilingLabel, 2)) then
-	    error "LEM::Veil(...): label %a is already assigned, please save its "
+	    error "LEM:-Veil(...): label %a is already assigned, please save its "
         "contents and unassign it.", _self:-m_VeilingLabel;
 	  end if;
 
@@ -250,10 +248,10 @@ module LEM()
 
   export VeilingStrategy::static := proc(
     _self::LEM,
-    x::{algebraic},
-    $)::{boolean};
+    x::algebraic,
+    $)::boolean;
 
-    description "Comupte the veiling strategy value for the value <x>.";
+    description "Evaluate the veiling strategy for the expression <x>.";
 
     return evalb(_self:-ExpressionCost(_self, x) > _self:-m_VeilingStrategy_maxcost);
   end proc: # VeilingStrategy
@@ -263,14 +261,14 @@ module LEM()
   export SetVeilingStrategyPars::static := proc(
     _self::LEM,
     {
-    maxcost::{nonnegint}         := 15,
-    subscripts::{nonnegint}      := 0,
-    assignments::{nonnegint}     := 0,
-    additions::{nonnegint}       := 1,
-    multiplications::{nonnegint} := 2,
-    divisions::{nonnegint}       := 3,
-    functions::{nonnegint}       := 2
-    }, $)::{nothing};
+    maxcost::nonnegint         := 15,
+    subscripts::nonnegint      := 0,
+    assignments::nonnegint     := 0,
+    additions::nonnegint       := 1,
+    multiplications::nonnegint := 2,
+    divisions::nonnegint       := 3,
+    functions::nonnegint       := 2
+    }, $)::nothing;
 
     description "Set the veiling strategy parameters: maximum veiling cost "
       "<maxcost>, subscripts cost weight parameter <subscripts>, assignments "
@@ -298,7 +296,7 @@ module LEM()
 
     description "Unveil the expression <x>.";
 
-    return eval['recurse'](x, _self:-VeilTable(_self));
+    return eval['recurse'](x, _self:-VeilList(_self));
   end proc: # UnVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -357,7 +355,7 @@ module LEM()
     _self::LEM,
     $)::nonnegint;
 
-    description "Return the size of the internal veiling list.";
+    description "Return the size of the internal veiling table.";
 
     return numelems(op(eval(_self:-m_UnVeilTable)));
   end proc: # VeilTableSize
@@ -389,7 +387,7 @@ module LEM()
     x::anything,
     $)::indexed;
 
-    description "Append the veiled expression <x> to the veiling list.";
+    description "Append the veiled expression <x> to the veiling table.";
 
     local k;
 
@@ -411,7 +409,7 @@ module LEM()
     $)::anything;
 
     description "Substitute the reversed veiling variables of the internal "
-      "veiling label in the expression <x>.";
+      "veiling table in the expression <x>.";
 
     return subs[eval](op(_self:-VeilList(_self, parse("reverse") = true)), x);
   end proc: # VeilSubs
@@ -422,7 +420,7 @@ module LEM()
     _self::LEM,
     $)
 
-    description "Clear all the veiling variables of the internal veiling label.";
+    description "Clear all the veiling variables of the internal veiling table.";
 
     _self:-m_UnVeilTable := evaln(_self:-m_UnVeilTable);
     return NULL;

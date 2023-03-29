@@ -114,7 +114,7 @@
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L280" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Create some instaces of 'LEM'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-VeilList(LEM);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Create some instaces of 'LEM'</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L300" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -248,7 +248,7 @@ LEM_Z:-GetVeilingLabel(LEM_Z);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L281" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Applend a new veiling variable with random veiling label generator</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-VeilTableAppend(LEM, 2*a*b*c);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Append a new veiling variable with random veiling label generator</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-VeilTableAppend(LEM, 2*a*b*c);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L294" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -260,11 +260,11 @@ LEM_Z:-GetVeilingLabel(LEM_Z);</Text-field>
 </Input>
 </Group>
 <Group labelreference="L310" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Try to change the defult (random) veiling label to 'A' (<Font bold="true">error</Font>)</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-SetVeilingLabel(LEM, 'A');</Text-field>
+<Input><Text-field style="Text" layout="Normal">Try to change the defult (random) veiling label to 'A' (<Font bold="true">error</Font>)</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># LEM:-SetVeilingLabel(LEM, 'A');</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L311" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">SaClear the veiling table</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">L := LEM:-VeilList(LEM);
+<Input><Text-field style="Text" layout="Normal">Clear the veiling table</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">L := LEM:-VeilList(LEM);
 LEM:-ClearVeilingTable(LEM);</Text-field>
 </Input>
 </Group>
