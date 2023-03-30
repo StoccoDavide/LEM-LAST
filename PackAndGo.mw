@@ -234,6 +234,90 @@ end do:</Text-field>
 <Group labelreference="L256751" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">Describe(LEM):</Text-field>
 </Input>
+<Output><Text-field style="Line Printed Output" layout="Line Printed Output">
+# Large Expressions Management module.
+object LEM :: LEM:
+
+    # Print 'LEM' module information.
+    Info( )
+
+    # 'LEM' module load procedure.
+    ModuleLoad( )
+
+    # 'LEM' module unload procedure.
+    ModuleUnload( )
+
+    # Copy the objects &lt;proto&gt; into &lt;self&gt;.
+    ModuleCopy( _self::LEM, proto::LEM, $ )
+
+    # Set the veiling label to &lt;label&gt;.
+    SetVeilingLabel( _self::LEM, label::{string, symbol}, $ )
+
+    # Return the veiling label.
+    GetVeilingLabel( _self::LEM, $ ) :: symbol
+
+    # Clear the veiling table.
+    ClearVeilingTable( _self::LEM, $ )
+
+    # Check if the veiling strategy is verified, if true veil the expression 
+    # &lt;x&gt; and return a label to it.
+    Veil( _self::LEM, x::anything, 
+          { force::boolean := false }, $ ) :: anything
+
+    # Compute the cost of the expression &lt;x&gt;.
+    ExpressionCost( _self::LEM, x::anything, $ ) :: integer
+
+    # Evaluate the veiling strategy for the expression &lt;x&gt;.
+    VeilingStrategy( _self::LEM, x::algebraic, $ ) :: boolean
+
+    # Set the veiling strategy parameters: maximum veiling cost &lt;maxcost&gt;, 
+    # subscripts cost weight parameter &lt;subscripts&gt;, assignments cost weight 
+    # parameter &lt;assignments&gt;, additions cost weight parameter &lt;additions&gt;, 
+    # multiplications cost weight parameter &lt;multiplications&gt;, divisions cost 
+    # weight parameter &lt;divisions&gt;, and functions cost weight parameter 
+    # &lt;functions&gt;.
+    SetVeilingStrategyPars( _self::LEM, 
+                            { additions::nonnegint := 1, 
+                              assignments::nonnegint := 0, 
+                              divisions::nonnegint := 3, 
+                              functions::nonnegint := 2, 
+                              maxcost::nonnegint := 15, 
+                              multiplications::nonnegint := 2, 
+                              subscripts::nonnegint := 0 }, $ ) :: nothing
+
+    # Unveil the expression &lt;x&gt;.
+    UnVeil( _self::LEM, x::anything, $ ) :: anything
+
+    # Unveil the expression &lt;x&gt; with internal permutation map.
+    UnVeilImap( _self::LEM, x::anything, $ ) :: anything
+
+    # Return a list of the veiling labels.
+    VeilList( _self::LEM, 
+              { reverse::boolean := false }, $ ) :: list(anything)
+
+    # Return the unordered veiling list.
+    VeilUnorderedList( _self::LEM, $ ) :: list
+
+    # Return the size of the internal veiling table.
+    VeilTableSize( _self::LEM, $ ) :: nonnegint
+
+    # Return the veiling list and the permutation that sorts it.
+    VeilTableImap( _self::LEM, 
+                   { reverse::boolean := false }, $ )
+                 :: {list(anything = anything), []}
+
+    # Append the veiled expression &lt;x&gt; to the veiling table.
+    VeilTableAppend( _self::LEM, x::anything, $ ) :: indexed
+
+    # Substitute the reversed veiling variables of the internal veiling table 
+    # in the expression &lt;x&gt;.
+    VeilSubs( _self::LEM, x::anything, $ ) :: anything
+
+    # Clear all the veiling variables of the internal veiling table.
+    VeilForget( _self::LEM, $ )
+
+</Text-field>
+</Output>
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">

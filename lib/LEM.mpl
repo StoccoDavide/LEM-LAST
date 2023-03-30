@@ -357,7 +357,7 @@ module LEM()
 
     description "Return the size of the internal veiling table.";
 
-    return numelems(op(eval(_self:-m_UnVeilTable)));
+    return numelems(_self:-VeilUnorderedList(_self));
   end proc: # VeilTableSize
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -393,7 +393,7 @@ module LEM()
 
     k := 1;
     if type(_self:-m_UnVeilTable, table) then
-      k := numelems(op(eval(_self:-m_UnVeilTable))) + 1;
+      k := numelems(_self:-m_UnVeilTable) + 1;
       _self:-m_UnVeilTable[_self:-m_VeilingLabel[k]] := x;
     else
       _self:-m_UnVeilTable := table([_self:-m_VeilingLabel[1] = x]);
@@ -422,7 +422,7 @@ module LEM()
 
     description "Clear all the veiling variables of the internal veiling table.";
 
-    _self:-m_UnVeilTable := evaln(_self:-m_UnVeilTable);
+    _self:-m_UnVeilTable := table([]);
     return NULL;
   end proc: # VeilForget
 
