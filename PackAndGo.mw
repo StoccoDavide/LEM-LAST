@@ -250,6 +250,9 @@ object LAST :: LAST:
     # Copy the objects &lt;proto&gt; into &lt;self&gt;.
     ModuleCopy( _self::LAST, proto::LAST, $ )
 
+    # Check if the 'LAST' object is initialized.
+    CheckInit( _self::LAST, $ )
+
     # Initialize the 'LEM' object with veiling label &lt;label&gt;.
     InitLEM( _self::LAST, label::{string, symbol} := NULL, $ )
 
@@ -274,12 +277,15 @@ object LAST :: LAST:
     # Get the time limit of the module.
     GetTimeLimit( _self::LAST, $ ) :: numeric
 
-    # Clear the results of the last factorization.
-    ClearResults( $ )
+    # Check if the results of the last factorization are available.
+    CheckResults( _self::LAST, $ )
 
     # Get the results of the last factorization. If &lt;field&gt; is specified, only 
     # the field Results['field'] is returned.
     GetResults( _self::LAST, field::string := &quot;all&quot;, $ )
+
+    # Clear the results of the last factorization.
+    ClearResults( $ )
 
     # Solve the factorized linear system (LU)*x=b or (QR)*x=b.
     SolveLinearSystem( _self::LAST, b::Vector, $ )
@@ -309,9 +315,9 @@ object LAST :: LAST:
     GetDegrees( _self::LAST, A::Matrix, $ ) :: Matrix(nonnegint)
 
     # Set the strategy &lt;str&gt; for the minimum degree ordering.
-    SetMinDegreeStrategy( _self::LAST, str::string := &quot;product_1&quot;, $ )
+    SetMinDegreeStrategy( _self::LAST, str::string := &quot;product_1rc&quot;, $ )
 
-    # Set the strategy &lt;str&gt; for the minimum degree ordering.
+    # Set the strategy &lt;val&gt; for the minimum degree ordering.
     DegreeCost( _self::LAST, val::table, $ ) :: integer
 
     # Compute the pivoting degree cost.
@@ -330,7 +336,13 @@ object LAST :: LAST:
     DegreeCost_prod( _self::LAST, val::table, $ ) :: integer
 
     # Compute the pivoting degree cost.
-    DegreeCost_prod_1( _self::LAST, val::table, $ ) :: integer
+    DegreeCost_prod_1rc( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting degree cost.
+    DegreeCost_prod_1r( _self::LAST, val::table, $ ) :: integer
+
+    # Compute the pivoting degree cost.
+    DegreeCost_prod_1c( _self::LAST, val::table, $ ) :: integer
 
     # Compute the pivoting degree cost.
     DegreeCost_min( _self::LAST, val::table, $ ) :: integer
@@ -343,15 +355,18 @@ object LAST :: LAST:
     # or not.
     PivotingCompare( _self::LAST, cur::table, val::table, $ ) :: boolean
 
-    # Compute the LU decomposition of a square matrix &lt;A&gt;.
-    LU( _self::LAST, A::Matrix, $ )
+    # Compute the LU decomposition of a square matrix &lt;A&gt; and check if the 
+    # veiling symbol is already present in the matrix coefficients.
+    LU( _self::LAST, A::Matrix, 
+        { veil_sanity_check::boolean := true }, $ )
 
     # Solve the linear system Ax=b using LU decomposition provided the vector 
     # &lt;b&gt;.
     LUsolve( _self::LAST, b::Vector, $ ) :: Vector
 
     # Compute the Givens QR decomposition of a square matrix &lt;A&gt;.
-    QR( _self::LAST, A::Matrix, $ )
+    QR( _self::LAST, A::Matrix, 
+        { veil_sanity_check::boolean := true }, $ )
 
     # Solve the linear system Ax=b using QR decomposition provided the vector 
     # &lt;b&gt;.

@@ -19,8 +19,8 @@ To install the module you must have first installed Maple. Then open the `PackAn
 Then test the library in a Maple worksheet or document by typing:
 
 ```
-> LAST:-Info(LAST); # Maple < 2021
-> LAST:-Info();     # Maple >= 2021
+> LAST:-Info(LAST); # Fot Maple versions up to 2020
+> LAST:-Info();     # Fot Maple versions starting from 2021
 ```
 
 Alternatively, you can use one of the tests file provided in the `tests` folder. If the module is loaded without errors, it is done!
@@ -179,37 +179,37 @@ For further information please refer to this [link](https://fr.maplesoft.com/sup
 
 ### Current version authors:
 
-- *Davide Stocco* \
-  Department of Industrial Engineering \
+- *Davide Stocco*,
+  Department of Industrial Engineering,
   University of Trento \
   email: davide.stocco@unitn.it
 
-- *Matteo Larcher* \
-  Department of Industrial Engineering \
+- *Matteo Larcher*,
+  Department of Industrial Engineering,
   University of Trento \
   email: matteo.larcher@unitn.it
 
-- *Enrico Bertolazzi* \
-  Department of Industrial Engineering \
-  University of Trento
+- *Enrico Bertolazzi*,
+  Department of Industrial Engineering,
+  University of Trento \
   email: enrico.bertolazzi@unitn.it
 
 ### Inspired by the work of:
 
-- *Wenqin Zhou* (former affiliation) \
-  Department of Applied Mathematics \
+- *Wenqin Zhou* (former affiliation),
+  Department of Applied Mathematics,
   University of Western Ontario
 
-- *David J. Jeffrey* \
-  Department of Applied Mathematics \
+- *David J. Jeffrey*,
+  Department of Applied Mathematics,
   University of Western Ontario
 
-- *Jacques Carette* \
-  Department of Computing and Software \
+- *Jacques Carette*,
+  Department of Computing and Software,
   McMaster University
 
-- *Robert M. Corless* \
-  Department of Applied Mathematics \
+- *Robert M. Corless*,
+  Department of Applied Mathematics,
   University of Western Ontario
 
 ## References
@@ -225,11 +225,11 @@ For further information please refer to this [link](https://fr.maplesoft.com/sup
 ```
 
 ```
-inproceedings{zhou2006hierarchical,
+@inproceedings{zhou2006hierarchical,
   title = {Hierarchical representations with signatures for large expression management},
   author = {Zhou, Wenqin and Carette, Jacques and Jeffrey, David J. and Monagan, Michael B.},
-  booktitle = {Artificial Intelligence and Symbolic Computation: 8th International Conference,
-    AISC 2006 Beijing, China, September 20-22, 2006 Proceedings 8},
+  booktitle = {Proceedings AISC 2006, LNCS 4120}
+  editor = {Calmet, J. and Ida, T. and Wang, D.},
   pages = {254--268},
   year = {2006},
   organization = {Springer}

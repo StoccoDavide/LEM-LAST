@@ -22,11 +22,8 @@ export Pivoting::static := proc(
   local uMij, M_degree_R, M_degree_C, perm, perm_R, perm_C, m, n, i, j, ipos,
     Mij, pivot, pivot_list, pivot_cost;
 
-  # Check if the LEM is initialized
-  if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST::InitLEM() first).";
-    return table([]);
-  end if;
+  # Check if the LEM object is initialized
+  _self:-CheckInit(_self);
 
   # Extract matrix dimensions
   m, n := LinearAlgebra:-Dimensions(M):
@@ -87,12 +84,18 @@ export Pivoting::static := proc(
         Mij["is_zero"] := evalb(uMij = 0);
       end if;
     catch "time expired":
-      printf("LAST::Pivoting(...): simplify(Mij) failed, assumed <> 0.\n");
+      printf(
+        "LAST::Pivoting(...): simplify(M[%d, %d]) failed, assumed <> 0.\n",
+        i, j
+      );
       Mij["is_zero"] := false;
+      Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, Mij);
     catch:
-      print("LAST::Pivoting(...): something went wrong %q.\n", lastexception);
+      print(
+        "LAST::Pivoting(...): simplify(M[%d, %d]), something went wrong %q.\n",
+        i, j, lastexception
+      );
       print("catch", Mij["value"], Mij["is_zero"]);
-      printf("LAST::Pivoting(...): Mij division by 0 or other exception.\n");
       if _self:-m_VerboseMode then
         print(Mij["value"]);
       end if;
@@ -187,12 +190,13 @@ end proc: # GetDegrees
 
 export SetMinDegreeStrategy::static := proc(
   _self::LAST,
-  str::string := "product_1",
+  str::string := "product_1rc",
   $)
 
   description "Set the strategy <str> for the minimum degree ordering.";
 
-  if not str in ["none", "row", "column", "sum", "product", "product_1"] then
+  if not str in ["none", "row", "column", "sum", "product", "product_1rc",
+    "product_1r", "product_1c"] then
     error "unknown minimum degree strategy %1.", str;
   else
     _self:-m_MinDegreeStrategy := str;
@@ -207,7 +211,7 @@ export DegreeCost::static := proc(
   val::table,
   $)::integer;
 
-  description "Set the strategy <str> for the minimum degree ordering.";
+  description "Set the strategy <val> for the minimum degree ordering.";
 
   if (_self:-m_MinDegreeStrategy = "none") then
     return _self:-DegreeCost_none(_self, val);
@@ -219,14 +223,18 @@ export DegreeCost::static := proc(
     return _self:-DegreeCost_sum(_self, val);
   elif (_self:-m_MinDegreeStrategy = "product") then
     return _self:-DegreeCost_prod(_self, val);
-  elif (_self:-m_MinDegreeStrategy = "product_1") then
-    return _self:-DegreeCost_prod_1(_self, val);
+  elif (_self:-m_MinDegreeStrategy = "product_1rc") then
+    return _self:-DegreeCost_prod_1rc(_self, val);
+  elif (_self:-m_MinDegreeStrategy = "product_1r") then
+    return _self:-DegreeCost_prod_1r(_self, val);
+  elif (_self:-m_MinDegreeStrategy = "product_1c") then
+    return _self:-DegreeCost_prod_1c(_self, val);
   elif (_self:-m_MinDegreeStrategy = "minimum") then
     return _self:-DegreeCost_min(_self, val);
   elif (_self:-m_MinDegreeStrategy = "maximum") then
     return _self:-DegreeCost_max(_self, val);
   else
-    error "unknown minimum degree strategy %1.", str;
+    error "unknown minimum degree strategy %1.", val;
     return NULL;
   end if;
 end proc: # SetMinDegreeStrategy
@@ -293,7 +301,7 @@ end proc: # DegreeCost_prod
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-export DegreeCost_prod_1::static := proc(
+export DegreeCost_prod_1rc::static := proc(
   _self::LAST,
   val::table,
   $)::integer;
@@ -301,7 +309,31 @@ export DegreeCost_prod_1::static := proc(
   description "Compute the pivoting degree cost.";
 
   return max(val["degree_c"]-1, 0) * max(val["degree_r"]-1, 0);
-end proc: # DegreeCost_prod_1
+end proc: # DegreeCost_prod_1rc
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+export DegreeCost_prod_1r::static := proc(
+  _self::LAST,
+  val::table,
+  $)::integer;
+
+  description "Compute the pivoting degree cost.";
+
+  return max(val["degree_c"], 0) * max(val["degree_r"]-1, 0);
+end proc: # DegreeCost_prod_1r
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+export DegreeCost_prod_1c::static := proc(
+  _self::LAST,
+  val::table,
+  $)::integer;
+
+  description "Compute the pivoting degree cost.";
+
+  return max(val["degree_c"]-1, 0) * max(val["degree_r"], 0);
+end proc: # DegreeCost_prod_1c
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

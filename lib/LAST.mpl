@@ -48,7 +48,7 @@ module LAST()
   local m_LEM               := NULL;
   local m_VerboseMode       := false;
   local m_TimeLimit         := 1;
-  local m_MinDegreeStrategy := "product_1";
+  local m_MinDegreeStrategy := "product_1rc";
   local m_Results           := NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -105,11 +105,26 @@ module LAST()
     description "Copy the objects <proto> into <self>.";
 
     _self:-m_LEM               := proto:-m_LEM;
-    _self:-m_VerboseMode           := proto:-m_VerboseMode;
+    _self:-m_VerboseMode       := proto:-m_VerboseMode;
     _self:-m_TimeLimit         := proto:-m_TimeLimit;
     _self:-m_MinDegreeStrategy := proto:-m_MinDegreeStrategy;
     _self:-m_Results           := proto:-m_Results;
   end proc: # ModuleCopy
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export CheckInit::static := proc(
+    _self::LAST,
+    $)
+
+    description "Check if the 'LAST' object is initialized.";
+
+    if not type(_self:-m_LEM, LEM) then
+      error "the 'LEM' object is not initialized, use 'LAST:-InitLEM(...)'' "
+        "or other appropriate initialization methods first.";
+    end if;
+    return NULL;
+  end proc: # CheckInit
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -216,6 +231,43 @@ module LAST()
     return _self:-m_TimeLimit;
   end proc: # GetTimeLimit
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export CheckResults::static := proc(
+    _self::LAST,
+    $)
+
+    description "Check if the results of the last factorization are available.";
+
+    if (numelems(_self:-m_Results) = 0) then
+      error "the results of the last factorization are not available, use "
+        "appropriate factorization and solution methods first.";
+    end if;
+    return NULL;
+  end proc: # CheckResults
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export GetResults::static := proc(
+    _self::LAST,
+    field::string := "all",
+    $)
+
+    description "Get the results of the last factorization. If <field> is "
+      "specified, only the field Results['field'] is returned.";
+
+    # Check if the results are available
+    _self:-CheckResults(_self);
+
+    # Retrieve the results
+    if (field = "all") then
+      return _self:-m_Results;
+    else
+      return _self:-m_Results[field];
+    end if;
+  end proc: # GetResults
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   export ClearResults::static := proc( $ )
@@ -228,23 +280,6 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  export GetResults::static := proc(
-    _self::LAST,
-    field::string := "all",
-    $)
-
-    description "Get the results of the last factorization. If <field> is "
-      "specified, only the field Results['field'] is returned.";
-
-    if (field = "all") then
-      return _self:-m_Results;
-    else
-      return _self:-m_Results[field];
-    end if;
-  end proc: # GetResults
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
   export SolveLinearSystem::static := proc(
     _self::LAST,
     b::Vector,
@@ -252,13 +287,20 @@ module LAST()
 
     description "Solve the factorized linear system (LU)*x=b or (QR)*x=b.";
 
+    # Check if the LEM object is initialized
+    _self:-CheckInit(_self);
+
+    # Check if the results are available
+    _self:-CheckResults(_self);
+
+    # Solve the linear system
     if (_self:-m_Results["method"] = "LU") then
       return _self:-LUsolve(_self, b);
     elif (_self:-m_Results["method"] = "QR") then
       return _self:-QRsolve(_self, b);
     else
-      error "wrong or not available decomposition (use LAST::LU() or LAST::QR() "
-        "first).";
+      error "wrong or not available decomposition, use 'LAST::LU()'' or "
+        "'LAST::QR()'' first.";
     end if;
 
     # Work in progress: FFLU and QR2 methods.
@@ -293,10 +335,10 @@ module LAST()
       "with fill-in values.";
 
     local mat_0, mat_1, mat_2;
+
     mat_0 := map(x -> `if`(x = 0, 0, 1), A);
     mat_1 := map(x -> `if`(x = 0, 0, 1), L + U);
     mat_2 := map(x -> `if`(x = 1, 1, 0), mat_0 + mat_1);
-
     return [plots:-sparsematrixplot(mat_0, 'matrixview', color = "Black"),
             plots:-sparsematrixplot(mat_2, 'matrixview', color = "Red")];
   end proc: # SpyLU

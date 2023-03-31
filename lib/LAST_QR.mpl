@@ -10,19 +10,19 @@
 export QR::static := proc(
   _self::LAST,
   A::Matrix,
-  $)
+  {
+  veil_sanity_check::boolean := true
+  }, $)
 
   description "Compute the Givens QR decomposition of a square matrix <A>.";
 
   local m, n, Q, R, DG, k, j, a, b, z1, z2, r, Rk, Rj;
 
-  # Check if the LEM is initialized
-  if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST::InitLEM() first).";
-  end if;
+  # Check if the LEM object is initialized
+  _self:-CheckInit(_self);
 
   # Sanity check
-  if has(A, V) then
+  if veil_sanity_check and has(A, V) then
     error "veiling symbol %1 is already present in matrix coefficient.", V;
   end if;
 
@@ -122,14 +122,15 @@ export QRsolve::static := proc(
 
   local Q, R, DG, m, n, i, j, k, c, s, a, d, x, z1, z2;
 
-  # Check if the LEM is initialized
-  if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST::InitLEM() first).";
-  end if;
+  # Check if the LEM object is initialized
+  _self:-CheckInit(_self);
+
+  # Check if the results are available
+  _self:-CheckResults(_self);
 
   # Check if the QR decomposition is available
   if not (_self:-m_Results["method"] = "QR") then
-    error "wrong or not available QR decomposition (use LAST::QR() first).";
+    error "wrong or not available QR decomposition (use 'LAST::QR()'' first).";
   end if;
 
   # apply Q^T a rhs

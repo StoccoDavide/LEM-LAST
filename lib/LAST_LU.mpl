@@ -10,28 +10,26 @@
 export LU::static := proc(
   _self::LAST,
   A::Matrix,
-  $)
+  {
+  veil_sanity_check::boolean := true
+  }, $)
 
-  description "Compute the LU decomposition of a square matrix <A>.";
+  description "Compute the LU decomposition of a square matrix <A> and check "
+    " if the veiling symbol is already present in the matrix coefficients.";
 
   local V, M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, tmp;
 
-  # Check if the LEM is initialized
-  if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST::InitLEM() first).";
-  end if;
+  # Check if the LEM object is initialized
+  _self:-CheckInit(_self);
 
   # Get the veiling label
   V := _self:-m_LEM:-GetVeilingLabel(_self:-m_LEM);
 
   # Sanity check
-  if has(A, V) then
+  if veil_sanity_check and has(A, V) then
     error "veiling symbol %1 is already present in matrix coefficient.", V;
     return table([]);
   end if;
-
-  # Forget the veilings
-  _self:-m_LEM:-VeilForget(_self:-m_LEM);
 
   # Get matrix dimensions
   m, n := LinearAlgebra:-Dimensions(A):
@@ -117,14 +115,15 @@ export LUsolve::static := proc(
 
   local L, U, r, c, m, n, p, q, x, y, i, s, rnk;
 
-  # Check if the LEM is initialized
-  if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST::InitLEM() first).";
-  end if;
+  # Check if the LEM object is initialized
+  _self:-CheckInit(_self);
+
+  # Check if the results are available
+  _self:-CheckResults(_self);
 
   # Check if the LU decomposition is available
   if not (_self:-m_Results["method"] = "LU") then
-    error "wrong or not available LU decomposition (use LAST::LU() first).";
+    error "wrong or not available LU decomposition (use 'LAST::LU()' first).";
   end if;
 
   # Extract the LU decomposition
