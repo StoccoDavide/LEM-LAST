@@ -47,6 +47,7 @@ module LAST()
 
   local m_LEM               := NULL;
   local m_VerboseMode       := false;
+  local m_WarningMode       := true;
   local m_TimeLimit         := 1;
   local m_MinDegreeStrategy := "product_1rc";
   local m_Results           := NULL;
@@ -106,6 +107,7 @@ module LAST()
 
     _self:-m_LEM               := proto:-m_LEM;
     _self:-m_VerboseMode       := proto:-m_VerboseMode;
+    _self:-m_WarningMode       := proto:-m_WarningMode;
     _self:-m_TimeLimit         := proto:-m_TimeLimit;
     _self:-m_MinDegreeStrategy := proto:-m_MinDegreeStrategy;
     _self:-m_Results           := proto:-m_Results;
@@ -202,6 +204,56 @@ module LAST()
     _self:-m_VerboseMode := false;
     return NULL;
   end proc: # DisableVerboseMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export SetVerboseMode::static := proc(
+    _self::LAST,
+    mode::boolean,
+    $)
+
+    description "Set the verbosity of the module to <mode>.";
+
+    _self:-m_VerboseMode := mode;
+    return NULL;
+  end proc: # SetVerboseMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export EnableWarningMode::static := proc(
+    _self::LAST,
+    $)
+
+    description "Enable the warning mode of the module.";
+
+    _self:-m_WarningMode := true;
+    return NULL;
+  end proc: # EnableWarningMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export DisableWarningMode::static := proc(
+    _self::LAST,
+    $)
+
+    description "Disable the warning mode of the module.";
+
+    _self:-m_WarningMode := false;
+    return NULL;
+  end proc: # DisableWarningMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export SetWarningMode::static := proc(
+    _self::LAST,
+    mode::boolean,
+    $)
+
+    description "Set the warning mode of the module to <mode>.";
+
+    _self:-m_WarningMode := mode;
+    return NULL;
+  end proc: # SetWarningMode
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

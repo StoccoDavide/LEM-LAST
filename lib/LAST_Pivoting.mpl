@@ -84,14 +84,16 @@ export Pivoting::static := proc(
         Mij["is_zero"] := evalb(uMij = 0);
       end if;
     catch "time expired":
-      printf(
-        "LAST::Pivoting(...): simplify(M[%d, %d]) failed, assumed <> 0.\n",
-        i, j
-      );
+      if _self:-m_WarningMode then
+        WARNING(
+          "LAST::Pivoting(...): simplify(M[%d, %d]) failed, assumed <> 0.\n",
+          i, j
+        );
+      end if;
       Mij["is_zero"] := false;
       Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, Mij);
     catch:
-      print(
+      WARNING(
         "LAST::Pivoting(...): simplify(M[%d, %d]), something went wrong %q.\n",
         i, j, lastexception
       );

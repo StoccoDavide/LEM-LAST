@@ -64,7 +64,7 @@ export FFLU::static := proc(
 
     if pivot["is_zero"] then
       rnk := rnk - 1;
-      if _self:-m_VerboseMode then
+      if _self:-m_WarningMode then
         WARNING("LAST::LU(...): the matrix appears to be not full rank.");
       end;
       break;

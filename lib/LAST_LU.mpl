@@ -180,8 +180,6 @@ export LUsolve::static := proc(
     y[c[i]] := x[i];
   end do;
 
-  print("here1");
-
   # Return outputs
   return y;
 end proc: # LUsolve
