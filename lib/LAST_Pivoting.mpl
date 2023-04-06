@@ -380,9 +380,9 @@ export PivotingCompare::static := proc(
     "and the next pivot <val>, decide if to the next pivot is better than the "
     "current pivot or not.";
 
-  if (val["numeric_value"] < cur["numeric_value"]) then
+  if (val["numeric_value"] > cur["numeric_value"]) then
     return true;
-  elif (val["numeric_value"] > cur["numeric_value"]) then
+  elif (val["numeric_value"] < cur["numeric_value"]) then
     return false;
   elif (val["numeric_value"] = infinity) then
     return evalb(val["cost"] < cur["cost"]);
