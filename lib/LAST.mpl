@@ -283,7 +283,6 @@ module LAST()
     return _self:-m_TimeLimit;
   end proc: # GetTimeLimit
 
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   export CheckResults::static := proc(

@@ -33,7 +33,7 @@ export FFLU::static := proc(
   end if;
 
   # Forget the veilings
-  _self:-m_LEM:-VeilForget(_self:-m_LEM);
+  _self:-m_LEM:-ForgetVeil(_self:-m_LEM);
 
   # Get matrix dimensions
   m, n := LinearAlgebra:-Dimensions(A):

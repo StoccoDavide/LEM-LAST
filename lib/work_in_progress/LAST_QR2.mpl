@@ -31,7 +31,7 @@ export QR2::static := proc(
   end if;
 
   # Clear the veiling list
-  _self:-m_LEM:-VeilForget(_self:-m_LEM);
+  _self:-m_LEM:-ForgetVeil(_self:-m_LEM);
 
   # Extract the dimensions of the matrix A
   m, n := LinearAlgebra:-Dimensions(A):
@@ -68,8 +68,8 @@ export QR2::static := proc(
       end if;
       for j from k+1 to n do
         # Check if expressions are equal to 0 (very costly)
-        a := Normalizer(_self:-m_LEM:-UnVeil(_self:-m_LEM, R[k, k]));
-        b := Normalizer(_self:-m_LEM:-UnVeil(_self:-m_LEM, R[j, k]));
+        a := Normalizer(_self:-m_LEM:-Unveil(_self:-m_LEM, R[k, k]));
+        b := Normalizer(_self:-m_LEM:-Unveil(_self:-m_LEM, R[j, k]));
         if (b = 0) then
           R[j,k] := 0;
           if (a = 0) then
