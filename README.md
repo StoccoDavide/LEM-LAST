@@ -48,11 +48,14 @@ object LEM :: LEM:
     # Set the veiling label to <label>.
     SetVeilingLabel( _self::LEM, label::{string, symbol}, $ )
 
+    # Enable the expression signature calculation.
+    EnableSignature( _self::LEM, $ )
+
+    # Disable the expression signature calculation.
+    DisableSignature( _self::LEM, $ )
+
     # Return the veiling label.
     GetVeilingLabel( _self::LEM, $ ) :: symbol
-
-    # Clear the veiling table.
-    ClearVeilingTable( _self::LEM, $ )
 
     # Check if the veiling strategy is verified, if true veil the expression
     # <x> and return a label to it.
@@ -80,41 +83,66 @@ object LEM :: LEM:
                               multiplications::nonnegint := 2,
                               subscripts::nonnegint := 0 }, $ ) :: nothing
 
-    # Unveil the expression <x>.
-    UnVeil( _self::LEM, x::anything, $ ) :: anything
+    # Unveil the expression <x> with the veiled variables.
+    Unveil( _self::LEM, x::anything, $ ) :: anything
 
-    # Unveil the expression <x> with internal permutation map.
-    UnVeilImap( _self::LEM, x::anything, $ ) :: anything
+    # Unveil the expression <x> with signature values.
+    UnveilSig( _self::LEM, x::anything, $ ) :: anything
+
+    # Unveil the expression <x> with veiling labels permutation map.
+    UnveilImap( _self::LEM, x::anything, $ ) :: anything
+
+    # Unveil the expression <x> with signature values permutation map.
+    SigImap( _self::LEM, x::anything, $ ) :: anything
 
     # Return a list of the veiling labels.
     VeilList( _self::LEM,
               { reverse::boolean := false }, $ ) :: list(anything)
 
+    # Return a list of the signature labels.
+    SigList( _self::LEM,
+             { reverse::boolean := false }, $ ) :: list(anything)
+
     # Return the unordered veiling list.
     VeilUnorderedList( _self::LEM, $ ) :: list
 
+    # Return the unordered signature list.
+    SigUnorderedList( _self::LEM, $ ) :: list
+
     # Return the size of the internal veiling table.
     VeilTableSize( _self::LEM, $ ) :: nonnegint
+
+    # Return the size of the internal signature table.
+    SigTableSize( _self::LEM, $ ) :: nonnegint
 
     # Return the veiling list and the permutation that sorts it.
     VeilTableImap( _self::LEM,
                    { reverse::boolean := false }, $ )
                  :: {list(anything = anything), []}
 
+    # Return the signature list and the permutation that sorts it.
+    SigTableImap( _self::LEM,
+                  { reverse::boolean := false }, $ )
+                :: {list(anything = anything), []}
+
     # Append the veiled expression <x> to the veiling table.
-    VeilTableAppend( _self::LEM, x::anything, $ ) :: indexed
+    TablesAppend( _self::LEM, x::anything, $ ) :: indexed
+
+    # Substitute the reversed signature values of the internal signature table
+    # in the expression <x>.
+    SubsSig( _self::LEM, x::anything, $ ) :: anything
 
     # Substitute the reversed veiling variables of the internal veiling table
     # in the expression <x>.
-    VeilSubs( _self::LEM, x::anything, $ ) :: anything
+    SubsVeil( _self::LEM, x::anything, $ ) :: anything
 
     # Clear all the veiling variables of the internal veiling table.
-    VeilForget( _self::LEM, $ )
+    ForgetVeil( _self::LEM, $ )
 ```
 
 ## Usage
 
-In case you have no time to read the description and realize how it should or should not work, here is a simple worked example.
+In case you have no time to read the description and realize how it should or should not work, refer to the files `Test_Maple2021minus.mw` and `Test_Maple2021plus.mw` in the `tests` folder.
 
 ### 🚧 Attention! 🚧
 
@@ -128,211 +156,53 @@ Maple object-oriented programming features have slightly changed in 2021, which 
 
 For further information please refer to this [link](https://fr.maplesoft.com/support/help/Maple/view.aspx?path=object/methods).
 
-### For Maple versions up to 2020
+# SIG (Expression Signature Module)
 
-Here is a worked example of how to use the `LEM` module for Maple versions **before** 2021.
+The module `SIG` (Signature) module in also contained in the `LEM` repository. It contains the functions and workarounds to calculate the signature of "almost" any kind of expression. The signature is a hashing value that can be used to calculate the similarity between two expressions, or to check how likely an expression is algebraically non-null (see Schwarz-Zippel Lemma).
 
-```
-> restart;
-> kernelopt(assertlevel = 2);
+## Module description
 
-Print 'LEM' module informations
-> LEM:-Info(LEM);
-
-Write some random polynomial
-> p := randpoly([x,y,z], degree = 5, dense);
-
-Create some instaces of 'LEM'
-> LEM_X := Object(LEM);
-> LEM_X:-SetVeilingLabel(LEM_X, 'X');
-> LEM_X:-GetVeilingLabel(LEM_X);
-> LEM_Y := Object(LEM);
-> LEM_Y:-SetVeilingLabel(LEM_Y, 'Y');
-> LEM_Y:-GetVeilingLabel(LEM_Y);
-> LEM_Z := Object(LEM);
-> LEM_Z:-SetVeilingLabel(LEM_Z, 'Z');
-> LEM_Z:-GetVeilingLabel(LEM_Z);
-
-Veil the long expressions with veiling variable 'X'
-> p_X := collect(p, x, i -> LEM_X:-Veil(LEM_X, i));
-
-Veil the long expressions with veiling variable 'Y'
-> p_Y := collect(p, y, i -> LEM_Y:-Veil(LEM_Y, i));
-
-Veil the long expressions with veiling variable 'Z'
-> p_Z := collect(p, z, i -> LEM_Z:-Veil(LEM_Z, i));
-
-Get the list of veiling variables 'X'
-> LEM_X:-VeilList(LEM_X);
-
-Get the list of veiling variables 'Y'
-> LEM_Y:-VeilList(LEM_Y);
-
-Get the list of veiling variables 'Z'
-> LEM_Z:-VeilList(LEM_Z);
-
-Substitute the veiling variables 'X' in the polynomial 'p_X'
-> simplify(LEM_X:-VeilSubs(LEM_X, p_X) - p);
-
-Substitute the veiling variables 'Y' in the polynomial 'p_Y'
-> simplify(LEM_Y:-VeilSubs(LEM_Y, p_Y) - p);
-
-Substitute the veiling variables 'X' and 'Y' in the polynomial 'p_X+p_Y'
-> simplify(LEM_X:-VeilSubs(LEM_X, LEM_Y:-VeilSubs(LEM_Y, p_X + p_Y)) - 2*p);
-
-Substitute all the veiling variables in the polynomial 'p_X+p_Y+p_Z'
-> simplify(LEM_X:-VeilSubs(LEM_X, LEM_Y:-VeilSubs(LEM_Y, LEM_Z:-VeilSubs(LEM_Z, p_X + p_Y + p_Z) - 3*p)));
-
-Get the 'X' veiling lists and number of veiling variables
-> LEM_X:-VeilTableSize(LEM_X);
-> LEM_X:-VeilList(LEM_X);
-> LEM_X:-VeilUnorderedList(LEM_X);
-> LEM_X:-VeilTableImap(LEM_X, reverse = true);
-
-Get the 'Y' veiling lists and number of veiling variables
-> LEM_Y:-VeilTableSize(LEM_Y);
-> LEM_Y:-VeilList(LEM_Y);
-> LEM_Y:-VeilUnorderedList(LEM_Y);
-> LEM_Y:-VeilTableImap(LEM_Y, reverse = true);
-
-Get the 'Z' veiling number of veiling variables, lists and table
-> LEM_Z:-VeilTableSize(LEM_Z);
-> LEM_Z:-VeilList(LEM_Z);
-> LEM_Z:-VeilUnorderedList(LEM_Z);
-> LEM_Z:-VeilTableImap(LEM_Z, reverse = true);
-
-Forget the veiling variables 'X'
-> LEM_X:-VeilForget(LEM_X);
-> LEM_X:-VeilList(LEM_X);
-
-Forget the veiling variables 'Y'
-> LEM_Y:-VeilForget(LEM_Y);
-> LEM_Y:-VeilList(LEM_Y);
-
-Forget the veiling variables 'Z'
-> LEM_Z:-VeilForget(LEM_Z);
-> LEM_Z:-VeilList(LEM_Z);
-
-Append a new veiling variable with random veiling label generator
-> LEM:-VeilTableAppend(LEM, 2*a*b*c);
-> LEM:-VeilList(LEM);
-> LEM:-GetVeilingLabel(LEM);
-
-Try to change the defult (random) veiling label to 'A' (error)
-> # LEM:-SetVeilingLabel(LEM, 'A');
-
-Clear the veiling table
-> L := LEM:-VeilList(LEM);
-> LEM:-ClearVeilingTable(LEM);
-
-Try to change the defult (random) veiling label to 'A' (success)
-> LEM:-SetVeilingLabel(LEM, 'A');
-```
-
-For further information open the file `Test_Maple2021minus.mw` in the `tests` folder.
-
-### For Maple versions starting from 2021
-
-Here is a worked example of how to use the `LEM` module for Maple 2021 and the versions **after** 2021.
+If you want a full description of the `SIG` module type:
 
 ```
-> restart;
-> kernelopt(assertlevel = 2);
-
-Print 'LEM' module informations
-> LEM:-Info(LEM);
-
-Write some random polynomial
-> p := randpoly([x,y,z], degree = 5, dense);
-
-Create some instaces of 'LEM'
-> LEM_X := Object(LEM);
-> LEM_X:-SetVeilingLabel('X');
-> LEM_X:-GetVeilingLabel();
-> LEM_Y := Object(LEM);
-> LEM_Y:-SetVeilingLabel('Y');
-> LEM_Y:-GetVeilingLabel();
-> LEM_Z := Object(LEM);
-> LEM_Z:-SetVeilingLabel('Z');
-> LEM_Z:-GetVeilingLabel();
-
-Veil the long expressions with veiling variable 'X'
-> p_X := collect(p, x, i -> LEM_X:-Veil(i));
-
-Veil the long expressions with veiling variable 'Y'
-> p_Y := collect(p, y, i -> LEM_Y:-Veil(i));
-
-Veil the long expressions with veiling variable 'Z'
-> p_Z := collect(p, z, i -> LEM_Z:-Veil(i));
-
-Get the list of veiling variables 'X'
-> LEM_X:-VeilList();
-
-Get the list of veiling variables 'Y'
-> LEM_Y:-VeilList();
-
-Get the list of veiling variables 'Z'
-> LEM_Z:-VeilList();
-
-Substitute the veiling variables 'X' in the polynomial 'p_X'
-> simplify(LEM_X:-VeilSubs(p_X) - p);
-
-Substitute the veiling variables 'Y' in the polynomial 'p_Y'
-> simplify(LEM_Y:-VeilSubs(p_Y) - p);
-
-Substitute the veiling variables 'X' and 'Y' in the polynomial 'p_X+p_Y'
-> simplify(LEM_X:-VeilSubs(LEM_Y:-VeilSubs(p_X + p_Y)) - 2*p);
-
-Substitute all the veiling variables in the polynomial 'p_X+p_Y+p_Z'
-> simplify(LEM_X:-VeilSubs(LEM_Y:-VeilSubs(LEM_Z:-VeilSubs(p_X + p_Y + p_Z) - 3*p)));
-
-Get the 'X' veiling lists and number of veiling variables
-> LEM_X:-VeilTableSize();
-> LEM_X:-VeilList();
-> LEM_X:-VeilUnorderedList();
-> LEM_X:-VeilTableImap(reverse = true);
-
-Get the 'Y' veiling lists and number of veiling variables
-> LEM_Y:-VeilTableSize();
-> LEM_Y:-VeilList();
-> LEM_Y:-VeilUnorderedList();
-> LEM_Y:-VeilTableImap(LEM_Y, reverse = true);
-
-Get the 'Z' veiling number of veiling variables, lists and table
-> LEM_Z:-VeilTableSize();
-> LEM_Z:-VeilList();
-> LEM_Z:-VeilUnorderedList();
-> LEM_Z:-VeilTableImap(reverse = true);
-
-Forget the veiling variables 'X'
-> LEM_X:-VeilForget();
-> LEM_X:-VeilList();
-
-Forget the veiling variables 'Y'
-> LEM_Y:-VeilForget();
-> LEM_Y:-VeilList();
-
-Forget the veiling variables 'Z'
-> LEM_Z:-VeilForget();
-> LEM_Z:-VeilList();
-
-Append a new veiling variable with random veiling label generator
-> LEM:-VeilTableAppend(2*a*b*c);
-> LEM:-VeilList();
-> LEM:-GetVeilingLabel();
-
-Try to change the defult (random) veiling label to 'A' (error)
-> # LEM:-SetVeilingLabel('A');
-
-Clear the veiling table
-> L := LEM:-VeilList();
-> LEM:-ClearVeilingTable();
-
-Try to change the defult (random) veiling label to 'A' (success)
-> LEM:-SetVeilingLabel('A');
+> Describe(SIG);
 ```
 
-For further information open the file `Test_Maple2021plus.mw` in the `tests` folder.
+This command will generate a brief description of the module and all the procedures and other objects present in the `SIG.mpl` file, which will be (very) similar to the following code.
+
+```
+# Expression Signature module.
+# Compute the signature of an expression <expr> modulo a prime number <p>.
+module SIG( expr::algebraic, p::prime, max_iter::posint := 10, $ ) :: algebraic
+
+    # Print 'SIG' module information.
+    Info( )
+
+    # 'SIG' module load procedure.
+    ModuleLoad( )
+
+    # 'SIG' module unload procedure.
+    ModuleUnload( )
+
+    # Extract the arguments of a function <func> from an expression <expr>.
+    ExtractArgs( expr::algebraic, func::name, $ ) :: list(algebraic)
+
+    # Transform the absolute value function in an expression <expr>.
+    AbsTransform( expr::algebraic, $ ) :: algebraic
+
+    # Transform the logarithm function in an expression <expr>.
+    LogTransform( expr::algebraic, $ ) :: algebraic
+
+    # Transform the trigonometric functions in an expression <expr>.
+    WeierstrassTransform( expr::algebraic, $ ) :: algebraic
+
+    # Transform an expression <expr> using a maximum number of substitutions
+    # recursions <max_iter>.
+    Transform( expr::algebraic, max_iter::posint := 10, $ ) :: algebraic
+
+    # Compute the signature of an expression <expr> modulo a prime number <p>.
+    Signature( expr::algebraic, p::prime, $ ) :: integer
+```
 
 ## Authors
 

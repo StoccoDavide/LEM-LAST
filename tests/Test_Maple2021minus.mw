@@ -159,20 +159,48 @@ LEM_Z:-GetVeilingLabel(LEM_Z);</Text-field>
 <Input><Text-field style="Text" layout="Normal">Get the list of veiling variables 'Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilList(LEM_Z);</Text-field>
 </Input>
 </Group>
+<Group hide-input="false" labelreference="L318" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the list of signature values 'X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-SigList(LEM_X);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L319" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the list of signature values 'Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-SigList(LEM_Y);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L320" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the list of signature values 'Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-SigList(LEM_Z);</Text-field>
+</Input>
+</Group>
 <Group hide-input="false" labelreference="L239" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Substitute the veiling variables 'X' in the polynomial 'p_X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-VeilSubs(LEM_X, p_X) - p);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Substitute the veiling variables 'X' in the polynomial 'p_X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-SubsVeil(LEM_X, p_X) - p);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L263" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Substitute the veiling variables 'Y' in the polynomial 'p_Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_Y:-VeilSubs(LEM_Y, p_Y) - p);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Substitute the veiling variables 'Y' in the polynomial 'p_Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_Y:-SubsVeil(LEM_Y, p_Y) - p);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L267" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Substitute the veiling variables 'X' and 'Y' in the polynomial 'p_X+p_Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-VeilSubs(LEM_X, LEM_Y:-VeilSubs(LEM_Y, p_X + p_Y)) - 2*p);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Substitute the veiling variables 'X' and 'Y' in the polynomial 'p_X+p_Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-SubsVeil(LEM_X, LEM_Y:-SubsVeil(LEM_Y, p_X + p_Y)) - 2*p);</Text-field>
 </Input>
 </Group>
-<Group hide-input="false" labelreference="L270" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Substitute all the veiling variables in the polynomial 'p_X+p_Y+p_Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-VeilSubs(LEM_X, LEM_Y:-VeilSubs(LEM_Y, LEM_Z:-VeilSubs(LEM_Z, p_X + p_Y + p_Z) - 3*p)));</Text-field>
+<Group hide-input="false" labelreference="L332" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Substitute all the veiling variables in the polynomial 'p_X+p_Y+p_Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-SubsVeil(LEM_X, LEM_Y:-SubsVeil(LEM_Y, LEM_Z:-SubsVeil(LEM_Z, p_X + p_Y + p_Z) - 3*p)));</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L327" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Substitute the signature values 'X' in the polynomial 'p_X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-SubsSig(LEM_X, p_X));</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L325" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Substitute the signature values 'Y' in the polynomial 'p_Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_Y:-SubsSig(LEM_Y, p_Y));</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L326" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Substitute the signature values 'X' and 'Y' in the polynomial 'p_X+p_Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-SubsSig(LEM_X, LEM_Y:-SubsSig(LEM_Y, p_X + p_Y)));</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L331" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Substitute all the signature values in the polynomial 'p_X+p_Y+p_Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-SubsSig(LEM_X, LEM_Y:-SubsSig(LEM_Y, LEM_Z:-SubsSig(LEM_Z, p_X + p_Y + p_Z))));</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L259" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -208,7 +236,7 @@ LEM_Z:-GetVeilingLabel(LEM_Z);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L271" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Get the 'Z' veiling number of veiling variables, lists and table</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilTableSize(LEM_Z);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Get the 'Z' veiling lists and number of veiling variables</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilTableSize(LEM_Z);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L293" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -223,36 +251,96 @@ LEM_Z:-GetVeilingLabel(LEM_Z);</Text-field>
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilTableImap(LEM_Z, reverse = true);</Text-field>
 </Input>
 </Group>
+<Group hide-input="false" labelreference="L342" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the 'X' signature lists and number of signature values</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-SigTableSize(LEM_X);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L344" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-SigList(LEM_X);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L337" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-SigUnorderedList(LEM_X);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L345" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-SigTableImap(LEM_X, reverse = true);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L335" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the 'Y' signature lists and number of signature values</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-SigTableSize(LEM_Y);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L343" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-SigList(LEM_Y);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L336" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-SigUnorderedList(LEM_Y);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L341" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-SigTableImap(LEM_Y, reverse = true);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L338" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Get the 'Z' signature lists and number of signature values</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-SigTableSize(LEM_Z);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L339" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-SigList(LEM_Z);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L334" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-SigUnorderedList(LEM_Z);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L340" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-SigTableImap(LEM_Z, reverse = true);</Text-field>
+</Input>
+</Group>
 <Group hide-input="false" labelreference="L255" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Forget the veiling variables 'X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-VeilForget(LEM_X);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Forget the veiling variables 'X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-ForgetVeil(LEM_X);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L285" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-VeilList(LEM_X);</Text-field>
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-VeilList(LEM_X);LEM_X:-SigList(LEM_X);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L254" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Forget the veiling variables 'Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-VeilForget(LEM_Y);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Forget the veiling variables 'Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-ForgetVeil(LEM_Y);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L286" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-VeilList(LEM_Y);</Text-field>
 </Input>
 </Group>
+<Group hide-input="false" labelreference="L328" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-SigList(LEM_Y);</Text-field>
+</Input>
+</Group>
 <Group hide-input="false" labelreference="L303" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Forget the veiling variables 'Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilForget(LEM_Z);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Forget the veiling variables 'Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-ForgetVeil(LEM_Z);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L304" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-VeilList(LEM_Z);</Text-field>
 </Input>
 </Group>
+<Group hide-input="false" labelreference="L329" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-SigList(LEM_Z);</Text-field>
+</Input>
+</Group>
 <Group hide-input="false" labelreference="L281" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal">Append a new veiling variable with random veiling label generator</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-VeilTableAppend(LEM, 2*a*b*c);</Text-field>
+<Input><Text-field style="Text" layout="Normal">Append a new veiling variable with random veiling label generator</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-TablesAppend(LEM, 2*a*b*c);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L294" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-VeilList(LEM);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L330" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-SigList(LEM);</Text-field>
 </Input>
 </Group>
 <Group hide-input="false" labelreference="L307" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
@@ -265,14 +353,14 @@ LEM_Z:-GetVeilingLabel(LEM_Z);</Text-field>
 </Group>
 <Group hide-input="false" labelreference="L311" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Clear the veiling table</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">L := LEM:-VeilList(LEM);
-LEM:-ClearVeilingTable(LEM);</Text-field>
+LEM:-ForgetVeil(LEM);</Text-field>
 </Input>
 </Group>
 <Group labelreference="L312" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Try to change the defult (random) veiling label to 'A' (<Font bold="true">success</Font>)</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM:-SetVeilingLabel(LEM, 'A');</Text-field>
 </Input>
 </Group>
-<Group labelreference="L314" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Group labelreference="L323" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
 </Input>
 </Group>
