@@ -138,6 +138,12 @@ object LEM :: LEM:
 
     # Clear all the veiling variables of the internal veiling table.
     ForgetVeil( _self::LEM, $ )
+
+    # Compute the signature of the expression <x> modulo <p> (the default is
+    # the internal signature value) also by using the internal signature table
+    # of the veiled expressions.
+    Signature( _self::LEM, x::anything, p::prime := _self:-m_SigValue, $ )
+             :: nonnegint
 ```
 
 ## Usage
@@ -201,7 +207,7 @@ module SIG( expr::algebraic, p::prime, max_iter::posint := 10, $ ) :: algebraic
     Transform( expr::algebraic, max_iter::posint := 10, $ ) :: algebraic
 
     # Compute the signature of an expression <expr> modulo a prime number <p>.
-    Signature( expr::algebraic, p::prime, $ ) :: integer
+    Signature( expr::algebraic, p::prime, $ ) :: nonnegint
 ```
 
 ## Authors

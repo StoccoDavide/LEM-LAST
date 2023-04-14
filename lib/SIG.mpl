@@ -63,7 +63,7 @@ SIG := module()
     expr::algebraic,
     p::prime,
     max_iter::posint := 10,
-    $)::algebraic;
+    $)::nonnegint;
 
     description "Compute the signature of an expression <expr> modulo a prime "
       "number <p>.";
@@ -199,7 +199,7 @@ SIG := module()
   export Signature := proc(
     expr::algebraic,
     p::prime,
-    $)::integer;
+    $)::nonnegint;
 
     description "Compute the signature of an expression <expr> modulo a prime "
       "number <p>.";

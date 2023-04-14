@@ -602,12 +602,27 @@ module LEM()
     _self::LEM,
     $)
 
-    description "Clear all the veiling variables of the internal veiling table.";
+    description "Clear the internal veiling and signature tables.";
 
     _self:-m_UnveilTable := table([]);
     _self:-m_SigTable    := table([]);
     return NULL;
   end proc: # ForgetVeil
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export Signature::static := proc(
+    _self::LEM,
+    x::anything,
+    p::prime := _self:-m_SigValue,
+    $)::nonnegint;
+
+    description "Compute the signature of the expression <x> modulo <p> (the "
+      "default is the internal signature value) also by using the internal "
+      "signature table of the veiled expressions.";
+
+    return SIG(_self:-SubsSig(_self, x), _self:-m_SigValue);
+  end proc: # Signature
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

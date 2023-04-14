@@ -171,6 +171,18 @@ LEM_Z:-GetVeilingLabel();</Text-field>
 <Input><Text-field style="Text" layout="Normal">Get the list of signature values 'Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-SigList();</Text-field>
 </Input>
 </Group>
+<Group hide-input="false" labelreference="L375" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Compute the signature of the polynomial 'p_X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_X:-Signature(p_X);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L373" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Compute the signature of the polynomial 'p_Y'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Y:-Signature(p_Y);</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" labelreference="L374" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field style="Text" layout="Normal">Compute the signature of the polynomial 'p_Z'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">LEM_Z:-Signature(p_Z);</Text-field>
+</Input>
+</Group>
 <Group hide-input="false" labelreference="L239" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
 <Input><Text-field style="Text" layout="Normal">Substitute the veiling variables 'X' in the polynomial 'p_X'</Text-field><Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(LEM_X:-SubsVeil(p_X) - p);</Text-field>
 </Input>
