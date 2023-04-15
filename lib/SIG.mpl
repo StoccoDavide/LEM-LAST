@@ -63,7 +63,7 @@ SIG := module()
     expr::algebraic,
     p::prime,
     max_iter::posint := 10,
-    $)::nonnegint;
+    $)::anything;
 
     description "Compute the signature of an expression <expr> modulo a prime "
       "number <p>.";
@@ -83,6 +83,29 @@ SIG := module()
 
     return [op(map(op, indets(expr, ':-specfunc(func)')))];
   end proc: # ExtractArgs
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export IndexedTransform := proc(
+    expr::algebraic,
+    $)::algebraic;
+
+    description "Transform the indexed elements of an expression <expr> into "
+      "symbols .";
+
+    local vars;
+
+    vars := indets(expr, indexed);
+    if (nops(vars) > 0) then
+      WARNING("indexed variables detected: %1", vars);
+      return subs[eval](
+        op(vars =~ map(i -> convert(cat(op(0, i), op(1, i)), symbol), vars)),
+        expr
+      );
+    else
+      return expr;
+    end if;
+  end proc: # IndexedTransform
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -163,8 +186,11 @@ SIG := module()
     out := copy(expr);
 
     # Indexed type elements
+    for i from 1 to max_iter while hastype(out, indexed) do
+      out := SIG:-IndexedTransform(out);
+    end do;
     if hastype(out, indexed) then
-      error("the input expression has indexed type elements.");
+      WARNING("the input expression has indexed type elements.");
     end if;
 
     # Absolute value function elements
@@ -199,7 +225,7 @@ SIG := module()
   export Signature := proc(
     expr::algebraic,
     p::prime,
-    $)::nonnegint;
+    $)::anything;
 
     description "Compute the signature of an expression <expr> modulo a prime "
       "number <p>.";

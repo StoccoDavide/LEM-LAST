@@ -245,7 +245,7 @@ end do:</Text-field>
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">
 # Expression Signature module.
 # Compute the signature of an expression &lt;expr&gt; modulo a prime number &lt;p&gt;.
-module SIG( expr::algebraic, p::prime, max_iter::posint := 10, $ ) :: algebraic
+module SIG( expr::algebraic, p::prime, max_iter::posint := 10, $ ) :: anything
 
     # Print 'SIG' module information.
     Info( )
@@ -258,6 +258,9 @@ module SIG( expr::algebraic, p::prime, max_iter::posint := 10, $ ) :: algebraic
 
     # Extract the arguments of a function &lt;func&gt; from an expression &lt;expr&gt;.
     ExtractArgs( expr::algebraic, func::name, $ ) :: list(algebraic)
+
+    # Transform the indexed elements of an expression &lt;expr&gt; into symbols .
+    IndexedTransform( expr::algebraic, $ ) :: algebraic
 
     # Transform the absolute value function in an expression &lt;expr&gt;.
     AbsTransform( expr::algebraic, $ ) :: algebraic
@@ -273,7 +276,7 @@ module SIG( expr::algebraic, p::prime, max_iter::posint := 10, $ ) :: algebraic
     Transform( expr::algebraic, max_iter::posint := 10, $ ) :: algebraic
 
     # Compute the signature of an expression &lt;expr&gt; modulo a prime number &lt;p&gt;.
-    Signature( expr::algebraic, p::prime, $ ) :: integer
+    Signature( expr::algebraic, p::prime, $ ) :: anything
 
 </Text-field>
 </Output>
@@ -388,15 +391,21 @@ object LEM :: LEM:
     # in the expression &lt;x&gt;.
     SubsVeil( _self::LEM, x::anything, $ ) :: anything
 
-    # Clear all the veiling variables of the internal veiling table.
+    # Clear the internal veiling and signature tables.
     ForgetVeil( _self::LEM, $ )
+
+    # Compute the signature of the expression &lt;x&gt; modulo &lt;p&gt; (the default is 
+    # the internal signature value) also by using the internal signature table 
+    # of the veiled expressions.
+    Signature( _self::LEM, x::anything, p::prime := _self:-m_SigValue, $ )
+             :: nonnegint
 
 </Text-field>
 </Output>
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>
