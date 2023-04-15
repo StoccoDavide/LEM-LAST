@@ -86,29 +86,6 @@ SIG := module()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  export IndexedTransform := proc(
-    expr::algebraic,
-    $)::algebraic;
-
-    description "Transform the indexed elements of an expression <expr> into "
-      "symbols .";
-
-    local vars;
-
-    vars := indets(expr, indexed);
-    if (nops(vars) > 0) then
-      WARNING("indexed variables detected: %1", vars);
-      return subs[eval](
-        op(vars =~ map(i -> convert(cat(op(0, i), op(1, i)), symbol), vars)),
-        expr
-      );
-    else
-      return expr;
-    end if;
-  end proc: # IndexedTransform
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
   export AbsTransform := proc(
     expr::algebraic,
     $)::algebraic;
@@ -184,14 +161,6 @@ SIG := module()
 
     # Copy the input expression
     out := copy(expr);
-
-    # Indexed type elements
-    for i from 1 to max_iter while hastype(out, indexed) do
-      out := SIG:-IndexedTransform(out);
-    end do;
-    if hastype(out, indexed) then
-      WARNING("the input expression has indexed type elements.");
-    end if;
 
     # Absolute value function elements
     for i from 1 to max_iter while has(out, {'abs'}) do
