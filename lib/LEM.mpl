@@ -410,7 +410,7 @@ module LEM()
     multiplications::nonnegint := 2,
     divisions::nonnegint       := 3,
     functions::nonnegint       := 2
-    }, $)::nothing;
+    }, $)
 
     description "Set the veiling strategy parameters: maximum veiling cost "
       "<maxcost>, subscripts cost weight parameter <subscripts>, assignments "
