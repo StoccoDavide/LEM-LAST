@@ -49,7 +49,7 @@ export Pivoting::static := proc(
       Mij["degree_cost"] := _self:-DegreeCost(_self, Mij);
       pivot_list[ipos]   := copy(Mij);
       pivot_cost[ipos]   := Mij["degree_cost"];
-      ipos               := ipos+1;
+      ipos               := ipos + 1;
     end do;
   end do;
 
@@ -63,21 +63,38 @@ export Pivoting::static := proc(
     i              := Mij["i"];
     j              := Mij["j"];
     Mij["value"]   := M[i, j];
-    Mij["sig"]     := _self:-m_LEM:-Signature(_self:-m_LEM, Mij["value"]);
-    Mij["is_zero"] := evalb(Mij["sig"] = 0);
+    try
+      Mij["sig"] := _self:-m_LEM:-Signature(_self:-m_LEM, Mij["value"]);
+      Mij["is_zero"] := evalb(Mij["value"] = 0 or Mij["sig"] = 0);
+    catch "division by zero":
+      if _self:-m_WarningMode then
+        WARNING(
+          "LAST:-Pivoting(...): division by zero, assumed 'M[%1,%2] = 0'.",
+          i, j
+        );
+      end if;
+      Mij["is_zero"] := true;
+    catch:
+      if _self:-m_WarningMode then
+        WARNING(
+          "LAST:-Pivoting(...): something went wrong in '%1', assumed "
+          "'M[%2,%3] = 0'.", lastexception, i, j
+        );
+      end if;
+      Mij["is_zero"] := true;
+    end try;
 
     # Look for a non-zero pivot
     # Pre-check if next pivot cannot improve search
-    if not pivot["is_zero"] and not Mij["is_zero"] and
-       (Mij["degree_cost"] > pivot["degree_cost"]) then
+    if not pivot["is_zero"] and (Mij["degree_cost"] > pivot["degree_cost"]) then
       # If the degree cost is higher than degree cost of pivot cannot improve
       break;
     end if;
 
     # Try to simplify the pivot expression
     try
-      Mij["value"] := Normalizer(Mij["value"]);
-      #Mij["is_zero"] := evalb(Mij["value"] = 0);
+      Mij["value"] := timelimit(_self:-m_TimeLimit, Normalizer(Mij["value"]));
+      Mij["is_zero"] := evalb(Mij["value"] = 0);
       if not Mij["is_zero"] then
         uMij := timelimit(_self:-m_TimeLimit, _self:-m_LEM:-Unveil(_self:-m_LEM, Mij["value"]));
         # Recalculate cost and value of the pivot
@@ -89,7 +106,7 @@ export Pivoting::static := proc(
     catch "time expired":
       if _self:-m_WarningMode then
         WARNING(
-          "LAST::Pivoting(...): time expired, assumed 'M[%1, %2] <> 0'.",
+          "LAST:-Pivoting(...): time expired, assumed 'M[%1,%2] <> 0'.",
           i, j
         );
       end if;
@@ -98,15 +115,15 @@ export Pivoting::static := proc(
     catch "division by zero":
       if _self:-m_WarningMode then
         WARNING(
-          "LAST::Pivoting(...): division by zero, assumed 'M[%1, %2]= 0'.",
+          "LAST:-Pivoting(...): division by zero, assumed 'M[%1,%2] = 0'.",
           i, j
         );
       end if;
       Mij["is_zero"] := true;
     catch:
       WARNING(
-        "LAST::Pivoting(...): simplify(M[%1, %2]), something went wrong: '%3'.",
-        i, j, lastexception
+        "LAST:-Pivoting(...): something went wrong in '%1', assumed 'M[%2,%3] = 0'.",
+        lastexception, i, j
       );
       if _self:-m_VerboseMode then
         print("catch", Mij["value"] , Mij["sig"], Mij["is_zero"]);

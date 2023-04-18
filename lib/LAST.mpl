@@ -48,8 +48,8 @@ module LAST()
   local m_LEM               := NULL;
   local m_VerboseMode       := false;
   local m_WarningMode       := true;
-  local m_TimeLimit         := 1;
-  local m_MinDegreeStrategy := "product_1rc";
+  local m_TimeLimit         := 0.1;
+  local m_MinDegreeStrategy := "product_1c";
   local m_Results           := NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,6 +190,7 @@ module LAST()
     description "Enable the verbosity of the module.";
 
     _self:-m_VerboseMode := true;
+    _self:-m_LEM:-EnableVerboseMode(_self:-m_LEM);
     return NULL;
   end proc: # EnableVerboseMode
 
@@ -202,6 +203,7 @@ module LAST()
     description "Disable the verbosity of the module.";
 
     _self:-m_VerboseMode := false;
+    _self:-m_LEM:-DisableVerboseMode(_self:-m_LEM);
     return NULL;
   end proc: # DisableVerboseMode
 
@@ -215,6 +217,7 @@ module LAST()
     description "Set the verbosity of the module to <mode>.";
 
     _self:-m_VerboseMode := mode;
+    _self:-m_LEM:-SetVerboseMode(_self:-m_LEM, mode);
     return NULL;
   end proc: # SetVerboseMode
 
@@ -227,6 +230,7 @@ module LAST()
     description "Enable the warning mode of the module.";
 
     _self:-m_WarningMode := true;
+    _self:-m_LEM:-EnableWarningMode(_self:-m_LEM);
     return NULL;
   end proc: # EnableWarningMode
 
@@ -239,6 +243,7 @@ module LAST()
     description "Disable the warning mode of the module.";
 
     _self:-m_WarningMode := false;
+    _self:-m_LEM:-DisableWarningMode(_self:-m_LEM);
     return NULL;
   end proc: # DisableWarningMode
 
@@ -252,6 +257,7 @@ module LAST()
     description "Set the warning mode of the module to <mode>.";
 
     _self:-m_WarningMode := mode;
+    _self:-m_LEM:-SetWarningMode(_self:-m_LEM, mode);
     return NULL;
   end proc: # SetWarningMode
 
@@ -350,8 +356,8 @@ module LAST()
     elif (_self:-m_Results["method"] = "QR") then
       return _self:-QRsolve(_self, b);
     else
-      error "wrong or not available decomposition, use 'LAST::LU()'' or "
-        "'LAST::QR()'' first.";
+      error "wrong or not available decomposition, use 'LAST:-LU()'' or "
+        "'LAST:-QR()'' first.";
     end if;
 
     # Work in progress: FFLU and QR2 methods.

@@ -19,7 +19,7 @@ export FFLU::static := proc(
 
     # Check if the LEM is initialized
   if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST::InitLEM() first).";
+    error "LEM is not initialized (use LAST:-InitLEM() first).";
     return table([]);
   end if;
 
@@ -51,7 +51,7 @@ export FFLU::static := proc(
   for k from 1 to mn-1 do
     if _self:-m_VerboseMode then
       printf(
-        "LAST::FFLU(...): processing %d-th row, cost = %d, veilings = %d.\n",
+        "LAST:-FFLU(...): processing %d-th row, cost = %d, veilings = %d.\n",
         k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
         nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
@@ -65,14 +65,14 @@ export FFLU::static := proc(
     if pivot["is_zero"] then
       rnk := rnk - 1;
       if _self:-m_WarningMode then
-        WARNING("LAST::LU(...): the matrix appears to be not full rank.");
+        WARNING("LAST:-LU(...): the matrix appears to be not full rank.");
       end;
       break;
     end if;
 
     if _self:-m_VerboseMode then
       printf(
-        "LAST::FFLU(...): M[%d,%d] = %a, cost = %d, degree_r = %d, degree_c = %d.\n",
+        "LAST:-FFLU(...): M[%d,%d] = %a, cost = %d, degree_r = %d, degree_c = %d.\n",
         k, k, pivot["value"], pivot["cost"], pivot["degree_r"], pivot["degree_c"]
       );
     end if;
@@ -167,7 +167,7 @@ export FFLUsolve::static := proc(
 
   # Check if the LEM is initialized
   if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST::InitLEM() first).";
+    error "LEM is not initialized (use LAST:-InitLEM() first).";
     return NULL;
   end if;
 
@@ -199,7 +199,7 @@ export FFLUsolve::static := proc(
   # Perform forward substitution to solve Ly=b[r]
   for i from 2 to n do
     if _self:-m_VerboseMode then
-      printf("LAST::FFLUsolve(...): forward substitution of %d-th row.\n", i);
+      printf("LAST:-FFLUsolve(...): forward substitution of %d-th row.\n", i);
     end if;
     x[i..-1] := S[i-1] * x[i..-1]; # Apply D
     x[i..-1] := _self:-m_LEM:-Veil~(_self:-m_LEM, x[i..-1] - x[i-1]*M[i..-1, i-1]);
@@ -207,12 +207,12 @@ export FFLUsolve::static := proc(
 
   # Perform backward substitution to solve Ux[c]=y
   if _self:-m_VerboseMode then
-    printf("LAST::FFLUsolve(...): dividision by M[%d,%d].\n", n, n);
+    printf("LAST:-FFLUsolve(...): dividision by M[%d,%d].\n", n, n);
   end if;
   x[n] := _self:-m_LEM:-Veil(_self:-m_LEM, x[n]/M[n, n]);
   for i from n-1 to 1 by -1 do
     if _self:-m_VerboseMode then
-      printf("LAST::FFLUsolve(...): backward substitution of %d-th column.\n", i);
+      printf("LAST:-FFLUsolve(...): backward substitution of %d-th column.\n", i);
     end if;
     s    := x[i] - add(M[i, i+1..n] *~ x[i+1..n]);
     x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, s/M[i, i]);

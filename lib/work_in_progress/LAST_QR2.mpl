@@ -18,7 +18,7 @@ export QR2::static := proc(
 
   # Check if the LEM is initialized
   if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST::InitLEM() first).";
+    error "LEM is not initialized (use LAST:-InitLEM() first).";
     return table([]);
   end if;
 
@@ -53,14 +53,14 @@ export QR2::static := proc(
     for l from k to n do
       if _self:-m_VerboseMode then
         printf(
-        "LAST::QR2(...): processing %d-th row, cost = %d, veilings = %d.\n",
+        "LAST:-QR2(...): processing %d-th row, cost = %d, veilings = %d.\n",
         k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, R),
         length(_self:-m_LEM:-VeilList(_self:-m_LEM))
         );
       end if;
       if (l > k) then
         if _self:-m_VerboseMode then
-          printf("LAST::QR2(...): swap with colum %d\n", l+1);
+          printf("LAST:-QR2(...): swap with colum %d\n", l+1);
         end if;
         C          := R[1..-1,k]; a    := c[k];
         R[1..-1,k] := R[1..-1,l]; c[k] := c[l];
@@ -144,7 +144,7 @@ export QR2solve::static := proc(
 
   # Check if the LEM is initialized
   if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST::InitLEM() first).";
+    error "LEM is not initialized (use LAST:-InitLEM() first).";
     return NULL;
   end if;
 
@@ -177,7 +177,7 @@ export QR2solve::static := proc(
   x[n] := _self:-m_LEM:-Veil(_self:-m_LEM, x[n]/R[n, n]);
   for i from n-1 to 1 by -1 do
     if _self:-m_VerboseMode then
-      printf("LAST::QR2solve, backward %d\n",i);
+      printf("LAST:-QR2solve, backward %d\n",i);
     end if;
     s    := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(R[i, i+1..n]*~x[i+1..n]));
     x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, s/R[i, i]);

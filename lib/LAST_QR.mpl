@@ -27,7 +27,7 @@ export QR::static := proc(
   end if;
 
   # Clear the veiling list
-  _self:-m_LEM:-VeilForget(_self:-m_LEM);
+  _self:-m_LEM:-ForgetVeil(_self:-m_LEM);
 
   # Extract the dimensions of the matrix A
   m, n := LinearAlgebra:-Dimensions(A):
@@ -46,7 +46,7 @@ export QR::static := proc(
   for k from 1 to m-1 do
     if _self:-m_VerboseMode then
       printf(
-        "LAST::QR(...): processing %d-th row, cost = %d, veilings = %d.\n",
+        "LAST:-QR(...): processing %d-th row, cost = %d, veilings = %d.\n",
         k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, R),
         length(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
@@ -130,7 +130,7 @@ export QRsolve::static := proc(
 
   # Check if the QR decomposition is available
   if not (_self:-m_Results["method"] = "QR") then
-    error "wrong or not available QR decomposition (use 'LAST::QR()'' first).";
+    error "wrong or not available QR decomposition (use 'LAST:-QR()'' first).";
   end if;
 
   # apply Q^T a rhs
@@ -165,7 +165,7 @@ export QRsolve::static := proc(
   x[n] := _self:-m_LEM:-Veil(_self:-m_LEM, x[n]/R[n, n]);
   for i from n-1 to 1 by -1 do
     if _self:-m_VerboseMode then
-      printf("LAST::QRsolve(...): backward substitution of %d-th row.\n", i);
+      printf("LAST:-QRsolve(...): backward substitution of %d-th row.\n", i);
     end if;
     s    := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(R[i, i+1..n] *~ x[i+1..n]));
     x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, s/R[i, i]);
