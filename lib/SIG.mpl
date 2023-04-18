@@ -62,13 +62,17 @@ SIG := module()
   export ModuleApply := proc(
     expr::algebraic,
     p::prime,
-    max_iter::posint := 10,
-    $)::anything;
+    {
+    iter::posint     := 10,
+    verbose::boolean := false
+    }, $)::anything;
 
     description "Compute the signature of an expression <expr> modulo a prime "
       "number <p>.";
 
-    return SIG:-Signature(SIG:-Transform(expr, max_iter), p);
+    return SIG:-Signature(
+      SIG:-Transform(expr, parse("iter") = iter), p, parse("verbose") = verbose
+    );
   end proc: # ModuleApply
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -151,11 +155,11 @@ SIG := module()
 
   export Transform := proc(
     expr::algebraic,
-    max_iter::posint := 10,
+    {iter::posint := 10},
     $)::algebraic;
 
     description "Transform an expression <expr> using a maximum number of "
-      "substitutions recursions <max_iter>.";
+      "substitutions recursions <iter>.";
 
     local out, i;
 
@@ -163,7 +167,7 @@ SIG := module()
     out := copy(expr);
 
     # Absolute value function elements
-    for i from 1 to max_iter while has(out, {'abs'}) do
+    for i from 1 to iter while has(out, {'abs'}) do
       out := SIG:-AbsTransform(out);
     end do;
     if has(out, {'abs'}) then
@@ -171,7 +175,7 @@ SIG := module()
     end if;
 
     # Logarithm function elements
-    for i from 1 to max_iter while has(out, {'ln'}) do
+    for i from 1 to iter while has(out, {'ln'}) do
       out := SIG:-LogTransform(out);
     end do;
     if has(out, {'ln'}) then
@@ -179,7 +183,7 @@ SIG := module()
     end if;
 
     # Trigonometric function elements
-    for i from 1 to max_iter while has(out, {'sin', 'cos', 'tan'}) do
+    for i from 1 to iter while has(out, {'sin', 'cos', 'tan'}) do
       out := SIG:-WeierstrassTransform(out);
     end do;
     if has(out, {'sin', 'cos', 'tan'}) then
@@ -194,6 +198,7 @@ SIG := module()
   export Signature := proc(
     expr::algebraic,
     p::prime,
+    {verbose::boolean := false},
     $)::anything;
 
     description "Compute the signature of an expression <expr> modulo a prime "
@@ -204,7 +209,11 @@ SIG := module()
     try
       out := signature(expr, p);
     catch:
-      WARNING("expression signature not defined, assumed '0'.");
+      if verbose then
+        WARNING(
+          "LEM:-Signature(...): expression signature not defined, assumed '0'."
+        );
+      end if;
       out := 0;
     end try;
 

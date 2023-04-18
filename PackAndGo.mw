@@ -245,7 +245,8 @@ end do:</Text-field>
 <Output><Text-field style="Line Printed Output" layout="Line Printed Output">
 # Expression Signature module.
 # Compute the signature of an expression &lt;expr&gt; modulo a prime number &lt;p&gt;.
-module SIG( expr::algebraic, p::prime, max_iter::posint := 10, $ ) :: anything
+module SIG( expr::algebraic, p::prime, 
+            { iter::posint := 10, verbose::boolean := false }, $ ) :: anything
 
     # Print 'SIG' module information.
     Info( )
@@ -259,9 +260,6 @@ module SIG( expr::algebraic, p::prime, max_iter::posint := 10, $ ) :: anything
     # Extract the arguments of a function &lt;func&gt; from an expression &lt;expr&gt;.
     ExtractArgs( expr::algebraic, func::name, $ ) :: list(algebraic)
 
-    # Transform the indexed elements of an expression &lt;expr&gt; into symbols .
-    IndexedTransform( expr::algebraic, $ ) :: algebraic
-
     # Transform the absolute value function in an expression &lt;expr&gt;.
     AbsTransform( expr::algebraic, $ ) :: algebraic
 
@@ -272,11 +270,13 @@ module SIG( expr::algebraic, p::prime, max_iter::posint := 10, $ ) :: anything
     WeierstrassTransform( expr::algebraic, $ ) :: algebraic
 
     # Transform an expression &lt;expr&gt; using a maximum number of substitutions 
-    # recursions &lt;max_iter&gt;.
-    Transform( expr::algebraic, max_iter::posint := 10, $ ) :: algebraic
+    # recursions &lt;iter&gt;.
+    Transform( expr::algebraic, 
+               { iter::posint := 10 }, $ ) :: algebraic
 
     # Compute the signature of an expression &lt;expr&gt; modulo a prime number &lt;p&gt;.
-    Signature( expr::algebraic, p::prime, $ ) :: anything
+    Signature( expr::algebraic, p::prime, 
+               { verbose::boolean := false }, $ ) :: anything
 
 </Text-field>
 </Output>
@@ -299,6 +299,24 @@ object LEM :: LEM:
 
     # Copy the objects &lt;proto&gt; into &lt;self&gt;.
     ModuleCopy( _self::LEM, proto::LEM, $ )
+
+    # Enable the verbosity of the module.
+    EnableVerboseMode( _self::LEM, $ )
+
+    # Disable the verbosity of the module.
+    DisableVerboseMode( _self::LEM, $ )
+
+    # Set the verbosity of the module to &lt;mode&gt;.
+    SetVerboseMode( _self::LEM, mode::boolean, $ )
+
+    # Enable the warning mode of the module.
+    EnableWarningMode( _self::LEM, $ )
+
+    # Disable the warning mode of the module.
+    DisableWarningMode( _self::LEM, $ )
+
+    # Set the warning mode of the module to &lt;mode&gt;.
+    SetWarningMode( _self::LEM, mode::boolean, $ )
 
     # Set the veiling label to &lt;label&gt;.
     SetVeilingLabel( _self::LEM, label::{string, symbol}, $ )
@@ -381,7 +399,8 @@ object LEM :: LEM:
                 :: {list(anything = anything), []}
 
     # Append the veiled expression &lt;x&gt; to the veiling table.
-    TablesAppend( _self::LEM, x::anything, $ ) :: indexed
+    TablesAppend( _self::LEM, x::anything, 
+                  { iter::nonnegint := 10 }, $ ) :: indexed
 
     # Substitute the reversed signature values of the internal signature table 
     # in the expression &lt;x&gt;.
@@ -397,15 +416,15 @@ object LEM :: LEM:
     # Compute the signature of the expression &lt;x&gt; modulo &lt;p&gt; (the default is 
     # the internal signature value) also by using the internal signature table 
     # of the veiled expressions.
-    Signature( _self::LEM, x::anything, p::prime := _self:-m_SigValue, $ )
-             :: nonnegint
+    Signature( _self::LEM, x::anything, p::prime := _self:-m_SigValue, 
+               { iter::nonnegint := 10 }, $ ) :: nonnegint
 
 </Text-field>
 </Output>
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>

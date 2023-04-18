@@ -48,7 +48,11 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  # Veiling variables
+  # General
+  local m_VerboseMode := false;
+  local m_WarningMode := true;
+
+  # Veiling
   local m_VeilingLabel := parse(cat("V_", StringTools:-Random(5, 'alnum')));
   local m_UnveilTable                     := table([]);
   local m_VeilingStrategy_maxcost         := 15;
@@ -59,10 +63,10 @@ module LEM()
   local m_VeilingStrategy_divisions       := 3;
   local m_VeilingStrategy_functions       := 2;
 
-  # Signature variables
-  local m_SigEnable                       := true;
-  local m_SigTable                        := table([]);
-  local m_SigValue                        := 1000000007;
+  # Signature
+  local m_SigEnable := true;
+  local m_SigTable  := table([]);
+  local m_SigValue  := 1000000007;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -118,7 +122,11 @@ module LEM()
 
     description "Copy the objects <proto> into <self>.";
 
-    # Veiling variables
+    # General
+    _self:-m_VerboseMode := proto:-m_VerboseMode;
+    _self:-m_WarningMode := proto:-m_WarningMode;
+
+    # Veiling
     _self:-m_VeilingLabel                    := proto:-m_VeilingLabel;
     _self:-m_UnveilTable                     := copy(proto:-m_UnveilTable);
     _self:-m_VeilingStrategy_maxcost         := proto:-m_VeilingStrategy_maxcost;
@@ -129,11 +137,85 @@ module LEM()
     _self:-m_VeilingStrategy_divisions       := proto:-m_VeilingStrategy_divisions;
     _self:-m_VeilingStrategy_functions       := proto:-m_VeilingStrategy_functions;
 
-    # Signature variables
-    _self:-m_SigEnable                       := proto:-m_SigEnable;
-    _self:-m_SigTable                        := copy(proto:-m_SigTable);
-    _self:-m_SigValue                        := proto:-m_SigValue;
+    # Signature
+    _self:-m_SigEnable := proto:-m_SigEnable;
+    _self:-m_SigTable  := copy(proto:-m_SigTable);
+    _self:-m_SigValue  := proto:-m_SigValue;
   end proc: # ModuleCopy
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export EnableVerboseMode::static := proc(
+    _self::LEM,
+    $)
+
+    description "Enable the verbosity of the module.";
+
+    _self:-m_VerboseMode := true;
+    return NULL;
+  end proc: # EnableVerboseMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export DisableVerboseMode::static := proc(
+    _self::LEM,
+    $)
+
+    description "Disable the verbosity of the module.";
+
+    _self:-m_VerboseMode := false;
+    return NULL;
+  end proc: # DisableVerboseMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export SetVerboseMode::static := proc(
+    _self::LEM,
+    mode::boolean,
+    $)
+
+    description "Set the verbosity of the module to <mode>.";
+
+    _self:-m_VerboseMode := mode;
+    return NULL;
+  end proc: # SetVerboseMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export EnableWarningMode::static := proc(
+    _self::LEM,
+    $)
+
+    description "Enable the warning mode of the module.";
+
+    _self:-m_WarningMode := true;
+    return NULL;
+  end proc: # EnableWarningMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export DisableWarningMode::static := proc(
+    _self::LEM,
+    $)
+
+    description "Disable the warning mode of the module.";
+
+    _self:-m_WarningMode := false;
+    return NULL;
+  end proc: # DisableWarningMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export SetWarningMode::static := proc(
+    _self::LEM,
+    mode::boolean,
+    $)
+
+    description "Set the warning mode of the module to <mode>.";
+
+    _self:-m_WarningMode := mode;
+    return NULL;
+  end proc: # SetWarningMode
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -540,6 +622,7 @@ module LEM()
   export TablesAppend::static := proc(
     _self::LEM,
     x::anything,
+    {iter::nonnegint := 10},
     $)::indexed;
 
     description "Append the veiled expression <x> to the veiling table.";
@@ -552,7 +635,9 @@ module LEM()
       _self:-m_UnveilTable[_self:-m_VeilingLabel[k]] := x;
       if _self:-m_SigEnable then
         _self:-m_SigTable[_self:-m_VeilingLabel[k]] := SIG(
-          _self:-SubsSig(_self, x), _self:-m_SigValue
+          _self:-SubsSig(_self, x), _self:-m_SigValue,
+          parse("iter")    = iter,
+          parse("verbose") = _self:-m_WarningMode
         );
       else
         _self:-m_SigTable[_self:-m_VeilingLabel[k]] := 0;
@@ -561,7 +646,9 @@ module LEM()
       _self:-m_UnveilTable := table([_self:-m_VeilingLabel[1] = x]);
       if _self:-m_SigEnable then
         _self:-m_SigTable   := table([_self:-m_VeilingLabel[1] = SIG(
-          x, _self:-m_SigValue
+          x, _self:-m_SigValue,
+          parse("iter")    = iter,
+          parse("verbose") = _self:-m_WarningMode
         )]);
       else
         _self:-m_SigTable   := table([_self:-m_VeilingLabel[1] = 0]);
@@ -580,7 +667,24 @@ module LEM()
     description "Substitute the reversed signature values of the internal "
       "signature table in the expression <x>.";
 
-    return subs[eval](op(_self:-SigList(_self, parse("reverse") = true)), x);
+    local out;
+    try
+      out := subs[eval](op(_self:-SigList(_self, parse("reverse") = true)), x);
+    catch "division by zero":
+      if _self:-m_WarningMode then
+        WARNING("LEM:-SubsSig(...): division by zero, returning 'FAIL'.");
+      end if;
+      out := FAIL;
+    catch:
+      if _self:-m_WarningMode then
+        WARNING(
+          "LEM:-SubsSig(...): something went wrong in '%1', returning 'FAIL'.",
+          lastexception
+        );
+      end if;
+      out := FAIL;
+    end try;
+    return out;
   end proc: # SubsSig
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -615,13 +719,19 @@ module LEM()
     _self::LEM,
     x::anything,
     p::prime := _self:-m_SigValue,
+    {iter::nonnegint := 10},
     $)::nonnegint;
 
     description "Compute the signature of the expression <x> modulo <p> (the "
       "default is the internal signature value) also by using the internal "
       "signature table of the veiled expressions.";
 
-    return SIG(_self:-SubsSig(_self, x), _self:-m_SigValue);
+    return SIG(
+      _self:-SubsSig(_self, x),
+      _self:-m_SigValue,
+      parse("iter")    = iter,
+      parse("verbose") = _self:-m_WarningMode
+    );
   end proc: # Signature
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
