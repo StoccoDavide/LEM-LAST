@@ -55,6 +55,7 @@ module LEM()
   # Veiling
   local m_VeilingLabel := parse(cat("V_", StringTools:-Random(5, 'alnum')));
   local m_UnveilTable                     := table([]);
+  local m_VeilingDependency               := {};
   local m_VeilingStrategy_maxcost         := 15;
   local m_VeilingStrategy_subscripts      := 0;
   local m_VeilingStrategy_assignments     := 0;
@@ -129,6 +130,7 @@ module LEM()
     # Veiling
     _self:-m_VeilingLabel                    := proto:-m_VeilingLabel;
     _self:-m_UnveilTable                     := copy(proto:-m_UnveilTable);
+    _self:-m_VeilingDependency               := proto:-m_VeilingDependency;
     _self:-m_VeilingStrategy_maxcost         := proto:-m_VeilingStrategy_maxcost;
     _self:-m_VeilingStrategy_subscripts      := proto:-m_VeilingStrategy_subscripts;
     _self:-m_VeilingStrategy_assignments     := proto:-m_VeilingStrategy_assignments;
@@ -242,6 +244,48 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  export SetVeilingDependency::static := proc(
+    _self::LEM,
+    dependency::set,
+    $)
+
+    description "Set the veiling dependency to <dependency>.";
+
+    if (_self:-VeilTableSize(_self) > 0) then
+      error "the veiling table is not empty, save the list if necessary and "
+        "clear it before changing veiling dependency.";
+      return NULL;
+    end if;
+
+    _self:-m_VeilingDependency := dependency;
+    return NULL;
+  end proc: # SetVeilingDependency
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export GetVeilingDependency::static := proc(
+    _self::LEM,
+    $)::set;
+
+    description "Return the veiling dependency.";
+
+    return _self:-m_VeilingDependency;
+  end proc: # GetVeilingDependency
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export ClearVeilingDependency::static := proc(
+    _self::LEM,
+    $)
+
+    description "Clear the veiling dependency.";
+
+    _self:-m_VeilingDependency := {};
+    return NULL;
+  end proc: # ClearVeilingDependency
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   export EnableSignature::static := proc(
     _self::LEM,
     $)
@@ -316,7 +360,10 @@ module LEM()
   export Veil::static := proc(
     _self::LEM,
     x::anything,
-    {force::boolean := false},
+    {
+    depend::set    := {},
+    force::boolean := false
+    },
     $)::anything;
 
     description "Check if the veiling strategy is verified, if true veil the "
@@ -326,8 +373,8 @@ module LEM()
 
     # Check if label is already assigned
 	  if (_self:-m_VeilingLabel <> eval(_self:-m_VeilingLabel, 2)) then
-	    error "LEM:-Veil(...): label %a is already assigned, please save its "
-        "contents and unassign it.", _self:-m_VeilingLabel;
+	    error "label %a is already assigned, please save its contents and "
+        "unassign it.", _self:-m_VeilingLabel;
 	  end if;
 
     # Recognize zero if we can, so that we don't hide zeros.
@@ -355,6 +402,11 @@ module LEM()
     end try;
     # Only if there is something complicated to hide we do actually hide it and
     # return a label.
+    if (nops(_self:-m_VeilingDependency intersect indets(s*c/i)) > 0) then
+      return s * i * _self:-TablesAppend(_self, s*c/i)(
+        op(_self:-m_VeilingDependency intersect indets(s*c/i))
+      );
+    end if;
     return s * i * _self:-TablesAppend(_self, s*c/i);
   end proc; # Veil
 
@@ -497,16 +549,48 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  export VeilDependencyList::static := proc(
+    _self::LEM,
+    {
+    reverse::boolean := false
+    }, $)::list(anything);
+
+    description "Return a list of the veiling labels dependency substitution.";
+
+    local vars;
+
+    vars := _self:-m_VeilingDependency;
+    return map(x -> lhs(x) = `if`(
+        nops(vars intersect indets(rhs(x))) > 0,
+        lhs(x)(op(vars intersect indets(rhs(x)))),
+        lhs(x)
+      ), _self:-VeilList(_self,
+        parse("reverse")    = reverse,
+        parse("dependency") = false
+      )
+    );
+  end proc: # VeilDependencyList
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   export VeilList::static := proc(
     _self::LEM,
-    {reverse::boolean := false},
-    $)::list(anything);
+    {
+    reverse::boolean    := false,
+    dependency::boolean := false
+    }, $)::list(anything);
 
     description "Return a list of the veiling labels.";
 
     local T, perm;
 
     T, perm := _self:-VeilTableImap(_self, parse("reverse") = reverse);
+    if (dependency) then
+      T := subs(
+          op(_self:-VeilDependencyList(_self, parse("reverse") = reverse)),
+          lhs~(T)
+        ) =~ rhs~(T);
+    end if;
     return T[perm]:
   end proc: # VeilList
 
@@ -692,12 +776,20 @@ module LEM()
   export SubsVeil::static := proc(
     _self::LEM,
     x::anything,
-    $)::anything;
+    {
+    reverse::boolean    := true,
+    dependency::boolean := false
+    }, $)::anything;
 
     description "Substitute the reversed veiling variables of the internal "
-      "veiling table in the expression <x>.";
+      "veiling table in the expression <x>, If dependency flag <dependency> "
+      "is set to true, the veiling variables are substituted with their "
+      "dependencies.";
 
-    return subs[eval](op(_self:-VeilList(_self, parse("reverse") = true)), x);
+    return subs[eval](op(_self:-VeilList(_self,
+        parse("dependency") = dependency,
+        parse("reverse")    = reverse
+      )), x);
   end proc: # SubsVeil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
