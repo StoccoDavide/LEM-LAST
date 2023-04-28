@@ -47,6 +47,7 @@ export Pivoting::static := proc(
       Mij["degree_r"]    := M_degree_R[i, j];
       Mij["degree_c"]    := M_degree_C[i, j];
       Mij["degree_cost"] := _self:-DegreeCost(_self, Mij);
+      Mij["is_zero"]     := false;
       pivot_list[ipos]   := copy(Mij);
       pivot_cost[ipos]   := Mij["degree_cost"];
       ipos               := ipos + 1;
@@ -59,10 +60,10 @@ export Pivoting::static := proc(
   # Iterate over the columns and rows using estimated increasing cost o pivot
   pivot["is_zero"] := true;
   for ipos in perm do
-    Mij            := copy(pivot_list[ipos]);
-    i              := Mij["i"];
-    j              := Mij["j"];
-    Mij["value"]   := M[i, j];
+    Mij          := copy(pivot_list[ipos]);
+    i            := Mij["i"];
+    j            := Mij["j"];
+    Mij["value"] := M[i, j];
     try
       Mij["sig"] := _self:-m_LEM:-Signature(_self:-m_LEM, Mij["value"]);
       Mij["is_zero"] := evalb(Mij["value"] = 0 or Mij["sig"] = 0);
@@ -83,6 +84,9 @@ export Pivoting::static := proc(
       end if;
       Mij["is_zero"] := true;
     end try;
+
+    # if zero skip
+    if Mij["is_zero"] then continue; end if;
 
     # Look for a non-zero pivot
     # Pre-check if next pivot cannot improve search
@@ -407,12 +411,13 @@ export PivotingCompare::static := proc(
     "and the next pivot <val>, decide if to the next pivot is better than the "
     "current pivot or not.";
 
-  if (val["numeric_value"] > cur["numeric_value"]) then
-    return true;
-  elif (val["numeric_value"] < cur["numeric_value"]) then
-    return false;
-  elif (val["numeric_value"] = infinity) then
+  if (val["numeric_value"] = infinity) and (cur["numeric_value"] = infinity) then
+    # are both expressions use "cost" to compare
     return evalb(val["cost"] < cur["cost"]);
+  elif val["numeric_value"] = infinity then
+    return false;
+  elif cur["numeric_value"] = infinity then
+    return true;
   else
     return evalb(val["numeric_value"] > cur["numeric_value"]);
   end if;
