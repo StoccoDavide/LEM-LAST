@@ -355,9 +355,11 @@ module LAST()
       return _self:-LUsolve(_self, b);
     elif (_self:-m_Results["method"] = "QR") then
       return _self:-QRsolve(_self, b);
+    elif (_self:-m_Results["method"] = "GJ") then
+      return _self:-GJsolve(_self, b);
     else
-      error "wrong or not available decomposition, use 'LAST:-LU()'' or "
-        "'LAST:-QR()'' first.";
+      error "wrong or not available decomposition, use 'LAST:-LU()' or "
+        "'LAST:-QR()' or 'LAST:-GJ()' first.";
     end if;
 
     # Work in progress: FFLU and QR2 methods.
@@ -430,6 +432,7 @@ module LAST()
 
 $include "./lib/LAST_Pivoting.mpl"
 $include "./lib/LAST_LU.mpl"
+$include "./lib/LAST_GJ.mpl"
 $include "./lib/LAST_QR.mpl"
 
 # Work in progress: FFLU and QR2 methods.

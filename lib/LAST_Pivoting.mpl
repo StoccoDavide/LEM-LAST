@@ -13,6 +13,7 @@ export Pivoting::static := proc(
   M::Matrix,
   r::Vector(nonnegint),
   c::Vector(nonnegint),
+  full_rows::boolean := false,
   $)::table;
 
   description "Compute the LU decomposition pivots vectors with minum degree "
@@ -31,7 +32,11 @@ export Pivoting::static := proc(
   # Calculate the degree
   M_degree_R := Matrix(m, n);
   M_degree_C := Matrix(m, n);
-  M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] := _self:-GetDegrees(_self, M[k..m, k..n]);
+  if full_rows then
+    M_degree_R[1..-1, k..n], M_degree_C[1..-1, k..n] := _self:-GetDegrees(_self, M[1..-1, k..n]);
+  else
+    M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] := _self:-GetDegrees(_self, M[k..m, k..n]);
+  end;
 
   # Build a list (i,j,degree,cost) and sort it
   pivot      := table([]);
