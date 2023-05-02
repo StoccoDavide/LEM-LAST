@@ -85,7 +85,7 @@ module LAST()
       end if;
     end do;
     if (lib_base_path = NULL) then
-      error "cannot find 'LAST' module.";
+      error("cannot find 'LAST' module.");
     end if;
     return NULL;
   end proc: # ModuleLoad
@@ -122,8 +122,8 @@ module LAST()
     description "Check if the 'LAST' object is initialized.";
 
     if not type(_self:-m_LEM, LEM) then
-      error "the 'LEM' object is not initialized, use 'LAST:-InitLEM(...)'' "
-        "or other appropriate initialization methods first.";
+      error("the 'LEM' object is not initialized, use 'LAST:-InitLEM(...)'' "
+        "or other appropriate initialization methods first.");
     end if;
     return NULL;
   end proc: # CheckInit
@@ -271,7 +271,7 @@ module LAST()
     description "Set the time limit of the module to <x>.";
 
     if (x < 0) then
-      error "time limit must be a non-negative number.";
+      error("time limit must be a non-negative number.)";
     end if;
 
     _self:-m_TimeLimit := x;
@@ -298,8 +298,8 @@ module LAST()
     description "Check if the results of the last factorization are available.";
 
     if (numelems(_self:-m_Results) = 0) then
-      error "the results of the last factorization are not available, use "
-        "appropriate factorization and solution methods first.";
+      error("the results of the last factorization are not available, use "
+        "appropriate factorization and solution methods first.");
     end if;
     return NULL;
   end proc: # CheckResults
@@ -358,8 +358,8 @@ module LAST()
     elif (_self:-m_Results["method"] = "GJ") then
       return _self:-GJsolve(_self, b);
     else
-      error "wrong or not available decomposition, use 'LAST:-LU()' or "
-        "'LAST:-QR()' or 'LAST:-GJ()' first.";
+      error("wrong or not available decomposition, use 'LAST:-LU()' or "
+        "'LAST:-QR()' or 'LAST:-GJ()' first.");
     end if;
 
     # Work in progress: FFLU and QR2 methods.

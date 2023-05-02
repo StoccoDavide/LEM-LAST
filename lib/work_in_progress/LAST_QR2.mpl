@@ -18,7 +18,7 @@ export QR2::static := proc(
 
   # Check if the LEM is initialized
   if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST:-InitLEM() first).";
+    error("LEM is not initialized (use LAST:-InitLEM() first).");
     return table([]);
   end if;
 
@@ -27,7 +27,7 @@ export QR2::static := proc(
 
   # Sanity check
   if has(A, V) then
-    error "veiling symbol %1 is already present in matrix coefficient.", V;
+    error("veiling symbol %1 is already present in matrix coefficient.", V);
   end if;
 
   # Clear the veiling list
@@ -37,8 +37,8 @@ export QR2::static := proc(
   m, n := LinearAlgebra:-Dimensions(A):
 
   # Check if the matrix A valid
-  if m < n then
-    error "invalid matrix size A(m = %1, n = %2) detected (m >= n).", m, n;
+  if (m < n) then
+    error("invalid matrix size A(m = %1, n = %2) detected (m >= n).", m, n;)
   end if;
 
   # Initialize some variables
@@ -106,7 +106,7 @@ export QR2::static := proc(
         break;
       end if;
     end do;
-    if R[k,k] = 0 then
+    if (R[k,k] = 0) then
       printf("R[%a,%a] = 0", k, k);
       break;
     end if;
@@ -144,7 +144,7 @@ export QR2solve::static := proc(
 
   # Check if the LEM is initialized
   if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST:-InitLEM() first).";
+    error("LEM is not initialized (use LAST:-InitLEM() first).");
     return NULL;
   end if;
 
@@ -161,7 +161,7 @@ export QR2solve::static := proc(
     j  := Q[i][2];
     c  := Q[i][3];
     s  := Q[i][4];
-    if c = 0 then
+    if (c = 0) then
       b    := x[k];
       x[k] := x[j];
       x[j] := b;

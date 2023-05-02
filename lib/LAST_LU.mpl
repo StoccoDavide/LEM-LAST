@@ -27,7 +27,7 @@ export LU::static := proc(
 
   # Sanity check
   if veil_sanity_check and has(A, V) then
-    error "veiling symbol %1 is already present in matrix coefficient.", V;
+    error("veiling symbol %1 is already present in matrix coefficient.", V);
     return table([]);
   end if;
 
@@ -52,7 +52,9 @@ export LU::static := proc(
       );
     end if;
 
-    pivot := _self:-Pivoting(_self, k, M, r, c);
+    pivot := _self:-Pivoting(
+      _self, k, M, r, c, parse("full_rows_degree") = false
+    );
     if not pivot["is_zero"] then
       pivot_list := [op(pivot_list), pivot["value"]];
     end if;
@@ -75,10 +77,10 @@ export LU::static := proc(
 
     # Shur complement
     tmp         := [k+1..-1];
-    M[k, k]     := _self:-m_LEM:-Veil(_self:-m_LEM, pivot["value"]);
+    M[k,   k]   := _self:-m_LEM:-Veil(_self:-m_LEM, pivot["value"]);
     M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot["value"])) ;
-    M[k, tmp]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
-    M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp] - M[tmp, k].M[k, tmp]));
+    M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
+    M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
   end do;
 
   L := Matrix(M[1..m, 1..m], shape = triangular[lower, unit]);
@@ -124,7 +126,7 @@ export LUsolve::static := proc(
 
   # Check if the LU decomposition is available
   if not (_self:-m_Results["method"] = "LU") then
-    error "wrong or not available LU decomposition (use 'LAST:-LU()' first).";
+    error("wrong or not available LU decomposition (use 'LAST:-LU()' first).");
   end if;
 
   # Extract the LU decomposition
@@ -141,14 +143,14 @@ export LUsolve::static := proc(
   # Check if the linear system is consistent
   # sanity check
   if not ((m = n) and (p = q)) then
-    error "only square system can be solved, got L = %d x %d, and U = %d x %d.",
-      m, n, p, q;
+    error("only square system can be solved, got L = %d x %d, and U = %d x %d.",
+      m, n, p, q);
   end if;
 
   # Check if the linear system is consistent
-  if not n = rnk then
-    error "only full rank linear system can be solved (got rank = %1, expected "
-      "rank = %2).", rnk, n;
+  if not (n = rnk) then
+    error("only full rank linear system can be solved (got rank = %1, expected "
+      "rank = %2).", rnk, n);
   end if;
 
   # apply permutation P

@@ -14,8 +14,9 @@ export GJ::static := proc(
   veil_sanity_check::boolean := true
   }, $)
 
-  description "Compute the Gauss Jordan decomposition of a rectangular matrix <A> and check "
-    " if the veiling symbol is already present in the matrix coefficients.";
+  description "Compute the Gauss-Jordan decomposition of a rectangular matrix "
+    "<A> and check  if the veiling symbol is already present in the matrix "
+    "coefficients.";
 
   local V, M, pivot, pivot_list, m, n, mn, k, rnk, r, c, tr, tc;
 
@@ -27,7 +28,7 @@ export GJ::static := proc(
 
   # Sanity check
   if veil_sanity_check and has(A, V) then
-    error "veiling symbol %1 is already present in matrix coefficient.", V;
+    error("veiling symbol %1 is already present in matrix coefficient.", V);
     return table([]);
   end if;
 
@@ -52,7 +53,9 @@ export GJ::static := proc(
       );
     end if;
 
-    pivot := _self:-Pivoting(_self, k, M, r, c, true);
+    pivot := _self:-Pivoting(
+      _self, k, M, r, c, parse("full_rows_degree") = true
+    );
     if not pivot["is_zero"] then
       pivot_list := [op(pivot_list), pivot["value"]];
     end if;
@@ -73,15 +76,13 @@ export GJ::static := proc(
       );
     end if;
 
-    #------------------------------------------------
-    # multiply by D_k^(-1) and then by I - v * e_k^T
-    #------------------------------------------------
-    if k = 1 then
+    # Multiply by D_k^(-1) and then by I-v*e_k^T
+    if (k = 1) then
       tr := [2..-1];
-    elif k = m then
+    elif (k = m) then
       tr := [1..m-1];
     else
-      tr := [1..k-1,k+1..-1];
+      tr := [1..k-1, k+1..-1];
     end;
     tc        := [k+1..-1];
     M[k,  k]  := _self:-m_LEM:-Veil(_self:-m_LEM, pivot["value"]);
@@ -127,7 +128,7 @@ export GJsolve::static := proc(
 
   # Check if the LU decomposition is available
   if not (_self:-m_Results["method"] = "GJ") then
-    error "wrong or not available GJ decomposition (use 'LAST:-GJ()' first).";
+    error("wrong or not available GJ decomposition (use 'LAST:-GJ()' first).");
   end if;
 
   # Extract the GJ decomposition
@@ -139,46 +140,43 @@ export GJsolve::static := proc(
   # Get linear system dimension
   m, n := LinearAlgebra:-Dimensions(M);
 
-  # Check if the linear system is consistent
-  # sanity check
+  # Check if the linear system is consistent (sanity check)
   if not (m = n) then
-    error "only square system can be solved, got M = %d x %d.", m, n;
+    error("only square system can be solved, got M = %d x %d.", m, n);
   end if;
 
   # Check if the linear system is consistent
-  if not n = rnk then
-    error "only full rank linear system can be solved (got rank = %1, expected "
-      "rank = %2).", rnk, n;
+  if not (n = rnk) then
+    error("only full rank linear system can be solved (got rank = %1, expected "
+      "rank = %2).", rnk, n);
   end if;
 
-  # apply permutation P
+  # Apply permutation P
   if _self:-m_VerboseMode then
     printf("LAST:-GJsolve(...): Apply permutation P\n");
   end if;
   x := b[convert(r, list)];
 
-  # apply multiplications in reverse order
+  # Apply multiplications in reverse order
   for k from 1 to n do
     if _self:-m_VerboseMode then
-      printf("LAST:-GJsolve(...): k=%d\n", k);
+      printf("LAST:-GJsolve(...): step k = %d.\n", k);
     end if;
-    #------------------------------------------------
-    # multiply by D_k^(-1) and then by I - v * e_k^T
-    #------------------------------------------------
+    # Multiply by D_k^(-1) and then by I-v*e_k^T
     # Try to simplify the pivot expression
     try
       tmp := x[k]/M[k,k];
       x[k] := timelimit(_self:-m_TimeLimit, Normalizer(tmp) );
     catch:
       if _self:-m_VerboseMode then
-        printf("LAST:-GJsolve(...): k=%d timelimit(1).\n", k);
+        printf("LAST:-GJsolve(...): step k = %d, timelimit(1) reached.\n", k);
       end if;
       x[k] := tmp;
     end try;
     #x[k] := _self:-m_LEM:-Veil(_self:-m_LEM, x[k] );
-    if k = 1 then
+    if (k = 1) then
       tr := [2..-1];
-    elif k = m then
+    elif (k = m) then
       tr := [1..m-1];
     else
       tr := [1..k-1,k+1..-1];
@@ -188,7 +186,7 @@ export GJsolve::static := proc(
       x[tr] := timelimit(_self:-m_TimeLimit, Normalizer~(tmp));
     catch:
       if _self:-m_VerboseMode then
-        printf("LAST:-GJsolve(...): k=%d timelimit(2).\n", k);
+        printf("LAST:-GJsolve(...): step k = %d, timelimit(2) reached.\n", k);
       end if;
       x[tr] := tmp;
     end try;
@@ -197,7 +195,7 @@ export GJsolve::static := proc(
 
   # Apply inverse permutation Q
   if _self:-m_VerboseMode then
-    printf("LAST:-GJsolve(...): Apply inverse permutation Q\n");
+    printf("LAST:-GJsolve(...): applying inverse permutation Q.\n");
   end if;
   y := Vector[column](n);
   for k from 1 to n do

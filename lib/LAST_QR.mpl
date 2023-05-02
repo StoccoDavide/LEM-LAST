@@ -23,7 +23,7 @@ export QR::static := proc(
 
   # Sanity check
   if veil_sanity_check and has(A, V) then
-    error "veiling symbol %1 is already present in matrix coefficient.", V;
+    error("veiling symbol %1 is already present in matrix coefficient.", V);
   end if;
 
   # Clear the veiling list
@@ -33,8 +33,8 @@ export QR::static := proc(
   m, n := LinearAlgebra:-Dimensions(A):
 
   # Check if the matrix A valid
-  if m < n then
-    error "invalid matrix size A(m = %1, n = %2) detected (m >= n).", m, n;
+  if (m < n) then
+    error("invalid matrix size A(m = %1, n = %2) detected (m >= n).", m, n);
   end if;
 
   # Initialize some variables
@@ -54,7 +54,7 @@ export QR::static := proc(
     for j from k+1 to n do
       a := R[k, k];
       b := R[j, k];
-      if not b = 0 then
+      if not (b = 0) then
         z1 := DG[k];
         z2 := DG[j];
         if (a = 0) then
@@ -88,7 +88,7 @@ export QR::static := proc(
       end if;
     end do;
     if (R[k,k] = 0) then
-      error "R[%1, %2] = 0 detected.", k, k;
+      error("R[%1, %2] = 0 detected.", k, k);
     end if;
   end do;
 
@@ -130,7 +130,7 @@ export QRsolve::static := proc(
 
   # Check if the QR decomposition is available
   if not (_self:-m_Results["method"] = "QR") then
-    error "wrong or not available QR decomposition (use 'LAST:-QR()'' first).";
+    error("wrong or not available QR decomposition (use 'LAST:-QR()'' first).");
   end if;
 
   # apply Q^T a rhs
@@ -146,7 +146,7 @@ export QRsolve::static := proc(
     k  := Q[i][1];
     j  := Q[i][2];
     a  := Q[i][3];
-    if a = 0 then
+    if (a = 0) then
       d    := x[k];
       x[k] := x[j];
       x[j] := d;

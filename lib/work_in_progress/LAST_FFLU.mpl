@@ -19,7 +19,7 @@ export FFLU::static := proc(
 
     # Check if the LEM is initialized
   if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST:-InitLEM() first).";
+    error("LEM is not initialized (use LAST:-InitLEM() first).)";
     return table([]);
   end if;
 
@@ -28,7 +28,7 @@ export FFLU::static := proc(
 
   # Sanity check
   if has(A, V) then
-    error "veiling symbol %1 is already present in matrix coefficient.", V;
+    error("veiling symbol %1 is already present in matrix coefficient.", V);
     return table([]);
   end if;
 
@@ -167,7 +167,7 @@ export FFLUsolve::static := proc(
 
   # Check if the LEM is initialized
   if not type(_self:-m_LEM, LEM) then
-    error "LEM is not initialized (use LAST:-InitLEM() first).";
+    error("LEM is not initialized (use LAST:-InitLEM() first).");
     return NULL;
   end if;
 
@@ -181,15 +181,15 @@ export FFLUsolve::static := proc(
   m, n := LinearAlgebra:-Dimensions(M);
 
   # Check if the linear system is consistent
-  if not m = n then
-    error "only square system can be solved (got M = %1 x %2).", m, n;
+  if not (m = n) then
+    error ("only square system can be solved (got M = %1 x %2).", m, n);
     return NULL;
   end if;
 
   # Check if the linear system is consistent
-  if not n = rnk then
-    error "only full rank linear system can be solved (got rank = %1, expected "
-      "rank = %2).", rnk, n;
+  if not (n = rnk) then
+    error("only full rank linear system can be solved (got rank = %1, expected "
+      "rank = %2).", rnk, n);
     return NULL;
   end if;
 

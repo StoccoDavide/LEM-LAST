@@ -13,8 +13,9 @@ export Pivoting::static := proc(
   M::Matrix,
   r::Vector(nonnegint),
   c::Vector(nonnegint),
-  full_rows::boolean := false,
-  $)::table;
+  {
+  full_rows_degree::boolean := false
+  }, $)::table;
 
   description "Compute the LU decomposition pivots vectors with minum degree "
     "provided the step <k>, the temporary LU (NAG) matrix <M>, the rows "
@@ -32,10 +33,12 @@ export Pivoting::static := proc(
   # Calculate the degree
   M_degree_R := Matrix(m, n);
   M_degree_C := Matrix(m, n);
-  if full_rows then
-    M_degree_R[1..-1, k..n], M_degree_C[1..-1, k..n] := _self:-GetDegrees(_self, M[1..-1, k..n]);
+  if full_rows_degree then
+    M_degree_R[1..-1, k..n], M_degree_C[1..-1, k..n] :=
+      _self:-GetDegrees(_self, M[1..-1, k..n]);
   else
-    M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] := _self:-GetDegrees(_self, M[k..m, k..n]);
+    M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] :=
+      _self:-GetDegrees(_self, M[k..m, k..n]);
   end;
 
   # Build a list (i,j,degree,cost) and sort it
@@ -235,7 +238,7 @@ export SetMinDegreeStrategy::static := proc(
 
   if not str in ["none", "row", "column", "sum", "product", "product_1rc",
     "product_1r", "product_1c"] then
-    error "unknown minimum degree strategy %1.", str;
+    error("unknown minimum degree strategy %1.", str);
   else
     _self:-m_MinDegreeStrategy := str;
   end if;
@@ -272,7 +275,7 @@ export DegreeCost::static := proc(
   elif (_self:-m_MinDegreeStrategy = "maximum") then
     return _self:-DegreeCost_max(_self, val);
   else
-    error "unknown minimum degree strategy %1.", val;
+    error("unknown minimum degree strategy %1.", val);
     return NULL;
   end if;
 end proc: # SetMinDegreeStrategy
@@ -417,11 +420,11 @@ export PivotingCompare::static := proc(
     "current pivot or not.";
 
   if (val["numeric_value"] = infinity) and (cur["numeric_value"] = infinity) then
-    # are both expressions use "cost" to compare
+    # Both are expressions: use 'cost' to compare them
     return evalb(val["cost"] < cur["cost"]);
-  elif val["numeric_value"] = infinity then
+  elif (val["numeric_value"] = infinity) then
     return false;
-  elif cur["numeric_value"] = infinity then
+  elif (cur["numeric_value"] = infinity) then
     return true;
   else
     return evalb(val["numeric_value"] > cur["numeric_value"]);
