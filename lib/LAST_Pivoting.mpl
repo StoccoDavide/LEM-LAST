@@ -184,7 +184,7 @@ export PivotCost::static := proc(
 
   description "Compute the cost of the pivot <x>.";
 
-  if type(x, integer) or type(x, float) then
+  if type(x, 'numeric') then
     if evalb(x = 0) then
       return 0, 0;
     else
@@ -349,7 +349,8 @@ export DegreeCost_prod_1rc::static := proc(
 
   description "Compute the pivoting degree cost.";
 
-  return max(val["degree_c"]-1, 0) * max(val["degree_r"]-1, 0);
+  return max(val["degree_c"]-1, 0) * val["degree_r"]+
+         val["degree_c"] * max(val["degree_r"]-1, 0);
 end proc: # DegreeCost_prod_1rc
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

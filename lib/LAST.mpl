@@ -49,7 +49,7 @@ module LAST()
   local m_VerboseMode       := false;
   local m_WarningMode       := true;
   local m_TimeLimit         := 0.1;
-  local m_MinDegreeStrategy := "product_1c";
+  local m_MinDegreeStrategy := "product_1rc";
   local m_Results           := NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

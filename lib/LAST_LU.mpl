@@ -45,16 +45,16 @@ export LU::static := proc(
   pivot_list := [];
 
   # Check if the warm start is available
-  ini := warm_start[1];
-  if numelems(warm_start[2]) > 0 then
-    tmp        := warm_start[2];
-    pivot_list := tmp["pivots"][1..ini];
-    r          := tmp["r"];
-    c          := tmp["c"];
-  end if;
+  #ini := warm_start[1];
+  #if numelems(warm_start[2]) > 0 then
+  #  tmp        := warm_start[2];
+  #  pivot_list := tmp["pivots"][1..ini];
+  #  r          := tmp["r"];
+  #  c          := tmp["c"];
+  #end if;
 
   # Perform Gaussian elimination
-  for k from ini to mn do
+  for k from 1 to mn do
     if _self:-m_VerboseMode then
       printf(
         "LAST:-LU(...): processing %d-th row, cost = %d, veilings = %d.\n",
@@ -71,7 +71,7 @@ export LU::static := proc(
     end if;
 
     if pivot["is_zero"] then
-      rnk := rnk - 1;
+      rnk := k - 1;
       if _self:-m_VerboseMode then
         WARNING("LAST:-LU(...): the matrix appears to be not full rank.");
       end if;
