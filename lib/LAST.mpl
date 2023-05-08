@@ -271,7 +271,7 @@ module LAST()
     description "Set the time limit of the module to <x>.";
 
     if (x < 0) then
-      error("time limit must be a non-negative number.)";
+      error("time limit must be a non-negative number.");
     end if;
 
     _self:-m_TimeLimit := x;

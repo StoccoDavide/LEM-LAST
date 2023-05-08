@@ -11,13 +11,14 @@ export LU::static := proc(
   _self::LAST,
   A::Matrix,
   {
-  veil_sanity_check::boolean := true
+  warm_start::list({posint, table}) := [1, table([])],
+  veil_sanity_check::boolean      := true
   }, $)
 
   description "Compute the LU decomposition of a square matrix <A> and check "
     " if the veiling symbol is already present in the matrix coefficients.";
 
-  local V, M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, tmp;
+  local V, M, L, U, pivot, pivot_list, m, n, mn, k, ini, rnk, r, c, tmp;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -38,12 +39,22 @@ export LU::static := proc(
   r := Vector(m, k -> k);
   c := Vector(n, k -> k);
 
-  # Perform Gaussian elimination
   M          := copy(A);
   mn         := min(m, n);
   rnk        := mn;
   pivot_list := [];
-  for k from 1 to mn do
+
+  # Check if the warm start is available
+  ini := warm_start[1];
+  if numelems(warm_start[2]) > 0 then
+    tmp        := warm_start[2];
+    pivot_list := tmp["pivots"][1..ini];
+    r          := tmp["r"];
+    c          := tmp["c"];
+  end if;
+
+  # Perform Gaussian elimination
+  for k from ini to mn do
     if _self:-m_VerboseMode then
       printf(
         "LAST:-LU(...): processing %d-th row, cost = %d, veilings = %d.\n",
