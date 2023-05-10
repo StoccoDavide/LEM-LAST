@@ -83,7 +83,7 @@ export GJ::static := proc(
       tr := [1..m-1];
     else
       tr := [1..k-1, k+1..-1];
-    end;
+    end if;
     tc        := [k+1..-1];
     M[k,  k]  := _self:-m_LEM:-Veil(_self:-m_LEM, pivot["value"]);
     M[k,  tc] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tc]/pivot["value"]));

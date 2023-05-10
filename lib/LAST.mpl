@@ -342,7 +342,7 @@ module LAST()
     b::Vector,
     $)
 
-    description "Solve the factorized linear system (LU)*x=b or (QR)*x=b.";
+    description "Solve the factorized linear system.";
 
     # Check if the LEM object is initialized
     _self:-CheckInit(_self);
@@ -361,10 +361,61 @@ module LAST()
       return _self:-GJsolve(_self, b);
     else
       error("wrong or not available decomposition, use 'LAST:-LU()' or "
-        "'LAST:-FFLU()' or 'LAST:-QR() or 'LAST:-GJ()' first.");
+        "'LAST:-FFLU()' or 'LAST:-QR()' or 'LAST:-GJ()' first.");
     end if;
 
   end proc: # SolveLinearSystem
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export ApplyLP::static := proc(
+    _self::LAST,
+    b::Vector,
+    $)::Vector;
+
+    description "Apply L^(-1)*P to the vector <b>.";
+
+    # Check if the LEM object is initialized
+    _self:-CheckInit(_self);
+
+    # Check if the results are available
+    _self:-CheckResults(_self);
+
+    # Retrieve the results
+    if (_self:-m_Results["method"] = "LU") then
+      return _self:-LUapplyLP(_self, b);
+    elif (_self:-m_Results["method"] = "FFLU") then
+      return _self:-FFLUapplyLP(_self, b);
+    else
+      error("wrong or not available decomposition, use 'LAST:-LU()' or "
+        "'LAST:-FFLU()' first.");
+    end if;
+  end proc: # GetUQT
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export GetUQT::static := proc(
+    _self::LAST,
+    $)::Matrix;
+
+    description "Return the matrix U^T*Q.";
+
+    # Check if the LEM object is initialized
+    _self:-CheckInit(_self);
+
+    # Check if the results are available
+    _self:-CheckResults(_self);
+
+    # Retrieve the results
+    if (_self:-m_Results["method"] = "LU") then
+      return _self:-LUgetUQT(_self);
+    elif (_self:-m_Results["method"] = "FFLU") then
+      return _self:-FFLUgetUQT(_self);
+    else
+      error("wrong or not available decomposition, use 'LAST:-LU()' or "
+        "'LAST:-FFLU()' first.");
+    end if;
+  end proc: # GetUQT
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

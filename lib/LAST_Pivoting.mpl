@@ -39,7 +39,7 @@ export Pivoting::static := proc(
   else
     M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] :=
       _self:-GetDegrees(_self, M[k..m, k..n]);
-  end;
+  end if;
 
   # Build a list (i,j,degree,cost) and sort it
   pivot      := table([]);

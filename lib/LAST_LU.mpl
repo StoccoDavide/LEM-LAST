@@ -18,7 +18,7 @@ export LU::static := proc(
   description "Compute the LU decomposition of a square matrix <A> and check "
     " if the veiling symbol is already present in the matrix coefficients.";
 
-  local V, M, L, U, pivot, pivot_list, m, n, mn, k, ini, rnk, r, c, tmp;
+  local V, M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, tmp;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -43,16 +43,6 @@ export LU::static := proc(
   mn         := min(m, n);
   rnk        := mn;
   pivot_list := [];
-
-  # Check if the warm start is available
-  #if (warm_start[1] > 1) and (numelems(warm_start[2]) > 0) then
-  #  ini        := warm_start[1];
-  #  tmp        := warm_start[2];
-  #  pivot_list := tmp["pivots"][1..ini-1];
-  #else
-  #  printf("LAST:-LU(...): no warm start available.");
-  #  ini := 1;
-  #end if;
 
   # Perform Gaussian elimination
   for k from 1 to mn do
@@ -90,7 +80,7 @@ export LU::static := proc(
     # Shur complement
     tmp         := [k+1..-1];
     M[k,   k]   := _self:-m_LEM:-Veil(_self:-m_LEM, pivot["value"]);
-    M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot["value"])) ;
+    M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot["value"]));
     M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
     M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
   end do;
@@ -165,7 +155,7 @@ export LUsolve::static := proc(
       "rank = %2).", rnk, n);
   end if;
 
-  # apply permutation P
+  # Apply permutation P
   x := b[convert(r, list)];
 
   # Perform forward substitution to solve Ly=b[r]
@@ -206,10 +196,9 @@ export LUapplyLP::static := proc(
   b::Vector,
   $)::Vector;
 
-  description "Solve the linear system Ax=b using LU decomposition provided "
-  "the vector <b>.";
+  description "Apply L^(-1)*P to the vector <b>.";
 
-  local L, r, x, i, rnk;
+  local L, r, x, m, i, rnk;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -226,30 +215,32 @@ export LUapplyLP::static := proc(
   L   := _self:-m_Results["L"];
   r   := _self:-m_Results["r"];
   rnk := _self:-m_Results["rank"];
+  m   := LinearAlgebra:-RowDimension(L);
 
-  # apply permutation P
+  # Apply permutation P
   x := b[convert(r, list)];
 
   # Perform forward substitution to solve Ly=b[r]
   for i from 2 to m do
     if _self:-m_VerboseMode then
-      printf("LAST:-LUsolve(...): forward substitution of %d-th row.\n", i);
+      printf("LAST:-LUapplyLP(...): forward substitution of %d-th row.\n", i);
     end if;
     x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, 1..i-1]*~x[1..i-1]));
   end do;
 
   # Return outputs
   return x;
-end proc: # LUsolve
+end proc: # LUapplyLP
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-export LUgetUQT::static := proc( _self::LAST, $)::Vector;
+export LUgetUQT::static := proc(
+  _self::LAST,
+  $)::Matrix;
 
-  description "Solve the linear system Ax=b using LU decomposition provided "
-  "the vector <b>.";
+  description "Return the matrix U^T*Q.";
 
-  local U, UT, c, nc, i, rnk;
+  local U, UT, c, n, i, rnk;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -266,14 +257,16 @@ export LUgetUQT::static := proc( _self::LAST, $)::Vector;
   U   := _self:-m_Results["U"];
   c   := _self:-m_Results["c"];
   rnk := _self:-m_Results["rank"];
-  nc  := LinearAlgebra:-ColumnDimension(U);
-  UT  := Matrix( rnk, nc );
+  n   := LinearAlgebra:-ColumnDimension(U);
+  UT  := Matrix(rnk, n);
 
   # Apply inverse permutation Q
   for i from 1 to n do
-    UT[1..-1,c[i]] := U[1..rnk,i];
+    UT[1..-1, c[i]] := U[1..rnk, i];
   end do;
 
   # Return outputs
   return UT;
-end proc: # LUsolve
+end proc: # LUgetUQT
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

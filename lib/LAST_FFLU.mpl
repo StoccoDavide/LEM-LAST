@@ -15,10 +15,12 @@ export FFLU::static := proc(
   veil_sanity_check::boolean           := true
   }, $)
 
-  description "Compute the Fraction Free LU decomposition of a square matrix <A> and check "
-    " if the veiling symbol is already present in the matrix coefficients.";
+  description "Compute the Fraction-Free LU (FFLU) decomposition of a square "
+    "matrix <A> and check  if the veiling symbol is already present in the "
+    "matrix coefficients.";
 
-  local V, M, L, U, pivot, pivot_list, spivot, m, n, mn, k, j, rnk, r, c, last_GCD, tmp, tmp2;
+  local V, M, L, U, pivot, pivot_list, s_pivot, m, n, mn, k, j, rnk, r, c,
+    last_GCD, tmp, tmp_try;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -44,7 +46,7 @@ export FFLU::static := proc(
   rnk        := mn;
   pivot_list := [];
 
-  # Perform Fraction Free Gaussian elimination
+  # Perform Fraction-Free Gaussian elimination
   for k from 1 to mn do
     if _self:-m_VerboseMode then
       printf(
@@ -54,7 +56,7 @@ export FFLU::static := proc(
       );
     end if;
 
-    pivot := _self:-Pivoting( _self, k, M, r, c, parse("full_rows_degree") = false );
+    pivot := _self:-Pivoting(_self, k, M, r, c, parse("full_rows_degree") = false);
 
     if pivot["is_zero"] then
       rnk := k - 1;
@@ -73,19 +75,35 @@ export FFLU::static := proc(
     end if;
     tmp := [k+1..-1];
 
-    # pivot scaled with GCD
-    spivot   := gcd~(M[tmp, k],pivot["value"]);
-    M[tmp,k] := simplify~(M[tmp,k]/~spivot);
-    spivot   := simplify~(pivot["value"]/~spivot);
-    ## Shur-like complement
+    # Scaled pivots (GCD)
+    s_pivot := gcd~(M[tmp, k], pivot["value"]);
+    tmp_try := M[tmp, k] /~ s_pivot;
+    try
+      M[tmp, k] := timelimit(_self:-m_TimeLimit, Normalizer~(tmp_try));
+    catch "time expired":
+      M[tmp, k] := tmp_try;
+    end try;
+    tmp_try := pivot["value"] /~ s_pivot;
+    try
+      s_pivot := timelimit(_self:-m_TimeLimit, Normalizer~(tmp_try));
+    catch "time expired":
+      s_pivot := tmp_try;
+    end try;
+
+    # Shur-like complement
     for j from k+1 to mn do
-      M[j,tmp] := spivot[j-k]*M[j,tmp];
-    end;
-    tmp2       := M[tmp,k].M[k,tmp] - M[tmp,tmp];
-    tmp2       := timelimit(_self:-m_TimeLimit, Normalizer~(tmp2) );
-    M[tmp,tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, tmp2 );
-    # save pivot list
-    pivot_list := [op(pivot_list), spivot];
+      M[j, tmp] := s_pivot[j-k] * M[j, tmp];
+    end do;
+    tmp_try := M[tmp, k].M[k, tmp] - M[tmp, tmp];
+    try
+      tmp_try := timelimit(_self:-m_TimeLimit, Normalizer~(tmp_try));
+    catch:
+      M[tmp, tmp] := tmp_try;
+    end try;
+    M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, tmp_try);
+
+    # Save pivot list
+    pivot_list := [op(pivot_list), s_pivot];
   end do;
 
   # Store the FFLU decomposition
@@ -112,8 +130,7 @@ export FFLUsolve::static := proc(
   b::Vector,
   $)::Vector;
 
-  description "Solve the linear system Ax=b using LU decomposition provided "
-  "the vector <b>.";
+  description "Apply L^(-1)*P to the vector <b>.";
 
   local M, r, c, m, n, x, y, i, s, rnk, pivots, tmp;
 
@@ -123,9 +140,9 @@ export FFLUsolve::static := proc(
   # Check if the results are available
   _self:-CheckResults(_self);
 
-  # Check if the LU decomposition is available
+  # Check if the FFLU decomposition is available
   if not (_self:-m_Results["method"] = "FFLU") then
-    error("wrong or not available FFLU decomposition (use 'LAST:-LU()' first).");
+    error("wrong or not available FFLU decomposition (use 'LAST:-FFLU()' first).");
   end if;
 
   # Extract the FFLU decomposition
@@ -138,18 +155,18 @@ export FFLUsolve::static := proc(
   # Get linear system dimension
   m, n := LinearAlgebra:-Dimensions(M);
 
-  # Check if the linear system is consistent
-  # sanity check
+  # Check if the linear system is consistent (sanity check)
   if not (m = n) then
     error("only square system can be solved, got M = %1 x %2.", m, n);
   end if;
 
   # Check if the linear system is consistent
   if not (n = rnk) then
-    error("only full rank linear system can be solved (got rank = %1, expected rank = %2).", rnk, n);
+    error("only full rank linear system can be solved (got rank = %1, expected "
+      "rank = %2).", rnk, n);
   end if;
 
-  # apply permutation P
+  # Apply permutation P
   x := b[convert(r, list)];
 
   # Perform forward substitution to solve Ly=b[r]
@@ -158,7 +175,7 @@ export FFLUsolve::static := proc(
       printf("LAST:-FFLUsolve(...): backward substitution of %d-th column.\n", i);
     end if;
     tmp    := [i+1..-1];
-    x[tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp,i]*x[i] - pivots[i]*~x[tmp]));
+    x[tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, i]*x[i] - pivots[i]*~x[tmp]);
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
@@ -182,7 +199,7 @@ export FFLUsolve::static := proc(
 
   # Return outputs
   return y;
-end proc: # LUsolve
+end proc: # FFLUsolve
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -191,8 +208,7 @@ export FFLUapplyLP::static := proc(
   b::Vector,
   $)::Vector;
 
-  description "Solve the linear system Ax=b using LU decomposition provided "
-  "the vector <b>.";
+  description "Return the matrix U^T*Q.";
 
   local M, r, x, i, rnk, pivots, tmp;
 
@@ -202,9 +218,9 @@ export FFLUapplyLP::static := proc(
   # Check if the results are available
   _self:-CheckResults(_self);
 
-  # Check if the LU decomposition is available
+  # Check if the FFLU decomposition is available
   if not (_self:-m_Results["method"] = "FFLU") then
-    error("wrong or not available FFLU decomposition (use 'LAST:-LU()' first).");
+    error("wrong or not available FFLU decomposition (use 'LAST:-FFLU()' first).");
   end if;
 
   # Extract the FFLU decomposition
@@ -213,7 +229,7 @@ export FFLUapplyLP::static := proc(
   r      := _self:-m_Results["r"];
   rnk    := _self:-m_Results["rank"];
 
-  # apply permutation P
+  # Apply permutation P
   x := b[convert(r, list)];
 
   # Perform forward substitution to solve Ly=b[r]
@@ -222,11 +238,49 @@ export FFLUapplyLP::static := proc(
       printf("LAST:-FFLUsolve(...): backward substitution of %d-th column.\n", i);
     end if;
     tmp    := [i+1..-1];
-    x[tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp,i]*x[i] - pivots[i]*~x[tmp]));
+    x[tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, i]*x[i] - pivots[i]*~x[tmp]);
   end do;
 
   # Return outputs
   return x;
-end proc: # LUsolve
+end proc: # FFLUapplyLP
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+export FFLUgetUQT::static := proc(
+  _self::LAST,
+  $)::Matrix;
+
+  description "Return the matrix U^T*Q.";
+
+  local M, U, UT, c, n, i, rnk;
+
+  # Check if the LEM object is initialized
+  _self:-CheckInit(_self);
+
+  # Check if the results are available
+  _self:-CheckResults(_self);
+
+  # Check if the FFLU decomposition is available
+  if not (_self:-m_Results["method"] = "FFLU") then
+    error("wrong or not available FFLU decomposition (use 'LAST:-FFLU()' first).");
+  end if;
+
+  # Extract the FFLU decomposition
+  M   := _self:-m_Results["M"];
+  U   := Matrix(M, shape = triangular[upper]);
+  c   := _self:-m_Results["c"];
+  rnk := _self:-m_Results["rank"];
+  n   := LinearAlgebra:-ColumnDimension(U);
+  UT  := Matrix(rnk, n);
+
+  # Apply inverse permutation Q
+  for i from 1 to n do
+    UT[1..-1, c[i]] := U[1..rnk, i];
+  end do;
+
+  # Return outputs
+  return UT;
+end proc: # FFLUgetUQT
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
