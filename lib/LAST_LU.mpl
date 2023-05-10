@@ -11,8 +11,8 @@ export LU::static := proc(
   _self::LAST,
   A::Matrix,
   {
-  warm_start::list({posint, table}) := [1, table([])],
-  veil_sanity_check::boolean      := true
+  warm_start::list({nonnegint, table}) := [0, table([])],
+  veil_sanity_check::boolean           := true
   }, $)
 
   description "Compute the LU decomposition of a square matrix <A> and check "
@@ -45,12 +45,13 @@ export LU::static := proc(
   pivot_list := [];
 
   # Check if the warm start is available
-  #ini := warm_start[1];
-  #if numelems(warm_start[2]) > 0 then
+  #if (warm_start[1] > 1) and (numelems(warm_start[2]) > 0) then
+  #  ini        := warm_start[1];
   #  tmp        := warm_start[2];
-  #  pivot_list := tmp["pivots"][1..ini];
-  #  r          := tmp["r"];
-  #  c          := tmp["c"];
+  #  pivot_list := tmp["pivots"][1..ini-1];
+  #else
+  #  printf("LAST:-LU(...): no warm start available.");
+  #  ini := 1;
   #end if;
 
   # Perform Gaussian elimination
