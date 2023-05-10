@@ -353,20 +353,17 @@ module LAST()
     # Solve the linear system
     if (_self:-m_Results["method"] = "LU") then
       return _self:-LUsolve(_self, b);
+    elif (_self:-m_Results["method"] = "FFLU") then
+      return _self:-FFLUsolve(_self, b);
     elif (_self:-m_Results["method"] = "QR") then
       return _self:-QRsolve(_self, b);
     elif (_self:-m_Results["method"] = "GJ") then
       return _self:-GJsolve(_self, b);
     else
       error("wrong or not available decomposition, use 'LAST:-LU()' or "
-        "'LAST:-QR()' or 'LAST:-GJ()' first.");
+        "'LAST:-FFLU()' or 'LAST:-QR() or 'LAST:-GJ()' first.");
     end if;
 
-    # Work in progress: FFLU and QR2 methods.
-    # elif (T["method"] = "FFLU") then
-    #   return _self:-FFLUsolve(_self, b);
-    # elif (T["method"] = "QR2") then
-    #   return _self:-QR2solve(_self, b);
   end proc: # SolveLinearSystem
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -432,12 +429,9 @@ module LAST()
 
 $include "./lib/LAST_Pivoting.mpl"
 $include "./lib/LAST_LU.mpl"
+$include "./lib/LAST_FFLU.mpl"
 $include "./lib/LAST_GJ.mpl"
 $include "./lib/LAST_QR.mpl"
-
-# Work in progress: FFLU and QR2 methods.
-# $include "./lib/LAST_FFLU.mpl"
-# $include "./lib/LAST_QR2.mpl"
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

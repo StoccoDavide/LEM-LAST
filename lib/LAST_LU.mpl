@@ -178,7 +178,7 @@ export LUsolve::static := proc(
 
   # Perform backward substitution to solve Ux[c]=y
   if _self:-m_VerboseMode then
-    printf("LAST:-LUsolve(...): dividision by U[%d,%d].\n", n, n);
+    printf("LAST:-LUsolve(...): division by U[%d,%d].\n", n, n);
   end if;
   x[n] := _self:-m_LEM:-Veil(_self:-m_LEM, x[n]/U[n, n]);
   for i from n-1 to 1 by -1 do
@@ -200,3 +200,80 @@ export LUsolve::static := proc(
 end proc: # LUsolve
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+export LUapplyLP::static := proc(
+  _self::LAST,
+  b::Vector,
+  $)::Vector;
+
+  description "Solve the linear system Ax=b using LU decomposition provided "
+  "the vector <b>.";
+
+  local L, r, x, i, rnk;
+
+  # Check if the LEM object is initialized
+  _self:-CheckInit(_self);
+
+  # Check if the results are available
+  _self:-CheckResults(_self);
+
+  # Check if the LU decomposition is available
+  if not (_self:-m_Results["method"] = "LU") then
+    error("wrong or not available LU decomposition (use 'LAST:-LU()' first).");
+  end if;
+
+  # Extract the LU decomposition
+  L   := _self:-m_Results["L"];
+  r   := _self:-m_Results["r"];
+  rnk := _self:-m_Results["rank"];
+
+  # apply permutation P
+  x := b[convert(r, list)];
+
+  # Perform forward substitution to solve Ly=b[r]
+  for i from 2 to m do
+    if _self:-m_VerboseMode then
+      printf("LAST:-LUsolve(...): forward substitution of %d-th row.\n", i);
+    end if;
+    x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, 1..i-1]*~x[1..i-1]));
+  end do;
+
+  # Return outputs
+  return x;
+end proc: # LUsolve
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+export LUgetUQT::static := proc( _self::LAST, $)::Vector;
+
+  description "Solve the linear system Ax=b using LU decomposition provided "
+  "the vector <b>.";
+
+  local U, UT, c, nc, i, rnk;
+
+  # Check if the LEM object is initialized
+  _self:-CheckInit(_self);
+
+  # Check if the results are available
+  _self:-CheckResults(_self);
+
+  # Check if the LU decomposition is available
+  if not (_self:-m_Results["method"] = "LU") then
+    error("wrong or not available LU decomposition (use 'LAST:-LU()' first).");
+  end if;
+
+  # Extract the LU decomposition
+  U   := _self:-m_Results["U"];
+  c   := _self:-m_Results["c"];
+  rnk := _self:-m_Results["rank"];
+  nc  := LinearAlgebra:-ColumnDimension(U);
+  UT  := Matrix( rnk, nc );
+
+  # Apply inverse permutation Q
+  for i from 1 to n do
+    UT[1..-1,c[i]] := U[1..rnk,i];
+  end do;
+
+  # Return outputs
+  return UT;
+end proc: # LUsolve
