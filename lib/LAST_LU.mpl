@@ -77,7 +77,7 @@ export LU::static := proc(
       );
     end if;
 
-    # Shur complement
+    # Schur complement
     tmp         := [k+1..-1];
     M[k,   k]   := _self:-m_LEM:-Veil(_self:-m_LEM, pivot["value"]);
     M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot["value"]));

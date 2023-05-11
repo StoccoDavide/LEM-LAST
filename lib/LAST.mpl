@@ -431,6 +431,39 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  local GCD::static := proc(
+    _self::LAST,
+    expr::{list, Vector, Matrix},
+    $)::algebraic;
+
+    description "Compute the greatest common divisor of the elements of the "
+      "expression <expr>.";
+
+    local expr_tmp, num, den, i;
+
+    if not type(expr, list) then
+      expr_tmp := convert(expr, list);
+    else
+      expr_tmp := expr;
+    end if;
+
+    if (nops(expr_tmp) > 0) then
+      num := numer(expr_tmp[1]);
+      den := denom(expr_tmp[1]);
+      if (nops(expr_tmp) > 1) then
+        for i in expr_tmp[2..-1] do
+          num := gcd(num, numer(i));
+          den := gcd(den, denom(i));
+        end do;
+      end if;
+      return num/den;
+    else
+      return 1;
+    end if;
+  end proc: # GCD
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   export SpyLU::static := proc(
     _self::LAST,
     A::Matrix,

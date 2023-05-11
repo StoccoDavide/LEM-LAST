@@ -7,23 +7,6 @@
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-local FFLUgcd::static := proc( _self::LAST, V::{Matrix,Vector,list} )
-  local top, bot, v, VV := convert(V,list);
-  if nops(VV) > 0 then
-    top := numer(VV[1]);
-    bot := denom(VV[1]);
-    if nops(VV) > 1 then
-      for v in VV[2..-1] do
-        top := gcd(top,numer(v));
-        bot := gcd(bot,denom(v));
-      end;
-    end;
-    return top/bot;
-  else
-    return 1;
-  end;
-end proc:
-
 export FFLU::static := proc(
   _self::LAST,
   A::Matrix,
@@ -36,8 +19,8 @@ export FFLU::static := proc(
     "matrix <A> and check  if the veiling symbol is already present in the "
     "matrix coefficients.";
 
-  local V, M, L, U, pivot, pivot_list, scale, scale_list, m, n, mn, k, j, rnk, r, c,
-        tmp, tmp2, tmp_try;
+  local V, M, L, U, pivot, pivot_list, S, m, n, mn, k, j, rnk, r, c, tmp,
+    tmp_gcd;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -59,10 +42,10 @@ export FFLU::static := proc(
   c := Vector(n, k -> k);
 
   M          := copy(A);
+  S          := Matrix(m, n);
   mn         := min(m, n);
   rnk        := mn;
   pivot_list := [];
-  scale_list := [];
 
   # Perform Fraction-Free Gaussian elimination
   for k from 1 to mn do
@@ -75,6 +58,9 @@ export FFLU::static := proc(
     end if;
 
     pivot := _self:-Pivoting(_self, k, M, r, c, parse("full_rows_degree") = false);
+    if (pivot["i"] <> k) then
+      S[[pivot["i"], k], 1..-1] := S[[k, pivot["i"]], 1..-1];
+    end if;
 
     if pivot["is_zero"] then
       rnk := k - 1;
@@ -99,36 +85,34 @@ export FFLU::static := proc(
       M[tmp, tmp] := timelimit(_self:-m_TimeLimit, Normalizer~(M[tmp, tmp]));
     catch:
       if _self:-m_WarningMode then
-        WARNING( "LAST:-FFLU(...): time expired, do not simplify Schur complement." );
+        WARNING("LAST:-FFLU(...): time expired, Schur complement not simplified.");
       end if;
     end try;
 
     # Scale rows
-    scale := [];
     for j from k+1 to m do
-      tmp2 := _self:-FFLUgcd(_self,M[j,tmp]);
-      M[j,tmp] := M[j,tmp] /~tmp2;
-      scale := [op(scale),tmp2];
+      tmp_gcd   := _self:-GCD(_self, M[j, tmp]);
+      M[j, tmp] := M[j, tmp] / tmp_gcd;
+      S[j, k]   := tmp_gcd;
     end;
 
-    # veil expressions
+    # Veil expressions
     M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, tmp]);
 
     # Save pivot list
     pivot_list := [op(pivot_list), pivot["value"]];
-    scale_list := [op(scale_list), scale];
   end do;
 
   # Store the FFLU decomposition
   _self:-m_Results := table([
     "method" = "FFLU",
     "M"      = M,
+    "S"      = S,
     "V"      = V,
     "r"      = r,
     "c"      = c,
     "rank"   = rnk,
     "pivots" = pivot_list,
-    "scales" = scale_list,
     "M_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
     "V_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, _self:-m_LEM:-VeilList(_self:-m_LEM)),
     "M_nnz"  = nops(op(2, M)),
@@ -146,7 +130,7 @@ export FFLUsolve::static := proc(
 
   description "Apply L^(-1)*P to the vector <b>.";
 
-  local M, r, c, m, n, x, y, i, s, rnk, pivots, scales, tmp;
+  local M, r, c, m, n, x, y, i, s, rnk, pivots, S, tmp;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -161,8 +145,8 @@ export FFLUsolve::static := proc(
 
   # Extract the FFLU decomposition
   M      := _self:-m_Results["M"];
+  S      := _self:-m_Results["S"];
   pivots := _self:-m_Results["pivots"];
-  scales := _self:-m_Results["scales"];
   r      := _self:-m_Results["r"];
   c      := _self:-m_Results["c"];
   rnk    := _self:-m_Results["rank"];
@@ -177,8 +161,10 @@ export FFLUsolve::static := proc(
 
   # Check if the linear system is consistent
   if not (n = rnk) then
-    error("only full rank linear system can be solved (got rank = %1, expected "
-      "rank = %2).", rnk, n);
+    error(
+      "only linear system can not be solved (got rank = %1, expected rank = %2).",
+      rnk, n
+    );
   end if;
 
   # Apply permutation P
@@ -190,7 +176,9 @@ export FFLUsolve::static := proc(
       printf("LAST:-FFLUsolve(...): backward substitution of %d-th column.\n", i);
     end if;
     tmp := [i+1..-1];
-    x[tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, (pivots[i]*x[tmp] - M[tmp,i]*x[i]) /~scales[i] );
+    x[tmp] := _self:-m_LEM:-Veil~(
+      _self:-m_LEM, (pivots[i]*x[tmp] - M[tmp, i]*x[i]) /~ S[tmp, i]
+    );
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
@@ -225,7 +213,7 @@ export FFLUapplyLP::static := proc(
 
   description "Return the matrix U^T*Q.";
 
-  local M, r, x, i, rnk, pivots, tmp;
+  local M, r, x, i, rnk, pivots, S, tmp;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -239,6 +227,7 @@ export FFLUapplyLP::static := proc(
   end if;
 
   # Extract the FFLU decomposition
+  S      := _self:-m_Results["S"];
   M      := _self:-m_Results["M"];
   pivots := _self:-m_Results["pivots"];
   r      := _self:-m_Results["r"];
@@ -248,12 +237,14 @@ export FFLUapplyLP::static := proc(
   x := b[convert(r, list)];
 
   # Perform forward substitution to solve Ly=b[r]
-  for i from 1 to rnk do
+  for i from 1 to m-1 do
     if _self:-m_VerboseMode then
       printf("LAST:-FFLUsolve(...): backward substitution of %d-th column.\n", i);
     end if;
-    tmp    := [i+1..-1];
-    x[tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, i]*x[i] - pivots[i]*~x[tmp]);
+    tmp := [i+1..-1];
+    x[tmp] := _self:-m_LEM:-Veil~(
+      _self:-m_LEM, (pivots[i]*x[tmp] - M[tmp, i]*x[i]) /~ S[tmp, i]
+    );
   end do;
 
   # Return outputs
@@ -302,11 +293,11 @@ end proc: # FFLUgetUQT
 
 export FFLUgetLU::static := proc(
   _self::LAST,
-  $)::Matrix,Matrix;
+  $)::Matrix, Matrix;
 
   description "Return the matrix L and U such that P.A.Q = L.U";
 
-  local M, L, pivots, scales, n, i, k, tmp, rnk;
+  local M, L, pivots, S, n, i, k, tmp, rnk;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -322,22 +313,22 @@ export FFLUgetLU::static := proc(
   # Extract the FFLU decomposition
   M      := _self:-m_Results["M"];
   pivots := _self:-m_Results["pivots"];
-  scales := _self:-m_Results["scales"];
+  S      := _self:-m_Results["S"];
   rnk    := _self:-m_Results["rank"];
   n      := LinearAlgebra:-RowDimension(M);
-  L      := LinearAlgebra:-IdentityMatrix(n, n, compact=false);
+  L      := LinearAlgebra:-IdentityMatrix(n, n, parse("compact") = false);
 
-  # Perform forward substitution to solve Ly=b[r]
+  # Perform forward substitution to get L
   for i from 1 to rnk do
     tmp := [i+1..-1];
-    L[tmp,1..-1] := pivots[i]*L[tmp,1..-1] - M[tmp,i].L[i,1..-1];
+    L[tmp, 1..-1] := pivots[i]*L[tmp, 1..-1] - M[tmp, i].L[i, 1..-1];
     for k from i+1 to n do
-      L[k,1..-1] := L[k,1..-1] /~ scales[i][k-i];
+      L[k, 1..-1] := L[k, 1..-1] /~ S[k, i];
     end;
   end do;
 
   # Return outputs
   return L, Matrix(M, shape = triangular[upper]);
-end proc: # FFLUgetUQT
+end proc: # FFLUgetLU
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
