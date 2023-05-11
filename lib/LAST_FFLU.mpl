@@ -7,6 +7,23 @@
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+local FFLUgcd::static := proc( _self::LAST, V::{Matrix,Vector,list} )
+  local top, bot, v, VV := convert(V,list);
+  if nops(VV) > 0 then
+    top := numer(VV[1]);
+    bot := denom(VV[1]);
+    if nops(VV) > 1 then
+      for v in VV[2..-1] do
+        top := gcd(top,numer(v));
+        bot := gcd(bot,denom(v));
+      end;
+    end;
+    return top/bot;
+  else
+    return 1;
+  end;
+end proc:
+
 export FFLU::static := proc(
   _self::LAST,
   A::Matrix,
@@ -19,8 +36,8 @@ export FFLU::static := proc(
     "matrix <A> and check  if the veiling symbol is already present in the "
     "matrix coefficients.";
 
-  local V, M, L, U, pivot, pivot_list, s_pivot, m, n, mn, k, j, rnk, r, c,
-    last_GCD, tmp, tmp_try;
+  local V, M, L, U, pivot, pivot_list, scale, scale_list, m, n, mn, k, j, rnk, r, c,
+        tmp, tmp2, tmp_try;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -45,6 +62,7 @@ export FFLU::static := proc(
   mn         := min(m, n);
   rnk        := mn;
   pivot_list := [];
+  scale_list := [];
 
   # Perform Fraction-Free Gaussian elimination
   for k from 1 to mn do
@@ -75,35 +93,30 @@ export FFLU::static := proc(
     end if;
     tmp := [k+1..-1];
 
-    # Scaled pivots (GCD)
-    s_pivot := gcd~(M[tmp, k], pivot["value"]);
-    tmp_try := M[tmp, k] /~ s_pivot;
+    # Schur complement
+    M[tmp, tmp] := pivot["value"]*M[tmp, tmp] - M[tmp, k].M[k, tmp];
     try
-      M[tmp, k] := timelimit(_self:-m_TimeLimit, Normalizer~(tmp_try));
-    catch "time expired":
-      M[tmp, k] := tmp_try;
-    end try;
-    tmp_try := pivot["value"] /~ s_pivot;
-    try
-      s_pivot := timelimit(_self:-m_TimeLimit, Normalizer~(tmp_try));
-    catch "time expired":
-      s_pivot := tmp_try;
+      M[tmp, tmp] := timelimit(_self:-m_TimeLimit, Normalizer~(M[tmp, tmp]));
+    catch:
+      if _self:-m_WarningMode then
+        WARNING( "LAST:-FFLU(...): time expired, do not simplify Schur complement." );
+      end if;
     end try;
 
-    # Shur-like complement
-    for j from k+1 to mn do
-      M[j, tmp] := s_pivot[j-k] * M[j, tmp];
-    end do;
-    tmp_try := M[tmp, k].M[k, tmp] - M[tmp, tmp];
-    try
-      tmp_try := timelimit(_self:-m_TimeLimit, Normalizer~(tmp_try));
-    catch:
-      M[tmp, tmp] := tmp_try;
-    end try;
-    M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, tmp_try);
+    # Scale rows
+    scale := [];
+    for j from k+1 to m do
+      tmp2 := _self:-FFLUgcd(_self,M[j,tmp]);
+      M[j,tmp] := M[j,tmp] /~tmp2;
+      scale := [op(scale),tmp2];
+    end;
+
+    # veil expressions
+    M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, tmp]);
 
     # Save pivot list
-    pivot_list := [op(pivot_list), s_pivot];
+    pivot_list := [op(pivot_list), pivot["value"]];
+    scale_list := [op(scale_list), scale];
   end do;
 
   # Store the FFLU decomposition
@@ -115,6 +128,7 @@ export FFLU::static := proc(
     "c"      = c,
     "rank"   = rnk,
     "pivots" = pivot_list,
+    "scales" = scale_list,
     "M_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
     "V_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, _self:-m_LEM:-VeilList(_self:-m_LEM)),
     "M_nnz"  = nops(op(2, M)),
@@ -132,7 +146,7 @@ export FFLUsolve::static := proc(
 
   description "Apply L^(-1)*P to the vector <b>.";
 
-  local M, r, c, m, n, x, y, i, s, rnk, pivots, tmp;
+  local M, r, c, m, n, x, y, i, s, rnk, pivots, scales, tmp;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -148,6 +162,7 @@ export FFLUsolve::static := proc(
   # Extract the FFLU decomposition
   M      := _self:-m_Results["M"];
   pivots := _self:-m_Results["pivots"];
+  scales := _self:-m_Results["scales"];
   r      := _self:-m_Results["r"];
   c      := _self:-m_Results["c"];
   rnk    := _self:-m_Results["rank"];
@@ -174,13 +189,13 @@ export FFLUsolve::static := proc(
     if _self:-m_VerboseMode then
       printf("LAST:-FFLUsolve(...): backward substitution of %d-th column.\n", i);
     end if;
-    tmp    := [i+1..-1];
-    x[tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, i]*x[i] - pivots[i]*~x[tmp]);
+    tmp := [i+1..-1];
+    x[tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, (pivots[i]*x[tmp] - M[tmp,i]*x[i]) /~scales[i] );
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
   if _self:-m_VerboseMode then
-    printf("LAST:-LUsolve(...): division by U[%d,%d].\n", n, n);
+    printf("LAST:-FFLUsolve(...): division by U[%d,%d].\n", n, n);
   end if;
   x[n] := _self:-m_LEM:-Veil(_self:-m_LEM, x[n]/M[n, n]);
   for i from n-1 to 1 by -1 do
@@ -281,6 +296,48 @@ export FFLUgetUQT::static := proc(
 
   # Return outputs
   return UT;
+end proc: # FFLUgetUQT
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+export FFLUgetLU::static := proc(
+  _self::LAST,
+  $)::Matrix,Matrix;
+
+  description "Return the matrix L and U such that P.A.Q = L.U";
+
+  local M, L, pivots, scales, n, i, k, tmp, rnk;
+
+  # Check if the LEM object is initialized
+  _self:-CheckInit(_self);
+
+  # Check if the results are available
+  _self:-CheckResults(_self);
+
+  # Check if the FFLU decomposition is available
+  if not (_self:-m_Results["method"] = "FFLU") then
+    error("wrong or not available FFLU decomposition (use 'LAST:-FFLU()' first).");
+  end if;
+
+  # Extract the FFLU decomposition
+  M      := _self:-m_Results["M"];
+  pivots := _self:-m_Results["pivots"];
+  scales := _self:-m_Results["scales"];
+  rnk    := _self:-m_Results["rank"];
+  n      := LinearAlgebra:-RowDimension(M);
+  L      := LinearAlgebra:-IdentityMatrix(n, n, compact=false);
+
+  # Perform forward substitution to solve Ly=b[r]
+  for i from 1 to rnk do
+    tmp := [i+1..-1];
+    L[tmp,1..-1] := pivots[i]*L[tmp,1..-1] - M[tmp,i].L[i,1..-1];
+    for k from i+1 to n do
+      L[k,1..-1] := L[k,1..-1] /~ scales[i][k-i];
+    end;
+  end do;
+
+  # Return outputs
+  return L, Matrix(M, shape = triangular[upper]);
 end proc: # FFLUgetUQT
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
