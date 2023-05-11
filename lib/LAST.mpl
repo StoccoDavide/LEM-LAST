@@ -456,7 +456,7 @@ module LAST()
           den := gcd(den, denom(i));
         end do;
       end if;
-      return num/den;
+      return `if`(evalb(num = 0), 1, num/den);
     else
       return 1;
     end if;

@@ -198,7 +198,7 @@ export LUapplyLP::static := proc(
 
   description "Apply L^(-1)*P to the vector <b>.";
 
-  local L, r, x, m, i, rnk;
+  local L, r, x, m, i;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -212,10 +212,9 @@ export LUapplyLP::static := proc(
   end if;
 
   # Extract the LU decomposition
-  L   := _self:-m_Results["L"];
-  r   := _self:-m_Results["r"];
-  rnk := _self:-m_Results["rank"];
-  m   := LinearAlgebra:-RowDimension(L);
+  L := _self:-m_Results["L"];
+  r := _self:-m_Results["r"];
+  m := LinearAlgebra:-RowDimension(L);
 
   # Apply permutation P
   x := b[convert(r, list)];

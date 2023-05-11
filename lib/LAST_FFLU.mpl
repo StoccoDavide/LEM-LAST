@@ -58,9 +58,6 @@ export FFLU::static := proc(
     end if;
 
     pivot := _self:-Pivoting(_self, k, M, r, c, parse("full_rows_degree") = false);
-    if (pivot["i"] <> k) then
-      S[[pivot["i"], k], 1..-1] := S[[k, pivot["i"]], 1..-1];
-    end if;
 
     if pivot["is_zero"] then
       rnk := k - 1;
@@ -68,6 +65,11 @@ export FFLU::static := proc(
         WARNING("LAST:-FFLU(...): the matrix appears to be not full rank.");
       end if;
       break;
+    end if;
+
+    # Swap rows of S
+    if (pivot["i"] <> k) then
+      S[[pivot["i"], k], 1..-1] := S[[k, pivot["i"]], 1..-1];
     end if;
 
     if _self:-m_VerboseMode then
@@ -94,7 +96,7 @@ export FFLU::static := proc(
       tmp_gcd   := _self:-GCD(_self, M[j, tmp]);
       M[j, tmp] := M[j, tmp] / tmp_gcd;
       S[j, k]   := tmp_gcd;
-    end;
+    end do;
 
     # Veil expressions
     M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, tmp]);
@@ -213,7 +215,7 @@ export FFLUapplyLP::static := proc(
 
   description "Return the matrix U^T*Q.";
 
-  local M, r, x, i, rnk, pivots, S, tmp;
+  local M, r, x, i, m, rnk, pivots, S, tmp;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -227,17 +229,18 @@ export FFLUapplyLP::static := proc(
   end if;
 
   # Extract the FFLU decomposition
-  S      := _self:-m_Results["S"];
   M      := _self:-m_Results["M"];
+  S      := _self:-m_Results["S"];
   pivots := _self:-m_Results["pivots"];
   r      := _self:-m_Results["r"];
   rnk    := _self:-m_Results["rank"];
+  m      := LinearAlgebra:-RowDimension(M);
 
   # Apply permutation P
   x := b[convert(r, list)];
 
   # Perform forward substitution to solve Ly=b[r]
-  for i from 1 to m-1 do
+  for i from 1 to m-1 while rnk >= i do
     if _self:-m_VerboseMode then
       printf("LAST:-FFLUsolve(...): backward substitution of %d-th column.\n", i);
     end if;
@@ -274,10 +277,10 @@ export FFLUgetUQT::static := proc(
 
   # Extract the FFLU decomposition
   M   := _self:-m_Results["M"];
-  U   := Matrix(M, shape = triangular[upper]);
   c   := _self:-m_Results["c"];
   rnk := _self:-m_Results["rank"];
-  n   := LinearAlgebra:-ColumnDimension(U);
+  n   := LinearAlgebra:-ColumnDimension(M);
+  U   := Matrix(M, shape = triangular[upper]);
   UT  := Matrix(rnk, n);
 
   # Apply inverse permutation Q
@@ -324,7 +327,7 @@ export FFLUgetLU::static := proc(
     L[tmp, 1..-1] := pivots[i]*L[tmp, 1..-1] - M[tmp, i].L[i, 1..-1];
     for k from i+1 to n do
       L[k, 1..-1] := L[k, 1..-1] /~ S[k, i];
-    end;
+    end do;
   end do;
 
   # Return outputs
