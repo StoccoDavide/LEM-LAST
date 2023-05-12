@@ -134,7 +134,7 @@ export Pivoting::static := proc(
       Mij["is_zero"] := true;
     catch:
       WARNING(
-        "LAST:-Pivoting(...): something went wrong in '%1', assumed 'M[%2,%3] = 0'.",
+        "LAST:-Pivoting(...): s omething went wrong in '%1', assumed 'M[%2,%3] = 0'.",
         lastexception, i, j
       );
       if _self:-m_VerboseMode then

@@ -431,22 +431,25 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  local GCD::static := proc(
+  export GCD::static := proc(
     _self::LAST,
     expr::{list, Vector, Matrix},
+    postproc::boolean := true,
     $)::algebraic;
 
     description "Compute the greatest common divisor of the elements of the "
       "expression <expr>.";
 
-    local expr_tmp, num, den, i;
+    local expr_tmp, num, den, i, tmp, out;
 
+    # Convert the expression is a list
     if not type(expr, list) then
       expr_tmp := convert(expr, list);
     else
       expr_tmp := expr;
     end if;
 
+    # Find the GCD of the elements of the expression
     if (nops(expr_tmp) > 0) then
       num := numer(expr_tmp[1]);
       den := denom(expr_tmp[1]);
@@ -456,7 +459,20 @@ module LAST()
           den := gcd(den, denom(i));
         end do;
       end if;
-      return `if`(evalb(num = 0), 1, num/den);
+      # Force the output to be a non-zero
+      if evalb(num = 0) then
+        return 1;
+      end if;
+    else
+      return 1;
+    end if;
+
+    # Process the output to exclude functions
+    tmp := num/den;
+    if not hastype(tmp, function) then
+      return tmp;
+    elif type(tmp, `*`) then
+      return mul(remove[flatten](i -> hastype(i, function), [op(tmp)]));
     else
       return 1;
     end if;
@@ -478,6 +494,26 @@ module LAST()
 
     mat_0 := map(x -> `if`(x = 0, 0, 1), A);
     mat_1 := map(x -> `if`(x = 0, 0, 1), L + U);
+    mat_2 := map(x -> `if`(x = 1, 1, 0), mat_0 + mat_1);
+    return [plots:-sparsematrixplot(mat_0, 'matrixview', color = "Black"),
+            plots:-sparsematrixplot(mat_2, 'matrixview', color = "Red")];
+  end proc: # SpyLU
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export SpyFFLU::static := proc(
+    _self::LAST,
+    A::Matrix,
+    M::Matrix,
+    $)::anything;
+
+    description "Plot of non-zero values of the matrices <A>, <M> with fill-in "
+      "values.";
+
+    local mat_0, mat_1, mat_2;
+
+    mat_0 := map(x -> `if`(x = 0, 0, 1), A);
+    mat_1 := map(x -> `if`(x = 0, 0, 1), M);
     mat_2 := map(x -> `if`(x = 1, 1, 0), mat_0 + mat_1);
     return [plots:-sparsematrixplot(mat_0, 'matrixview', color = "Black"),
             plots:-sparsematrixplot(mat_2, 'matrixview', color = "Red")];

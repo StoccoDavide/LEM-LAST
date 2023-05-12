@@ -167,9 +167,9 @@ export GJsolve::static := proc(
     try
       tmp := x[k]/M[k,k];
       x[k] := timelimit(_self:-m_TimeLimit, Normalizer(tmp) );
-    catch:
+    catch "time expired":
       if _self:-m_VerboseMode then
-        printf("LAST:-GJsolve(...): step k = %d, timelimit(1) reached.\n", k);
+        printf("LAST:-GJsolve(...): time expired, step 1 at k = %d.\n", k);
       end if;
       x[k] := tmp;
     end try;
@@ -184,9 +184,9 @@ export GJsolve::static := proc(
     try
       tmp := x[tr]-x[k]*M[tr, k];
       x[tr] := timelimit(_self:-m_TimeLimit, Normalizer~(tmp));
-    catch:
+    catch "time expired":
       if _self:-m_VerboseMode then
-        printf("LAST:-GJsolve(...): step k = %d, timelimit(2) reached.\n", k);
+        printf("LAST:-GJsolve(...): time expired, step 2 at k = %d.\n", k);
       end if;
       x[tr] := tmp;
     end try;

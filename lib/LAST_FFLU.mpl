@@ -84,8 +84,8 @@ export FFLU::static := proc(
     # Schur complement
     M[tmp, tmp] := pivot["value"]*M[tmp, tmp] - M[tmp, k].M[k, tmp];
     try
-      M[tmp, tmp] := timelimit(_self:-m_TimeLimit, Normalizer~(M[tmp, tmp]));
-    catch:
+      M[tmp, tmp] := timelimit(_self:-m_TimeLimit, simplify~(M[tmp, tmp]));
+    catch "time expired":
       if _self:-m_WarningMode then
         WARNING("LAST:-FFLU(...): time expired, Schur complement not simplified.");
       end if;
@@ -95,6 +95,13 @@ export FFLU::static := proc(
     for j from k+1 to m do
       tmp_gcd   := _self:-GCD(_self, M[j, tmp]);
       M[j, tmp] := M[j, tmp] / tmp_gcd;
+      try
+      M[j, tmp] := timelimit(_self:-m_TimeLimit, simplify~(M[j, tmp]));
+      catch "time expired":
+        if _self:-m_WarningMode then
+          WARNING("LAST:-FFLU(...): time expired, rows scaling not simplified.");
+        end if;
+      end try;
       S[j, k]   := tmp_gcd;
     end do;
 
