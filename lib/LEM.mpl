@@ -246,7 +246,7 @@ module LEM()
 
   export SetVeilingDependency::static := proc(
     _self::LEM,
-    dependency::set,
+    dependency::list,
     $)
 
     description "Set the veiling dependency to <dependency>.";
@@ -265,7 +265,7 @@ module LEM()
 
   export GetVeilingDependency::static := proc(
     _self::LEM,
-    $)::set;
+    $)::list;
 
     description "Return the veiling dependency.";
 
@@ -361,7 +361,7 @@ module LEM()
     _self::LEM,
     x::anything,
     {
-    depend::set    := {},
+    depend::list   := [],
     force::boolean := false
     },
     $)::anything;
@@ -369,7 +369,7 @@ module LEM()
     description "Check if the veiling strategy is verified, if true veil the "
       "expression <x> and return a label to it.";
 
-    local i, s, c;
+    local i, s, c, deps;
 
     # Check if label is already assigned
 	  if (_self:-m_VeilingLabel <> eval(_self:-m_VeilingLabel, 2)) then
@@ -381,7 +381,7 @@ module LEM()
     c := Normalizer(x);
 
     # Check the veiling strategy
-    if not(force) and not(_self:-VeilingStrategy(_self, c)) then
+    if not force and not _self:-VeilingStrategy(_self, c) then
       return c;
     end if;
 
@@ -402,10 +402,12 @@ module LEM()
     end try;
     # Only if there is something complicated to hide we do actually hide it and
     # return a label.
-    if (nops(_self:-m_VeilingDependency intersect indets(s*c/i)) > 0) then
-      return s * i * _self:-TablesAppend(_self, s*c/i)(
-        op(_self:-m_VeilingDependency intersect indets(s*c/i))
-      );
+    if (nops(_self:-m_VeilingDependency) > 0) then
+      {op(_self:-m_VeilingDependency)} intersect indets(s*c/i):
+      deps := remove[flatten](j -> evalb(j in %), _self:-m_VeilingDependency);
+      if (nops(deps) > 0) then
+        return s * i * _self:-TablesAppend(_self, s*c/i)(op(deps));
+      end if;
     end if;
     return s * i * _self:-TablesAppend(_self, s*c/i);
   end proc; # Veil
@@ -421,7 +423,7 @@ module LEM()
 
     local tmp;
 
-    if not(type(x, algebraic) or type(x, list)) then
+    if not (type(x, algebraic) or type(x, list)) then
       tmp := convert(x, list);
     else
       tmp := x;
@@ -557,18 +559,21 @@ module LEM()
 
     description "Return a list of the veiling labels dependency substitution.";
 
-    local vars;
+    local vars, veil, i, deps;
 
+    # Extract variables and veils
     vars := _self:-m_VeilingDependency;
-    return map(x -> lhs(x) = `if`(
-        nops(vars intersect indets(rhs(x))) > 0,
-        lhs(x)(op(vars intersect indets(rhs(x)))),
-        lhs(x)
-      ), _self:-VeilList(_self,
-        parse("reverse")    = reverse,
-        parse("dependency") = false
-      )
-    );
+    veil := _self:-VeilList(_self, parse("reverse") = reverse, parse("dependency") = false);
+
+    # Iterate over veils to find dependencies
+    for i from 1 to nops(veil) do
+      {op(_self:-m_VeilingDependency)} intersect indets(rhs(veil[i]));
+      deps := remove[flatten](j -> evalb(j in %), _self:-m_VeilingDependency);
+      veil[i]  := lhs(veil[i]) = `if`(
+        nops(deps) > 0, lhs(veil[i])(op(deps)), lhs(veil[i])
+      );
+    end do;
+    return veil;
   end proc: # VeilDependencyList
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -586,10 +591,10 @@ module LEM()
 
     T, perm := _self:-VeilTableImap(_self, parse("reverse") = reverse);
     if (dependency) then
-      T := subs(
-          op(_self:-VeilDependencyList(_self, parse("reverse") = reverse)),
-          lhs~(T)
-        ) =~ rhs~(T);
+      T := subs(op(
+        _self:-VeilDependencyList(_self, parse("reverse") = reverse)
+        ), lhs~(T)
+      ) =~ rhs~(T);
     end if;
     return T[perm]:
   end proc: # VeilList

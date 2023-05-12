@@ -321,6 +321,15 @@ object LEM :: LEM:
     # Set the veiling label to &lt;label&gt;.
     SetVeilingLabel( _self::LEM, label::{string, symbol}, $ )
 
+    # Set the veiling dependency to &lt;dependency&gt;.
+    SetVeilingDependency( _self::LEM, dependency::set, $ )
+
+    # Return the veiling dependency.
+    GetVeilingDependency( _self::LEM, $ ) :: set
+
+    # Clear the veiling dependency.
+    ClearVeilingDependency( _self::LEM, $ )
+
     # Enable the expression signature calculation.
     EnableSignature( _self::LEM, $ )
 
@@ -333,7 +342,7 @@ object LEM :: LEM:
     # Check if the veiling strategy is verified, if true veil the expression 
     # &lt;x&gt; and return a label to it.
     Veil( _self::LEM, x::anything, 
-          { force::boolean := false }, $ ) :: anything
+          { depend::set := {}, force::boolean := false }, $ ) :: anything
 
     # Compute the cost of the expression &lt;x&gt;.
     ExpressionCost( _self::LEM, x::anything, $ ) :: integer
@@ -368,9 +377,14 @@ object LEM :: LEM:
     # Unveil the expression &lt;x&gt; with signature values permutation map.
     SigImap( _self::LEM, x::anything, $ ) :: anything
 
+    # Return a list of the veiling labels dependency substitution.
+    VeilDependencyList( _self::LEM, 
+                        { reverse::boolean := false }, $ ) :: list(anything)
+
     # Return a list of the veiling labels.
     VeilList( _self::LEM, 
-              { reverse::boolean := false }, $ ) :: list(anything)
+              { dependency::boolean := false, reverse::boolean := false }, $ )
+            :: list(anything)
 
     # Return a list of the signature labels.
     SigList( _self::LEM, 
@@ -407,8 +421,11 @@ object LEM :: LEM:
     SubsSig( _self::LEM, x::anything, $ ) :: anything
 
     # Substitute the reversed veiling variables of the internal veiling table 
-    # in the expression &lt;x&gt;.
-    SubsVeil( _self::LEM, x::anything, $ ) :: anything
+    # in the expression &lt;x&gt;, If dependency flag &lt;dependency&gt; is set to true, 
+    # the veiling variables are substituted with their dependencies.
+    SubsVeil( _self::LEM, x::anything, 
+              { dependency::boolean := false, reverse::boolean := true }, $ )
+            :: anything
 
     # Clear the internal veiling and signature tables.
     ForgetVeil( _self::LEM, $ )
@@ -424,7 +441,7 @@ object LEM :: LEM:
 </Group>
 </Section><Presentation-Block>
 <Group view="presentation" inline-output="false" labelreference="L1" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
-<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+<Input><Text-field style="Text" layout="Normal"><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation><Equation executable="true" style="2D Math" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
 </Input>
 </Group></Presentation-Block>
 </Worksheet>
