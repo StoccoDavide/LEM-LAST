@@ -55,7 +55,7 @@ module LEM()
   # Veiling
   local m_VeilingLabel := parse(cat("V_", StringTools:-Random(5, 'alnum')));
   local m_UnveilTable                     := table([]);
-  local m_VeilingDependency               := {};
+  local m_VeilingDependency               := [];
   local m_VeilingStrategy_maxcost         := 15;
   local m_VeilingStrategy_subscripts      := 0;
   local m_VeilingStrategy_assignments     := 0;
@@ -403,7 +403,7 @@ module LEM()
     # Only if there is something complicated to hide we do actually hide it and
     # return a label.
     if (nops(_self:-m_VeilingDependency) > 0) then
-      {op(_self:-m_VeilingDependency)} intersect indets(s*c/i):
+      {op(_self:-m_VeilingDependency)} intersect indets(s*c/i);
       deps := remove[flatten](j -> evalb(j in %), _self:-m_VeilingDependency);
       if (nops(deps) > 0) then
         return s * i * _self:-TablesAppend(_self, s*c/i)(op(deps));
@@ -817,7 +817,7 @@ module LEM()
     x::anything,
     p::prime := _self:-m_SigValue,
     {iter::nonnegint := 10},
-    $)::nonnegint;
+    $)::anything;
 
     description "Compute the signature of the expression <x> modulo <p> (the "
       "default is the internal signature value) also by using the internal "

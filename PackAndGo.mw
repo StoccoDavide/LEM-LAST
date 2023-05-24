@@ -322,10 +322,10 @@ object LEM :: LEM:
     SetVeilingLabel( _self::LEM, label::{string, symbol}, $ )
 
     # Set the veiling dependency to &lt;dependency&gt;.
-    SetVeilingDependency( _self::LEM, dependency::set, $ )
+    SetVeilingDependency( _self::LEM, dependency::list, $ )
 
     # Return the veiling dependency.
-    GetVeilingDependency( _self::LEM, $ ) :: set
+    GetVeilingDependency( _self::LEM, $ ) :: list
 
     # Clear the veiling dependency.
     ClearVeilingDependency( _self::LEM, $ )
@@ -342,7 +342,7 @@ object LEM :: LEM:
     # Check if the veiling strategy is verified, if true veil the expression 
     # &lt;x&gt; and return a label to it.
     Veil( _self::LEM, x::anything, 
-          { depend::set := {}, force::boolean := false }, $ ) :: anything
+          { depend::list := [], force::boolean := false }, $ ) :: anything
 
     # Compute the cost of the expression &lt;x&gt;.
     ExpressionCost( _self::LEM, x::anything, $ ) :: integer
@@ -434,7 +434,7 @@ object LEM :: LEM:
     # the internal signature value) also by using the internal signature table 
     # of the veiled expressions.
     Signature( _self::LEM, x::anything, p::prime := _self:-m_SigValue, 
-               { iter::nonnegint := 10 }, $ ) :: nonnegint
+               { iter::nonnegint := 10 }, $ ) :: anything
 
 </Text-field>
 </Output>
