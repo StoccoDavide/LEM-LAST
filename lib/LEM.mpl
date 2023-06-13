@@ -511,7 +511,7 @@ module LEM()
 
     description "Unveil the expression <x> with the veiled variables.";
 
-    return eval['recurse'](x, _self:-VeilList(_self));
+    return subs(_self:-VeilList(_self, parse("reverse") = true), x);
   end proc: # Unveil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
