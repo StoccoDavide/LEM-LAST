@@ -177,7 +177,7 @@ export FFLUsolve::static := proc(
   end if;
 
   # Apply permutation P
-  x := b[convert(r, list)];
+  x := Vector(b[convert(r, list)], datatype = anything);
 
   # Perform forward substitution to solve Ly=b[r]
   for i from 1 to m-1 do
@@ -244,7 +244,7 @@ export FFLUapplyLP::static := proc(
   m      := LinearAlgebra:-RowDimension(M);
 
   # Apply permutation P
-  x := b[convert(r, list)];
+  x := Vector(b[convert(r, list)], datatype = anything);
 
   # Perform forward substitution to solve Ly=b[r]
   for i from 1 to m-1 while rnk >= i do

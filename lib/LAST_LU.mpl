@@ -156,14 +156,16 @@ export LUsolve::static := proc(
   end if;
 
   # Apply permutation P
-  x := b[convert(r, list)];
+  x := Vector(b[convert(r, list)], datatype = anything);
 
   # Perform forward substitution to solve Ly=b[r]
   for i from 2 to m do
     if _self:-m_VerboseMode then
       printf("LAST:-LUsolve(...): forward substitution of %d-th row.\n", i);
     end if;
-    x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, 1..i-1]*~x[1..i-1]));
+    printf("a");
+    x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, 1..i-1] *~ x[1..i-1]));
+    printf("b");
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
@@ -217,7 +219,7 @@ export LUapplyLP::static := proc(
   m := LinearAlgebra:-RowDimension(L);
 
   # Apply permutation P
-  x := b[convert(r, list)];
+  x := Vector(b[convert(r, list)], datatype = anything);
 
   # Perform forward substitution to solve Ly=b[r]
   for i from 2 to m do

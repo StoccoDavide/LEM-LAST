@@ -155,7 +155,7 @@ export GJsolve::static := proc(
   if _self:-m_VerboseMode then
     printf("LAST:-GJsolve(...): Apply permutation P\n");
   end if;
-  x := b[convert(r, list)];
+  x := Vector(b[convert(r, list)], datatype = anything);
 
   # Apply multiplications in reverse order
   for k from 1 to n do
@@ -204,6 +204,6 @@ export GJsolve::static := proc(
 
   # Return outputs
   return y;
-end proc: # LUsolve
+end proc: # GJsolve
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
