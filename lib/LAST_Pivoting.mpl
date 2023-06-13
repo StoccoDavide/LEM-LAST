@@ -22,7 +22,12 @@ export Pivoting::static := proc(
     "permutation <r> and the columns permutation <c>.";
 
   local uMij, M_degree_R, M_degree_C, perm, perm_R, perm_C, m, n, i, j, ipos,
-    Mij, pivot, pivot_list, pivot_cost;
+    Mij, pivot, pivot_list, pivot_cost, M_data, V, V_data;
+
+  # Copy the matrix and veils, and substitute the data
+  M_data := subs(op(_self:-m_StoredData), M);
+  V      := _self:-m_LEM:-VeilList(_self:-m_LEM, parse("reverse") = true);
+  V_data := subs(op(_self:-m_StoredData), V);
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -35,10 +40,10 @@ export Pivoting::static := proc(
   M_degree_C := Matrix(m, n);
   if full_rows_degree then
     M_degree_R[1..-1, k..n], M_degree_C[1..-1, k..n] :=
-      _self:-GetDegrees(_self, M[1..-1, k..n]);
+      _self:-GetDegrees(_self, M_data[1..-1, k..n]);
   else
     M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] :=
-      _self:-GetDegrees(_self, M[k..m, k..n]);
+      _self:-GetDegrees(_self, M_data[k..m, k..n]);
   end if;
 
   # Build a list (i,j,degree,cost) and sort it
@@ -108,7 +113,7 @@ export Pivoting::static := proc(
       Mij["value"] := timelimit(_self:-m_TimeLimit, Normalizer(Mij["value"]));
       Mij["is_zero"] := evalb(Mij["value"] = 0);
       if not Mij["is_zero"] then
-        uMij := timelimit(_self:-m_TimeLimit, _self:-m_LEM:-Unveil(_self:-m_LEM, Mij["value"]));
+        uMij := timelimit(_self:-m_TimeLimit, subs(op(_self:-m_StoredData), op(V_data), Mij["value"]));
         # Recalculate cost and value of the pivot
         Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, uMij);
         # Time limit required because sometimes Normalizer get stuck
@@ -123,7 +128,9 @@ export Pivoting::static := proc(
         );
       end if;
       Mij["is_zero"] := false;
-      Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, Mij);
+      uMij := subs(op(_self:-m_StoredData), Mij["value"]);
+      # Recalculate cost and value of the pivot
+      Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, uMij);
     catch "division by zero":
       if _self:-m_WarningMode then
         WARNING(
@@ -134,7 +141,7 @@ export Pivoting::static := proc(
       Mij["is_zero"] := true;
     catch:
       WARNING(
-        "LAST:-Pivoting(...): s omething went wrong in '%1', assumed 'M[%2,%3] = 0'.",
+        "LAST:-Pivoting(...): something went wrong in '%1', assumed 'M[%2,%3] = 0'.",
         lastexception, i, j
       );
       if _self:-m_VerboseMode then
