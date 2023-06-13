@@ -57,7 +57,7 @@ module LEM()
   local m_UnveilTable                     := table([]);
   local m_VeilingDependency               := [];
   local m_VeilingStrategy_maxcost         := 15;
-  local m_VeilingStrategy_subscripts      := 0;
+  local m_VeilingStrategy_subscripts      := 2;
   local m_VeilingStrategy_assignments     := 0;
   local m_VeilingStrategy_additions       := 1;
   local m_VeilingStrategy_multiplications := 2;
@@ -65,9 +65,9 @@ module LEM()
   local m_VeilingStrategy_functions       := 2;
 
   # Signature
-  local m_SigEnable := true;
-  local m_SigTable  := table([]);
-  local m_SigValue  := 1000000007;
+  local m_SigMode  := true;
+  local m_SigTable := table([]);
+  local m_SigValue := 1000000007;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -140,9 +140,9 @@ module LEM()
     _self:-m_VeilingStrategy_functions       := proto:-m_VeilingStrategy_functions;
 
     # Signature
-    _self:-m_SigEnable := proto:-m_SigEnable;
-    _self:-m_SigTable  := copy(proto:-m_SigTable);
-    _self:-m_SigValue  := proto:-m_SigValue;
+    _self:-m_SigMode  := proto:-m_SigMode;
+    _self:-m_SigTable := copy(proto:-m_SigTable);
+    _self:-m_SigValue := proto:-m_SigValue;
   end proc: # ModuleCopy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -286,7 +286,7 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  export EnableSignature::static := proc(
+  export EnableSignatureMode::static := proc(
     _self::LEM,
     $)
 
@@ -298,13 +298,13 @@ module LEM()
       return NULL;
     end if;
 
-    _self:-m_SigEnable := true;
+    _self:-m_SigMode := true;
     return NULL;
-  end proc: # EnableSignature
+  end proc: # EnableSignatureMode
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  export DisableSignature::static := proc(
+  export DisableSignatureMode::static := proc(
     _self::LEM,
     $)
 
@@ -316,9 +316,29 @@ module LEM()
       return NULL;
     end if;
 
-    _self:-m_SigEnable := false;
+    _self:-m_SigMode := false;
     return NULL;
-  end proc: # DisableSignature
+  end proc: # DisableSignatureMode
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export SetSignatureMode::static := proc(
+    _self::LEM,
+    mode::boolean,
+    $)
+
+    description "Set the expression signature calculation of the module to "
+      "<mode>.";
+
+    if not mode and (_self:-VeilTableSize(_self) > 0) then
+      error "the signature table is not empty, save the list if necessary and "
+        "clear it before disabling signature calculation.";
+      return NULL;
+    end if;
+
+    _self:-m_SigMode := mode;
+    return NULL;
+  end proc: # SetSignatureMode
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -370,7 +390,6 @@ module LEM()
       "expression <x> and return a label to it.";
 
     local i, s, c, deps;
-
     # Check if label is already assigned
 	  if (_self:-m_VeilingLabel <> eval(_self:-m_VeilingLabel, 2)) then
 	    error "label %a is already assigned, please save its contents and "
@@ -403,7 +422,7 @@ module LEM()
     # Only if there is something complicated to hide we do actually hide it and
     # return a label.
     if (nops(_self:-m_VeilingDependency) > 0) then
-      {op(_self:-m_VeilingDependency)} intersect indets(s*c/i);
+      convert(_self:-m_VeilingDependency, set) intersect indets(s*c/i);
       deps := remove[flatten](j -> evalb(j in %), _self:-m_VeilingDependency);
       if (nops(deps) > 0) then
         return s * i * _self:-TablesAppend(_self, s*c/i)(op(deps));
@@ -567,7 +586,7 @@ module LEM()
 
     # Iterate over veils to find dependencies
     for i from 1 to nops(veil) do
-      {op(_self:-m_VeilingDependency)} intersect indets(rhs(veil[i]));
+      convert(_self:-m_VeilingDependency, set) intersect indets(rhs(veil[i]));
       deps := remove[flatten](j -> evalb(j in %), _self:-m_VeilingDependency);
       veil[i]  := lhs(veil[i]) = `if`(
         nops(deps) > 0, lhs(veil[i])(op(deps)), lhs(veil[i])
@@ -722,7 +741,7 @@ module LEM()
     if type(_self:-m_UnveilTable, table) then
       k := numelems(_self:-m_UnveilTable) + 1;
       _self:-m_UnveilTable[_self:-m_VeilingLabel[k]] := x;
-      if _self:-m_SigEnable then
+      if _self:-m_SigMode then
         _self:-m_SigTable[_self:-m_VeilingLabel[k]] := SIG(
           _self:-SubsSig(_self, x), _self:-m_SigValue,
           parse("iter")    = iter,
@@ -733,7 +752,7 @@ module LEM()
       end if;
     else
       _self:-m_UnveilTable := table([_self:-m_VeilingLabel[1] = x]);
-      if _self:-m_SigEnable then
+      if _self:-m_SigMode then
         _self:-m_SigTable   := table([_self:-m_VeilingLabel[1] = SIG(
           x, _self:-m_SigValue,
           parse("iter")    = iter,
