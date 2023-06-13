@@ -163,9 +163,7 @@ export LUsolve::static := proc(
     if _self:-m_VerboseMode then
       printf("LAST:-LUsolve(...): forward substitution of %d-th row.\n", i);
     end if;
-    printf("a");
     x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, 1..i-1] *~ x[1..i-1]));
-    printf("b");
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
