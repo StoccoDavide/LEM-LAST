@@ -18,7 +18,13 @@ export LU::static := proc(
   description "Compute the LU decomposition of a square matrix <A> and check "
     " if the veiling symbol is already present in the matrix coefficients.";
 
-  local V, M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, tmp;
+  local V, M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, tmp, veil_fnc;
+
+  veil_fnc := (lem, x) -> `if`(
+    try evalb(lem:-Unveil(lem, x) = 0) catch: false end try,
+    0,
+    lem:-Veil(lem, x)
+  );
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -79,10 +85,10 @@ export LU::static := proc(
 
     # Schur complement
     tmp         := [k+1..-1];
-    M[k,   k]   := _self:-m_LEM:-Veil(_self:-m_LEM, pivot["value"]);
-    M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot["value"]));
-    M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
-    M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
+    M[k,   k]   := veil_fnc(_self:-m_LEM,  pivot["value"]);
+    M[tmp, k]   := veil_fnc~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot["value"]));
+    M[k,   tmp] := veil_fnc~(_self:-m_LEM, Normalizer~(M[k, tmp]));
+    M[tmp, tmp] := veil_fnc~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
   end do;
 
   L := Matrix(M[1..m, 1..m], shape = triangular[lower, unit]);
