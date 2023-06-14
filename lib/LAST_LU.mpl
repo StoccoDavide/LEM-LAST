@@ -21,7 +21,11 @@ export LU::static := proc(
   local V, M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, tmp, veil_fnc;
 
   veil_fnc := (lem, x) -> `if`(
-    try evalb(lem:-Unveil(lem, x) = 0) catch: false end try,
+    try
+      timelimit(_self:-m_TimeLimit, evalb(lem:-Unveil(lem, x) = 0))
+    catch:
+      false
+    end try,
     0,
     lem:-Veil(lem, x)
   );
