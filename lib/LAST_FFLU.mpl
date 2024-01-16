@@ -48,6 +48,9 @@ export FFLU::static := proc(
   pivot_list := [];
 
   # Perform Fraction-Free Gaussian elimination
+  if _self:-m_VerboseMode then
+    printf("LAST:-FFLU(...): %d x %d matrix detected.\n", m, n);
+  end if;
   for k from 1 to mn do
     if _self:-m_VerboseMode then
       printf(

@@ -158,6 +158,9 @@ export GJsolve::static := proc(
   x := Vector(b[convert(r, list)], datatype = anything);
 
   # Apply multiplications in reverse order
+  if _self:-m_VerboseMode then
+    printf("LAST:-GJ(...): %d x %d matrix detected.\n", m, n);
+  end if;
   for k from 1 to n do
     if _self:-m_VerboseMode then
       printf("LAST:-GJsolve(...): step k = %d.\n", k);

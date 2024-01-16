@@ -55,6 +55,9 @@ export LU::static := proc(
   pivot_list := [];
 
   # Perform Gaussian elimination
+  if _self:-m_VerboseMode then
+    printf("LAST:-GJ(...): %d x %d matrix detected.\n", m, n);
+  end if;
   for k from 1 to mn do
     if _self:-m_VerboseMode then
       printf(

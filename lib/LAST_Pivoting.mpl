@@ -91,11 +91,11 @@ export Pivoting::static := proc(
     catch:
       if _self:-m_WarningMode then
         WARNING(
-          "LAST:-Pivoting(...): something went wrong in '%1', assumed "
-          "'M[%2,%3] = 0'.", lastexception, i, j
+          "LAST:-Pivoting(...): something went wrong in '%1', assumed 'M[%2,%3] <> 0'.",
+          lastexception, i, j
         );
       end if;
-      Mij["is_zero"] := true;
+      Mij["is_zero"] := false;
     end try;
 
     # if zero skip
@@ -116,7 +116,7 @@ export Pivoting::static := proc(
         uMij := timelimit(_self:-m_TimeLimit, subs(op(_self:-m_StoredData), op(V_data), Mij["value"]));
         # Recalculate cost and value of the pivot
         Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, uMij);
-        # Time limit required because sometimes Normalizer get stuck
+        # Time limit required because sometimes normalizer get stuck
         uMij := timelimit(_self:-m_TimeLimit, eval(Normalizer(uMij)));
         Mij["is_zero"] := evalb(uMij = 0);
       end if;
@@ -141,13 +141,13 @@ export Pivoting::static := proc(
       Mij["is_zero"] := true;
     catch:
       WARNING(
-        "LAST:-Pivoting(...): something went wrong in '%1', assumed 'M[%2,%3] = 0'.",
+        "LAST:-Pivoting(...): something went wrong in '%1', assumed 'M[%2,%3] <> 0'.",
         lastexception, i, j
       );
       if _self:-m_VerboseMode then
         print("catch", Mij["value"] , Mij["sig"], Mij["is_zero"]);
       end if;
-      Mij["is_zero"] := true;
+      Mij["is_zero"] := false;
     end try;
 
     if Mij["is_zero"] then
