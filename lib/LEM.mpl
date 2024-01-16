@@ -257,6 +257,11 @@ module LEM()
       return NULL;
     end if;
 
+    if (nops(dependency) > 0) and not _self:-m_SigMode then
+      error "the signature mode is disabled, please enable it before setting "
+        "the veiling dependency.";
+    end if;
+
     _self:-m_VeilingDependency := dependency;
     return NULL;
   end proc: # SetVeilingDependency
@@ -423,12 +428,12 @@ module LEM()
     # return a label.
     if (nops(_self:-m_VeilingDependency) > 0) then
       convert(_self:-m_VeilingDependency, set) intersect indets(s*c/i);
-      deps := remove[flatten](j -> evalb(j in %), _self:-m_VeilingDependency);
+      deps := select[flatten](j -> evalb(j in %), _self:-m_VeilingDependency);
       if (nops(deps) > 0) then
-        return s * i * _self:-TablesAppend(_self, s*c/i)(op(deps));
+        return s*i*_self:-TablesAppend(_self, s*c/i)(op(deps));
       end if;
     end if;
-    return s * i * _self:-TablesAppend(_self, s*c/i);
+    return s*i*_self:-TablesAppend(_self, s*c/i);
   end proc; # Veil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -582,17 +587,19 @@ module LEM()
 
     # Extract variables and veils
     vars := _self:-m_VeilingDependency;
-    veil := _self:-VeilList(_self, parse("reverse") = reverse, parse("dependency") = false);
+    veil := Array(_self:-VeilList(
+      _self, parse("reverse") = reverse, parse("dependency") = false
+    ));
 
     # Iterate over veils to find dependencies
-    for i from 1 to nops(veil) do
+    for i from 1 to ArrayNumElems(veil) do
       convert(_self:-m_VeilingDependency, set) intersect indets(rhs(veil[i]));
-      deps := remove[flatten](j -> evalb(j in %), _self:-m_VeilingDependency);
-      veil[i]  := lhs(veil[i]) = `if`(
+      deps := select[flatten](j -> evalb(j in %), _self:-m_VeilingDependency);
+      veil[i] := lhs(veil[i]) = `if`(
         nops(deps) > 0, lhs(veil[i])(op(deps)), lhs(veil[i])
       );
     end do;
-    return veil;
+    return convert(veil, list);
   end proc: # VeilDependencyList
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -609,7 +616,7 @@ module LEM()
     local T, perm;
 
     T, perm := _self:-VeilTableImap(_self, parse("reverse") = reverse);
-    if (dependency) then
+    if dependency then
       T := subs(op(
         _self:-VeilDependencyList(_self, parse("reverse") = reverse)
         ), lhs~(T)
@@ -622,8 +629,9 @@ module LEM()
 
   export SigList::static := proc(
     _self::LEM,
-    {reverse::boolean := false},
-    $)::list(anything);
+    {
+    reverse::boolean := false
+    }, $)::list(anything);
 
     description "Return a list of the signature labels.";
 
@@ -689,8 +697,9 @@ module LEM()
 
   export VeilTableImap::static := proc(
     _self::LEM,
-    {reverse::boolean := false},
-    $)::{[], list(anything = anything)}, {[], list(nonnegint)};
+    {
+    reverse::boolean := false
+    }, $)::{[], list(anything = anything)}, {[], list(nonnegint)};
 
     description "Return the veiling list and the permutation that sorts it.";
 
@@ -709,8 +718,9 @@ module LEM()
 
   export SigTableImap::static := proc(
     _self::LEM,
-    {reverse::boolean := false},
-    $)::{[], list(anything = anything)}, {[], list(nonnegint)};
+    {
+    reverse::boolean := false
+    }, $)::{[], list(anything = anything)}, {[], list(nonnegint)};
 
     description "Return the signature list and the permutation that sorts it.";
 
@@ -730,7 +740,6 @@ module LEM()
   export TablesAppend::static := proc(
     _self::LEM,
     x::anything,
-    {iter::nonnegint := 10},
     $)::indexed;
 
     description "Append the veiled expression <x> to the veiling table.";
@@ -742,9 +751,8 @@ module LEM()
       k := numelems(_self:-m_UnveilTable) + 1;
       _self:-m_UnveilTable[_self:-m_VeilingLabel[k]] := x;
       if _self:-m_SigMode then
-        _self:-m_SigTable[_self:-m_VeilingLabel[k]] := SIG(
-          _self:-SubsSig(_self, x), _self:-m_SigValue,
-          parse("iter")    = iter,
+        _self:-m_SigTable[_self:-m_VeilingLabel[k]] := _self:-Signature(
+          _self, _self:-SubsSig(_self, x), _self:-m_SigValue,
           parse("verbose") = _self:-m_WarningMode
         );
       else
@@ -753,13 +761,12 @@ module LEM()
     else
       _self:-m_UnveilTable := table([_self:-m_VeilingLabel[1] = x]);
       if _self:-m_SigMode then
-        _self:-m_SigTable   := table([_self:-m_VeilingLabel[1] = SIG(
-          x, _self:-m_SigValue,
-          parse("iter")    = iter,
+        _self:-m_SigTable := table([_self:-m_VeilingLabel[1] = _self:-Signature(
+          _self, x, _self:-m_SigValue,
           parse("verbose") = _self:-m_WarningMode
         )]);
       else
-        _self:-m_SigTable   := table([_self:-m_VeilingLabel[1] = 0]);
+        _self:-m_SigTable := table([_self:-m_VeilingLabel[1] = 0]);
       end if;
     end if;
     return _self:-m_VeilingLabel[k];
@@ -835,17 +842,18 @@ module LEM()
     _self::LEM,
     x::anything,
     p::prime := _self:-m_SigValue,
-    {iter::nonnegint := 10},
-    $)::anything;
+    {
+    verbose::boolean := false
+    }, $)::anything;
 
     description "Compute the signature of the expression <x> modulo <p> (the "
       "default is the internal signature value) also by using the internal "
-      "signature table of the veiled expressions.";
+      "signature table of the veiled expressions. Verbosity can be enabled "
+      "with the flag <verbose>.";
 
     return SIG(
       _self:-SubsSig(_self, x),
       _self:-m_SigValue,
-      parse("iter")    = iter,
       parse("verbose") = _self:-m_WarningMode
     );
   end proc: # Signature
