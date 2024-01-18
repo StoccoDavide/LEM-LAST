@@ -11,15 +11,15 @@ export FFLU::static := proc(
   _self::LAST,
   A::Matrix,
   {
-  warm_start::list({nonnegint, table}) := [0, table([])],
-  veil_sanity_check::boolean           := true
+  warm_start::boolean        := false,
+  veil_sanity_check::boolean := true
   }, $)
 
   description "Compute the Fraction-Free LU (FFLU) decomposition of a square "
     "matrix <A> and check  if the veiling symbol is already present in the "
     "matrix coefficients.";
 
-  local V, M, L, U, pivot, pivot_list, S, m, n, mn, k, j, rnk, r, c, tmp,
+  local V, M, L, U, pivot, pivot_list, S, m, n, mn, i, j, k, rnk, r, c, tmp,
     tmp_gcd;
 
   # Check if the LEM object is initialized
@@ -36,22 +36,31 @@ export FFLU::static := proc(
 
   # Get matrix dimensions
   m, n := LinearAlgebra:-Dimensions(A):
-
-  # Create pivot vector
-  r := Vector(m, k -> k);
-  c := Vector(n, k -> k);
-
-  M          := copy(A);
-  S          := Matrix(m, n);
-  mn         := min(m, n);
-  rnk        := mn;
-  pivot_list := [];
-
-  # Perform Fraction-Free Gaussian elimination
   if _self:-m_VerboseMode then
     printf("LAST:-FFLU(...): %d x %d matrix detected.\n", m, n);
   end if;
-  for k from 1 to mn do
+
+  # Create pivot vector and matrix M
+  if not warm_start then
+    i := 1;
+    r := Vector(m, k -> k);
+    c := Vector(n, k -> k);
+    S := Matrix(m, n);
+    pivot_list := [];
+  else
+    i := _self:-m_Results["rank"]+1;
+    r := _self:-m_Results["r"];
+    c := _self:-m_Results["c"];
+    S := _self:-m_Results["S"];
+    pivot_list := _self:-m_Results["pivots"];
+  end if;
+
+  M := copy(A);
+  mn  := min(m, n);
+  rnk := mn;
+
+  # Perform Fraction-Free Gaussian elimination
+  for k from i to mn do
     if _self:-m_VerboseMode then
       printf(
         "LAST:-FFLU(...): processing %d-th row, cost = %d, veilings = %d.\n",
@@ -105,7 +114,7 @@ export FFLU::static := proc(
           WARNING("LAST:-FFLU(...): time expired, rows scaling not simplified.");
         end if;
       end try;
-      S[j, k]   := tmp_gcd;
+      S[j, k] := tmp_gcd;
     end do;
 
     # Veil expressions

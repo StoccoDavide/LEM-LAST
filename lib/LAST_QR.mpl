@@ -31,6 +31,9 @@ export QR::static := proc(
 
   # Extract the dimensions of the matrix A
   m, n := LinearAlgebra:-Dimensions(A):
+  if _self:-m_VerboseMode then
+    printf("LAST:-QR(...): %d x %d matrix detected.\n", m, n);
+  end if;
 
   # Check if the matrix A valid
   if (m < n) then
@@ -43,9 +46,6 @@ export QR::static := proc(
   DG := Vector[column](m, k -> 1);
 
   # Compute the Householder QR decomposition with veiling
-  if _self:-m_VerboseMode then
-    printf("LAST:-QR(...): %d x %d matrix detected.\n", m, n);
-  end if;
   for k from 1 to m-1 do
     if _self:-m_VerboseMode then
       printf(

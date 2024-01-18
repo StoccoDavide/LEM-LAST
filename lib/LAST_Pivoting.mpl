@@ -192,7 +192,7 @@ export PivotCost::static := proc(
   description "Compute the cost of the pivot <x>.";
 
   if type(x, numeric) then
-    if evalb(x = 0) then
+    if (x = 0) then
       return 0, 0;
     else
       return 1, abs(x);

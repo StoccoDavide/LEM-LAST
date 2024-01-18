@@ -485,7 +485,7 @@ module LAST()
         end do;
       end if;
       # Force the output to be a non-zero
-      if evalb(num = 0) then
+      if (num = 0) then
         return 1;
       end if;
     else
@@ -568,7 +568,7 @@ module LAST()
       Q[c[i], i] := 1;
     end do;
     return P, Q;
-  end proc: # Permutatiomnatrices
+  end proc: # PermutationMatrices
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
