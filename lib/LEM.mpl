@@ -441,9 +441,14 @@ module LEM()
   export ExpressionCost::static := proc(
     _self::LEM,
     x::anything,
-    $)::integer;
+    {
+    dependency::boolean := true
+    }, $)::integer;
 
-    description "Compute the cost of the expression <x>.";
+    description "Compute the cost of the expression <x>. If dependency flag "
+      "<dependency> is set to true, the veiling variables are considered with "
+      "their dependencies (e.g., V(x,y)), otherwise they are considered as "
+      "independent variables (e.g., V).";
 
     local tmp;
 
@@ -451,6 +456,11 @@ module LEM()
       tmp := convert(x, list);
     else
       tmp := x;
+    end if;
+
+    if not dependency then
+      _self:-VeilDependencyList(_self, parse("reverse") = true);
+      tmp := subs(op(rhs~(%) =~ lhs~(%)), tmp);
     end if;
 
     return subs(
@@ -482,7 +492,7 @@ module LEM()
     _self::LEM,
     {
     maxcost::nonnegint         := 15,
-    subscripts::nonnegint      := 0,
+    subscripts::nonnegint      := 2,
     assignments::nonnegint     := 0,
     additions::nonnegint       := 1,
     multiplications::nonnegint := 2,
@@ -813,7 +823,7 @@ module LEM()
     }, $)::anything;
 
     description "Substitute the reversed veiling variables of the internal "
-      "veiling table in the expression <x>, If dependency flag <dependency> "
+      "veiling table in the expression <x>. If dependency flag <dependency> "
       "is set to true, the veiling variables are substituted with their "
       "dependencies.";
 
