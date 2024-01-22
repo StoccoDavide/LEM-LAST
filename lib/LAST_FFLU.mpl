@@ -11,7 +11,6 @@ export FFLU::static := proc(
   _self::LAST,
   A::Matrix,
   {
-  warm_start::boolean        := false,
   veil_sanity_check::boolean := true
   }, $)
 
@@ -40,33 +39,28 @@ export FFLU::static := proc(
     printf("LAST:-FFLU(...): %d x %d matrix detected.\n", m, n);
   end if;
 
-  # Create pivot vector and matrix M
-  if not warm_start then
-    i := 1;
-    r := Vector(m, k -> k);
-    c := Vector(n, k -> k);
-    S := Matrix(m, n);
-    pivot_list := [];
-  else
-    i := _self:-m_Results["rank"]+1;
-    r := _self:-m_Results["r"];
-    c := _self:-m_Results["c"];
-    S := _self:-m_Results["S"];
-    pivot_list := _self:-m_Results["pivots"];
-  end if;
+  # Create pivot vector
+  r := Vector(m, k -> k);
+  c := Vector(n, k -> k);
 
-  M := copy(A);
-  mn  := min(m, n);
-  rnk := mn;
+  M          := copy(A);
+  S          := Matrix(m, n);
+  mn         := min(m, n);
+  rnk        := mn;
+  pivot_list := [];
 
   # Perform Fraction-Free Gaussian elimination
   for k from i to mn do
     if _self:-m_VerboseMode then
       printf(
-        "LAST:-FFLU(...): processing %d-th row, cost = %d, veilings = %d.\n",
-        k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
-        nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
+        "LAST:-FFLU(...): processing %d-th row, veilings = %d.\n",
+        k,  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
+      #printf(
+      #  "LAST:-FFLU(...): processing %d-th row, cost = %d, veilings = %d.\n",
+      #  k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
+      #  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
+      #);
     end if;
 
     pivot := _self:-Pivoting(_self, k, M, r, c, parse("full_rows_degree") = false);

@@ -572,6 +572,7 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+$include "./lib/LAST_Rank.mpl"
 $include "./lib/LAST_Pivoting.mpl"
 $include "./lib/LAST_LU.mpl"
 $include "./lib/LAST_FFLU.mpl"

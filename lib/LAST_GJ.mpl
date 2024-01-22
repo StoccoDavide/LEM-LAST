@@ -15,7 +15,7 @@ export GJ::static := proc(
   }, $)
 
   description "Compute the Gauss-Jordan decomposition of a rectangular matrix "
-    "<A> and check  if the veiling symbol is already present in the matrix "
+    "<A> and check if the veiling symbol is already present in the matrix "
     "coefficients.";
 
   local V, M, pivot, pivot_list, m, n, mn, k, rnk, r, c, tr, tc;
@@ -47,10 +47,14 @@ export GJ::static := proc(
   for k from 1 to mn do
     if _self:-m_VerboseMode then
       printf(
-        "LAST:-GJ(...): processing %d-th row, cost = %d, veilings = %d.\n",
-        k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
-        nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
+        "LAST:-GJ(...): processing %d-th row, veilings = %d.\n",
+        k,  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
+      #printf(
+      #  "LAST:-GJ(...): processing %d-th row, cost = %d, veilings = %d.\n",
+      #  k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
+      #  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
+      #);
     end if;
 
     pivot := _self:-Pivoting(

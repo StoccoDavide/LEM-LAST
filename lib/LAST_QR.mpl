@@ -14,7 +14,8 @@ export QR::static := proc(
   veil_sanity_check::boolean := true
   }, $)
 
-  description "Compute the Givens QR decomposition of a square matrix <A>.";
+  description "Compute the Givens QR decomposition of a square matrix <A> and "
+    "check if the veiling symbol is already present in the matrix coefficients.";
 
   local m, n, Q, R, DG, k, j, a, b, z1, z2, r, Rk, Rj;
 
@@ -47,12 +48,16 @@ export QR::static := proc(
 
   # Compute the Householder QR decomposition with veiling
   for k from 1 to m-1 do
-    if _self:-m_VerboseMode then
-      printf(
-        "LAST:-QR(...): processing %d-th row, cost = %d, veilings = %d.\n",
-        k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, R),
-        length(_self:-m_LEM:-VeilList(_self:-m_LEM))
+      if _self:-m_VerboseMode then
+          printf(
+        "LAST:-QR(...): processing %d-th row, veilings = %d.\n",
+        k,  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
+      #printf(
+      #  "LAST:-QR(...): processing %d-th row, cost = %d, veilings = %d.\n",
+      #  k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, R),
+      #  length(_self:-m_LEM:-VeilList(_self:-m_LEM))
+      #);
     end if;
     for j from k+1 to n do
       a := R[k, k];

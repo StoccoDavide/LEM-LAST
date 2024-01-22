@@ -14,12 +14,14 @@ export Pivoting::static := proc(
   r::Vector(nonnegint),
   c::Vector(nonnegint),
   {
-  full_rows_degree::boolean := false
+  full_rows_degree::boolean := false,
+  fast_pivoting::boolean    := false
   }, $)::table;
 
   description "Compute the LU decomposition pivots vectors with minum degree "
     "provided the step <k>, the temporary LU (NAG) matrix <M>, the rows "
-    "permutation <r> and the columns permutation <c>.";
+    "permutation <r> and the columns permutation <c>. If <fast_pivoting> is "
+    "true the first non-zero pivot is returned";
 
   local uMij, M_degree_R, M_degree_C, perm, perm_R, perm_C, m, n, i, j, ipos,
     Mij, pivot, pivot_list, pivot_cost, M_data, V, V_data;
@@ -157,6 +159,9 @@ export Pivoting::static := proc(
       if pivot["is_zero"] then
         # First non-zero pivot found
         pivot := copy(Mij);
+        if fast_pivoting then
+          break;
+        end if;
       elif _self:-PivotingCompare(_self, pivot, Mij) then
         # A better pivot is found
         pivot := copy(Mij);
