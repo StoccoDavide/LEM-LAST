@@ -96,6 +96,12 @@ export Rank::static := proc(
     end do;
   end do;
 
+  # Store the LU decomposition
+  _self:-m_Results := table([
+    "method" = "Rank",
+    "pivots" = pivot_list,
+    "rank"   = rnk
+  ]);
   # Return the rank
   return rnk;
 end proc: # Rank

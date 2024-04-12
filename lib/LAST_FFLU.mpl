@@ -50,7 +50,7 @@ export FFLU::static := proc(
   pivot_list := [];
 
   # Perform Fraction-Free Gaussian elimination
-  for k from i to mn do
+  for k from 1 to mn do
     if _self:-m_VerboseMode then
       printf(
         "LAST:-FFLU(...): processing %d-th row, veilings = %d.\n",

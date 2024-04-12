@@ -54,8 +54,8 @@ export Pivoting::static := proc(
   pivot_list := Vector((n-k+1)*(m-k+1));
   pivot_cost := Vector((n-k+1)*(m-k+1));
   ipos       := 1;
-  for j from k to n do
-    for i from k to m do
+  for i from k to m do
+    for j from k to n do
       # Look for a non-zero pivot
       Mij["i"]           := i;
       Mij["j"]           := j;

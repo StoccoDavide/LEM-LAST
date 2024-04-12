@@ -92,10 +92,10 @@ export GJ::static := proc(
     M[k,  k]  := _self:-m_LEM:-Veil(_self:-m_LEM, pivot["value"]);
     M[k,  tc] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tc]/pivot["value"]));
     M[tr, k]  := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tr, k]));
-    M[tr, tc] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tr, tc]-M[tr, k].M[k,tc]));
+    M[tr, tc] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tr, tc]-M[tr, k].M[k, tc]));
   end do;
 
-  # Store the LU decomposition
+  # Store the GJ decomposition
   _self:-m_Results := table([
     "method" = "GJ",
     "M"      = M,
@@ -110,7 +110,7 @@ export GJ::static := proc(
     "A_nnz"  = nops(op(2, A))
   ]);
   return NULL;
-end proc: # LU
+end proc: # GJ
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -130,7 +130,7 @@ export GJsolve::static := proc(
   # Check if the results are available
   _self:-CheckResults(_self);
 
-  # Check if the LU decomposition is available
+  # Check if the GJ decomposition is available
   if not (_self:-m_Results["method"] = "GJ") then
     error("wrong or not available GJ decomposition (use 'LAST:-GJ()' first).");
   end if;
