@@ -54,15 +54,12 @@ module LEM()
 
   # Veiling
   local m_VeilingLabel := parse(cat("V_", StringTools:-Random(5, 'alnum')));
-  local m_UnveilTable                     := table([]);
-  local m_VeilingDependency               := [];
-  local m_VeilingStrategy_maxcost         := 15;
-  local m_VeilingStrategy_subscripts      := 2;
-  local m_VeilingStrategy_assignments     := 0;
-  local m_VeilingStrategy_additions       := 1;
-  local m_VeilingStrategy_multiplications := 2;
-  local m_VeilingStrategy_divisions       := 3;
-  local m_VeilingStrategy_functions       := 2;
+  local m_UnveilTable             := table([]);
+  local m_VeilingDependency       := [];
+  local m_VeilingStrategy_maxcost := 50;
+  local m_VeilingStrategy_edges   := 0;
+  local m_VeilingStrategy_nodes   := 1;
+  local m_VeilingStrategy_leafs   := 0;
 
   # Signature
   local m_SigMode  := true;
@@ -128,16 +125,13 @@ module LEM()
     _self:-m_WarningMode := proto:-m_WarningMode;
 
     # Veiling
-    _self:-m_VeilingLabel                    := proto:-m_VeilingLabel;
-    _self:-m_UnveilTable                     := copy(proto:-m_UnveilTable);
-    _self:-m_VeilingDependency               := proto:-m_VeilingDependency;
-    _self:-m_VeilingStrategy_maxcost         := proto:-m_VeilingStrategy_maxcost;
-    _self:-m_VeilingStrategy_subscripts      := proto:-m_VeilingStrategy_subscripts;
-    _self:-m_VeilingStrategy_assignments     := proto:-m_VeilingStrategy_assignments;
-    _self:-m_VeilingStrategy_additions       := proto:-m_VeilingStrategy_additions;
-    _self:-m_VeilingStrategy_multiplications := proto:-m_VeilingStrategy_multiplications;
-    _self:-m_VeilingStrategy_divisions       := proto:-m_VeilingStrategy_divisions;
-    _self:-m_VeilingStrategy_functions       := proto:-m_VeilingStrategy_functions;
+    _self:-m_VeilingLabel            := proto:-m_VeilingLabel;
+    _self:-m_UnveilTable             := copy(proto:-m_UnveilTable);
+    _self:-m_VeilingDependency       := proto:-m_VeilingDependency;
+    _self:-m_VeilingStrategy_maxcost := proto:-m_VeilingStrategy_maxcost;
+    _self:-m_VeilingStrategy_edges   := proto:-m_VeilingStrategy_edges;
+    _self:-m_VeilingStrategy_nodes   := proto:-m_VeilingStrategy_nodes;
+    _self:-m_VeilingStrategy_leafs   := proto:-m_VeilingStrategy_leafs;
 
     # Signature
     _self:-m_SigMode  := proto:-m_SigMode;
@@ -315,7 +309,7 @@ module LEM()
 
     description "Disable the expression signature calculation.";
 
-    if (_self:-VeilTableSize(_self) > 0) then
+    if (_self:-SigTableSize(_self) > 0) then
       error "the signature table is not empty, save the list if necessary and "
         "clear it before disabling signature calculation.";
       return NULL;
@@ -335,7 +329,7 @@ module LEM()
     description "Set the expression signature calculation of the module to "
       "<mode>.";
 
-    if not mode and (_self:-VeilTableSize(_self) > 0) then
+    if not mode and (_self:-SigTableSize(_self) > 0) then
       error "the signature table is not empty, save the list if necessary and "
         "clear it before disabling signature calculation.";
       return NULL;
@@ -464,15 +458,62 @@ module LEM()
     end if;
 
     return subs(
-      'subscripts'      = _self:-m_VeilingStrategy_subscripts,
-      'assignments'     = _self:-m_VeilingStrategy_assignments,
-      'additions'       = _self:-m_VeilingStrategy_additions,
-      'multiplications' = _self:-m_VeilingStrategy_multiplications,
-      'divisions'       = _self:-m_VeilingStrategy_divisions,
-      'functions'       = _self:-m_VeilingStrategy_functions,
-      codegen:-cost(tmp)
+      'edges' = _self:-m_VeilingStrategy_edges,
+      'nodes' = _self:-m_VeilingStrategy_nodes,
+      'leafs' = _self:-m_VeilingStrategy_leafs,
+      _self:-GraphComplexity(tmp)
     );
   end proc: # ExpressionCost
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export GraphStatistics := proc(
+    expr::anything,
+    $)::nonnegint, nonnegint, nonnegint;
+
+    description "Given the expression <expr>, return the directed acyclic "
+    "graph's edges, nodes, and leafs.";
+
+    local i, edges, tmp_edges, nodes, tmp_nodes, leafs, tmp_leafs;
+
+    edges := 0;
+    nodes := 0;
+    leafs := 0;
+    if (nops(expr) <> 1) then
+      nodes := nodes + 1;
+      edges := edges + nops(expr);
+      for i in op(expr) do
+        tmp_edges, tmp_nodes, tmp_leafs := GraphStatistics(i);
+        edges := edges + tmp_edges;
+        nodes := nodes + tmp_nodes;
+        leafs := leafs + tmp_leafs;
+      end do;
+    else
+      leafs := leafs + 1;
+    end if;
+    return edges, nodes, leafs;
+  end proc: # GraphStatistics
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export GraphComplexity := proc(
+    expr::anything,
+    level::nonnegint := 0,
+    $)::nonnegint;
+
+    description "Given the expression <expr> and the starting subtree's level "
+      "<level>, return the complexity of the expression.";
+
+    local i, out;
+
+    out := level+1;
+    if (nops(expr) <> 1) then
+      for i in op(expr) do
+        out := out + GraphComplexity(i, level+1);
+      end do;
+    end if;
+    return out;
+  end proc:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -491,29 +532,20 @@ module LEM()
   export SetVeilingStrategyPars::static := proc(
     _self::LEM,
     {
-    maxcost::nonnegint         := 15,
-    subscripts::nonnegint      := 2,
-    assignments::nonnegint     := 0,
-    additions::nonnegint       := 1,
-    multiplications::nonnegint := 2,
-    divisions::nonnegint       := 3,
-    functions::nonnegint       := 2
+    maxcost::nonnegint := 50,
+    edges::nonnegint   := 0,
+    nodes::nonnegint   := 1,
+    leafs::nonnegint   := 0
     }, $)
 
     description "Set the veiling strategy parameters: maximum veiling cost "
-      "<maxcost>, subscripts cost weight parameter <subscripts>, assignments "
-      "cost weight parameter <assignments>, additions cost weight parameter "
-      "<additions>, multiplications cost weight parameter <multiplications>, "
-      "divisions cost weight parameter <divisions>, and functions cost weight "
-      "parameter <functions>.";
+      "<maxcost>, edges cost weight parameter <edges>, nodes cost weight "
+      "parameter <nodes>, and leafs cost weight parameter <leafs>.";
 
-    _self:-m_VeilingStrategy_maxcost         := maxcost;
-    _self:-m_VeilingStrategy_subscripts      := subscripts;
-    _self:-m_VeilingStrategy_assignments     := assignments;
-    _self:-m_VeilingStrategy_additions       := additions;
-    _self:-m_VeilingStrategy_multiplications := multiplications;
-    _self:-m_VeilingStrategy_divisions       := divisions;
-    _self:-m_VeilingStrategy_functions       := functions;
+    _self:-m_VeilingStrategy_maxcost := maxcost;
+    _self:-m_VeilingStrategy_edges   := edges;
+    _self:-m_VeilingStrategy_nodes   := nodes;
+    _self:-m_VeilingStrategy_leafs   := leafs;
     return NULL;
   end proc: # SetVeilingStrategyPars
 
@@ -754,27 +786,45 @@ module LEM()
 
     description "Append the veiled expression <x> to the veiling table.";
 
-    local k;
+    local k, tmp_sig;
 
     k := 1;
     if type(_self:-m_UnveilTable, table) then
       k := numelems(_self:-m_UnveilTable) + 1;
       _self:-m_UnveilTable[_self:-m_VeilingLabel[k]] := x;
       if _self:-m_SigMode then
-        _self:-m_SigTable[_self:-m_VeilingLabel[k]] := _self:-Signature(
+        tmp_sig := _self:-Signature(
           _self, _self:-SubsSig(_self, x), _self:-m_SigValue,
           parse("verbose") = _self:-m_WarningMode
         );
+        if has(tmp_sig, undefined) then
+          WARNING(
+            "LEM:-TablesAppend(...): found 'undefined' signature, disabling signature mode."
+          );
+          _self:-ForgetVeilSig(_self);
+          _self:-DisableSignatureMode(_self);
+        else
+          _self:-m_SigTable[_self:-m_VeilingLabel[k]] := tmp_sig;
+        end if;
       else
         _self:-m_SigTable[_self:-m_VeilingLabel[k]] := 0;
       end if;
     else
       _self:-m_UnveilTable := table([_self:-m_VeilingLabel[1] = x]);
       if _self:-m_SigMode then
-        _self:-m_SigTable := table([_self:-m_VeilingLabel[1] = _self:-Signature(
+        tmp_sig := _self:-Signature(
           _self, x, _self:-m_SigValue,
           parse("verbose") = _self:-m_WarningMode
-        )]);
+        );
+        if has(tmp_sig, undefined) then
+          WARNING(
+            "LEM:-TablesAppend(...): found 'undefined' signature, disabling signature mode."
+          );
+          _self:-ForgetVeilSig(_self);
+          _self:-DisableSignatureMode(_self);
+        else
+          _self:-m_SigTable := table([_self:-m_VeilingLabel[1] = tmp_sig]);
+        end if;
       else
         _self:-m_SigTable := table([_self:-m_VeilingLabel[1] = 0]);
       end if;
@@ -843,6 +893,18 @@ module LEM()
 
     _self:-m_UnveilTable := table([]);
     _self:-m_SigTable    := table([]);
+    return NULL;
+  end proc: # ForgetVeil
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export ForgetVeilSig::static := proc(
+    _self::LEM,
+    $)
+
+    description "Clear the internal veiling signature tables.";
+
+    _self:-m_SigTable := table([]);
     return NULL;
   end proc: # ForgetVeil
 

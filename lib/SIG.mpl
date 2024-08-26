@@ -91,10 +91,10 @@ SIG := module()
     catch:
       if verbose then
         WARNING(
-          "LEM:-Signature(...): expression signature not defined, assumed '1'."
+          "LEM:-Signature(...): expression signature not defined, assumed 'undefined'."
         );
       end if;
-      out := 1; # FIXME: is 1 the best choice?
+      out := undefined;
     end try;
 
     return out;
