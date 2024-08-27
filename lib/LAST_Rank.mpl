@@ -10,26 +10,19 @@
 export Rank::static := proc(
   _self::LAST,
   A::Matrix, {
-  reduced := false
+    fast_pivoting := false,
+    reduced := false
   }, $)
 
   description "Compute the rank of a square matrix <A> by transforming it in "
     "row echelon form. If <reduced> is true, the matrix is transformed in "
-    "reduced row echelon form.";
+    "reduced row echelon form. If <fast_pivoting> is true the first non-zero "
+    "pivot is returned";
 
-  local M, pivot, pivot_list, m, n, mn, i, k, rnk, r, c, tmp, tmp_LEM, veil_fnc;
+  local M, pivot, pivot_list, m, n, mn, i, k, rnk, r, c, tmp, tmp_LEM;
 
-  # Creare temporary LEM
-  tmp_LEM  := _self:-m_LEM;
-  veil_fnc := (lem, x) -> `if`(
-    try
-      timelimit(_self:-m_TimeLimit, evalb(lem:-Unveil(lem, x) = 0))
-    catch:
-      false
-    end try,
-    0,
-    lem:-Veil(lem, x)
-  );
+  # Copy the LEM object
+  tmp_LEM := _self:-m_LEM;
 
   # Get matrix dimensions
   m, n := LinearAlgebra:-Dimensions(A):
@@ -53,15 +46,9 @@ export Rank::static := proc(
         "LAST:-Rank(...): processing %d-th row, veilings = %d.\n",
         k,  nops(tmp_LEM:-VeilList(tmp_LEM))
       );
-      #printf(
-      #  "LAST:-Rank(...): processing %d-th row, cost = %d, veilings = %d.\n",
-      #  k, tmp_LEM:-ExpressionCost(tmp_LEM, M), nops(tmp_LEM:-VeilList(tmp_LEM))
-      #);
     end if;
 
-    pivot := _self:-Pivoting(
-      _self, k, M, r, c, parse("full_rows_degree") = false, parse("fast_pivoting") = true
-    );
+    pivot := _self:-Pivoting(_self, k, M, r, c, parse("fast_pivoting") = fast_pivoting);
     if not pivot["is_zero"] then
       pivot_list := [op(pivot_list), pivot["value"]];
     end if;
@@ -85,13 +72,13 @@ export Rank::static := proc(
     # Gaussian elimination
     tmp := [k..-1];
     if reduced then
-      M[k, 1..-1] := veil_fnc~(tmp_LEM, Normalizer~(M[k, 1..-1]/pivot["value"]));
+      M[k, 1..-1] := _self:-m_LEM:-Veil~(tmp_LEM, Normalizer~(M[k, 1..-1]/pivot["value"]));
     end if;
     for i from k+1 to mn do
       if reduced then
-        M[i, tmp] := veil_fnc~(tmp_LEM, Normalizer~(M[i, tmp] - M[i, k]*M[k, tmp]));
+        M[i, tmp] := _self:-m_LEM:-Veil~(tmp_LEM, Normalizer~(M[i, tmp] - M[i, k]*M[k, tmp]));
       else;
-        M[i, tmp] := veil_fnc~(tmp_LEM, Normalizer~(M[i, tmp] - M[i, k]/M[k, k]*M[k, tmp]));
+        M[i, tmp] := _self:-m_LEM:-Veil~(tmp_LEM, Normalizer~(M[i, tmp] - M[i, k]/M[k, k]*M[k, tmp]));
       end if;
     end do;
   end do;

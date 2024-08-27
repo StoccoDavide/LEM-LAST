@@ -56,15 +56,9 @@ export FFLU::static := proc(
         "LAST:-FFLU(...): processing %d-th row, veilings = %d.\n",
         k,  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
-      #printf(
-      #  "LAST:-FFLU(...): processing %d-th row, cost = %d, veilings = %d.\n",
-      #  k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
-      #  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
-      #);
     end if;
 
-    pivot := _self:-Pivoting(_self, k, M, r, c, parse("full_rows_degree") = false);
-
+    pivot := _self:-Pivoting(_self, k, M, r, c);
     if pivot["is_zero"] then
       rnk := k - 1;
       if _self:-m_VerboseMode then

@@ -50,16 +50,9 @@ export GJ::static := proc(
         "LAST:-GJ(...): processing %d-th row, veilings = %d.\n",
         k,  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
-      #printf(
-      #  "LAST:-GJ(...): processing %d-th row, cost = %d, veilings = %d.\n",
-      #  k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
-      #  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
-      #);
     end if;
 
-    pivot := _self:-Pivoting(
-      _self, k, M, r, c, parse("full_rows_degree") = true
-    );
+    pivot := _self:-Pivoting(_self, k, M, r, c);
     if not pivot["is_zero"] then
       pivot_list := [op(pivot_list), pivot["value"]];
     end if;

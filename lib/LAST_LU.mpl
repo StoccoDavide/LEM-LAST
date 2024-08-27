@@ -11,23 +11,16 @@ export LU::static := proc(
   _self::LAST,
   A::Matrix,
   {
+  warm_start::boolean        := false,
   veil_sanity_check::boolean := true
   }, $)
 
   description "Compute the LU decomposition of a square matrix <A> and check "
-    "if the veiling symbol is already present in the matrix coefficients.";
+    "if the veiling symbol is already present in the matrix coefficients. The "
+    "warm start option allows to reuse the previous results.";
 
-  local V, M, L, U, pivot, pivot_list, m, n, mn, k, rnk, r, c, tmp, veil_fnc;
+  local V, M, L, U, pivot, pivot_list, m, n, mn, i, k, rnk, r, c, tmp;
 
-  veil_fnc := (lem, x) -> `if`(
-    try
-      timelimit(_self:-m_TimeLimit, evalb(lem:-Unveil(lem, x) = 0))
-    catch:
-      false
-    end try,
-    0,
-    lem:-Veil(lem, x)
-  );
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -47,32 +40,57 @@ export LU::static := proc(
     printf("LAST:-LU(...): %d x %d matrix detected.\n", m, n);
   end if;
 
-  # Create pivot vector
-  r := Vector(m, k -> k);
-  c := Vector(n, k -> k);
+  # Create pivot vector and matrix M
+  M := copy(A);
+  if not warm_start then
+    i := 1;
+    r := Vector(m, k -> k);
+    c := Vector(n, k -> k);
+    pivot_list := [];
+  else
+    i := _self:-m_Results["rank"]+1;
+    r := _self:-m_Results["r"];
+    c := _self:-m_Results["c"];
+    pivot_list := _self:-m_Results["pivots"];
 
-  M          := copy(A);
-  mn         := min(m, n);
-  rnk        := mn;
-  pivot_list := [];
+    # Reconstruct the matrix M
+    for k from 1 to i-1 do
+      if _self:-m_VerboseMode then
+        printf("LAST:-LU(...): reconstructing %d-th row.\n", k);
+      end if;
+
+      # FIXME: I should repeat the same steps as in the main loop for the first i-1 steps
+
+      # Swap rows and columns
+      if (r[k] <> k) then
+        M[[r[k], k], 1..-1] := M[[k, r[k]], 1..-1];
+      end if;
+      if (c[k] <> k) then
+        M[1..-1, [c[k], k]] := M[1..-1, [k, c[k]]];
+      end if;
+
+      # Schur complement
+      tmp         := [k+1..-1];
+      M[k,   k]   := _self:-m_LEM:-Veil(_self:-m_LEM,  pivot_list[k]);
+      M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot_list[k]));
+      M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
+      M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
+    end do;
+  end if;
+
+  mn  := min(m, n);
+  rnk := mn;
 
   # Perform Gaussian elimination
-  for k from 1 to mn do
+  for k from i to mn do
     if _self:-m_VerboseMode then
       printf(
         "LAST:-LU(...): processing %d-th row, veilings = %d.\n",
         k,  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
-      #printf(
-      #  "LAST:-LU(...): processing %d-th row, cost = %d, veilings = %d.\n",
-      #  k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
-      #  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
-      #);
     end if;
 
-    pivot := _self:-Pivoting(
-      _self, k, M, r, c, parse("full_rows_degree") = false
-    );
+    pivot := _self:-Pivoting(_self, k, M, r, c);
     if not pivot["is_zero"] then
       pivot_list := [op(pivot_list), pivot["value"]];
     end if;
@@ -95,10 +113,10 @@ export LU::static := proc(
 
     # Schur complement
     tmp         := [k+1..-1];
-    M[k,   k]   := veil_fnc(_self:-m_LEM,  pivot["value"]);
-    M[tmp, k]   := veil_fnc~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot["value"]));
-    M[k,   tmp] := veil_fnc~(_self:-m_LEM, Normalizer~(M[k, tmp]));
-    M[tmp, tmp] := veil_fnc~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
+    M[k,   k]   := _self:-m_LEM:-Veil(_self:-m_LEM,  pivot["value"]);
+    M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot["value"]));
+    M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
+    M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
   end do;
 
   L := Matrix(M[1..m, 1..m], shape = triangular[lower, unit]);

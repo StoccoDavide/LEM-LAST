@@ -45,13 +45,12 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  local m_LEM               := NULL;
-  local m_VerboseMode       := false;
-  local m_WarningMode       := true;
-  local m_TimeLimit         := 0.1;
-  local m_MinDegreeStrategy := "product_1rc";
-  local m_Results           := NULL;
-  local m_StoredData        := [];
+  local m_LEM         := NULL;
+  local m_VerboseMode := false;
+  local m_WarningMode := true;
+  local m_TimeLimit   := 0.1;
+  local m_Results     := NULL;
+  local m_StoredData  := []; # TODO: remove me or test me!
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -106,12 +105,12 @@ module LAST()
 
     description "Copy the objects <proto> into <self>.";
 
-    _self:-m_LEM               := proto:-m_LEM;
-    _self:-m_VerboseMode       := proto:-m_VerboseMode;
-    _self:-m_WarningMode       := proto:-m_WarningMode;
-    _self:-m_TimeLimit         := proto:-m_TimeLimit;
-    _self:-m_MinDegreeStrategy := proto:-m_MinDegreeStrategy;
-    _self:-m_Results           := proto:-m_Results;
+    _self:-m_LEM         := proto:-m_LEM;
+    _self:-m_VerboseMode := proto:-m_VerboseMode;
+    _self:-m_WarningMode := proto:-m_WarningMode;
+    _self:-m_TimeLimit   := proto:-m_TimeLimit;
+    _self:-m_Results     := proto:-m_Results;
+    _self:-m_StoredData  := proto:-m_StoredData;
   end proc: # ModuleCopy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

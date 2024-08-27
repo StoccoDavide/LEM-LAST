@@ -53,11 +53,6 @@ export QR::static := proc(
         "LAST:-QR(...): processing %d-th row, veilings = %d.\n",
         k,  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
-      #printf(
-      #  "LAST:-QR(...): processing %d-th row, cost = %d, veilings = %d.\n",
-      #  k, _self:-m_LEM:-ExpressionCost(_self:-m_LEM, R),
-      #  length(_self:-m_LEM:-VeilList(_self:-m_LEM))
-      #);
     end if;
     for j from k+1 to n do
       a := R[k, k];
