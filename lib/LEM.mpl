@@ -48,23 +48,12 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  # General
-  local m_VerboseMode := false;
-  local m_WarningMode := true;
-
-  # Veiling
-  local m_VeilingLabel := parse(cat("V_", StringTools:-Random(5, 'alnum')));
-  local m_UnveilTable             := table([]);
-  local m_VeilingDependency       := [];
-  local m_VeilingStrategy_maxcost := 50;
-  local m_VeilingStrategy_edges   := 0;
-  local m_VeilingStrategy_nodes   := 1;
-  local m_VeilingStrategy_leafs   := 0;
-
-  # Signature
-  local m_SigMode  := true;
-  local m_SigTable := table([]);
-  local m_SigValue := 1000000007;
+  local m_VerboseMode       := false;
+  local m_WarningMode       := true;
+  local m_VeilingLabel      := parse(cat("V_", StringTools:-Random(5, 'alnum')));
+  local m_UnveilTable       := table([]);
+  local m_VeilingDependency := [];
+  local m_ExprMaxCost       := 500;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -120,23 +109,12 @@ module LEM()
 
     description "Copy the objects <proto> into <self>.";
 
-    # General
-    _self:-m_VerboseMode := proto:-m_VerboseMode;
-    _self:-m_WarningMode := proto:-m_WarningMode;
-
-    # Veiling
-    _self:-m_VeilingLabel            := proto:-m_VeilingLabel;
-    _self:-m_UnveilTable             := copy(proto:-m_UnveilTable);
-    _self:-m_VeilingDependency       := proto:-m_VeilingDependency;
-    _self:-m_VeilingStrategy_maxcost := proto:-m_VeilingStrategy_maxcost;
-    _self:-m_VeilingStrategy_edges   := proto:-m_VeilingStrategy_edges;
-    _self:-m_VeilingStrategy_nodes   := proto:-m_VeilingStrategy_nodes;
-    _self:-m_VeilingStrategy_leafs   := proto:-m_VeilingStrategy_leafs;
-
-    # Signature
-    _self:-m_SigMode  := proto:-m_SigMode;
-    _self:-m_SigTable := copy(proto:-m_SigTable);
-    _self:-m_SigValue := proto:-m_SigValue;
+    _self:-m_VerboseMode       := proto:-m_VerboseMode;
+    _self:-m_WarningMode       := proto:-m_WarningMode;
+    _self:-m_VeilingLabel      := proto:-m_VeilingLabel;
+    _self:-m_UnveilTable       := copy(proto:-m_UnveilTable);
+    _self:-m_VeilingDependency := proto:-m_VeilingDependency;
+    _self:-m_ExprMaxCost       := proto:-m_ExprMaxCost;
   end proc: # ModuleCopy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -251,11 +229,6 @@ module LEM()
       return NULL;
     end if;
 
-    if (nops(dependency) > 0) and not _self:-m_SigMode then
-      error "the signature mode is disabled, please enable it before setting "
-        "the veiling dependency.";
-    end if;
-
     _self:-m_VeilingDependency := dependency;
     return NULL;
   end proc: # SetVeilingDependency
@@ -282,86 +255,6 @@ module LEM()
     _self:-m_VeilingDependency := {};
     return NULL;
   end proc: # ClearVeilingDependency
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export EnableSignatureMode::static := proc(
-    _self::LEM,
-    $)
-
-    description "Enable the expression signature calculation.";
-
-    if (_self:-VeilTableSize(_self) > 0) then
-      error "the signature table is not empty, save the list if necessary and "
-        "clear it before enabling signature calculation.";
-      return NULL;
-    end if;
-
-    _self:-m_SigMode := true;
-    return NULL;
-  end proc: # EnableSignatureMode
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export DisableSignatureMode::static := proc(
-    _self::LEM,
-    $)
-
-    description "Disable the expression signature calculation.";
-
-    if (_self:-SigTableSize(_self) > 0) then
-      error "the signature table is not empty, save the list if necessary and "
-        "clear it before disabling signature calculation.";
-      return NULL;
-    end if;
-
-    _self:-m_SigMode := false;
-    return NULL;
-  end proc: # DisableSignatureMode
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export SetSignatureMode::static := proc(
-    _self::LEM,
-    mode::boolean,
-    $)
-
-    description "Set the expression signature calculation of the module to "
-      "<mode>.";
-
-    if not mode and (_self:-SigTableSize(_self) > 0) then
-      error "the signature table is not empty, save the list if necessary and "
-        "clear it before disabling signature calculation.";
-      return NULL;
-    end if;
-
-    _self:-m_SigMode := mode;
-    return NULL;
-  end proc: # SetSignatureMode
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export SetSignatureValue := proc(
-    _self::LEM,
-    p::prime,
-    $)
-
-    description "Set the signature value to <p>.";
-
-    _self:-m_SigValue := p;
-    return NULL;
-  end proc: # SetSignatureValue
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export GetSignatureValue := proc(
-    _self::LEM,
-    $)::prime;
-
-    description "Return the signature value.";
-
-    return _self:-m_SigValue;
-  end proc: # GetSignatureValue
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -395,7 +288,7 @@ module LEM()
         "unassign it.", _self:-m_VeilingLabel;
 	  end if;
 
-    # Recognize zero if we can, so that we don't hide zeros.
+    # Recognize zero if we can, so that we don't hide zeros
     c := Normalizer(x);
 
     # Check the veiling strategy
@@ -403,11 +296,11 @@ module LEM()
       return c;
     end if;
 
-    # Remove the integer content and sign so that we don't hide them either.
+    # Remove the integer content and sign so that we don't hide them either
     i := icontent(c);
 
     # And we really mean sign, here, and not signum, because the interesting
-    # case is when c may be a polynomial.
+    # case is when c may be a polynomial
     try
       s := sign(c); # sign is weak
       # Don't do anything if we can tell that the coefficient is just a number
@@ -418,16 +311,15 @@ module LEM()
     catch:
       s := 1;
     end try;
-    # Only if there is something complicated to hide we do actually hide it and
-    # return a label.
+    # Only if there is something complicated to hide we do actually hide it
     if (nops(_self:-m_VeilingDependency) > 0) then
       convert(_self:-m_VeilingDependency, set) intersect indets(s*c/i);
       deps := select[flatten](j -> evalb(j in %), _self:-m_VeilingDependency);
       if (nops(deps) > 0) then
-        return s*i*_self:-TablesAppend(_self, s*c/i)(op(deps));
+        return s*i*_self:-VeilTableAppend(_self, s*c/i)(op(deps));
       end if;
     end if;
-    return s*i*_self:-TablesAppend(_self, s*c/i);
+    return s*i*_self:-VeilTableAppend(_self, s*c/i);
   end proc; # Veil
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -457,17 +349,13 @@ module LEM()
       tmp := subs(op(rhs~(%) =~ lhs~(%)), tmp);
     end if;
 
-    return subs(
-      'edges' = _self:-m_VeilingStrategy_edges,
-      'nodes' = _self:-m_VeilingStrategy_nodes,
-      'leafs' = _self:-m_VeilingStrategy_leafs,
-      _self:-GraphComplexity(tmp)
-    );
+    return _self:-GraphComplexity(_self, tmp);
   end proc: # ExpressionCost
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   export GraphStatistics := proc(
+    _self::LEM,
     expr::anything,
     $)::nonnegint, nonnegint, nonnegint;
 
@@ -483,7 +371,7 @@ module LEM()
       nodes := nodes + 1;
       edges := edges + nops(expr);
       for i in op(expr) do
-        tmp_edges, tmp_nodes, tmp_leafs := GraphStatistics(i);
+        tmp_edges, tmp_nodes, tmp_leafs := GraphStatistics(_self, i);
         edges := edges + tmp_edges;
         nodes := nodes + tmp_nodes;
         leafs := leafs + tmp_leafs;
@@ -497,6 +385,7 @@ module LEM()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   export GraphComplexity := proc(
+    _self::LEM,
     expr::anything,
     level::nonnegint := 0,
     $)::nonnegint;
@@ -506,10 +395,10 @@ module LEM()
 
     local i, out;
 
-    out := level+1;
+    out := level + 1;
     if (nops(expr) <> 1) then
       for i in op(expr) do
-        out := out + GraphComplexity(i, level+1);
+        out := out + GraphComplexity(_self, i, level + 1);
       end do;
     end if;
     return out;
@@ -524,30 +413,21 @@ module LEM()
 
     description "Evaluate the veiling strategy for the expression <x>.";
 
-    return evalb(_self:-ExpressionCost(_self, x) > _self:-m_VeilingStrategy_maxcost);
+    return evalb(_self:-ExpressionCost(_self, x) > _self:-m_ExprMaxCost);
   end proc: # VeilingStrategy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  export SetVeilingStrategyPars::static := proc(
+  export SetExprMaxCost::static := proc(
     _self::LEM,
-    {
-    maxcost::nonnegint := 50,
-    edges::nonnegint   := 0,
-    nodes::nonnegint   := 1,
-    leafs::nonnegint   := 0
-    }, $)
+    maxcost::nonnegint,
+    $)
 
-    description "Set the veiling strategy parameters: maximum veiling cost "
-      "<maxcost>, edges cost weight parameter <edges>, nodes cost weight "
-      "parameter <nodes>, and leafs cost weight parameter <leafs>.";
+    description "Set the maximum expression cost <maxcost> for veiling.";
 
-    _self:-m_VeilingStrategy_maxcost := maxcost;
-    _self:-m_VeilingStrategy_edges   := edges;
-    _self:-m_VeilingStrategy_nodes   := nodes;
-    _self:-m_VeilingStrategy_leafs   := leafs;
+    _self:-m_ExprMaxCost := maxcost;
     return NULL;
-  end proc: # SetVeilingStrategyPars
+  end proc: # SetExprMaxCost
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -560,18 +440,6 @@ module LEM()
 
     return subs(op(_self:-VeilList(_self, parse("reverse") = true)), x);
   end proc: # Unveil
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export UnveilSig::static := proc(
-    _self::LEM,
-    x::anything,
-    $)::anything;
-
-    description "Unveil the expression <x> with signature values.";
-
-    return eval['recurse'](x, _self:-SigList(_self));
-  end proc: # UnveilSig
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -596,27 +464,6 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  export SigImap::static := proc(
-    _self::LEM,
-    x::anything,
-    $)::anything;
-
-    description "Unveil the expression <x> with signature values permutation "
-      "map.";
-
-    local T, perm, a, b, k;
-
-    T, perm := _self:-SigTableImap(_self, parse("reverse") = true);
-    b       := copy(x);
-    for k from 1 to nops(perm) do
-      a := b;
-      b := subs[eval](T[perm[k]], a);
-    end do;
-    return b;
-  end proc: # SigImap
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
   export VeilDependencyList::static := proc(
     _self::LEM,
     {
@@ -625,10 +472,9 @@ module LEM()
 
     description "Return a list of the veiling labels dependency substitution.";
 
-    local vars, veil, i, deps;
+    local veil, i, deps;
 
     # Extract variables and veils
-    vars := _self:-m_VeilingDependency;
     veil := Array(_self:-VeilList(
       _self, parse("reverse") = reverse, parse("dependency") = false
     ));
@@ -669,22 +515,6 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  export SigList::static := proc(
-    _self::LEM,
-    {
-    reverse::boolean := false
-    }, $)::list(anything);
-
-    description "Return a list of the signature labels.";
-
-    local T, perm;
-
-    T, perm := _self:-SigTableImap(_self, parse("reverse") = reverse);
-    return T[perm]:
-  end proc: # SigList
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
   export VeilUnorderedList::static := proc(
     _self::LEM,
     $)::list;
@@ -700,21 +530,6 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  export SigUnorderedList::static := proc(
-    _self::LEM,
-    $)::list;
-
-    description "Return the unordered signature list.";
-
-    if type(_self:-m_SigTable, table) then
-      return op(eval(_self:-m_SigTable));
-    else
-      return [];
-    end if;
-  end proc: # SigUnorderedList
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
   export VeilTableSize::static := proc(
     _self::LEM,
     $)::nonnegint;
@@ -723,17 +538,6 @@ module LEM()
 
     return numelems(_self:-VeilUnorderedList(_self));
   end proc: # VeilTableSize
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export SigTableSize::static := proc(
-    _self::LEM,
-    $)::nonnegint;
-
-    description "Return the size of the internal signature table.";
-
-    return numelems(_self:-SigUnorderedList(_self));
-  end proc: # SigTableSize
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -758,109 +562,24 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  export SigTableImap::static := proc(
-    _self::LEM,
-    {
-    reverse::boolean := false
-    }, $)::{[], list(anything = anything)}, {[], list(nonnegint)};
-
-    description "Return the signature list and the permutation that sorts it.";
-
-    local T, a, b, comparator;
-
-    T := _self:-SigUnorderedList(_self);
-    if reverse then
-      comparator := (a, b) -> evalb(op(1, lhs(a)) > op(1, lhs(b)));
-    else
-      comparator := (a, b) -> evalb(op(1, lhs(a)) < op(1, lhs(b)));
-    end if;
-    return T, sort(T, comparator, output = 'permutation');
-  end proc: # SigTableImap
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export TablesAppend::static := proc(
+  export VeilTableAppend::static := proc(
     _self::LEM,
     x::anything,
     $)::indexed;
 
     description "Append the veiled expression <x> to the veiling table.";
 
-    local k, tmp_sig;
+    local k;
 
     k := 1;
     if type(_self:-m_UnveilTable, table) then
       k := numelems(_self:-m_UnveilTable) + 1;
       _self:-m_UnveilTable[_self:-m_VeilingLabel[k]] := x;
-      if _self:-m_SigMode then
-        tmp_sig := _self:-Signature(
-          _self, _self:-SubsSig(_self, x), _self:-m_SigValue,
-          parse("verbose") = _self:-m_WarningMode
-        );
-        if has(tmp_sig, undefined) then
-          WARNING(
-            "LEM:-TablesAppend(...): found 'undefined' signature, disabling signature mode."
-          );
-          _self:-ForgetVeilSig(_self);
-          _self:-DisableSignatureMode(_self);
-        else
-          _self:-m_SigTable[_self:-m_VeilingLabel[k]] := tmp_sig;
-        end if;
-      else
-        _self:-m_SigTable[_self:-m_VeilingLabel[k]] := 0;
-      end if;
     else
       _self:-m_UnveilTable := table([_self:-m_VeilingLabel[1] = x]);
-      if _self:-m_SigMode then
-        tmp_sig := _self:-Signature(
-          _self, x, _self:-m_SigValue,
-          parse("verbose") = _self:-m_WarningMode
-        );
-        if has(tmp_sig, undefined) then
-          WARNING(
-            "LEM:-TablesAppend(...): found 'undefined' signature, disabling signature mode."
-          );
-          _self:-ForgetVeilSig(_self);
-          _self:-DisableSignatureMode(_self);
-        else
-          _self:-m_SigTable := table([_self:-m_VeilingLabel[1] = tmp_sig]);
-        end if;
-      else
-        _self:-m_SigTable := table([_self:-m_VeilingLabel[1] = 0]);
-      end if;
     end if;
     return _self:-m_VeilingLabel[k];
-  end proc: # TablesAppend
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export SubsSig::static := proc(
-    _self::LEM,
-    x::anything,
-    $)::anything;
-
-    description "Substitute the reversed signature values of the internal "
-      "signature table in the expression <x>.";
-
-    local out;
-    try
-      out := subs[eval](op(_self:-SigList(_self, parse("reverse") = true)), x);
-    catch "division by zero":
-      if _self:-m_WarningMode then
-        WARNING("LEM:-SubsSig(...): division by zero, returning 'FAIL'.");
-      end if;
-      out := FAIL;
-    catch:
-      if _self:-m_WarningMode then
-        WARNING(
-          "LEM:-SubsSig(...): something went wrong in '%1', returning 'FAIL'.",
-          lastexception
-        );
-      end if;
-      out := FAIL;
-    end try;
-    return out;
-  end proc: # SubsSig
+  end proc: # VeilTableAppend
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -878,8 +597,8 @@ module LEM()
       "dependencies.";
 
     return subs[eval](op(_self:-VeilList(_self,
-        parse("dependency") = dependency,
-        parse("reverse")    = reverse
+        parse("reverse")    = reverse,
+        parse("dependency") = dependency
       )), x);
   end proc: # SubsVeil
 
@@ -889,46 +608,11 @@ module LEM()
     _self::LEM,
     $)
 
-    description "Clear the internal veiling and signature tables.";
+    description "Clear the internal veiling table.";
 
     _self:-m_UnveilTable := table([]);
-    _self:-m_SigTable    := table([]);
     return NULL;
   end proc: # ForgetVeil
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export ForgetVeilSig::static := proc(
-    _self::LEM,
-    $)
-
-    description "Clear the internal veiling signature tables.";
-
-    _self:-m_SigTable := table([]);
-    return NULL;
-  end proc: # ForgetVeil
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export Signature::static := proc(
-    _self::LEM,
-    x::anything,
-    p::prime := _self:-m_SigValue,
-    {
-    verbose::boolean := false
-    }, $)::anything;
-
-    description "Compute the signature of the expression <x> modulo <p> (the "
-      "default is the internal signature value) also by using the internal "
-      "signature table of the veiled expressions. Verbosity can be enabled "
-      "with the flag <verbose>.";
-
-    return SIG(
-      _self:-SubsSig(_self, x),
-      _self:-m_SigValue,
-      parse("verbose") = _self:-m_WarningMode
-    );
-  end proc: # Signature
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
