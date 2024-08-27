@@ -48,7 +48,7 @@ export GJ::static := proc(
     if _self:-m_VerboseMode then
       printf(
         "LAST:-GJ(...): processing %d-th row, veilings = %d.\n",
-        k,  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
+        k, nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
     end if;
 
@@ -71,6 +71,7 @@ export GJ::static := proc(
         pivot["i"], pivot["j"], pivot["value"], pivot["cost"], pivot["degree_r"],
         pivot["degree_c"]
       );
+      printf("LAST:-GJ(...): performing Gaussian elimination...");
     end if;
 
     # Multiply by D_k^(-1) and then by I-v*e_k^T
@@ -86,6 +87,10 @@ export GJ::static := proc(
     M[k,  tc] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tc]/pivot["value"]));
     M[tr, k]  := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tr, k]));
     M[tr, tc] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tr, tc]-M[tr, k].M[k, tc]));
+
+    if _self:-m_VerboseMode then
+      printf(" DONE\n");
+    end if;
   end do;
 
   # Store the GJ decomposition

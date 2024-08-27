@@ -13,26 +13,18 @@ export Pivoting::static := proc(
   M::Matrix,
   r::Vector(nonnegint),
   c::Vector(nonnegint),
-  {
-  fast_pivoting::boolean := false
-  }, $)::table;
+  $)::table;
 
   description "Compute the LU decomposition pivots vectors with minum degree "
     "provided the step <k>, the temporary LU (NAG) matrix <M>, the rows "
-    "permutation <r> and the columns permutation <c>. If <fast_pivoting> is "
-    "true the first non-zero pivot is returned.";
+    "permutation <r> and the columns permutation <c>.";
 
-  local uMij, M_degree_R, M_degree_C, perm, perm_R, perm_C, m, n, i, j, ipos,
-    Mij, pivot, pivot_list, pivot_cost, M_data, V, V_data;
+  local Mij, uMij, M_degree_R, M_degree_C, perm, perm_R, perm_C, m, n, i, j, ipos,
+    pivot, pivot_list, pivot_cost;
 
   if _self:-m_VerboseMode then
-    printf("LAST:-LU(...): finding pivot in %d-th row.\n", k);
+    printf("LAST:-Pivoting(...): finding pivot in %d-th row...", k);
   end if;
-
-  # Copy the matrix and veils, and substitute the data
-  M_data := subs(op(_self:-m_StoredData), M);
-  V      := _self:-m_LEM:-VeilList(_self:-m_LEM, parse("reverse") = true);
-  V_data := subs(op(_self:-m_StoredData), V);
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -43,7 +35,7 @@ export Pivoting::static := proc(
   # Calculate the degree
   M_degree_R := Matrix(m, n);
   M_degree_C := Matrix(m, n);
-  M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] := _self:-GetDegrees(_self, M_data[k..m, k..n]);
+  M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] := _self:-GetDegrees(_self, M[k..m, k..n]);
 
   # Build a list (i,j,degree,cost) and sort it
   pivot      := table([]);
@@ -108,13 +100,15 @@ export Pivoting::static := proc(
     try
       Mij["value"] := timelimit(_self:-m_TimeLimit, Normalizer(Mij["value"]));
       Mij["is_zero"] := evalb(Mij["value"] = 0);
-      if not Mij["is_zero"] then
-        uMij := timelimit(_self:-m_TimeLimit, subs(op(_self:-m_StoredData), op(V_data), Mij["value"]));
+      if (not Mij["is_zero"]) and _self:-m_Unveiling then
+        uMij := timelimit(_self:-m_TimeLimit, _self:-m_LEM:-Unveil(_self:-m_LEM, Mij["value"]));
         # Recalculate cost and value of the pivot
         Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, uMij);
-        # Time limit required because sometimes normalizer get stuck
+        # Time limit required because sometimes Normalizer get stuck
         uMij := timelimit(_self:-m_TimeLimit, Normalizer(uMij));
         Mij["is_zero"] := evalb(uMij = 0);
+      else
+        Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, Mij);
       end if;
     catch "time expired":
       if _self:-m_WarningMode then
@@ -124,9 +118,8 @@ export Pivoting::static := proc(
         );
       end if;
       Mij["is_zero"] := false;
-      uMij := subs(op(_self:-m_StoredData), Mij["value"]);
       # Recalculate cost and value of the pivot
-      Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, uMij);
+      Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, Mij["value"]);
     catch "division by zero":
       if _self:-m_WarningMode then
         WARNING(
@@ -153,7 +146,7 @@ export Pivoting::static := proc(
       if pivot["is_zero"] then
         # First non-zero pivot found
         pivot := copy(Mij);
-        if fast_pivoting then
+        if _self:-m_FastPivoting then
           break;
         end if;
       elif _self:-PivotingCompare(_self, pivot, Mij) then
@@ -176,6 +169,10 @@ export Pivoting::static := proc(
       (c[j], c[k])     := (c[k], c[j]);
       M[1..-1, [j, k]] := M[1..-1, [k, j]];
     end if;
+  end if;
+
+  if _self:-m_VerboseMode then
+    printf(" DONE\n", k);
   end if;
 
   return pivot;

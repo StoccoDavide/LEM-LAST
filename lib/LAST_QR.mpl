@@ -51,7 +51,7 @@ export QR::static := proc(
       if _self:-m_VerboseMode then
           printf(
         "LAST:-QR(...): processing %d-th row, veilings = %d.\n",
-        k,  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
+        k, nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
     end if;
     for j from k+1 to n do
@@ -84,7 +84,6 @@ export QR::static := proc(
 
           R[k,k] := r;
           R[j,k] := 0;
-          #DG[k]  := _self:-m_LEM:-Veil(_self:-m_LEM, Normalizer~(z1*z2*r));
           DG[k]  := z1*z2*r;
           DG[j]  := r;
         end if;

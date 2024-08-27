@@ -45,12 +45,13 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  local m_LEM         := NULL;
-  local m_VerboseMode := false;
-  local m_WarningMode := true;
-  local m_TimeLimit   := 0.1;
-  local m_Results     := NULL;
-  local m_StoredData  := []; # TODO: remove me or test me!
+  local m_LEM          := NULL;
+  local m_VerboseMode  := false;
+  local m_WarningMode  := true;
+  local m_TimeLimit    := 0.1;
+  local m_Unveiling    := true;
+  local m_FastPivoting := false;
+  local m_Results      := NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -105,12 +106,13 @@ module LAST()
 
     description "Copy the objects <proto> into <self>.";
 
-    _self:-m_LEM         := proto:-m_LEM;
-    _self:-m_VerboseMode := proto:-m_VerboseMode;
-    _self:-m_WarningMode := proto:-m_WarningMode;
-    _self:-m_TimeLimit   := proto:-m_TimeLimit;
-    _self:-m_Results     := proto:-m_Results;
-    _self:-m_StoredData  := proto:-m_StoredData;
+    _self:-m_LEM          := proto:-m_LEM;
+    _self:-m_VerboseMode  := proto:-m_VerboseMode;
+    _self:-m_WarningMode  := proto:-m_WarningMode;
+    _self:-m_TimeLimit    := proto:-m_TimeLimit;
+    _self:-m_Unveiling    := proto:-m_Unveiling;
+    _self:-m_FastPivoting := proto:-m_FastPivoting;
+    _self:-m_Results      := proto:-m_Results;
   end proc: # ModuleCopy
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -291,6 +293,58 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  export EnableUnveiling::static := proc(
+    _self::LAST,
+    $)
+
+    description "Enable the unveiling of expressions during factorization "
+      "(longer computation time, possibly more accurate results).";
+
+    _self:-m_Unveiling := true;
+    return NULL;
+  end proc: # EnableUnveiling
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export DisableUnveiling::static := proc(
+    _self::LAST,
+    $)
+
+    description "Disable the unveiling of expressions during factorization "
+      "(shorter computation time, possibly less accurate results).";
+
+    _self:-m_Unveiling := false;
+    return NULL;
+  end proc: # DisableUnveiling
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export EnableFastPivoting::static := proc(
+    _self::LAST,
+    $)
+
+    description "Enable fast pivoting during the factorization (first non-zero "
+      "pivot is selected).";
+
+    _self:-m_FastPivoting := true;
+    return NULL;
+  end proc: # EnableFastPivoting
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export DisableFastPivoting::static := proc(
+    _self::LAST,
+    $)
+
+    description "Disable fast pivoting during the factorization (best pivot is "
+      "selected).";
+
+    _self:-m_FastPivoting := false;
+    return NULL;
+  end proc: # DisableFastPivoting
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   export CheckResults::static := proc(
     _self::LAST,
     $)
@@ -334,30 +388,6 @@ module LAST()
     _self:-m_Results := table([]);
     return NULL;
   end proc: # ClearResults
-
- # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export SetStoredData::static := proc(
-    _self::LAST,
-    data::{list(`=`), set(`=`)},
-    $)
-
-    description "Set the stored data of the module to <data>.";
-
-    _self:-m_StoredData := data;
-    return NULL;
-  end proc: # SetStoredData
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export GetStoredData::static := proc(
-    _self::LAST,
-    $)::{list(`=`), set(`=`)};
-
-    description "Get the stored data of the module.";
-
-    return _self:-m_StoredData;
-  end proc: # GetStoredData
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

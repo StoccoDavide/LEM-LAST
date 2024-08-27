@@ -54,7 +54,7 @@ export FFLU::static := proc(
     if _self:-m_VerboseMode then
       printf(
         "LAST:-FFLU(...): processing %d-th row, veilings = %d.\n",
-        k,  nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
+        k, nops(_self:-m_LEM:-VeilList(_self:-m_LEM))
       );
     end if;
 
@@ -78,10 +78,11 @@ export FFLU::static := proc(
         pivot["i"], pivot["j"], pivot["value"], pivot["cost"], pivot["degree_r"],
         pivot["degree_c"]
       );
+      printf("LAST:-FFLU(...): performing Gaussian elimination...");
     end if;
     tmp := [k+1..-1];
 
-    # Schur complement
+    # Gaussian elimination
     M[tmp, tmp] := pivot["value"]*M[tmp, tmp] - M[tmp, k].M[k, tmp];
     try
       M[tmp, tmp] := timelimit(_self:-m_TimeLimit, simplify~(M[tmp, tmp]));
@@ -104,6 +105,10 @@ export FFLU::static := proc(
       end try;
       S[j, k] := tmp_gcd;
     end do;
+
+    if _self:-m_VerboseMode then
+      printf(" DONE\n");
+    end if;
 
     # Veil expressions
     M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, tmp]);

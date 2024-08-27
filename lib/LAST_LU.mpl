@@ -69,12 +69,20 @@ export LU::static := proc(
         M[1..-1, [c[k], k]] := M[1..-1, [k, c[k]]];
       end if;
 
-      # Schur complement
+      if _self:-m_VerboseMode then
+        printf("LAST:-LU(...): performing Gaussian elimination...");
+      end if;
+
+      # Gaussian elimination
       tmp         := [k+1..-1];
       M[k,   k]   := _self:-m_LEM:-Veil(_self:-m_LEM,  pivot_list[k]);
       M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot_list[k]));
       M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
       M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
+
+      if _self:-m_VerboseMode then
+        printf(" DONE\n");
+      end if;
     end do;
   end if;
 
@@ -109,14 +117,19 @@ export LU::static := proc(
         pivot["i"], pivot["j"], pivot["value"], pivot["cost"], pivot["degree_r"],
         pivot["degree_c"]
       );
+      printf("LAST:-LU(...): performing Gaussian elimination...");
     end if;
 
-    # Schur complement
+    # Gaussian elimination
     tmp         := [k+1..-1];
     M[k,   k]   := _self:-m_LEM:-Veil(_self:-m_LEM,  pivot["value"]);
     M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot["value"]));
     M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
     M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
+
+    if _self:-m_VerboseMode then
+      printf(" DONE\n");
+    end if;
   end do;
 
   L := Matrix(M[1..m, 1..m], shape = triangular[lower, unit]);
