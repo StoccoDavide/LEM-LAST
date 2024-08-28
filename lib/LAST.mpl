@@ -601,6 +601,46 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  export RowPermutationMatrix::static := proc(
+    _self::LAST,
+    r::Vector(nonnegint),
+    $)::Matrix;
+
+    description "Compute the row permutation matrix provided the pivot vector "
+      "<r>.";
+
+    local m, i, P;
+
+    m := LinearAlgebra:-RowDimension(r);
+    P := Matrix(m, m);
+    for i from 1 to m by 1 do
+      P[i, r[i]] := 1;
+    end do;
+    return P;
+  end proc: # RowPermutationMatrix
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export ColPermutationMatrix::static := proc(
+    _self::LAST,
+    c::Vector(nonnegint),
+    $)::Matrix;
+
+    description "Compute the column permutation matrix provided the pivot "
+      "vector <c>.";
+
+    local n, i, Q;
+
+    n := LinearAlgebra:-RowDimension(c);
+    Q := Matrix(n, n);
+    for i from 1 to n by 1 do
+      Q[c[i], i] := 1;
+    end do;
+    return Q;
+  end proc: # ColPermutationMatrix
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 $include "./lib/LAST_Rank.mpl"
 $include "./lib/LAST_Pivoting.mpl"
 $include "./lib/LAST_LU.mpl"

@@ -11,28 +11,21 @@ export LU::static := proc(
   _self::LAST,
   A::Matrix,
   {
-  warm_start::boolean        := false,
-  veil_sanity_check::boolean := true
+  indigo_warm_start::boolean := false
   }, $)
 
   description "Compute the LU decomposition of a square matrix <A> and check "
     "if the veiling symbol is already present in the matrix coefficients. The "
-    "warm start option allows to reuse the previous results.";
+    "<indigo_warm_start> option allows the indigo library to reuse the previous "
+    "results (do not use it unless you know what you are doing!).";
 
-  local V, M, L, U, pivot, pivot_list, m, n, mn, i, k, rnk, r, c, tmp;
-
+  local V, M, L, U, pivot, pivot_list, m, n, mn, i, k, rnk, r, c, P, Q, tmp;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
 
   # Get the veiling label
   V := _self:-m_LEM:-GetVeilingLabel(_self:-m_LEM);
-
-  # Sanity check
-  if veil_sanity_check and has(A, V) then
-    error("veiling symbol %1 is already present in matrix coefficient.", V);
-    return table([]);
-  end if;
 
   # Get matrix dimensions
   m, n := LinearAlgebra:-Dimensions(A):
@@ -42,41 +35,28 @@ export LU::static := proc(
 
   # Create pivot vector and matrix M
   M := copy(A);
-  if not warm_start then
+  r := Vector(m, k -> k);
+  if not indigo_warm_start then
     i := 1;
-    r := Vector(m, k -> k);
     c := Vector(n, k -> k);
     pivot_list := [];
   else
     i := _self:-m_Results["rank"]+1;
-    r := _self:-m_Results["r"];
     c := _self:-m_Results["c"];
     pivot_list := _self:-m_Results["pivots"];
 
+    M := M.(_self:-ColPermutationMatrix(_self, c));
+
     # Reconstruct the matrix M
     for k from 1 to i-1 do
-      if _self:-m_VerboseMode then
-        printf("LAST:-LU(...): reconstructing %d-th row.\n", k);
-      end if;
-
-      # FIXME: I should repeat the same steps as in the main loop for the first i-1 steps
-
-      # Swap rows and columns
-      if (r[k] <> k) then
-        M[[r[k], k], 1..-1] := M[[k, r[k]], 1..-1];
-      end if;
-      if (c[k] <> k) then
-        M[1..-1, [c[k], k]] := M[1..-1, [k, c[k]]];
-      end if;
 
       if _self:-m_VerboseMode then
-        printf("LAST:-LU(...): performing Gaussian elimination...");
+        printf("LAST:-LU(...): reconstructing %d-th row...", k);
       end if;
 
       # Gaussian elimination
       tmp         := [k+1..-1];
-      M[k,   k]   := _self:-m_LEM:-Veil(_self:-m_LEM,  pivot_list[k]);
-      M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot_list[k]));
+      M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/M[k, k]));
       M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
       M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
 

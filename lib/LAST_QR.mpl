@@ -10,9 +10,7 @@
 export QR::static := proc(
   _self::LAST,
   A::Matrix,
-  {
-  veil_sanity_check::boolean := true
-  }, $)
+  $)
 
   description "Compute the Givens QR decomposition of a square matrix <A> and "
     "check if the veiling symbol is already present in the matrix coefficients.";
@@ -21,11 +19,6 @@ export QR::static := proc(
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
-
-  # Sanity check
-  if veil_sanity_check and has(A, V) then
-    error("veiling symbol %1 is already present in matrix coefficient.", V);
-  end if;
 
   # Clear the veiling list
   _self:-m_LEM:-ForgetVeil(_self:-m_LEM);

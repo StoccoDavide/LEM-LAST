@@ -10,13 +10,10 @@
 export GJ::static := proc(
   _self::LAST,
   A::Matrix,
-  {
-  veil_sanity_check::boolean := true
-  }, $)
+  $)
 
   description "Compute the Gauss-Jordan decomposition of a rectangular matrix "
-    "<A> and check if the veiling symbol is already present in the matrix "
-    "coefficients.";
+    "<A>.";
 
   local V, M, pivot, pivot_list, m, n, mn, k, rnk, r, c, tr, tc;
 
@@ -25,12 +22,6 @@ export GJ::static := proc(
 
   # Get the veiling label
   V := _self:-m_LEM:-GetVeilingLabel(_self:-m_LEM);
-
-  # Sanity check
-  if veil_sanity_check and has(A, V) then
-    error("veiling symbol %1 is already present in matrix coefficient.", V);
-    return table([]);
-  end if;
 
   # Get matrix dimensions
   m, n := LinearAlgebra:-Dimensions(A):

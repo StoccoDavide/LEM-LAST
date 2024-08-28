@@ -19,8 +19,8 @@ export Pivoting::static := proc(
     "provided the step <k>, the temporary LU (NAG) matrix <M>, the rows "
     "permutation <r> and the columns permutation <c>.";
 
-  local Mij, uMij, M_degree_R, M_degree_C, perm, perm_R, perm_C, m, n, i, j, ipos,
-    pivot, pivot_list, pivot_cost;
+  local Mij, uMij, M_degree_R, M_degree_C, perm, m, n, i, j, ipos, pivot,
+    pivot_list, pivot_cost;
 
   if _self:-m_VerboseMode then
     printf("LAST:-Pivoting(...): finding pivot in %d-th row...", k);

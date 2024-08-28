@@ -10,13 +10,10 @@
 export FFLU::static := proc(
   _self::LAST,
   A::Matrix,
-  {
-  veil_sanity_check::boolean := true
-  }, $)
+  $)
 
   description "Compute the Fraction-Free LU (FFLU) decomposition of a square "
-    "matrix <A> and check  if the veiling symbol is already present in the "
-    "matrix coefficients.";
+    "matrix <A>.";
 
   local V, M, L, U, pivot, pivot_list, S, m, n, mn, i, j, k, rnk, r, c, tmp,
     tmp_gcd;
@@ -26,12 +23,6 @@ export FFLU::static := proc(
 
   # Get the veiling label
   V := _self:-m_LEM:-GetVeilingLabel(_self:-m_LEM);
-
-  # Sanity check
-  if veil_sanity_check and has(A, V) then
-    error("veiling symbol %1 is already present in matrix coefficient.", V);
-    return table([]);
-  end if;
 
   # Get matrix dimensions
   m, n := LinearAlgebra:-Dimensions(A):
