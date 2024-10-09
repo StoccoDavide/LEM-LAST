@@ -51,6 +51,7 @@ module LAST()
   local m_TimeLimit    := 0.1;
   local m_Unveiling    := true;
   local m_FastPivoting := false;
+  local m_StoredData   := [];
   local m_Results      := NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -342,6 +343,30 @@ module LAST()
     _self:-m_FastPivoting := false;
     return NULL;
   end proc: # DisableFastPivoting
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export SetStoredData::static := proc(
+    _self::LAST,
+    data::{list(`=`), set(`=`)},
+    $)
+
+    description "Set the stored data of the module to <data>.";
+
+    _self:-m_StoredData := data;
+    return NULL;
+  end proc: # SetStoredData
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export GetStoredData::static := proc(
+    _self::LAST,
+    $)::{list(`=`), set(`=`)};
+
+    description "Get the stored data of the module.";
+
+    return _self:-m_StoredData;
+  end proc: # GetStoredData
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

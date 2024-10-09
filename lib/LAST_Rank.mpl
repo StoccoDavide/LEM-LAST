@@ -15,7 +15,8 @@ export Rank::static := proc(
 
   description "Compute the rank of a square matrix <A> by transforming it in "
     "row echelon form. If <ref> is true, the matrix is transformed in reduced "
-    "row echelon form.";
+    "row echelon form. Notice that the rank does not modify the previously "
+    "stored factorization results.";
 
   local M, pivot, pivot_list, m, n, mn, i, k, rnk, r, c, tmp, tmp_LEM;
 
@@ -47,16 +48,14 @@ export Rank::static := proc(
     end if;
 
     pivot := _self:-Pivoting(_self, k, M, r, c);
-    if not pivot["is_zero"] then
-      pivot_list := [op(pivot_list), pivot["value"]];
-    end if;
-
     if pivot["is_zero"] then
       rnk := k - 1;
       if _self:-m_VerboseMode then
         WARNING("LAST:-Rank(...): the matrix appears to be not full rank.");
       end if;
       break;
+    else
+      pivot_list := [op(pivot_list), pivot["value"]];
     end if;
 
     if _self:-m_VerboseMode then
@@ -87,12 +86,6 @@ export Rank::static := proc(
 
   end do;
 
-  # Store the rank output
-  #_self:-m_Results := table([
-  #  "method" = "Rank",
-  #  "pivots" = pivot_list,
-  #  "rank"   = rnk
-  #]);
   # Return the rank
   return rnk;
 end proc: # Rank

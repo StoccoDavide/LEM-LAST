@@ -56,6 +56,8 @@ export FFLU::static := proc(
         WARNING("LAST:-FFLU(...): the matrix appears to be not full rank.");
       end if;
       break;
+    else
+      pivot_list := [op(pivot_list), pivot["value"]];
     end if;
 
     # Swap rows of S
@@ -103,9 +105,6 @@ export FFLU::static := proc(
 
     # Veil expressions
     M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, tmp]);
-
-    # Save pivot list
-    pivot_list := [op(pivot_list), pivot["value"]];
   end do;
 
   # Store the FFLU decomposition

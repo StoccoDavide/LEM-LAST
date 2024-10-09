@@ -19,12 +19,18 @@ export Pivoting::static := proc(
     "provided the step <k>, the temporary LU (NAG) matrix <M>, the rows "
     "permutation <r> and the columns permutation <c>.";
 
-  local Mij, uMij, M_degree_R, M_degree_C, perm, m, n, i, j, ipos, pivot,
-    pivot_list, pivot_cost;
+  local M_data, V, V_data, Mij, uMij, M_degree_R, M_degree_C, perm, m, n, i, j,
+    ipos, pivot, pivot_list, pivot_cost;
 
   if _self:-m_VerboseMode then
     printf("LAST:-Pivoting(...): finding pivot in %d-th row...", k);
   end if;
+
+  # Copy the matrix and veils, and substitute the data
+  M_data := subs(op(_self:-m_StoredData), M);
+  V      := _self:-m_LEM:-VeilList(_self:-m_LEM, parse("reverse") = true);
+  V_data := subs(op(_self:-m_StoredData), V);
+
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -35,7 +41,7 @@ export Pivoting::static := proc(
   # Calculate the degree
   M_degree_R := Matrix(m, n);
   M_degree_C := Matrix(m, n);
-  M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] := _self:-GetDegrees(_self, M[k..m, k..n]);
+  M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] := _self:-GetDegrees(_self, M_data[k..m, k..n]);
 
   # Build a list (i,j,degree,cost) and sort it
   pivot      := table([]);
@@ -101,7 +107,7 @@ export Pivoting::static := proc(
       Mij["value"] := timelimit(_self:-m_TimeLimit, Normalizer(Mij["value"]));
       Mij["is_zero"] := evalb(Mij["value"] = 0);
       if (not Mij["is_zero"]) and _self:-m_Unveiling then
-        uMij := timelimit(_self:-m_TimeLimit, _self:-m_LEM:-Unveil(_self:-m_LEM, Mij["value"]));
+        uMij := timelimit(_self:-m_TimeLimit, subs(op(_self:-m_StoredData), op(V_data), Mij["value"]));
         # Recalculate cost and value of the pivot
         Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, uMij);
         # Time limit required because sometimes Normalizer get stuck

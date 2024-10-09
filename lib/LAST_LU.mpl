@@ -11,12 +11,13 @@ export LU::static := proc(
   _self::LAST,
   A::Matrix,
   {
-  indigo_warm_start::boolean := false
+  indigo_restart::boolean := false,
+  indigo_repivot::boolean := false
   }, $)
 
   description "Compute the LU decomposition of a square matrix <A> and check "
     "if the veiling symbol is already present in the matrix coefficients. The "
-    "<indigo_warm_start> option allows the indigo library to reuse the previous "
+    "<indigo_restart> option allows the indigo library to reuse the previous "
     "results (do not use it unless you know what you are doing!).";
 
   local V, M, L, U, pivot, pivot_list, m, n, mn, i, k, rnk, r, c, P, Q, tmp;
@@ -36,7 +37,7 @@ export LU::static := proc(
   # Create pivot vector and matrix M
   M := copy(A);
   r := Vector(m, k -> k);
-  if not indigo_warm_start then
+  if not indigo_restart then
     i := 1;
     c := Vector(n, k -> k);
     pivot_list := [];
@@ -55,10 +56,16 @@ export LU::static := proc(
       end if;
 
       # Gaussian elimination
-      tmp         := [k+1..-1];
-      M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/M[k, k]));
-      M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
-      M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
+      tmp := [k+1..-1];
+      if not indigo_repivot then
+        M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/M[k, k]));
+        M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
+        M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
+      else
+        M[tmp, k]   := Normalizer~(M[tmp, k]/M[k, k]);
+        M[k,   tmp] := Normalizer~(M[k, tmp]);
+        M[tmp, tmp] := Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]);
+      end if;
 
       if _self:-m_VerboseMode then
         printf(" DONE\n");
@@ -79,16 +86,20 @@ export LU::static := proc(
     end if;
 
     pivot := _self:-Pivoting(_self, k, M, r, c);
-    if not pivot["is_zero"] then
-      pivot_list := [op(pivot_list), pivot["value"]];
-    end if;
 
+    # Check if the pivot is zero
     if pivot["is_zero"] then
       rnk := k - 1;
       if _self:-m_VerboseMode then
         WARNING("LAST:-LU(...): the matrix appears to be not full rank.");
       end if;
       break;
+    else
+      if indigo_repivot and not type(pivot["value"], {numeric, symbol}) then
+        return pivot;
+      else
+        pivot_list := [op(pivot_list), pivot["value"]];
+      end if;
     end if;
 
     if _self:-m_VerboseMode then
