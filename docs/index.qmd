@@ -1,0 +1,65 @@
+---
+title: LEM Documentation
+subtitle: A Toolbox for Large Expression Management
+authors:
+  - name: Davide Stocco
+    affiliation: University of Trento (Italy)
+  - name: Matteo Larcher
+    affiliation: University of Trento (Italy)
+  - name: Enrico Bertolazzi
+    affiliation: University of Trento (Italy)
+theme: [cosmo, custom.scss]
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    number-depth: 3
+    toc-location: left
+    toc-title: |
+      <img src="logo.png" alt="LEM Logo" style="width:80%; display:block; margin:auto;">
+---
+
+This is the documentation for the LEM package. This is a module for Large Expressions Management in Maple. The module is very similar to the 'LargeExpression' module provided by Maple. The main difference is that the 'LEM' module has some built-in functions to collect, display, list and substitute the veiled expressions in a more user-friendly and object-oriented fashion.
+
+The following code is hopefully an improved version of the [LULEM](https://github.com/StoccoDavide/LULEM) package described in the following PhD thesis:
+
+- Wenqin Zhou, *Symbolic Computation Techniques for Solveing Large Expressions Problems from Mathematics and Engineering* (2007), Faculty of Graduate Studies, The University of Western Ontario London, Ontario, Canada.
+
+We would like to thank Jacques Carette for providing the original code that have inspired this module.
+
+# Installation
+
+Download the package from the [GitHub repository](https://github.com/StoccoDavide/LEM), release the zip file, and follow the instructions below. Optionally, you can clone the repository using the following command:
+
+```bash
+git clone https://github.com/StoccoDavide/LEM.git
+```
+
+## Maple
+
+To install the module you must have first installed [Maple](https://www.maplesoft.com/products/maple/) (2020 or later). Then open the `PackAndGo.mw` file and use the `!!!` button to execute the *entire* worksheet.
+
+Then test the module in a Maple worksheet or document by executing `LEM:-Info()` or `Describe(LEM)`. Alternatively, you can use one of the test files provided in the `maple/tests` folder. If the module is loaded without errors, it is done!
+
+#### 🚧 Attention! 🚧 {.unnumbered}
+
+Both LEM and LAST packages are written to work in an object-oriented programming style. Please note that Maple object-oriented programming features have slightly changed in 2021, which online documentation states:
+
+> As of Maple 2021, if the method has a formal parameter named `_self`, references to its object's local or exported variables may be written without prefixing them. That is, `_self:-variable` may be written as just `variable`. Maple will add the `self:-` prefix internally when the method is simplified.
+
+> As of Maple 2021, a message-passing form of method call can be used, which will automatically pass the object as an argument if the method has a formal parameter named `_self`.
+
+> Another way to invoke a method, similar to that used in other object-oriented languages, was introduced in Maple 2021. In this form, the object name is qualified by the method name, `object_name:-method_name(argument)` just as it can be in the function mechanism described above. However, the *object can be omitted from the argument sequence*.
+
+For further information please refer to the following [link](https://fr.maplesoft.com/support/help/Maple/view.aspx?path=object/methods).
+
+# License
+
+{{< include ./../LICENSE >}}
+
+# Usage
+
+In case you have no time to read through all the APIs and realize how the toolbox should or should not work, refer to the files prensent in `maple/tests` folder. This contains usage examples with increasing complexity and detail.
+
+{{< include ./maple-api.qmd >}}

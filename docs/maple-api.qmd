@@ -1,0 +1,454 @@
+
+# Maple API
+
+## Module Utilities
+
+### Info {.unnumbered}
+Print module information.
+
+- **Inputs**: None.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `Info()`
+
+### ModuleLoad {.unnumbered}
+Module load procedure.
+
+- **Inputs**: None.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `ModuleLoad()`
+
+### ModuleUnload {.unnumbered}
+Module unload procedure.
+
+- **Inputs**: None.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `ModuleLoad()`
+
+### ModuleCopy {.unnumbered}
+Copy the object `proto`.
+
+- **Inputs**: `_self::LEM`, `proto::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-ModuleCopy(_self, proto)`
+
+### EnableVerboseMode {.unnumbered}
+Enable the verbosity of the module.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-EnableVerboseMode(_self)`
+
+### DisableVerboseMode {.unnumbered}
+Disable the verbosity of the module.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-DisableVerboseMode(_self)`
+
+### SetVerboseMode {.unnumbered}
+Set the verbosity of the module to `mode`.
+
+- **Inputs**: `_self::LEM`, `mode::boolean`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetVerboseMode(_self, mode)`
+
+### EnableWarningMode {.unnumbered}
+Enable the warning mode of the module.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-EnableWarningMode(_self)`
+
+### DisableWarningMode {.unnumbered}
+Disable the warning mode of the module.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-DisableWarningMode(_self)`
+
+### SetWarningMode {.unnumbered}
+Set the warning mode of the module to `mode`.
+
+- **Inputs**: `_self::LEM`, `mode::boolean`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetWarningMode(_self, mode)`
+
+## Module Interface
+
+### SetVeilingLabel {.unnumbered}
+Set the veiling label to `label`.
+
+- **Inputs**: `_self::LEM`, `label::{string, symbol}`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetVeilingLabel(_self, label)`
+
+### SetVeilingDeps {.unnumbered}
+Set the veiling dependencies to `deps`.
+
+- **Inputs**: `_self::LEM`, `deps::list`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetVeilingDeps(_self, deps)`
+
+### GetVeilingDeps {.unnumbered}
+Return the veiling dependency.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `list`.
+
+Proto: `_self:-GetVeilingDeps(_self)`
+
+### ClearVeilingDeps {.unnumbered}
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-ClearVeilingDeps(_self)`
+
+### GetVeilingLabel {.unnumbered}
+Return the veiling label.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `symbol`.
+
+Proto: `_self:-GetVeilingLabel(_self)`
+
+### EnableSignatureMode {.unnumbered}
+Enable the expression signature calculation.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-EnableSignatureMode(_self)`
+
+### DisableSignatureMode {.unnumbered}
+Disable the expression signature calculation.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-DisableSignatureMode(_self)`
+
+### SetSignatureMode {.unnumbered}
+Set the expression signature calculation of the module to `mode`.
+
+- **Inputs**: `_self::LEM`, `mode::boolean`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetSignatureMode(_self, mode)`
+
+### Veil {.unnumbered}
+Check if the veiling strategy is verified, if true veil the expression `x` and return a label to it.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: `depend::list := []`, `force::boolean := false`.
+- **Returns**: `anything`.
+
+Proto: `_self:-Veil(_self, x, depend = [], force = false)`
+
+### VeilSig {.unnumbered}
+Veil the expression `x` and return a label to it.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-VeilSig(_self, x)`
+
+### VeilImap {.unnumbered}
+Return the permutation map of the veiling labels.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-VeilImap(_self)`
+
+### SigImap {.unnumbered}
+Return the permutation map of the signature labels.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-SigImap(_self)`
+
+### ExpressionCost {.unnumbered}
+Compute the cost of the expression `x`.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: `dependencies::boolean := true`.
+- **Returns**: `integer`.
+
+Proto: `_self:-ExpressionCost(_self, x, dependencies = true)`
+
+### TreeNodes {.unnumbered}
+Given the expression `x`, return the directed acyclic graph's nodes (optimized version).
+
+- **Inputs**: `x::anything`.
+- **Optional inputs**: `r::boolean := true`.
+- **Returns**: `anything`.
+
+Proto: `TreeNodes(x, r = true)`
+
+### TreeStructure {.unnumbered}
+Given the expression `x`, return the directed acyclic graph's edges, nodes, and leafs.
+
+- **Inputs**: `x::anything`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `TreeStructure(x)`
+
+### VeilingStrategy {.unnumbered}
+Evaluate the veiling strategy for the expression `x`.
+
+- **Inputs**: `_self::LEM`, `x::algebraic`.
+- **Optional inputs**: None.
+- **Returns**: `boolean`.
+
+Proto: `_self:-VeilingStrategy(_self, x)`
+
+### SetExprMaxCost {.unnumbered}
+Set the maximum expression cost `maxcost` for veiling.
+
+- **Inputs**: `_self::LEM`, `maxcost::nonnegint`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetExprMaxCost(_self, maxcost)`
+
+### GetExprMaxCost {.unnumbered}
+Get the maximum expression cost for veiling.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `nonnegint`.
+
+Proto: `_self:-GetExprMaxCost(_self)`
+
+### Unveil {.unnumbered}
+Unveil the expression `x` with the veiled variables.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-Unveil(_self, x)`
+
+### UnveilSig {.unnumbered}
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-UnveilSig(_self, x)`
+
+### UnveilImap {.unnumbered}
+Unveil the expression `x` with the veiling labels permutation map.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-UnveilImap(_self, x)`
+
+### SigImap {.unnumbered}
+Unveil the expression `x` with signature values permutation map.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-SigImap(_self, x)`
+
+### VeilDepsList {.unnumbered}
+Return a list of the veiling labels dependency substitution.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: `reverse::boolean := false`.
+- **Returns**: `list`.
+
+Proto: `_self:-VeilDepsList(_self, reverse = false)`
+
+### VeilList {.unnumbered}
+Return a list of the veiling labels.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: `dependency::boolean := false`, `reverse::boolean := false`.
+- **Returns**: `list`.
+
+Proto: `_self:-VeilList(_self, dependency = false, reverse = false)`
+
+### VeilList {.unnumbered}
+Return a list of the veiling labels.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: `dependency::boolean := false`, `reverse::boolean := false`.
+- **Returns**: `list`.
+
+Proto: `_self:-VeilList(_self, dependency = false, reverse = false)`
+
+### SigList {.unnumbered}
+Return a list of the signature labels.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: `reverse::boolean := false`.
+- **Returns**: `list`.
+
+Proto: `_self:-SigList(_self, reverse = false)`
+
+### VeilUnorderedList {.unnumbered}
+Return the unordered veiling list.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `list`.
+
+Proto: `_self:-VeilUnorderedList(_self)`
+
+### SigUnorderedList {.unnumbered}
+Return the unordered signature list.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `list`.
+
+Proto: `_self:-SigUnorderedList(_self)`
+
+### VeilTableSize {.unnumbered}
+Return the size of the internal veiling table.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `nonnegint`.
+
+Proto: `_self:-VeilTableSize(_self)`
+
+### SigTableSize {.unnumbered}
+Return the size of the internal signature table.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `nonnegint`.
+
+Proto: `_self:-SigTableSize(_self)`
+
+### VeilTableImap {.unnumbered}
+Return the veiling list and the permutation that sorts it.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: `reverse::boolean := false`.
+- **Returns**: `{list(anything = anything), []}`.
+
+Proto: `_self:-VeilTableImap(_self, reverse = false)`
+
+### SigTableImap {.unnumbered}
+Return the signature list and the permutation that sorts it.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: `reverse::boolean := false`.
+- **Returns**: `{list(anything = anything), []}`.
+
+Proto: `_self:-SigTableImap(_self, reverse = false)`
+
+### TablesAppend {.unnumbered}
+Append the veiled expression `x` to the veiling table.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: None.
+- **Returns**: `indexed`.
+
+Proto: `_self:-TablesAppend(_self, x)`
+
+### SubsVeil {.unnumbered}
+Substitute the reversed veiling variables of the internal veiling table in the expression `x`. If dependency flag `dependency` is set to true, the veiling variables are substituted with their dependencies.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: `dependency::boolean := false`, `reverse::boolean := true`.
+- **Returns**: `anything`.
+
+Proto: `_self:-SubsVeil(_self, x, dependency = false, reverse = true)`
+
+### SubsSig {.unnumbered}
+Substitute the reversed signature values of the internal signature table in the expression `x`.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-SubsSig(_self, x)`
+
+### ForgetVeil {.unnumbered}
+Clear the internal veiling and signature tables.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-ForgetVeil(_self)`
+
+### ForgetSig {.unnumbered}
+Clear the internal veiling signature tables.
+
+- **Inputs**: `_self::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-ForgetSig(_self)`
+
+### Sig {.unnumbered}
+Compute the signature of the expression `x` modulo `p` (the default is the internal signature value). Verbosity can be enabled with the flag `verbose`.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: `verbose::boolean := false`.
+- **Returns**: `anything`.
+
+Proto: `_self:-Sig(_self, x, verbose = false)`
+
+### Signature {.unnumbered}
+Compute the signature of the expression `x` modulo `p` (the default is the internal signature value) also by using the internal signature table of the veiled expressions. Verbosity can be enabled with the flag `verbose`.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: `verbose::boolean := false`.
+- **Returns**: `anything`.
+
+Proto: `_self:-Signature(_self, x, verbose = false)`
+
+### IsZero {.unnumbered}
+Check if the expression `x` is zero by evaluating the signature of the expression and substituting the signature values already computed. Verbosity can be enabled with the flag `verbose`.
+
+- **Inputs**: `_self::LEM`, `x::anything`.
+- **Optional inputs**: `verbose::boolean := false`.
+- **Returns**: `boolean`.
+
+Proto: `_self:-IsZero(_self, x, verbose = false)`

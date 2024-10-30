@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>LEM Documentation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title"><p><img src="logo.png" alt="LEM Logo" style="width:80%; display:block; margin:auto;"></p></h2>
+   
+  <ul>
+  <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation"><span class="header-section-number">1</span> Installation</a>
+  <ul class="collapse">
+  <li><a href="#maple" id="toc-maple" class="nav-link" data-scroll-target="#maple"><span class="header-section-number">1.1</span> Maple</a></li>
+  </ul></li>
+  <li><a href="#license" id="toc-license" class="nav-link" data-scroll-target="#license"><span class="header-section-number">2</span> License</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage"><span class="header-section-number">3</span> Usage</a></li>
+  <li><a href="#maple-api" id="toc-maple-api" class="nav-link" data-scroll-target="#maple-api"><span class="header-section-number">4</span> Maple API</a>
+  <ul class="collapse">
+  <li><a href="#module-utilities" id="toc-module-utilities" class="nav-link" data-scroll-target="#module-utilities"><span class="header-section-number">4.1</span> Module Utilities</a>
+  <ul class="collapse">
+  <li><a href="#info" id="toc-info" class="nav-link" data-scroll-target="#info">Info</a></li>
+  <li><a href="#moduleload" id="toc-moduleload" class="nav-link" data-scroll-target="#moduleload">ModuleLoad</a></li>
+  <li><a href="#moduleunload" id="toc-moduleunload" class="nav-link" data-scroll-target="#moduleunload">ModuleUnload</a></li>
+  <li><a href="#modulecopy" id="toc-modulecopy" class="nav-link" data-scroll-target="#modulecopy">ModuleCopy</a></li>
+  <li><a href="#enableverbosemode" id="toc-enableverbosemode" class="nav-link" data-scroll-target="#enableverbosemode">EnableVerboseMode</a></li>
+  <li><a href="#disableverbosemode" id="toc-disableverbosemode" class="nav-link" data-scroll-target="#disableverbosemode">DisableVerboseMode</a></li>
+  <li><a href="#setverbosemode" id="toc-setverbosemode" class="nav-link" data-scroll-target="#setverbosemode">SetVerboseMode</a></li>
+  <li><a href="#enablewarningmode" id="toc-enablewarningmode" class="nav-link" data-scroll-target="#enablewarningmode">EnableWarningMode</a></li>
+  <li><a href="#disablewarningmode" id="toc-disablewarningmode" class="nav-link" data-scroll-target="#disablewarningmode">DisableWarningMode</a></li>
+  <li><a href="#setwarningmode" id="toc-setwarningmode" class="nav-link" data-scroll-target="#setwarningmode">SetWarningMode</a></li>
+  </ul></li>
+  <li><a href="#module-interface" id="toc-module-interface" class="nav-link" data-scroll-target="#module-interface"><span class="header-section-number">4.2</span> Module Interface</a>
+  <ul class="collapse">
+  <li><a href="#setveilinglabel" id="toc-setveilinglabel" class="nav-link" data-scroll-target="#setveilinglabel">SetVeilingLabel</a></li>
+  <li><a href="#setveilingdeps" id="toc-setveilingdeps" class="nav-link" data-scroll-target="#setveilingdeps">SetVeilingDeps</a></li>
+  <li><a href="#getveilingdeps" id="toc-getveilingdeps" class="nav-link" data-scroll-target="#getveilingdeps">GetVeilingDeps</a></li>
+  <li><a href="#clearveilingdeps" id="toc-clearveilingdeps" class="nav-link" data-scroll-target="#clearveilingdeps">ClearVeilingDeps</a></li>
+  <li><a href="#getveilinglabel" id="toc-getveilinglabel" class="nav-link" data-scroll-target="#getveilinglabel">GetVeilingLabel</a></li>
+  <li><a href="#enablesignaturemode" id="toc-enablesignaturemode" class="nav-link" data-scroll-target="#enablesignaturemode">EnableSignatureMode</a></li>
+  <li><a href="#disablesignaturemode" id="toc-disablesignaturemode" class="nav-link" data-scroll-target="#disablesignaturemode">DisableSignatureMode</a></li>
+  <li><a href="#setsignaturemode" id="toc-setsignaturemode" class="nav-link" data-scroll-target="#setsignaturemode">SetSignatureMode</a></li>
+  <li><a href="#veil" id="toc-veil" class="nav-link" data-scroll-target="#veil">Veil</a></li>
+  <li><a href="#veilsig" id="toc-veilsig" class="nav-link" data-scroll-target="#veilsig">VeilSig</a></li>
+  <li><a href="#veilimap" id="toc-veilimap" class="nav-link" data-scroll-target="#veilimap">VeilImap</a></li>
+  <li><a href="#sigimap" id="toc-sigimap" class="nav-link" data-scroll-target="#sigimap">SigImap</a></li>
+  <li><a href="#expressioncost" id="toc-expressioncost" class="nav-link" data-scroll-target="#expressioncost">ExpressionCost</a></li>
+  <li><a href="#treenodes" id="toc-treenodes" class="nav-link" data-scroll-target="#treenodes">TreeNodes</a></li>
+  <li><a href="#treestructure" id="toc-treestructure" class="nav-link" data-scroll-target="#treestructure">TreeStructure</a></li>
+  <li><a href="#veilingstrategy" id="toc-veilingstrategy" class="nav-link" data-scroll-target="#veilingstrategy">VeilingStrategy</a></li>
+  <li><a href="#setexprmaxcost" id="toc-setexprmaxcost" class="nav-link" data-scroll-target="#setexprmaxcost">SetExprMaxCost</a></li>
+  <li><a href="#getexprmaxcost" id="toc-getexprmaxcost" class="nav-link" data-scroll-target="#getexprmaxcost">GetExprMaxCost</a></li>
+  <li><a href="#unveil" id="toc-unveil" class="nav-link" data-scroll-target="#unveil">Unveil</a></li>
+  <li><a href="#unveilsig" id="toc-unveilsig" class="nav-link" data-scroll-target="#unveilsig">UnveilSig</a></li>
+  <li><a href="#unveilimap" id="toc-unveilimap" class="nav-link" data-scroll-target="#unveilimap">UnveilImap</a></li>
+  <li><a href="#sigimap-1" id="toc-sigimap-1" class="nav-link" data-scroll-target="#sigimap-1">SigImap</a></li>
+  <li><a href="#veildepslist" id="toc-veildepslist" class="nav-link" data-scroll-target="#veildepslist">VeilDepsList</a></li>
+  <li><a href="#veillist" id="toc-veillist" class="nav-link" data-scroll-target="#veillist">VeilList</a></li>
+  <li><a href="#veillist-1" id="toc-veillist-1" class="nav-link" data-scroll-target="#veillist-1">VeilList</a></li>
+  <li><a href="#siglist" id="toc-siglist" class="nav-link" data-scroll-target="#siglist">SigList</a></li>
+  <li><a href="#veilunorderedlist" id="toc-veilunorderedlist" class="nav-link" data-scroll-target="#veilunorderedlist">VeilUnorderedList</a></li>
+  <li><a href="#sigunorderedlist" id="toc-sigunorderedlist" class="nav-link" data-scroll-target="#sigunorderedlist">SigUnorderedList</a></li>
+  <li><a href="#veiltablesize" id="toc-veiltablesize" class="nav-link" data-scroll-target="#veiltablesize">VeilTableSize</a></li>
+  <li><a href="#sigtablesize" id="toc-sigtablesize" class="nav-link" data-scroll-target="#sigtablesize">SigTableSize</a></li>
+  <li><a href="#veiltableimap" id="toc-veiltableimap" class="nav-link" data-scroll-target="#veiltableimap">VeilTableImap</a></li>
+  <li><a href="#sigtableimap" id="toc-sigtableimap" class="nav-link" data-scroll-target="#sigtableimap">SigTableImap</a></li>
+  <li><a href="#tablesappend" id="toc-tablesappend" class="nav-link" data-scroll-target="#tablesappend">TablesAppend</a></li>
+  <li><a href="#subsveil" id="toc-subsveil" class="nav-link" data-scroll-target="#subsveil">SubsVeil</a></li>
+  <li><a href="#subssig" id="toc-subssig" class="nav-link" data-scroll-target="#subssig">SubsSig</a></li>
+  <li><a href="#forgetveil" id="toc-forgetveil" class="nav-link" data-scroll-target="#forgetveil">ForgetVeil</a></li>
+  <li><a href="#forgetsig" id="toc-forgetsig" class="nav-link" data-scroll-target="#forgetsig">ForgetSig</a></li>
+  <li><a href="#sig" id="toc-sig" class="nav-link" data-scroll-target="#sig">Sig</a></li>
+  <li><a href="#signature" id="toc-signature" class="nav-link" data-scroll-target="#signature">Signature</a></li>
+  <li><a href="#iszero" id="toc-iszero" class="nav-link" data-scroll-target="#iszero">IsZero</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">LEM Documentation</h1>
+<p class="subtitle lead">A Toolbox for Large Expression Management</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Davide Stocco </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Trento (Italy)
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Matteo Larcher </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Trento (Italy)
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Enrico Bertolazzi </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Trento (Italy)
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This is the documentation for the LEM package. This is a module for Large Expressions Management in Maple. The module is very similar to the ‘LargeExpression’ module provided by Maple. The main difference is that the ‘LEM’ module has some built-in functions to collect, display, list and substitute the veiled expressions in a more user-friendly and object-oriented fashion.</p>
+<p>The following code is hopefully an improved version of the <a href="https://github.com/StoccoDavide/LULEM">LULEM</a> package described in the following PhD thesis:</p>
+<ul>
+<li>Wenqin Zhou, <em>Symbolic Computation Techniques for Solveing Large Expressions Problems from Mathematics and Engineering</em> (2007), Faculty of Graduate Studies, The University of Western Ontario London, Ontario, Canada.</li>
+</ul>
+<p>We would like to thank Jacques Carette for providing the original code that have inspired this module.</p>
+<section id="installation" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Installation</h1>
+<p>Download the package from the <a href="https://github.com/StoccoDavide/LEM">GitHub repository</a>, release the zip file, and follow the instructions below. Optionally, you can clone the repository using the following command:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/StoccoDavide/LEM.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="maple" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="maple"><span class="header-section-number">1.1</span> Maple</h2>
+<p>To install the module you must have first installed <a href="https://www.maplesoft.com/products/maple/">Maple</a> (2020 or later). Then open the <code>PackAndGo.mw</code> file and use the <code>!!!</code> button to execute the <em>entire</em> worksheet.</p>
+<p>Then test the module in a Maple worksheet or document by executing <code>LEM:-Info()</code> or <code>Describe(LEM)</code>. Alternatively, you can use one of the test files provided in the <code>maple/tests</code> folder. If the module is loaded without errors, it is done!</p>
+<section id="attention" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="attention">🚧 Attention! 🚧</h4>
+<p>Both LEM and LAST packages are written to work in an object-oriented programming style. Please note that Maple object-oriented programming features have slightly changed in 2021, which online documentation states:</p>
+<blockquote class="blockquote">
+<p>As of Maple 2021, if the method has a formal parameter named <code>_self</code>, references to its object’s local or exported variables may be written without prefixing them. That is, <code>_self:-variable</code> may be written as just <code>variable</code>. Maple will add the <code>self:-</code> prefix internally when the method is simplified.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>As of Maple 2021, a message-passing form of method call can be used, which will automatically pass the object as an argument if the method has a formal parameter named <code>_self</code>.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Another way to invoke a method, similar to that used in other object-oriented languages, was introduced in Maple 2021. In this form, the object name is qualified by the method name, <code>object_name:-method_name(argument)</code> just as it can be in the function mechanism described above. However, the <em>object can be omitted from the argument sequence</em>.</p>
+</blockquote>
+<p>For further information please refer to the following <a href="https://fr.maplesoft.com/support/help/Maple/view.aspx?path=object/methods">link</a>.</p>
+</section>
+</section>
+</section>
+<section id="license" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> License</h1>
+<p>BSD 3-Clause License</p>
+<p>Copyright (c) 2023 Current version: Davide Stocco, Matteo Larcher and Enrico Bertolazzi.</p>
+<p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
+<ol type="1">
+<li><p>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</p></li>
+<li><p>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</p></li>
+<li><p>Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.</p></li>
+</ol>
+<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+</section>
+<section id="usage" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Usage</h1>
+<p>In case you have no time to read through all the APIs and realize how the toolbox should or should not work, refer to the files prensent in <code>maple/tests</code> folder. This contains usage examples with increasing complexity and detail.</p>
+</section>
+<section id="maple-api" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Maple API</h1>
+<section id="module-utilities" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="module-utilities"><span class="header-section-number">4.1</span> Module Utilities</h2>
+<section id="info" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="info">Info</h3>
+<p>Print module information.</p>
+<ul>
+<li><strong>Inputs</strong>: None.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>Info()</code></p>
+</section>
+<section id="moduleload" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="moduleload">ModuleLoad</h3>
+<p>Module load procedure.</p>
+<ul>
+<li><strong>Inputs</strong>: None.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>ModuleLoad()</code></p>
+</section>
+<section id="moduleunload" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="moduleunload">ModuleUnload</h3>
+<p>Module unload procedure.</p>
+<ul>
+<li><strong>Inputs</strong>: None.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>ModuleLoad()</code></p>
+</section>
+<section id="modulecopy" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="modulecopy">ModuleCopy</h3>
+<p>Copy the object <code>proto</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>proto::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-ModuleCopy(_self, proto)</code></p>
+</section>
+<section id="enableverbosemode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="enableverbosemode">EnableVerboseMode</h3>
+<p>Enable the verbosity of the module.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-EnableVerboseMode(_self)</code></p>
+</section>
+<section id="disableverbosemode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="disableverbosemode">DisableVerboseMode</h3>
+<p>Disable the verbosity of the module.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-DisableVerboseMode(_self)</code></p>
+</section>
+<section id="setverbosemode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="setverbosemode">SetVerboseMode</h3>
+<p>Set the verbosity of the module to <code>mode</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>mode::boolean</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetVerboseMode(_self, mode)</code></p>
+</section>
+<section id="enablewarningmode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="enablewarningmode">EnableWarningMode</h3>
+<p>Enable the warning mode of the module.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-EnableWarningMode(_self)</code></p>
+</section>
+<section id="disablewarningmode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="disablewarningmode">DisableWarningMode</h3>
+<p>Disable the warning mode of the module.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-DisableWarningMode(_self)</code></p>
+</section>
+<section id="setwarningmode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="setwarningmode">SetWarningMode</h3>
+<p>Set the warning mode of the module to <code>mode</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>mode::boolean</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetWarningMode(_self, mode)</code></p>
+</section>
+</section>
+<section id="module-interface" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="module-interface"><span class="header-section-number">4.2</span> Module Interface</h2>
+<section id="setveilinglabel" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="setveilinglabel">SetVeilingLabel</h3>
+<p>Set the veiling label to <code>label</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>label::{string, symbol}</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetVeilingLabel(_self, label)</code></p>
+</section>
+<section id="setveilingdeps" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="setveilingdeps">SetVeilingDeps</h3>
+<p>Set the veiling dependencies to <code>deps</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>deps::list</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetVeilingDeps(_self, deps)</code></p>
+</section>
+<section id="getveilingdeps" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="getveilingdeps">GetVeilingDeps</h3>
+<p>Return the veiling dependency.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>list</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GetVeilingDeps(_self)</code></p>
+</section>
+<section id="clearveilingdeps" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="clearveilingdeps">ClearVeilingDeps</h3>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-ClearVeilingDeps(_self)</code></p>
+</section>
+<section id="getveilinglabel" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="getveilinglabel">GetVeilingLabel</h3>
+<p>Return the veiling label.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>symbol</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GetVeilingLabel(_self)</code></p>
+</section>
+<section id="enablesignaturemode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="enablesignaturemode">EnableSignatureMode</h3>
+<p>Enable the expression signature calculation.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-EnableSignatureMode(_self)</code></p>
+</section>
+<section id="disablesignaturemode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="disablesignaturemode">DisableSignatureMode</h3>
+<p>Disable the expression signature calculation.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-DisableSignatureMode(_self)</code></p>
+</section>
+<section id="setsignaturemode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="setsignaturemode">SetSignatureMode</h3>
+<p>Set the expression signature calculation of the module to <code>mode</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>mode::boolean</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetSignatureMode(_self, mode)</code></p>
+</section>
+<section id="veil" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="veil">Veil</h3>
+<p>Check if the veiling strategy is verified, if true veil the expression <code>x</code> and return a label to it.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: <code>depend::list := []</code>, <code>force::boolean := false</code>.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-Veil(_self, x, depend = [], force = false)</code></p>
+</section>
+<section id="veilsig" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="veilsig">VeilSig</h3>
+<p>Veil the expression <code>x</code> and return a label to it.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-VeilSig(_self, x)</code></p>
+</section>
+<section id="veilimap" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="veilimap">VeilImap</h3>
+<p>Return the permutation map of the veiling labels.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-VeilImap(_self)</code></p>
+</section>
+<section id="sigimap" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="sigimap">SigImap</h3>
+<p>Return the permutation map of the signature labels.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SigImap(_self)</code></p>
+</section>
+<section id="expressioncost" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="expressioncost">ExpressionCost</h3>
+<p>Compute the cost of the expression <code>x</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: <code>dependencies::boolean := true</code>.</li>
+<li><strong>Returns</strong>: <code>integer</code>.</li>
+</ul>
+<p>Proto: <code>_self:-ExpressionCost(_self, x, dependencies = true)</code></p>
+</section>
+<section id="treenodes" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="treenodes">TreeNodes</h3>
+<p>Given the expression <code>x</code>, return the directed acyclic graph’s nodes (optimized version).</p>
+<ul>
+<li><strong>Inputs</strong>: <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: <code>r::boolean := true</code>.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>TreeNodes(x, r = true)</code></p>
+</section>
+<section id="treestructure" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="treestructure">TreeStructure</h3>
+<p>Given the expression <code>x</code>, return the directed acyclic graph’s edges, nodes, and leafs.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>TreeStructure(x)</code></p>
+</section>
+<section id="veilingstrategy" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="veilingstrategy">VeilingStrategy</h3>
+<p>Evaluate the veiling strategy for the expression <code>x</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::algebraic</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>boolean</code>.</li>
+</ul>
+<p>Proto: <code>_self:-VeilingStrategy(_self, x)</code></p>
+</section>
+<section id="setexprmaxcost" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="setexprmaxcost">SetExprMaxCost</h3>
+<p>Set the maximum expression cost <code>maxcost</code> for veiling.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>maxcost::nonnegint</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetExprMaxCost(_self, maxcost)</code></p>
+</section>
+<section id="getexprmaxcost" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="getexprmaxcost">GetExprMaxCost</h3>
+<p>Get the maximum expression cost for veiling.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>nonnegint</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GetExprMaxCost(_self)</code></p>
+</section>
+<section id="unveil" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="unveil">Unveil</h3>
+<p>Unveil the expression <code>x</code> with the veiled variables.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-Unveil(_self, x)</code></p>
+</section>
+<section id="unveilsig" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="unveilsig">UnveilSig</h3>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-UnveilSig(_self, x)</code></p>
+</section>
+<section id="unveilimap" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="unveilimap">UnveilImap</h3>
+<p>Unveil the expression <code>x</code> with the veiling labels permutation map.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-UnveilImap(_self, x)</code></p>
+</section>
+<section id="sigimap-1" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="sigimap-1">SigImap</h3>
+<p>Unveil the expression <code>x</code> with signature values permutation map.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SigImap(_self, x)</code></p>
+</section>
+<section id="veildepslist" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="veildepslist">VeilDepsList</h3>
+<p>Return a list of the veiling labels dependency substitution.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: <code>reverse::boolean := false</code>.</li>
+<li><strong>Returns</strong>: <code>list</code>.</li>
+</ul>
+<p>Proto: <code>_self:-VeilDepsList(_self, reverse = false)</code></p>
+</section>
+<section id="veillist" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="veillist">VeilList</h3>
+<p>Return a list of the veiling labels.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: <code>dependency::boolean := false</code>, <code>reverse::boolean := false</code>.</li>
+<li><strong>Returns</strong>: <code>list</code>.</li>
+</ul>
+<p>Proto: <code>_self:-VeilList(_self, dependency = false, reverse = false)</code></p>
+</section>
+<section id="veillist-1" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="veillist-1">VeilList</h3>
+<p>Return a list of the veiling labels.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: <code>dependency::boolean := false</code>, <code>reverse::boolean := false</code>.</li>
+<li><strong>Returns</strong>: <code>list</code>.</li>
+</ul>
+<p>Proto: <code>_self:-VeilList(_self, dependency = false, reverse = false)</code></p>
+</section>
+<section id="siglist" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="siglist">SigList</h3>
+<p>Return a list of the signature labels.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: <code>reverse::boolean := false</code>.</li>
+<li><strong>Returns</strong>: <code>list</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SigList(_self, reverse = false)</code></p>
+</section>
+<section id="veilunorderedlist" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="veilunorderedlist">VeilUnorderedList</h3>
+<p>Return the unordered veiling list.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>list</code>.</li>
+</ul>
+<p>Proto: <code>_self:-VeilUnorderedList(_self)</code></p>
+</section>
+<section id="sigunorderedlist" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="sigunorderedlist">SigUnorderedList</h3>
+<p>Return the unordered signature list.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>list</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SigUnorderedList(_self)</code></p>
+</section>
+<section id="veiltablesize" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="veiltablesize">VeilTableSize</h3>
+<p>Return the size of the internal veiling table.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>nonnegint</code>.</li>
+</ul>
+<p>Proto: <code>_self:-VeilTableSize(_self)</code></p>
+</section>
+<section id="sigtablesize" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="sigtablesize">SigTableSize</h3>
+<p>Return the size of the internal signature table.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>nonnegint</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SigTableSize(_self)</code></p>
+</section>
+<section id="veiltableimap" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="veiltableimap">VeilTableImap</h3>
+<p>Return the veiling list and the permutation that sorts it.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: <code>reverse::boolean := false</code>.</li>
+<li><strong>Returns</strong>: <code>{list(anything = anything), []}</code>.</li>
+</ul>
+<p>Proto: <code>_self:-VeilTableImap(_self, reverse = false)</code></p>
+</section>
+<section id="sigtableimap" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="sigtableimap">SigTableImap</h3>
+<p>Return the signature list and the permutation that sorts it.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: <code>reverse::boolean := false</code>.</li>
+<li><strong>Returns</strong>: <code>{list(anything = anything), []}</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SigTableImap(_self, reverse = false)</code></p>
+</section>
+<section id="tablesappend" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="tablesappend">TablesAppend</h3>
+<p>Append the veiled expression <code>x</code> to the veiling table.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>indexed</code>.</li>
+</ul>
+<p>Proto: <code>_self:-TablesAppend(_self, x)</code></p>
+</section>
+<section id="subsveil" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="subsveil">SubsVeil</h3>
+<p>Substitute the reversed veiling variables of the internal veiling table in the expression <code>x</code>. If dependency flag <code>dependency</code> is set to true, the veiling variables are substituted with their dependencies.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: <code>dependency::boolean := false</code>, <code>reverse::boolean := true</code>.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SubsVeil(_self, x, dependency = false, reverse = true)</code></p>
+</section>
+<section id="subssig" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="subssig">SubsSig</h3>
+<p>Substitute the reversed signature values of the internal signature table in the expression <code>x</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SubsSig(_self, x)</code></p>
+</section>
+<section id="forgetveil" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="forgetveil">ForgetVeil</h3>
+<p>Clear the internal veiling and signature tables.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-ForgetVeil(_self)</code></p>
+</section>
+<section id="forgetsig" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="forgetsig">ForgetSig</h3>
+<p>Clear the internal veiling signature tables.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-ForgetSig(_self)</code></p>
+</section>
+<section id="sig" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="sig">Sig</h3>
+<p>Compute the signature of the expression <code>x</code> modulo <code>p</code> (the default is the internal signature value). Verbosity can be enabled with the flag <code>verbose</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: <code>verbose::boolean := false</code>.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-Sig(_self, x, verbose = false)</code></p>
+</section>
+<section id="signature" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="signature">Signature</h3>
+<p>Compute the signature of the expression <code>x</code> modulo <code>p</code> (the default is the internal signature value) also by using the internal signature table of the veiled expressions. Verbosity can be enabled with the flag <code>verbose</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: <code>verbose::boolean := false</code>.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-Signature(_self, x, verbose = false)</code></p>
+</section>
+<section id="iszero" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="iszero">IsZero</h3>
+<p>Check if the expression <code>x</code> is zero by evaluating the signature of the expression and substituting the signature values already computed. Verbosity can be enabled with the flag <code>verbose</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LEM</code>, <code>x::anything</code>.</li>
+<li><strong>Optional inputs</strong>: <code>verbose::boolean := false</code>.</li>
+<li><strong>Returns</strong>: <code>boolean</code>.</li>
+</ul>
+<p>Proto: <code>_self:-IsZero(_self, x, verbose = false)</code></p>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

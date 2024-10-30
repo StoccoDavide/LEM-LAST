@@ -29,8 +29,8 @@
 # The main difference is that the 'LEM' module has some built-in functions to
 # collect, display, list and substitute the veiled expressions.
 #
-# The following code is hopefully an improved version of the original version
-# provided inthe following PhD thesis:
+# The following code is hopefully an improved version of the LULEM package
+# described in the following PhD thesis:
 #
 #   Wenqin Zhou, Symbolic Computation Techniques for Solveing Large Expressions
 #   Problems from Mathematics and Engineering (2007), Faculty of Graduate Studies,
@@ -63,12 +63,11 @@ module LEM()
   local m_SigTable     := table([]);
   local m_SigValue     := 1000000007;
 
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   export Info::static := proc()
 
-    description "Print 'LEM' module information.";
+    description "Print module information.";
 
     printf(
       "+--------------------------------------------------------------------------+\n"
@@ -86,7 +85,7 @@ module LEM()
 
   export ModuleLoad::static := proc()
 
-    description "'LEM' module load procedure.";
+    description "Module load procedure.";
 
     local i, lib_base_path;
 
@@ -105,7 +104,7 @@ module LEM()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   export ModuleUnload::static := proc()
-    description "'LEM' module unload procedure.";
+    description "Module unload procedure.";
     return NULL;
   end proc: # ModuleUnload
 
@@ -114,9 +113,9 @@ module LEM()
   export ModuleCopy::static := proc(
     _self::LEM,
     proto::LEM,
-    $)
+    $)::anything;
 
-    description "Copy the objects <proto> into <self>.";
+    description "Copy the object <proto>.";
 
     # General
     _self:-m_VerboseMode  := proto:-m_VerboseMode;
@@ -454,14 +453,39 @@ module LEM()
       tmp := subs(op(rhs~(%) =~ lhs~(%)), tmp);
     end if;
 
-    return _self:-GraphComplexity(tmp);
+    return _self:-TreeNodes(tmp);
   end proc: # ExpressionCost
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  export TreeNodes::static := proc(
+    x::anything,
+    r::boolean := true,
+    $)
+
+    description "Given the expression <x>, return the directed acyclic graph's "
+    "nodes (optimized version).";
+
+    option remember;
+
+    local i, n;
+
+    n := 0;
+    if not type(x, {symbol, numeric, indexed}) then
+      n := n + 1;
+      for i in {op(x)} do
+        n := n + TreeNodes(i);
+      end do;
+    else
+      n := n + 1;
+    end if;
+    return n;
+  end proc: # TreeNodes
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   export TreeStructure::static := proc(
     x::anything,
-    r::boolean := true,
     $)
 
     description "Given the expression <x>, return the directed acyclic graph's "
@@ -472,11 +496,11 @@ module LEM()
     e := 0; # edges
     n := 0; # nodes
     l := 0; # leafs
-    if not type(x, {symbol, numeric}) then
+    if not type(x, {symbol, numeric, indexed}) then
       n := n + 1;
       e := e + nops(x);
       for i in {op(x)} do
-        e_t, n_t, l_t := TreeStructure(i, false);
+        e_t, n_t, l_t := TreeStructure(i);
         e := e + e_t;
         n := n + n_t;
         l := l + l_t;
@@ -484,33 +508,12 @@ module LEM()
     else
       l := l + 1;
     end if;
-    if _nresults = 3 then
+    if (_nresults = 3) then
       return e, n, l;
     else
-      return 'edges'*e + 'nodes'*n + 'leafs'*l;
+      return 'edges'*e + 'nodes'*(n+l) + 'leafs'*l;
     end if;
   end proc: # TreeStructure
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  export GraphComplexity::static := proc(
-    expr::anything,
-    level::nonnegint := 0,
-    $)::nonnegint;
-
-    description "Given the expression <expr> and the starting subtree's level "
-      "<level>, return the complexity of the expression.";
-
-    local i, out;
-
-    out := level + 1;
-    if (nops(expr) <> 1) then
-      for i in op(expr) do
-        out := out + GraphComplexity(i, level + 1);
-      end do;
-    end if;
-    return out;
-  end proc:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -784,6 +787,8 @@ module LEM()
 
     description "Append the veiled expression <x> to the veiling table.";
 
+    option remember;
+
     local k, tmp_sig;
 
     k := 1;
@@ -791,14 +796,12 @@ module LEM()
       k := numelems(_self:-m_UnveilTable) + 1;
       _self:-m_UnveilTable[_self:-m_VeilingLabel[k]] := x;
       if _self:-m_SigMode then
-        tmp_sig := _self:-Sig(
-          _self, _self:-SubsSig(_self, x), parse("verbose") = _self:-m_WarningMode
-        );
+        tmp_sig := _self:-Signature(_self, x, parse("verbose") = _self:-m_WarningMode);
         if has(tmp_sig, undefined) then
           WARNING(
             "LEM:-TablesAppend(...): found 'undefined' signature, disabling signature mode."
           );
-          _self:-ForgetVeilSig(_self);
+          _self:-ForgetVeil(_self);
           _self:-DisableSignatureMode(_self);
         else
           _self:-m_SigTable[_self:-m_VeilingLabel[k]] := tmp_sig;
@@ -814,7 +817,7 @@ module LEM()
           WARNING(
             "LEM:-TablesAppend(...): found 'undefined' signature, disabling signature mode."
           );
-          _self:-ForgetVeilSig(_self);
+          _self:-ForgetVeil(_self);
           _self:-DisableSignatureMode(_self);
         else
           _self:-m_SigTable := table([_self:-m_VeilingLabel[1] = tmp_sig]);
@@ -904,7 +907,7 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    export Sig::static := proc(
+  export Sig::static := proc(
     _self::LEM,
     x::anything,
     {
@@ -912,9 +915,8 @@ module LEM()
     }, $)::anything;
 
     description "Compute the signature of the expression <x> modulo <p> (the "
-      "default is the internal signature value) also by using the internal "
-      "signature table of the veiled expressions. Verbosity can be enabled "
-      "with the flag <verbose>.";
+      "default is the internal signature value). Verbosity can be enabled with "
+      "the flag <verbose>.";
 
     local out;
 
@@ -933,15 +935,35 @@ module LEM()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  export Signature::static := proc(
+    _self::LEM,
+    x::anything,
+    {
+    verbose::boolean := false
+    }, $)::anything;
+
+    description "Compute the signature of the expression <x> modulo <p> (the "
+      "default is the internal signature value) also by using the internal "
+      "signature table of the veiled expressions. Verbosity can be enabled "
+      "with the flag <verbose>.";
+
+    return _self:-Sig(_self, _self:-SubsSig(_self, x), parse("verbose") = verbose);
+  end proc: # Signature
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   export IsZero::static := proc(
     _self::LEM,
     x::anything,
-    $)::boolean;
+    {
+    verbose::boolean := false
+    }, $)::boolean;
 
     description "Check if the expression <x> is zero by evaluating the signature "
-      "of the expression and substituting the signature values already computed.";
+      "of the expression and substituting the signature values already computed. "
+      "Verbosity can be enabled with the flag <verbose>.";
 
-    return evalb(_self:-Sig(_self, _self:-SubsSig(_self, x)) = 0);
+    return evalb(_self:-Signature(_self, x, parse("verbose") = verbose) = 0);
   end proc: # IsZero
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
