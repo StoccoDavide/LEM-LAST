@@ -1,0 +1,503 @@
+
+# Maple API
+
+## Module Utilities
+
+### Info {.unnumbered}
+Print module information.
+
+- **Inputs**: None.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `Info()`
+
+### ModuleLoad {.unnumbered}
+Module load procedure.
+
+- **Inputs**: None.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `ModuleLoad()`
+
+### ModuleUnload {.unnumbered}
+Module unload procedure.
+
+- **Inputs**: None.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `ModuleLoad()`
+
+### ModuleCopy {.unnumbered}
+Copy the object `proto`.
+
+- **Inputs**: `_self::LAST`, `proto::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-ModuleCopy(_self, proto)`
+
+### CheckInit {.unnumbered}
+Check if the `LAST` object is correctly initialized.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-CheckInit(_self)`
+
+### InitLEM {.unnumbered}
+Initialize the `LEM` object with veiling label `label`.
+
+- **Inputs**: `_self::LAST`, `label::{string, symbol} := NULL`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-InitLEM(_self, label)`
+
+### ClearLEM {.unnumbered}
+Clear the `LEM` object.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-ClearLEM(_self)`
+
+### SetLEM {.unnumbered}
+Set the `LEM` object `obj`.
+
+- **Inputs**: `_self::LAST`, `obj::LEM`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetLEM(_self, obj)`
+
+### GetLEM {.unnumbered}
+Get the `LEM` object.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `LEM`.
+
+Proto: `_self:-GetLEM(_self)`
+
+### EnableVerboseMode {.unnumbered}
+Enable the verbosity of the module.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-EnableVerboseMode(_self)`
+
+### DisableVerboseMode {.unnumbered}
+Disable the verbosity of the module.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-DisableVerboseMode(_self)`
+
+### SetVerboseMode {.unnumbered}
+Set the verbosity of the module to `mode`.
+
+- **Inputs**: `_self::LAST`, `mode::boolean`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetVerboseMode(_self, mode)`
+
+### EnableWarningMode {.unnumbered}
+Enable the warning mode of the module.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-EnableWarningMode(_self)`
+
+### DisableWarningMode {.unnumbered}
+Disable the warning mode of the module.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-DisableWarningMode(_self)`
+
+### SetWarningMode {.unnumbered}
+Set the warning mode of the module to `mode`.
+
+- **Inputs**: `_self::LAST`, `mode::boolean`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetWarningMode(_self, mode)`
+
+### SetTimeLimit {.unnumbered}
+Set the time limit of the module to `x`.
+
+- **Inputs**: `_self::LAST`, `x::numeric`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetTimeLimit(_self, x)`
+
+### GetTimeLimit {.unnumbered}
+Get the time limit of the module.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `numeric`.
+
+Proto: `_self:-GetTimeLimit(_self)`
+
+### EnableUnveiling {.unnumbered}
+Enable the unveiling of expressions during factorization (longer computation time, possibly more accurate results).
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-EnableUnveiling(_self)`
+
+### DisableUnveiling {.unnumbered}
+Disable the unveiling of expressions during factorization (shorter computation time, possibly less accurate results).
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-DisableUnveiling(_self)`
+
+### EnableFastPivoting {.unnumbered}
+Enable fast pivoting during the factorization (first non-zero pivot is selected).
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-EnableFastPivoting(_self)`
+
+### DisableFastPivoting {.unnumbered}
+Disable fast pivoting during the factorization (best pivot is selected).
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-DisableFastPivoting(_self)`
+
+### SetStoredData {.unnumbered}
+Set the stored data of the module to `data`.
+
+- **Inputs**: `_self::LAST`, `data::{list('='), set('=')}`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SetStoredData(_self, data)`
+
+### GetStoredData {.unnumbered}
+Get the stored data of the module.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `{list('='), set('=')}`.
+
+Proto: `_self:-GetStoredData(_self)`
+
+## Module Interface
+
+### CheckResults {.unnumbered}
+Check if the results of the last factorization are available.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-CheckResults(_self)`
+
+### GetResults {.unnumbered}
+Get the results of the last factorization. If `field` is specified, only the field `Results['field']` is returned.
+
+- **Inputs**: `_self::LAST`, `field::string := "all"`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-GetResults(_self, field)`
+
+### ClearResults {.unnumbered}
+Clear the results of the last factorization.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-ClearResults(_self)`
+
+### SolveLinearSystem {.unnumbered}
+Solve the factorized linear system.
+
+- **Inputs**: `_self::LAST`, `b::Vector`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-SolveLinearSystem(_self, b)`
+
+### ApplyLP {.unnumbered}
+Apply `L^(-1)*P` to the vector `b`.
+
+- **Inputs**: `_self::LAST`, `b::Vector`.
+- **Optional inputs**: None.
+- **Returns**: `Vector`.
+
+Proto: `_self:-ApplyLP(_self, b)`
+
+### GetUQT {.unnumbered}
+Return the matrix `U^T*Q`.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `Matrix`.
+
+Proto: `_self:-GetUQT(_self)`
+
+### Spy {.unnumbered}
+Plot of non-zero values of the matrix `A`.
+
+- **Inputs**: `_self::LAST`, `A::Matrix`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-Spy(_self, A)`
+
+### GCD {.unnumbered}
+Compute the greatest common divisor of the elements of the expression `expr`.
+
+- **Inputs**: `_self::LAST`, `expr::{Matrix, Vector, list}`, `postproc::boolean := true`.
+- **Optional inputs**: None.
+- **Returns**: `algebraic`.
+
+Proto: `_self:-GCD(_self, expr, postproc)`
+
+### SpyLU {.unnumbered}
+Plot of non-zero values of the matrices `A`, `L` and `U` with fill-in values.
+
+- **Inputs**: `_self::LAST`, `A::Matrix`, `L::Matrix`, `U::Matrix`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-SpyLU(_self, A, L, U)`
+
+### SpyFFLU {.unnumbered}
+Plot of non-zero values of the matrices `A`, `M` with fill-in values.
+
+- **Inputs**: `_self::LAST`, `A::Matrix`, `M::Matrix`.
+- **Optional inputs**: None.
+- **Returns**: `anything`.
+
+Proto: `_self:-SpyFFLU(_self, A, M)`
+
+### PermutationMatrices {.unnumbered}
+Compute the LU decomposition permutation matrices provided the rows pivot vector `r` and the columns pivot vector `c`.
+
+- **Inputs**: `_self::LAST`, `r::Vector(nonnegint)`, `c::Vector(nonnegint)`.
+- **Optional inputs**: None.
+- **Returns**: `Matrix(nonnegint)`.
+
+Proto: `_self:-PermutationMatrices(_self, r, c)`
+
+### RowPermutationMatrix {.unnumbered}
+Compute the row permutation matrix provided the pivot vector `r`.
+
+- **Inputs**: `_self::LAST`, `r::Vector(nonnegint)`.
+- **Optional inputs**: None.
+- **Returns**: `Matrix`.
+
+Proto: `_self:-RowPermutationMatrix(_self, r)`
+
+### ColPermutationMatrix {.unnumbered}
+Compute the column permutation matrix provided the pivot vector `c`.
+
+- **Inputs**: `_self::LAST`, `c::Vector(nonnegint)`.
+- **Optional inputs**: None.
+- **Returns**: `Matrix`.
+
+Proto: `_self:-ColPermutationMatrix(_self, c)`
+
+### Rank {.unnumbered}
+
+Compute the rank of a square matrix `A` by transforming it in row echelon form. If `ref` is true, the matrix is transformed in reduced row echelon form. Notice that the rank does not modify the previously stored factorization results.
+
+- **Inputs**: `_self::LAST`, `A::Matrix`.
+- **Optional inputs**: `rref := false`.
+- **Returns**: `NULL`.
+
+Proto: `_self:-Rank(_self, A, rref = false)`
+
+### Pivoting {.unnumbered}
+Compute the LU decomposition pivots vectors with minimum degree provided the step `k`, the temporary LU (NAG) matrix `M`, the rows permutation `r` and the columns permutation `c`.
+
+- **Inputs**: `_self::LAST`, `k::integer`, `M::Matrix`, `r::Vector(nonnegint)`, `c::Vector(nonnegint)`.
+- **Optional inputs**: None.
+- **Returns**: `table`.
+
+Proto: `_self:-Pivoting(_self, k, M, r, c)`
+
+### PivotCost {.unnumbered}
+Compute the cost of the pivot `x`.
+
+- **Inputs**: `_self::LAST`, `x::algebraic`.
+- **Optional inputs**: None.
+- **Returns**: `integer`.
+
+Proto: `_self:-PivotCost(_self, x)`
+
+### GetDegrees {.unnumbered}
+Get the degree matrices of the matrix `A`.
+
+- **Inputs**: `_self::LAST`, `A::Matrix`.
+- **Optional inputs**: None.
+- **Returns**: `Matrix(nonnegint)`.
+
+Proto: `_self:-GetDegrees(_self, A)`
+
+### DegreeCost {.unnumbered}
+Set the strategy `val` for the minimum degree ordering.
+
+- **Inputs**: `_self::LAST`, `val::table`.
+- **Optional inputs**: None.
+- **Returns**: `integer`.
+
+Proto: `_self:-DegreeCost(_self, val)`
+
+### PivotingCompare {.unnumbered}
+Compute the pivoting strategy: given the current pivot `cur` and the next pivot `val`, decide if the next pivot is better than the current pivot or not.
+
+- **Inputs**: `_self::LAST`, `cur::table`, `val::table`.
+- **Optional inputs**: None.
+- **Returns**: `boolean`.
+
+Proto: `_self:-PivotingCompare(_self, cur, val)`
+
+### LU {.unnumbered}
+Compute the LU decomposition of a square matrix `A` and check if the veiling symbol is already present in the matrix coefficients. The `indigo_restart` option allows the indigo library to reuse the previous results (do not use it unless you know what you are doing!).
+
+- **Inputs**: `_self::LAST`, `A::Matrix`.
+- **Optional inputs**: `indigo_repivot::boolean := false`, `indigo_restart::boolean := false`.
+- **Returns**: `NULL`.
+
+Proto: `_self:-LU(_self, A, indigo_repivot = false, indigo_restart = false)`
+
+### LUsolve {.unnumbered}
+Solve the linear system `Ax=b` using LU decomposition provided the vector `b`.
+
+- **Inputs**: `_self::LAST`, `b::Vector`.
+- **Optional inputs**: None.
+- **Returns**: `Vector`.
+
+Proto: `_self:-LUsolve(_self, b)`
+
+### LUapplyLP {.unnumbered}
+Apply `L^(-1)*P` to the vector `b`.
+
+- **Inputs**: `_self::LAST`, `b::Vector`.
+- **Optional inputs**: None.
+- **Returns**: `Vector`.
+
+Proto: `_self:-LUapplyLP(_self, b)`
+
+### LUgetUQT {.unnumbered}
+Return the matrix `U^T*Q`.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `Matrix`.
+
+Proto: `_self:-LUgetUQT(_self)`
+
+### FFLU {.unnumbered}
+Compute the Fraction-Free LU (FFLU) decomposition of a square matrix `A`.
+
+- **Inputs**: `_self::LAST`, `A::Matrix`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-FFLU(_self, A)`
+
+### FFLUsolve {.unnumbered}
+Apply `L^(-1)*P` to the vector `b`.
+
+- **Inputs**: `_self::LAST`, `b::Vector`.
+- **Optional inputs**: None.
+- **Returns**: `Vector`.
+
+Proto: `_self:-FFLUsolve(_self, b)`
+
+### FFLUapplyLP {.unnumbered}
+Apply `L^(-1)*P` to the vector `b`.
+
+- **Inputs**: `_self::LAST`, `b::Vector`.
+- **Optional inputs**: None.
+- **Returns**: `Vector`.
+
+Proto: `_self:-FFLUapplyLP(_self, b)`
+
+### FFLUgetUQT {.unnumbered}
+Return the matrix `U^T*Q`.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `Matrix`.
+
+Proto: `_self:-FFLUgetUQT(_self)`
+
+### FFLUgetLU {.unnumbered}
+Return the matrix `L` and `U` such that `P.A.Q = L.U`.
+
+- **Inputs**: `_self::LAST`.
+- **Optional inputs**: None.
+- **Returns**: `Matrix`.
+
+Proto: `_self:-FFLUgetLU(_self)`
+
+### GJ {.unnumbered}
+Compute the Gauss-Jordan decomposition of a rectangular matrix `A`.
+
+- **Inputs**: `_self::LAST`, `A::Matrix`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-GJ(_self, A)`
+
+### GJsolve {.unnumbered}
+Solve the linear system `Ax=b` using GJ decomposition provided the vector `b`.
+
+- **Inputs**: `_self::LAST`, `b::Vector`.
+- **Optional inputs**: None.
+- **Returns**: `Vector`.
+
+Proto: `_self:-GJsolve(_self, b)`
+
+### QR {.unnumbered}
+Compute the Givens QR decomposition of a square matrix `A` and check if the veiling symbol is already present in the matrix coefficients.
+
+- **Inputs**: `_self::LAST`, `A::Matrix`.
+- **Optional inputs**: None.
+- **Returns**: `NULL`.
+
+Proto: `_self:-QR(_self, A)`
+
+### QRsolve {.unnumbered}
+Solve the linear system `Ax=b` using QR decomposition provided the vector `b`.
+
+- **Inputs**: `_self::LAST`, `b::Vector`.
+- **Optional inputs**: None.
+- **Returns**: `Vector`.
+
+Proto: `_self:-QRsolve(_self, b)`
+

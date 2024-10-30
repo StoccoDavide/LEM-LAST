@@ -31,7 +31,6 @@ export Pivoting::static := proc(
   V      := _self:-m_LEM:-VeilList(_self:-m_LEM, parse("reverse") = true);
   V_data := subs(op(_self:-m_StoredData), V);
 
-
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
 
@@ -43,7 +42,7 @@ export Pivoting::static := proc(
   M_degree_C := Matrix(m, n);
   M_degree_R[k..m, k..n], M_degree_C[k..m, k..n] := _self:-GetDegrees(_self, M_data[k..m, k..n]);
 
-  # Build a list (i,j,degree,cost) and sort it
+  # Build a list (i, j, degree, cost) and sort it
   pivot      := table([]);
   Mij        := table([]);
   pivot_list := Vector((n-k+1)*(m-k+1));
@@ -67,7 +66,7 @@ export Pivoting::static := proc(
   # Sort the pivot list by degree cost
   perm := sort(pivot_cost, output = 'permutation');
 
-  # Iterate over the columns and rows using estimated increasing cost o pivot
+  # Iterate over the columns and rows using estimated increasing cost of pivot
   pivot["is_zero"] := true;
   for ipos in perm do
     Mij          := copy(pivot_list[ipos]);
@@ -75,7 +74,8 @@ export Pivoting::static := proc(
     j            := Mij["j"];
     Mij["value"] := M[i, j];
     try
-      Mij["is_zero"] := evalb(Mij["value"] = 0);
+      Mij["sig"] := _self:-m_LEM:-Signature(_self:-m_LEM, Mij["value"]);
+      Mij["is_zero"] := evalb(Mij["value"] = 0 or Mij["sig"] = 0);
     catch "division by zero":
       if _self:-m_WarningMode then
         WARNING(
@@ -94,7 +94,7 @@ export Pivoting::static := proc(
       Mij["is_zero"] := false;
     end try;
 
-    if Mij["is_zero"] then continue; end if; # If zero skip to next
+    if Mij["is_zero"] then next; end if; # If zero skip to next pivot
 
     # Look for a non-zero pivot: pre-check if next pivot cannot improve the research
     if not pivot["is_zero"] and (Mij["degree_cost"] > pivot["degree_cost"]) then
@@ -102,17 +102,18 @@ export Pivoting::static := proc(
       break;
     end if;
 
-    # Try to simplify the pivot expression
+    # If the pivot is not zero, try to use the internal data
     try
-      Mij["value"] := timelimit(_self:-m_TimeLimit, Normalizer(Mij["value"]));
-      Mij["is_zero"] := evalb(Mij["value"] = 0);
-      if (not Mij["is_zero"]) and _self:-m_Unveiling then
-        uMij := timelimit(_self:-m_TimeLimit, subs(op(_self:-m_StoredData), op(V_data), Mij["value"]));
-        # Recalculate cost and value of the pivot
+      if not Mij["is_zero"] then
+        if _self:-m_Unveiling then
+          uMij := timelimit(_self:-m_TimeLimit, subs(op(_self:-m_StoredData), op(V_data), Mij["value"]));
+        else
+          uMij := subs(op(_self:-m_StoredData), Mij["value"]);
+        end if;
         Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, uMij);
         # Time limit required because sometimes Normalizer get stuck
         uMij := timelimit(_self:-m_TimeLimit, Normalizer(uMij));
-        Mij["is_zero"] := evalb(uMij = 0);
+        Mij["is_zero"] := evalb(uMij = 0 or _self:-m_LEM:-Signature(_self:-m_LEM, uMij) = 0);
       else
         Mij["cost"], Mij["numeric_value"] := _self:-PivotCost(_self, Mij);
       end if;
@@ -269,7 +270,7 @@ export PivotingCompare::static := proc(
     "current pivot or not.";
 
   if (val["numeric_value"] = infinity) and (cur["numeric_value"] = infinity) then
-    # Both are expressions: use 'cost' to compare them
+    # Both are expressions: use expression 'cost' to compare them
     return evalb(val["cost"] < cur["cost"]);
   elif (val["numeric_value"] = infinity) then
     return false;

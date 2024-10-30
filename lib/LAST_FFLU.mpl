@@ -119,6 +119,7 @@ export FFLU::static := proc(
     "pivots" = pivot_list,
     "M_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, M),
     "V_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, _self:-m_LEM:-VeilList(_self:-m_LEM)),
+    "A_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, A),
     "M_nnz"  = nops(op(2, M)),
     "A_nnz"  = nops(op(2, A))
   ]);

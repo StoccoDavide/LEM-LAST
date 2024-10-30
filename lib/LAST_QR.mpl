@@ -20,9 +20,6 @@ export QR::static := proc(
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
 
-  # Clear the veiling list
-  _self:-m_LEM:-ForgetVeil(_self:-m_LEM);
-
   # Extract the dimensions of the matrix A
   m, n := LinearAlgebra:-Dimensions(A):
   if _self:-m_VerboseMode then
@@ -98,6 +95,7 @@ export QR::static := proc(
     "D_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, DG),
     "R_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, R),
     "V_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, LEM:-VeilList(_self:-m_LEM)),
+    "A_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, A),
     "Q_nnz"  = nops(op(2, Q)),
     "D_nnz"  = nops(op(2, DG)),
     "A_nnz"  = nops(op(2, A))

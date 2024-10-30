@@ -9,7 +9,6 @@
 
 # Current version authors:
 #   Davide Stocco     (University of Trento)
-#   Matteo Larcher    (University of Trento)
 #   Enrico Bertolazzi (University of Trento)
 #
 # Inspired by the work of:
@@ -26,8 +25,8 @@
 # decompositions to solve linear systems. The 'LEM' (Large Expressions
 # Management) module is used to avoid expression swell.
 #
-# The following code is hopefully an improved version of the original version
-# provided inthe following PhD thesis:
+# The following code is hopefully an improved version of the LULEM package
+# described in the following PhD thesis:
 #
 #   Wenqin Zhou, Symbolic Computation Techniques for Solveing Large Expressions
 #   Problems from Mathematics and Engineering (2007), Faculty of Graduate Studies,
@@ -49,7 +48,7 @@ module LAST()
   local m_VerboseMode  := false;
   local m_WarningMode  := true;
   local m_TimeLimit    := 0.1;
-  local m_Unveiling    := true;
+  local m_Unveiling    := false;
   local m_FastPivoting := false;
   local m_StoredData   := [];
   local m_Results      := NULL;
@@ -58,13 +57,13 @@ module LAST()
 
   export Info::static := proc()
 
-    description "Print 'LAST' module information.";
+    description "Print module information.";
 
     printf(
       "+--------------------------------------------------------------------------+\n"
       "| 'LAST' module version 1.0 - BSD 3-Clause License - Copyright (c) 2023    |\n"
       "| Current version authors:                                                 |\n"
-      "|   D. Stocco, M. Larcher and E. Bertolazzi.                               |\n"
+      "|   D. Stocco and E. Bertolazzi.                                           |\n"
       "| Inspired by the work of:                                                 |\n"
       "|   W. Zhou, D. J. Jeffrey, J. Carette and R. M. Corless.                  |\n"
       "+--------------------------------------------------------------------------+\n"
@@ -76,7 +75,7 @@ module LAST()
 
   export ModuleLoad::static := proc()
 
-    description "'LAST' module load procedure.";
+    description "Module load procedure.";
 
     local i, lib_base_path;
 
@@ -95,7 +94,7 @@ module LAST()
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   export ModuleUnload::static := proc()
-    description "'LAST' module unload procedure.";
+    description "Module unload procedure.";
   end proc: # ModuleUnload
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -105,7 +104,7 @@ module LAST()
     proto::LAST,
     $)
 
-    description "Copy the objects <proto> into <self>.";
+    description "Copy the object <proto>.";
 
     _self:-m_LEM          := proto:-m_LEM;
     _self:-m_VerboseMode  := proto:-m_VerboseMode;
@@ -122,7 +121,7 @@ module LAST()
     _self::LAST,
     $)
 
-    description "Check if the 'LAST' object is initialized.";
+    description "Check if the 'LAST' object is correctly initialized.";
 
     if not type(_self:-m_LEM, LEM) then
       error("the 'LEM' object is not initialized, use 'LAST:-InitLEM(...)'' "
@@ -406,7 +405,9 @@ module LAST()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  export ClearResults::static := proc( $ )
+  export ClearResults::static := proc(
+    _self::LAST,
+    $)
 
     description "Clear the results of the last factorization.";
 

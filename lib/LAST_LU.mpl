@@ -58,13 +58,13 @@ export LU::static := proc(
       # Gaussian elimination
       tmp := [k+1..-1];
       if not indigo_repivot then
-        M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/M[k, k]));
-        M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
-        M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
+        M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, k]/M[k, k]);
+        M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[k, tmp]);
+        M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, tmp]-M[tmp, k].M[k, tmp]);
       else
-        M[tmp, k]   := Normalizer~(M[tmp, k]/M[k, k]);
-        M[k,   tmp] := Normalizer~(M[k, tmp]);
-        M[tmp, tmp] := Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]);
+        M[tmp, k]   := M[tmp, k]/M[k, k];
+        M[k,   tmp] := M[k, tmp];
+        M[tmp, tmp] := M[tmp, tmp]-M[tmp, k].M[k, tmp];
       end if;
 
       if _self:-m_VerboseMode then
@@ -114,9 +114,9 @@ export LU::static := proc(
     # Gaussian elimination
     tmp         := [k+1..-1];
     M[k,   k]   := _self:-m_LEM:-Veil(_self:-m_LEM,  pivot["value"]);
-    M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, k]/pivot["value"]));
-    M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[k, tmp]));
-    M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, Normalizer~(M[tmp, tmp]-M[tmp, k].M[k, tmp]));
+    M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, k]/M[k, k]);
+    M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[k, tmp]);
+    M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, tmp]-M[tmp, k].M[k, tmp]);
 
     if _self:-m_VerboseMode then
       printf(" DONE\n");
@@ -139,6 +139,7 @@ export LU::static := proc(
     "L_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, L),
     "U_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, U),
     "V_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, _self:-m_LEM:-VeilList(_self:-m_LEM)),
+    "A_cost" = _self:-m_LEM:-ExpressionCost(_self:-m_LEM, A),
     "L_nnz"  = nops(op(2, L)),
     "U_nnz"  = nops(op(2, U)),
     "A_nnz"  = nops(op(2, A))
@@ -156,7 +157,7 @@ export LUsolve::static := proc(
   description "Solve the linear system Ax=b using LU decomposition provided "
   "the vector <b>.";
 
-  local L, U, r, c, m, n, p, q, x, y, i, s, rnk;
+  local L, U, r, c, m, n, p, q, x, y, i, j, s, rnk;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -197,11 +198,12 @@ export LUsolve::static := proc(
   x := Vector(b[convert(r, list)], datatype = anything);
 
   # Perform forward substitution to solve Ly=b[r]
+  x[1] := _self:-m_LEM:-Veil(_self:-m_LEM, x[1]);
   for i from 2 to m do
     if _self:-m_VerboseMode then
       printf("LAST:-LUsolve(...): forward substitution of %d-th row.\n", i);
     end if;
-    x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, 1..i-1] *~ x[1..i-1]));
+    x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, j]*x[j], j=1..i-1));
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
@@ -213,7 +215,7 @@ export LUsolve::static := proc(
     if _self:-m_VerboseMode then
       printf("LAST:-LUsolve(...): backward substitution of %d-th column.\n", i);
     end if;
-    s    := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(U[i, i+1..n]*~x[i+1..n]));
+    s := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(U[i, j]*x[j], j=i+1..n));
     x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, s/U[i, i]);
   end do;
 
@@ -236,7 +238,7 @@ export LUapplyLP::static := proc(
 
   description "Apply L^(-1)*P to the vector <b>.";
 
-  local L, r, x, m, i;
+  local L, r, x, m, i, j;
 
   # Check if the LEM object is initialized
   _self:-CheckInit(_self);
@@ -258,11 +260,12 @@ export LUapplyLP::static := proc(
   x := Vector(b[convert(r, list)], datatype = anything);
 
   # Perform forward substitution to solve Ly=b[r]
+  x[1] := _self:-m_LEM:-Veil(_self:-m_LEM, x[1]);
   for i from 2 to m do
     if _self:-m_VerboseMode then
       printf("LAST:-LUapplyLP(...): forward substitution of %d-th row.\n", i);
     end if;
-    x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, 1..i-1]*~x[1..i-1]));
+    x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, j]*x[j], j=1..i-1));
   end do;
 
   # Return outputs
