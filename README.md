@@ -14,8 +14,8 @@ Large Expressions Management
   University of Trento \
   email: matteo.larcher@unitn.it
 
-- *Enrico Bertolazzi*,
-  Department of Industrial Engineering,
+- *Enrico Bertolazzi*, \
+  Department of Industrial Engineering, \
   University of Trento \
   email: enrico.bertolazzi@unitn.it
 
