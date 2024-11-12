@@ -801,7 +801,7 @@ module LEM()
           WARNING(
             "LEM:-TablesAppend(...): found 'undefined' signature, disabling signature mode."
           );
-          _self:-ForgetVeil(_self);
+          _self:-ForgetSig(_self);
           _self:-DisableSignatureMode(_self);
         else
           _self:-m_SigTable[_self:-m_VeilingLabel[k]] := tmp_sig;
@@ -817,7 +817,7 @@ module LEM()
           WARNING(
             "LEM:-TablesAppend(...): found 'undefined' signature, disabling signature mode."
           );
-          _self:-ForgetVeil(_self);
+          _self:-ForgetSig(_self);
           _self:-DisableSignatureMode(_self);
         else
           _self:-m_SigTable := table([_self:-m_VeilingLabel[1] = tmp_sig]);
