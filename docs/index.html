@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.43">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -63,10 +63,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="index_files/libs/quarto-html/anchor.min.js"></script>
 <link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/bootstrap/bootstrap-812b5bfe28ce16a2e12cdc4832856bec.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -689,13 +689,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="lu" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="lu">LU</h3>
-<p>Compute the LU decomposition of a square matrix <code>A</code> and check if the veiling symbol is already present in the matrix coefficients. The <code>indigo_restart</code> option allows the indigo library to reuse the previous results (do not use it unless you know what you are doing!).</p>
+<p>Compute the LU decomposition of a square matrix <code>A</code> and check if the veiling symbol is already present in the matrix coefficients.</p>
 <ul>
 <li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>A::Matrix</code>.</li>
-<li><strong>Optional inputs</strong>: <code>indigo_repivot::boolean := false</code>, <code>indigo_restart::boolean := false</code>.</li>
 <li><strong>Returns</strong>: <code>NULL</code>.</li>
 </ul>
-<p>Proto: <code>_self:-LU(_self, A, indigo_repivot = false, indigo_restart = false)</code></p>
+<p>Proto: <code>_self:-LU(_self, A)</code></p>
 </section>
 <section id="lusolve" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="lusolve">LUsolve</h3>
@@ -904,8 +903,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1016,7 +1013,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

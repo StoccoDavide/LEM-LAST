@@ -14,7 +14,7 @@ export Rank::static := proc(
   }, $)
 
   description "Compute the rank of a square matrix <A> by transforming it in "
-    "row echelon form. If <ref> is true, the matrix is transformed in reduced "
+    "row echelon form. If <rref> is true, the matrix is transformed in reduced "
     "row echelon form. Notice that the rank does not modify the previously "
     "stored factorization results.";
 

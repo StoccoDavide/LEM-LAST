@@ -10,15 +10,10 @@
 export LU::static := proc(
   _self::LAST,
   A::Matrix,
-  {
-  indigo_restart::boolean := false,
-  indigo_repivot::boolean := false
-  }, $)
+  $)
 
   description "Compute the LU decomposition of a square matrix <A> and check "
-    "if the veiling symbol is already present in the matrix coefficients. The "
-    "<indigo_restart> option allows the indigo library to reuse the previous "
-    "results (do not use it unless you know what you are doing!).";
+    "if the veiling symbol is already present in the matrix coefficients.";
 
   local V, M, L, U, pivot, pivot_list, m, n, mn, i, k, rnk, r, c, P, Q, tmp;
 
@@ -37,46 +32,13 @@ export LU::static := proc(
   # Create pivot vector and matrix M
   M := copy(A);
   r := Vector(m, k -> k);
-  if not indigo_restart then
-    i := 1;
-    c := Vector(n, k -> k);
-    pivot_list := [];
-  else
-    i := _self:-m_Results["rank"]+1;
-    c := _self:-m_Results["c"];
-    pivot_list := _self:-m_Results["pivots"];
-
-    M := M.(_self:-ColPermutationMatrix(_self, c));
-
-    # Reconstruct the matrix M
-    for k from 1 to i-1 do
-
-      if _self:-m_VerboseMode then
-        printf("LAST:-LU(...): reconstructing %d-th row...", k);
-      end if;
-
-      # Gaussian elimination
-      tmp := [k+1..-1];
-      if not indigo_repivot then
-        M[tmp, k]   := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, k]/M[k, k]);
-        M[k,   tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[k, tmp]);
-        M[tmp, tmp] := _self:-m_LEM:-Veil~(_self:-m_LEM, M[tmp, tmp]-M[tmp, k].M[k, tmp]);
-      else
-        M[tmp, k]   := M[tmp, k]/M[k, k];
-        M[k,   tmp] := M[k, tmp];
-        M[tmp, tmp] := M[tmp, tmp]-M[tmp, k].M[k, tmp];
-      end if;
-
-      if _self:-m_VerboseMode then
-        printf(" DONE\n");
-      end if;
-    end do;
-  end if;
-
-  mn  := min(m, n);
+  c := Vector(n, k -> k);
+  mn := min(m, n);
   rnk := mn;
+  pivot_list := [];
 
   # Perform Gaussian elimination
+  i := 1;
   for k from i to mn do
     if _self:-m_VerboseMode then
       printf(
@@ -95,11 +57,7 @@ export LU::static := proc(
       end if;
       break;
     else
-      if indigo_repivot and not type(pivot["value"], {numeric, symbol}) then
-        return pivot;
-      else
-        pivot_list := [op(pivot_list), pivot["value"]];
-      end if;
+      pivot_list := [op(pivot_list), pivot["value"]];
     end if;
 
     if _self:-m_VerboseMode then
@@ -201,9 +159,10 @@ export LUsolve::static := proc(
   x[1] := _self:-m_LEM:-Veil(_self:-m_LEM, x[1]);
   for i from 2 to m do
     if _self:-m_VerboseMode then
-      printf("LAST:-LUsolve(...): forward substitution of %d-th row.\n", i);
+      printf("LAST:-LUsolve(...): forward substitution of %d-th row, veilings = %d.\n",
+        i, nops(_self:-m_LEM:-VeilList(_self:-m_LEM)));
     end if;
-    x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, j]*x[j], j=1..i-1));
+    x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(_self:-m_LEM:-Veil(_self:-m_LEM, L[i, j]*x[j]), j=1..i-1));
   end do;
 
   # Perform backward substitution to solve Ux[c]=y
@@ -213,9 +172,10 @@ export LUsolve::static := proc(
   x[n] := _self:-m_LEM:-Veil(_self:-m_LEM, x[n]/U[n, n]);
   for i from n-1 to 1 by -1 do
     if _self:-m_VerboseMode then
-      printf("LAST:-LUsolve(...): backward substitution of %d-th column.\n", i);
+      printf("LAST:-LUsolve(...): backward substitution of %d-th column, veilings = %d.\n",
+        i, nops(_self:-m_LEM:-VeilList(_self:-m_LEM)));
     end if;
-    s := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(U[i, j]*x[j], j=i+1..n));
+    s := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(_self:-m_LEM:-Veil(_self:-m_LEM, U[i, j]*x[j]), j=i+1..n));
     x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, s/U[i, i]);
   end do;
 
@@ -263,7 +223,8 @@ export LUapplyLP::static := proc(
   x[1] := _self:-m_LEM:-Veil(_self:-m_LEM, x[1]);
   for i from 2 to m do
     if _self:-m_VerboseMode then
-      printf("LAST:-LUapplyLP(...): forward substitution of %d-th row.\n", i);
+      printf("LAST:-LUapplyLP(...): forward substitution of %d-th row, veilings = %d.\n",
+        i, nops(_self:-m_LEM:-VeilList(_self:-m_LEM)));
     end if;
     x[i] := _self:-m_LEM:-Veil(_self:-m_LEM, x[i] - add(L[i, j]*x[j], j=1..i-1));
   end do;

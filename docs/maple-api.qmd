@@ -385,13 +385,12 @@ Compute the pivoting strategy: given the current pivot `cur` and the next pivot 
 Proto: `_self:-PivotingCompare(_self, cur, val)`
 
 ### LU {.unnumbered}
-Compute the LU decomposition of a square matrix `A` and check if the veiling symbol is already present in the matrix coefficients. The `indigo_restart` option allows the indigo library to reuse the previous results (do not use it unless you know what you are doing!).
+Compute the LU decomposition of a square matrix `A` and check if the veiling symbol is already present in the matrix coefficients.
 
 - **Inputs**: `_self::LAST`, `A::Matrix`.
-- **Optional inputs**: `indigo_repivot::boolean := false`, `indigo_restart::boolean := false`.
 - **Returns**: `NULL`.
 
-Proto: `_self:-LU(_self, A, indigo_repivot = false, indigo_restart = false)`
+Proto: `_self:-LU(_self, A)`
 
 ### LUsolve {.unnumbered}
 Solve the linear system `Ax=b` using LU decomposition provided the vector `b`.
