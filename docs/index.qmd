@@ -29,9 +29,9 @@ git clone https://github.com/StoccoDavide/LAST.git
 
 ## Maple
 
-To install the module you must have first installed [Maple](https://www.maplesoft.com/products/maple/) (2020 or later). Then open the `PackAndGo.mw` file and use the `!!!` button to execute the *entire* worksheet.
+To install the module you must have first installed [Maple](https://www.maplesoft.com/products/maple/) (2020 or later). Then open the `PackAndGo.mw` files in `LEM` and `LAST` folders and use the `!!!` button to execute the *entire* worksheets.
 
-Then test the module in a Maple worksheet or document by executing `LEM:-Info()` (or `Describe(LEM)`) and `LAST:-Info()` (or `Describe(LAST)`). Alternatively, you can use one of the test files provided in the `tests` folders. If the module is loaded without errors, it is done!
+Then test the module in a Maple worksheet or document by executing `LEM:-Info()` (or `Describe(LEM)`) and `LAST:-Info()` (or `Describe(LAST)`). Alternatively, you can use one of the test files provided in the `LEM/tests` and `LAST/tests` folders. If the modules are loaded without errors, it is done!
 
 #### 🚧 Attention! 🚧 {.unnumbered}
 
