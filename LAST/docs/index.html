@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>LAST Documentation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap-812b5bfe28ce16a2e12cdc4832856bec.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title"><p><img src="logo.png" alt="LAST Logo" style="width:80%; display:block; margin:auto;"></p></h2>
+   
+  <ul>
+  <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation"><span class="header-section-number">1</span> Installation</a>
+  <ul class="collapse">
+  <li><a href="#maple" id="toc-maple" class="nav-link" data-scroll-target="#maple"><span class="header-section-number">1.1</span> Maple</a>
+  <ul class="collapse">
+  <li><a href="#lem-package" id="toc-lem-package" class="nav-link" data-scroll-target="#lem-package">LEM Package</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#license" id="toc-license" class="nav-link" data-scroll-target="#license"><span class="header-section-number">2</span> License</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage"><span class="header-section-number">3</span> Usage</a></li>
+  <li><a href="#maple-api" id="toc-maple-api" class="nav-link" data-scroll-target="#maple-api"><span class="header-section-number">4</span> Maple API</a>
+  <ul class="collapse">
+  <li><a href="#module-utilities" id="toc-module-utilities" class="nav-link" data-scroll-target="#module-utilities"><span class="header-section-number">4.1</span> Module Utilities</a>
+  <ul class="collapse">
+  <li><a href="#info" id="toc-info" class="nav-link" data-scroll-target="#info">Info</a></li>
+  <li><a href="#moduleload" id="toc-moduleload" class="nav-link" data-scroll-target="#moduleload">ModuleLoad</a></li>
+  <li><a href="#moduleunload" id="toc-moduleunload" class="nav-link" data-scroll-target="#moduleunload">ModuleUnload</a></li>
+  <li><a href="#modulecopy" id="toc-modulecopy" class="nav-link" data-scroll-target="#modulecopy">ModuleCopy</a></li>
+  <li><a href="#checkinit" id="toc-checkinit" class="nav-link" data-scroll-target="#checkinit">CheckInit</a></li>
+  <li><a href="#initlem" id="toc-initlem" class="nav-link" data-scroll-target="#initlem">InitLEM</a></li>
+  <li><a href="#clearlem" id="toc-clearlem" class="nav-link" data-scroll-target="#clearlem">ClearLEM</a></li>
+  <li><a href="#setlem" id="toc-setlem" class="nav-link" data-scroll-target="#setlem">SetLEM</a></li>
+  <li><a href="#getlem" id="toc-getlem" class="nav-link" data-scroll-target="#getlem">GetLEM</a></li>
+  <li><a href="#enableverbosemode" id="toc-enableverbosemode" class="nav-link" data-scroll-target="#enableverbosemode">EnableVerboseMode</a></li>
+  <li><a href="#disableverbosemode" id="toc-disableverbosemode" class="nav-link" data-scroll-target="#disableverbosemode">DisableVerboseMode</a></li>
+  <li><a href="#setverbosemode" id="toc-setverbosemode" class="nav-link" data-scroll-target="#setverbosemode">SetVerboseMode</a></li>
+  <li><a href="#enablewarningmode" id="toc-enablewarningmode" class="nav-link" data-scroll-target="#enablewarningmode">EnableWarningMode</a></li>
+  <li><a href="#disablewarningmode" id="toc-disablewarningmode" class="nav-link" data-scroll-target="#disablewarningmode">DisableWarningMode</a></li>
+  <li><a href="#setwarningmode" id="toc-setwarningmode" class="nav-link" data-scroll-target="#setwarningmode">SetWarningMode</a></li>
+  <li><a href="#settimelimit" id="toc-settimelimit" class="nav-link" data-scroll-target="#settimelimit">SetTimeLimit</a></li>
+  <li><a href="#gettimelimit" id="toc-gettimelimit" class="nav-link" data-scroll-target="#gettimelimit">GetTimeLimit</a></li>
+  <li><a href="#enableunveiling" id="toc-enableunveiling" class="nav-link" data-scroll-target="#enableunveiling">EnableUnveiling</a></li>
+  <li><a href="#disableunveiling" id="toc-disableunveiling" class="nav-link" data-scroll-target="#disableunveiling">DisableUnveiling</a></li>
+  <li><a href="#enablefastpivoting" id="toc-enablefastpivoting" class="nav-link" data-scroll-target="#enablefastpivoting">EnableFastPivoting</a></li>
+  <li><a href="#disablefastpivoting" id="toc-disablefastpivoting" class="nav-link" data-scroll-target="#disablefastpivoting">DisableFastPivoting</a></li>
+  <li><a href="#setstoreddata" id="toc-setstoreddata" class="nav-link" data-scroll-target="#setstoreddata">SetStoredData</a></li>
+  <li><a href="#getstoreddata" id="toc-getstoreddata" class="nav-link" data-scroll-target="#getstoreddata">GetStoredData</a></li>
+  </ul></li>
+  <li><a href="#module-interface" id="toc-module-interface" class="nav-link" data-scroll-target="#module-interface"><span class="header-section-number">4.2</span> Module Interface</a>
+  <ul class="collapse">
+  <li><a href="#checkresults" id="toc-checkresults" class="nav-link" data-scroll-target="#checkresults">CheckResults</a></li>
+  <li><a href="#getresults" id="toc-getresults" class="nav-link" data-scroll-target="#getresults">GetResults</a></li>
+  <li><a href="#clearresults" id="toc-clearresults" class="nav-link" data-scroll-target="#clearresults">ClearResults</a></li>
+  <li><a href="#solvelinearsystem" id="toc-solvelinearsystem" class="nav-link" data-scroll-target="#solvelinearsystem">SolveLinearSystem</a></li>
+  <li><a href="#applylp" id="toc-applylp" class="nav-link" data-scroll-target="#applylp">ApplyLP</a></li>
+  <li><a href="#getuqt" id="toc-getuqt" class="nav-link" data-scroll-target="#getuqt">GetUQT</a></li>
+  <li><a href="#spy" id="toc-spy" class="nav-link" data-scroll-target="#spy">Spy</a></li>
+  <li><a href="#gcd" id="toc-gcd" class="nav-link" data-scroll-target="#gcd">GCD</a></li>
+  <li><a href="#spylu" id="toc-spylu" class="nav-link" data-scroll-target="#spylu">SpyLU</a></li>
+  <li><a href="#spyfflu" id="toc-spyfflu" class="nav-link" data-scroll-target="#spyfflu">SpyFFLU</a></li>
+  <li><a href="#permutationmatrices" id="toc-permutationmatrices" class="nav-link" data-scroll-target="#permutationmatrices">PermutationMatrices</a></li>
+  <li><a href="#rowpermutationmatrix" id="toc-rowpermutationmatrix" class="nav-link" data-scroll-target="#rowpermutationmatrix">RowPermutationMatrix</a></li>
+  <li><a href="#colpermutationmatrix" id="toc-colpermutationmatrix" class="nav-link" data-scroll-target="#colpermutationmatrix">ColPermutationMatrix</a></li>
+  <li><a href="#rank" id="toc-rank" class="nav-link" data-scroll-target="#rank">Rank</a></li>
+  <li><a href="#pivoting" id="toc-pivoting" class="nav-link" data-scroll-target="#pivoting">Pivoting</a></li>
+  <li><a href="#pivotcost" id="toc-pivotcost" class="nav-link" data-scroll-target="#pivotcost">PivotCost</a></li>
+  <li><a href="#getdegrees" id="toc-getdegrees" class="nav-link" data-scroll-target="#getdegrees">GetDegrees</a></li>
+  <li><a href="#degreecost" id="toc-degreecost" class="nav-link" data-scroll-target="#degreecost">DegreeCost</a></li>
+  <li><a href="#pivotingcompare" id="toc-pivotingcompare" class="nav-link" data-scroll-target="#pivotingcompare">PivotingCompare</a></li>
+  <li><a href="#lu" id="toc-lu" class="nav-link" data-scroll-target="#lu">LU</a></li>
+  <li><a href="#lusolve" id="toc-lusolve" class="nav-link" data-scroll-target="#lusolve">LUsolve</a></li>
+  <li><a href="#luapplylp" id="toc-luapplylp" class="nav-link" data-scroll-target="#luapplylp">LUapplyLP</a></li>
+  <li><a href="#lugetuqt" id="toc-lugetuqt" class="nav-link" data-scroll-target="#lugetuqt">LUgetUQT</a></li>
+  <li><a href="#fflu" id="toc-fflu" class="nav-link" data-scroll-target="#fflu">FFLU</a></li>
+  <li><a href="#fflusolve" id="toc-fflusolve" class="nav-link" data-scroll-target="#fflusolve">FFLUsolve</a></li>
+  <li><a href="#ffluapplylp" id="toc-ffluapplylp" class="nav-link" data-scroll-target="#ffluapplylp">FFLUapplyLP</a></li>
+  <li><a href="#fflugetuqt" id="toc-fflugetuqt" class="nav-link" data-scroll-target="#fflugetuqt">FFLUgetUQT</a></li>
+  <li><a href="#fflugetlu" id="toc-fflugetlu" class="nav-link" data-scroll-target="#fflugetlu">FFLUgetLU</a></li>
+  <li><a href="#gj" id="toc-gj" class="nav-link" data-scroll-target="#gj">GJ</a></li>
+  <li><a href="#gjsolve" id="toc-gjsolve" class="nav-link" data-scroll-target="#gjsolve">GJsolve</a></li>
+  <li><a href="#qr" id="toc-qr" class="nav-link" data-scroll-target="#qr">QR</a></li>
+  <li><a href="#qrsolve" id="toc-qrsolve" class="nav-link" data-scroll-target="#qrsolve">QRsolve</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">LAST Documentation</h1>
+<p class="subtitle lead">Linear Algebra Symbolic Toolbox</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Davide Stocco </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Trento (Italy)
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Matteo Larcher </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Trento (Italy)
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Enrico Bertolazzi </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Trento (Italy)
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This is a module for the LAST (Linear Algebra Symbolic Toolbox) module. It contains the functions to solve linear systems of equations with large symbolic expressions. The module uses symbolic full pivoting LU and QR decompositions to solve linear systems. The ‘LEM’ (Large Expressions Management) module is used to avoid expression swell.</p>
+<p>The following code is hopefully an improved version of the <a href="https://github.com/StoccoDavide/LULEM">LULEM</a> package described in the following PhD thesis:</p>
+<ul>
+<li>Wenqin Zhou, <em>Symbolic Computation Techniques for Solveing Large Expressions Problems from Mathematics and Engineering</em> (2007), Faculty of Graduate Studies, The University of Western Ontario London, Ontario, Canada.</li>
+</ul>
+<p>We would like to thank Jacques Carette for providing the original code that have inspired this module.</p>
+<section id="installation" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Installation</h1>
+<p>Download the package from the <a href="https://github.com/StoccoDavide/LAST">GitHub repository</a>, release the zip file, and follow the instructions below. Optionally, you can clone the repository using the following command:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/StoccoDavide/LAST.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="maple" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="maple"><span class="header-section-number">1.1</span> Maple</h2>
+<p>To install the module you must have first installed <a href="https://www.maplesoft.com/products/maple/">Maple</a> (2020 or later). Then open the <code>PackAndGo.mw</code> file and use the <code>!!!</code> button to execute the <em>entire</em> worksheet.</p>
+<p>Then test the module in a Maple worksheet or document by executing <code>LAST:-Info()</code> or <code>Describe(LAST)</code>. Alternatively, you can use one of the test files provided in the <code>maple/tests</code> folder. If the module is loaded without errors, it is done!</p>
+<section id="lem-package" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="lem-package">LEM Package</h3>
+<p>LEM is mandatory for the LAST module to work. However, they are highly recommended to facilitate the symbolic manipulation of the FEM system.. These packages are not included in the <code>maple</code> folder and must be downloaded separately from the <a href="https://github.com/StoccoDavide/LEM">LEM GitHub repository</a> and <a href="https://github.com/StoccoDavide/LAST">LAST GitHub repository</a>. Similarly as before, you can clone the repositories using the following command:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/StoccoDavide/LEM.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The installation of these optinal packages is similar to the one described above and requires the execution of the <code>PackAndGo.mw</code> file in the respective library folders.</p>
+<section id="attention" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="attention">🚧 Attention! 🚧</h4>
+<p>Both LEM and LAST packages are written to work in an object-oriented programming style. Please note that Maple object-oriented programming features have slightly changed in 2021, which online documentation states:</p>
+<blockquote class="blockquote">
+<p>As of Maple 2021, if the method has a formal parameter named <code>_self</code>, references to its object’s local or exported variables may be written without prefixing them. That is, <code>_self:-variable</code> may be written as just <code>variable</code>. Maple will add the <code>self:-</code> prefix internally when the method is simplified.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>As of Maple 2021, a message-passing form of method call can be used, which will automatically pass the object as an argument if the method has a formal parameter named <code>_self</code>.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Another way to invoke a method, similar to that used in other object-oriented languages, was introduced in Maple 2021. In this form, the object name is qualified by the method name, <code>object_name:-method_name(argument)</code> just as it can be in the function mechanism described above. However, the <em>object can be omitted from the argument sequence</em>.</p>
+</blockquote>
+<p>For further information please refer to the following <a href="https://fr.maplesoft.com/support/help/Maple/view.aspx?path=object/methods">link</a>.</p>
+</section>
+</section>
+</section>
+</section>
+<section id="license" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> License</h1>
+<p>BSD 3-Clause License</p>
+<p>Copyright (c) 2023, Davide Stocco, Matteo Larcher and Enrico Bertolazzi.</p>
+<p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
+<ol type="1">
+<li><p>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</p></li>
+<li><p>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</p></li>
+<li><p>Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.</p></li>
+</ol>
+<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+</section>
+<section id="usage" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Usage</h1>
+<p>In case you have no time to read through all the APIs and realize how the toolbox should or should not work, refer to the files prensent in <code>maple/tests</code> folder. This contains usage examples with increasing complexity and detail.</p>
+</section>
+<section id="maple-api" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Maple API</h1>
+<section id="module-utilities" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="module-utilities"><span class="header-section-number">4.1</span> Module Utilities</h2>
+<section id="info" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="info">Info</h3>
+<p>Print module information.</p>
+<ul>
+<li><strong>Inputs</strong>: None.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>Info()</code></p>
+</section>
+<section id="moduleload" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="moduleload">ModuleLoad</h3>
+<p>Module load procedure.</p>
+<ul>
+<li><strong>Inputs</strong>: None.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>ModuleLoad()</code></p>
+</section>
+<section id="moduleunload" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="moduleunload">ModuleUnload</h3>
+<p>Module unload procedure.</p>
+<ul>
+<li><strong>Inputs</strong>: None.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>ModuleLoad()</code></p>
+</section>
+<section id="modulecopy" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="modulecopy">ModuleCopy</h3>
+<p>Copy the object <code>proto</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>proto::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-ModuleCopy(_self, proto)</code></p>
+</section>
+<section id="checkinit" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="checkinit">CheckInit</h3>
+<p>Check if the <code>LAST</code> object is correctly initialized.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-CheckInit(_self)</code></p>
+</section>
+<section id="initlem" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="initlem">InitLEM</h3>
+<p>Initialize the <code>LEM</code> object with veiling label <code>label</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>label::{string, symbol} := NULL</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-InitLEM(_self, label)</code></p>
+</section>
+<section id="clearlem" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="clearlem">ClearLEM</h3>
+<p>Clear the <code>LEM</code> object.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-ClearLEM(_self)</code></p>
+</section>
+<section id="setlem" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="setlem">SetLEM</h3>
+<p>Set the <code>LEM</code> object <code>obj</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>obj::LEM</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetLEM(_self, obj)</code></p>
+</section>
+<section id="getlem" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="getlem">GetLEM</h3>
+<p>Get the <code>LEM</code> object.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>LEM</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GetLEM(_self)</code></p>
+</section>
+<section id="enableverbosemode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="enableverbosemode">EnableVerboseMode</h3>
+<p>Enable the verbosity of the module.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-EnableVerboseMode(_self)</code></p>
+</section>
+<section id="disableverbosemode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="disableverbosemode">DisableVerboseMode</h3>
+<p>Disable the verbosity of the module.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-DisableVerboseMode(_self)</code></p>
+</section>
+<section id="setverbosemode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="setverbosemode">SetVerboseMode</h3>
+<p>Set the verbosity of the module to <code>mode</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>mode::boolean</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetVerboseMode(_self, mode)</code></p>
+</section>
+<section id="enablewarningmode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="enablewarningmode">EnableWarningMode</h3>
+<p>Enable the warning mode of the module.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-EnableWarningMode(_self)</code></p>
+</section>
+<section id="disablewarningmode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="disablewarningmode">DisableWarningMode</h3>
+<p>Disable the warning mode of the module.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-DisableWarningMode(_self)</code></p>
+</section>
+<section id="setwarningmode" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="setwarningmode">SetWarningMode</h3>
+<p>Set the warning mode of the module to <code>mode</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>mode::boolean</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetWarningMode(_self, mode)</code></p>
+</section>
+<section id="settimelimit" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="settimelimit">SetTimeLimit</h3>
+<p>Set the time limit of the module to <code>x</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>x::numeric</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetTimeLimit(_self, x)</code></p>
+</section>
+<section id="gettimelimit" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="gettimelimit">GetTimeLimit</h3>
+<p>Get the time limit of the module.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>numeric</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GetTimeLimit(_self)</code></p>
+</section>
+<section id="enableunveiling" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="enableunveiling">EnableUnveiling</h3>
+<p>Enable the unveiling of expressions during factorization (longer computation time, possibly more accurate results).</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-EnableUnveiling(_self)</code></p>
+</section>
+<section id="disableunveiling" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="disableunveiling">DisableUnveiling</h3>
+<p>Disable the unveiling of expressions during factorization (shorter computation time, possibly less accurate results).</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-DisableUnveiling(_self)</code></p>
+</section>
+<section id="enablefastpivoting" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="enablefastpivoting">EnableFastPivoting</h3>
+<p>Enable fast pivoting during the factorization (first non-zero pivot is selected).</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-EnableFastPivoting(_self)</code></p>
+</section>
+<section id="disablefastpivoting" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="disablefastpivoting">DisableFastPivoting</h3>
+<p>Disable fast pivoting during the factorization (best pivot is selected).</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-DisableFastPivoting(_self)</code></p>
+</section>
+<section id="setstoreddata" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="setstoreddata">SetStoredData</h3>
+<p>Set the stored data of the module to <code>data</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>data::{list('='), set('=')}</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SetStoredData(_self, data)</code></p>
+</section>
+<section id="getstoreddata" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="getstoreddata">GetStoredData</h3>
+<p>Get the stored data of the module.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>{list('='), set('=')}</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GetStoredData(_self)</code></p>
+</section>
+</section>
+<section id="module-interface" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="module-interface"><span class="header-section-number">4.2</span> Module Interface</h2>
+<section id="checkresults" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="checkresults">CheckResults</h3>
+<p>Check if the results of the last factorization are available.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-CheckResults(_self)</code></p>
+</section>
+<section id="getresults" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="getresults">GetResults</h3>
+<p>Get the results of the last factorization. If <code>field</code> is specified, only the field <code>Results['field']</code> is returned.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>field::string := "all"</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GetResults(_self, field)</code></p>
+</section>
+<section id="clearresults" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="clearresults">ClearResults</h3>
+<p>Clear the results of the last factorization.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-ClearResults(_self)</code></p>
+</section>
+<section id="solvelinearsystem" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="solvelinearsystem">SolveLinearSystem</h3>
+<p>Solve the factorized linear system.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>b::Vector</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SolveLinearSystem(_self, b)</code></p>
+</section>
+<section id="applylp" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="applylp">ApplyLP</h3>
+<p>Apply <code>L^(-1)*P</code> to the vector <code>b</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>b::Vector</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Vector</code>.</li>
+</ul>
+<p>Proto: <code>_self:-ApplyLP(_self, b)</code></p>
+</section>
+<section id="getuqt" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="getuqt">GetUQT</h3>
+<p>Return the matrix <code>U^T*Q</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Matrix</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GetUQT(_self)</code></p>
+</section>
+<section id="spy" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="spy">Spy</h3>
+<p>Plot of non-zero values of the matrix <code>A</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>A::Matrix</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-Spy(_self, A)</code></p>
+</section>
+<section id="gcd" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="gcd">GCD</h3>
+<p>Compute the greatest common divisor of the elements of the expression <code>expr</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>expr::{Matrix, Vector, list}</code>, <code>postproc::boolean := true</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>algebraic</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GCD(_self, expr, postproc)</code></p>
+</section>
+<section id="spylu" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="spylu">SpyLU</h3>
+<p>Plot of non-zero values of the matrices <code>A</code>, <code>L</code> and <code>U</code> with fill-in values.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>A::Matrix</code>, <code>L::Matrix</code>, <code>U::Matrix</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SpyLU(_self, A, L, U)</code></p>
+</section>
+<section id="spyfflu" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="spyfflu">SpyFFLU</h3>
+<p>Plot of non-zero values of the matrices <code>A</code>, <code>M</code> with fill-in values.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>A::Matrix</code>, <code>M::Matrix</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>anything</code>.</li>
+</ul>
+<p>Proto: <code>_self:-SpyFFLU(_self, A, M)</code></p>
+</section>
+<section id="permutationmatrices" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="permutationmatrices">PermutationMatrices</h3>
+<p>Compute the LU decomposition permutation matrices provided the rows pivot vector <code>r</code> and the columns pivot vector <code>c</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>r::Vector(nonnegint)</code>, <code>c::Vector(nonnegint)</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Matrix(nonnegint)</code>.</li>
+</ul>
+<p>Proto: <code>_self:-PermutationMatrices(_self, r, c)</code></p>
+</section>
+<section id="rowpermutationmatrix" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="rowpermutationmatrix">RowPermutationMatrix</h3>
+<p>Compute the row permutation matrix provided the pivot vector <code>r</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>r::Vector(nonnegint)</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Matrix</code>.</li>
+</ul>
+<p>Proto: <code>_self:-RowPermutationMatrix(_self, r)</code></p>
+</section>
+<section id="colpermutationmatrix" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="colpermutationmatrix">ColPermutationMatrix</h3>
+<p>Compute the column permutation matrix provided the pivot vector <code>c</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>c::Vector(nonnegint)</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Matrix</code>.</li>
+</ul>
+<p>Proto: <code>_self:-ColPermutationMatrix(_self, c)</code></p>
+</section>
+<section id="rank" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="rank">Rank</h3>
+<p>Compute the rank of a square matrix <code>A</code> by transforming it in row echelon form. If <code>ref</code> is true, the matrix is transformed in reduced row echelon form. Notice that the rank does not modify the previously stored factorization results.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>A::Matrix</code>.</li>
+<li><strong>Optional inputs</strong>: <code>rref := false</code>.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-Rank(_self, A, rref = false)</code></p>
+</section>
+<section id="pivoting" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="pivoting">Pivoting</h3>
+<p>Compute the LU decomposition pivots vectors with minimum degree provided the step <code>k</code>, the temporary LU (NAG) matrix <code>M</code>, the rows permutation <code>r</code> and the columns permutation <code>c</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>k::integer</code>, <code>M::Matrix</code>, <code>r::Vector(nonnegint)</code>, <code>c::Vector(nonnegint)</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>table</code>.</li>
+</ul>
+<p>Proto: <code>_self:-Pivoting(_self, k, M, r, c)</code></p>
+</section>
+<section id="pivotcost" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="pivotcost">PivotCost</h3>
+<p>Compute the cost of the pivot <code>x</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>x::algebraic</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>integer</code>.</li>
+</ul>
+<p>Proto: <code>_self:-PivotCost(_self, x)</code></p>
+</section>
+<section id="getdegrees" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="getdegrees">GetDegrees</h3>
+<p>Get the degree matrices of the matrix <code>A</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>A::Matrix</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Matrix(nonnegint)</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GetDegrees(_self, A)</code></p>
+</section>
+<section id="degreecost" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="degreecost">DegreeCost</h3>
+<p>Set the strategy <code>val</code> for the minimum degree ordering.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>val::table</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>integer</code>.</li>
+</ul>
+<p>Proto: <code>_self:-DegreeCost(_self, val)</code></p>
+</section>
+<section id="pivotingcompare" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="pivotingcompare">PivotingCompare</h3>
+<p>Compute the pivoting strategy: given the current pivot <code>cur</code> and the next pivot <code>val</code>, decide if the next pivot is better than the current pivot or not.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>cur::table</code>, <code>val::table</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>boolean</code>.</li>
+</ul>
+<p>Proto: <code>_self:-PivotingCompare(_self, cur, val)</code></p>
+</section>
+<section id="lu" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="lu">LU</h3>
+<p>Compute the LU decomposition of a square matrix <code>A</code> and check if the veiling symbol is already present in the matrix coefficients.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>A::Matrix</code>.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-LU(_self, A)</code></p>
+</section>
+<section id="lusolve" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="lusolve">LUsolve</h3>
+<p>Solve the linear system <code>Ax=b</code> using LU decomposition provided the vector <code>b</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>b::Vector</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Vector</code>.</li>
+</ul>
+<p>Proto: <code>_self:-LUsolve(_self, b)</code></p>
+</section>
+<section id="luapplylp" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="luapplylp">LUapplyLP</h3>
+<p>Apply <code>L^(-1)*P</code> to the vector <code>b</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>b::Vector</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Vector</code>.</li>
+</ul>
+<p>Proto: <code>_self:-LUapplyLP(_self, b)</code></p>
+</section>
+<section id="lugetuqt" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="lugetuqt">LUgetUQT</h3>
+<p>Return the matrix <code>U^T*Q</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Matrix</code>.</li>
+</ul>
+<p>Proto: <code>_self:-LUgetUQT(_self)</code></p>
+</section>
+<section id="fflu" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="fflu">FFLU</h3>
+<p>Compute the Fraction-Free LU (FFLU) decomposition of a square matrix <code>A</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>A::Matrix</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-FFLU(_self, A)</code></p>
+</section>
+<section id="fflusolve" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="fflusolve">FFLUsolve</h3>
+<p>Apply <code>L^(-1)*P</code> to the vector <code>b</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>b::Vector</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Vector</code>.</li>
+</ul>
+<p>Proto: <code>_self:-FFLUsolve(_self, b)</code></p>
+</section>
+<section id="ffluapplylp" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="ffluapplylp">FFLUapplyLP</h3>
+<p>Apply <code>L^(-1)*P</code> to the vector <code>b</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>b::Vector</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Vector</code>.</li>
+</ul>
+<p>Proto: <code>_self:-FFLUapplyLP(_self, b)</code></p>
+</section>
+<section id="fflugetuqt" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="fflugetuqt">FFLUgetUQT</h3>
+<p>Return the matrix <code>U^T*Q</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Matrix</code>.</li>
+</ul>
+<p>Proto: <code>_self:-FFLUgetUQT(_self)</code></p>
+</section>
+<section id="fflugetlu" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="fflugetlu">FFLUgetLU</h3>
+<p>Return the matrix <code>L</code> and <code>U</code> such that <code>P.A.Q = L.U</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Matrix</code>.</li>
+</ul>
+<p>Proto: <code>_self:-FFLUgetLU(_self)</code></p>
+</section>
+<section id="gj" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="gj">GJ</h3>
+<p>Compute the Gauss-Jordan decomposition of a rectangular matrix <code>A</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>A::Matrix</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GJ(_self, A)</code></p>
+</section>
+<section id="gjsolve" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="gjsolve">GJsolve</h3>
+<p>Solve the linear system <code>Ax=b</code> using GJ decomposition provided the vector <code>b</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>b::Vector</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Vector</code>.</li>
+</ul>
+<p>Proto: <code>_self:-GJsolve(_self, b)</code></p>
+</section>
+<section id="qr" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="qr">QR</h3>
+<p>Compute the Givens QR decomposition of a square matrix <code>A</code> and check if the veiling symbol is already present in the matrix coefficients.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>A::Matrix</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>NULL</code>.</li>
+</ul>
+<p>Proto: <code>_self:-QR(_self, A)</code></p>
+</section>
+<section id="qrsolve" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="qrsolve">QRsolve</h3>
+<p>Solve the linear system <code>Ax=b</code> using QR decomposition provided the vector <code>b</code>.</p>
+<ul>
+<li><strong>Inputs</strong>: <code>_self::LAST</code>, <code>b::Vector</code>.</li>
+<li><strong>Optional inputs</strong>: None.</li>
+<li><strong>Returns</strong>: <code>Vector</code>.</li>
+</ul>
+<p>Proto: <code>_self:-QRsolve(_self, b)</code></p>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
