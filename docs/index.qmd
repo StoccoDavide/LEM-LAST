@@ -1,0 +1,50 @@
+---
+title: LEM-LAST Documentation
+subtitle: Large Algebraic Symbolic Toolbox with Large Expression Management
+authors:
+  - name: Davide Stocco
+    affiliation: University of Trento (Italy)
+  - name: Enrico Bertolazzi
+    affiliation: University of Trento (Italy)
+theme: [cosmo, custom.scss]
+format:
+  html:
+    toc: false
+    number-sections: false
+---
+
+This documentation provides a comprehensive guide to the LEM (Large Expression Management) and LAST (Large Algebraic Symbolic Toolbox) libraries. The documentation is structured to help you understand the libraries' features, installation procedures, and usage examples. For convenience, it is diveded into two separate web pages.
+
+- **LEM Documentation**: available at [https://stoccodavide.github.io/LEM/](https://stoccodavide.github.io/LEM/).
+- **LAST Documentation**: available at [https://stoccodavide.github.io/LAST/](https://stoccodavide.github.io/LAST/).
+
+# Installation
+
+Download the packages from the [LEM](https://github.com/StoccoDavide/LEM) and [LAST](https://github.com/StoccoDavide/LAST) GitHub repositories, release the zip file, and follow the instructions below. Optionally, you can clone the repository using the following command:
+
+```bash
+git clone https://github.com/StoccoDavide/LEM.git
+git clone https://github.com/StoccoDavide/LAST.git
+```
+
+## Maple
+
+To install the module you must have first installed [Maple](https://www.maplesoft.com/products/maple/) (2020 or later). Then open the `PackAndGo.mw` file and use the `!!!` button to execute the *entire* worksheet.
+
+Then test the module in a Maple worksheet or document by executing `LEM:-Info()` (or `Describe(LEM)`) and `LAST:-Info()` (or `Describe(LAST)`). Alternatively, you can use one of the test files provided in the `tests` folders. If the module is loaded without errors, it is done!
+
+#### 🚧 Attention! 🚧 {.unnumbered}
+
+Both LEM and LAST packages are written to work in an object-oriented programming style. Please note that Maple object-oriented programming features have slightly changed in 2021, which online documentation states:
+
+> As of Maple 2021, if the method has a formal parameter named `_self`, references to its object's local or exported variables may be written without prefixing them. That is, `_self:-variable` may be written as just `variable`. Maple will add the `self:-` prefix internally when the method is simplified.
+
+> As of Maple 2021, a message-passing form of method call can be used, which will automatically pass the object as an argument if the method has a formal parameter named `_self`.
+
+> Another way to invoke a method, similar to that used in other object-oriented languages, was introduced in Maple 2021. In this form, the object name is qualified by the method name, `object_name:-method_name(argument)` just as it can be in the function mechanism described above. However, the *object can be omitted from the argument sequence*.
+
+For further information please refer to the following [link](https://fr.maplesoft.com/support/help/Maple/view.aspx?path=object/methods).
+
+# License
+
+{{< include ./../LICENSE >}}
