@@ -1,6 +1,6 @@
-# LAST 
+# LAST
 
-Large Expressions Management
+Linear Algebra Symbolic Toolbox
 
 ## Authors
 
